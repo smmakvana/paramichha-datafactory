@@ -6,190 +6,85 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.paramichha</groupId>
+    <parent>
+        <groupId>com.paramichha</groupId>
+        <artifactId>paramichha-dev</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
     <artifactId>datafactory</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+
     <name>Paramichha DataFactory</name>
     <description>Generate valid and invalid test data from Jakarta-annotated POJOs</description>
     <url>https://paramichha.com</url>
 
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <id>smmakvana</id>
-            <name>Sanjay Makvana</name>
-            <email>sanjay@paramichha.com</email>
-            <url>https://paramichha.com</url>
-        </developer>
-    </developers>
-
     <scm>
-        <connection>scm:git:git://github.com/paramichha/datafactory.git</connection>
-        <developerConnection>scm:git:ssh://github.com/paramichha/datafactory.git</developerConnection>
-        <url>https://github.com/paramichha/datafactory</url>
+        <connection>scm:git:git://github.com/smmakvana/paramichha-datafactory.git</connection>
+        <developerConnection>scm:git:ssh://github.com/smmakvana/paramichha-datafactory.git</developerConnection>
+        <url>https://github.com/smmakvana/paramichha-datafactory</url>
         <tag>HEAD</tag>
     </scm>
-
-    <properties>
-        <java.version>21</java.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <datafaker.version>2.3.1</datafaker.version>
-        <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
-        <jakarta.validation.version>3.0.2</jakarta.validation.version>
-        <junit.version>5.10.2</junit.version>
-        <assertj.version>3.25.3</assertj.version>
-        <lombok.version>1.18.32</lombok.version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
-            <version>${jakarta.validation.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate.validator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.expressly</groupId>
             <artifactId>expressly</artifactId>
-            <version>5.0.0</version>
         </dependency>
         <dependency>
             <groupId>net.datafaker</groupId>
             <artifactId>datafaker</artifactId>
-            <version>${datafaker.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.5.0</version>
-                <configuration>
-                    <doclint>none</doclint>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-
-            <!-- GPG signing — only active during release, not normal builds -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${gpg.skip}</skip>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.7.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>central</publishingServerId>
-                    <autoPublish>true</autoPublish>
-                    <waitUntil>published</waitUntil>
-                </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <!-- activate GPG signing only when releasing -->
-        <profile>
-            <id>release</id>
-            <properties>
-                <gpg.skip>false</gpg.skip>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>
