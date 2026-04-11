@@ -1,0 +1,958 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : null,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : -1,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : null,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : -1,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : null,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : -1,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : null,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : -1,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : null,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : null,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : null,
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : null,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : false,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : null,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : null,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : null,
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "bigDecimalVal" : -1.00,
+      "bigIntegerVal" : -1,
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346,
+      "stringVal" : "eum",
+      "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "bigDecimalVal" : [ {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : 0.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : 643.98,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ],
+    "bigIntegerVal" : [ {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : 0,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : 360,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ],
+    "byteVal" : [ {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : -128,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : -127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 0,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 126,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ],
+    "doubleVal" : [ {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : 0.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : 159.5,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ],
+    "floatVal" : [ {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : 0.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : 251.41,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ],
+    "intVal" : [ {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 40,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : -2147483648,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : -2147483647,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 0,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 2147483646,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 2147483647,
+        "longVal" : 739,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ],
+    "longVal" : [ {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 650,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : -9223372036854775808,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : -9223372036854775807,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 0,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 9223372036854775806,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 9223372036854775807,
+        "shortVal" : 346,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ],
+    "shortVal" : [ {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 529,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : -32768,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : -32767,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 0,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 32766,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "bigDecimalVal" : -1.00,
+        "bigIntegerVal" : -1,
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 32767,
+        "stringVal" : "eum",
+        "uuidVal" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

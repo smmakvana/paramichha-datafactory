@@ -1,0 +1,37 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "address" : null,
+      "contact" : {
+        "email" : "gregory.donnelly@hotmail.com",
+        "phone" : "(305) 235-0190"
+      }
+    },
+    "violations" : [ "address" ]
+  }, {
+    "object" : {
+      "address" : {
+        "city" : "Kunzeview",
+        "line1" : "dolores",
+        "postcode" : "53351"
+      },
+      "contact" : null
+    },
+    "violations" : [ "contact" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "address" : {
+        "city" : "Kunzeview",
+        "line1" : "dolores",
+        "postcode" : "53351"
+      },
+      "contact" : {
+        "email" : "gregory.donnelly@hotmail.com",
+        "phone" : "(305) 235-0190"
+      }
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

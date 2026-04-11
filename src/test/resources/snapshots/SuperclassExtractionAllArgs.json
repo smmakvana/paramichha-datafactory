@@ -1,0 +1,55 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "name" : null,
+      "value" : 2
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "name" : "",
+      "value" : 2
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "value" : null
+    },
+    "violations" : [ "value" ]
+  }, {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "value" : 0
+    },
+    "violations" : [ "value" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "value" : 2
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "value" : [ {
+      "object" : {
+        "name" : "Garnet VonRueden",
+        "value" : 2
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Garnet VonRueden",
+        "value" : 1
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Garnet VonRueden",
+        "value" : 2
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

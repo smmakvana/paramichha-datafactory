@@ -1,0 +1,195 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : null,
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "not-an-email",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : null
+    },
+    "violations" : [ "website" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : ""
+    },
+    "violations" : [ "website" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "not-a-url"
+    },
+    "violations" : [ "website" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : null,
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "reference" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "reference", "reference" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "!!!INVALID!!!",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "reference" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : null,
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "cardNumber" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "cardNumber", "cardNumber" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "1234-bad",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "cardNumber" ]
+  }, {
+    "object" : {
+      "barcode" : null,
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "barcode" ]
+  }, {
+    "object" : {
+      "barcode" : "",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "barcode", "barcode" ]
+  }, {
+    "object" : {
+      "barcode" : "000-bad-ean",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "barcode" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : null,
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "bookCode" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "bookCode", "bookCode" ]
+  }, {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "000-bad-isbn",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ "bookCode" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "barcode" : "7606057723348",
+      "bookCode" : "9791089533756",
+      "cardNumber" : "4626039036331084",
+      "email" : "lamar.lehner@hotmail.com",
+      "reference" : "AA5555",
+      "website" : "http://www.lucius-bechtelar.name:46380/aliquam/hic"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

@@ -1,0 +1,33 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "metadata" : null,
+      "payload" : null,
+      "value" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "metadata" : null,
+      "payload" : null,
+      "value" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "metadata" : null,
+      "payload" : null,
+      "value" : null
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "metadata" : null,
+      "payload" : null,
+      "value" : null
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

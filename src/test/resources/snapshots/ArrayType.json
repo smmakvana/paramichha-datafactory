@@ -1,0 +1,45 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "data" : "fw==",
+      "ids" : [ 671 ],
+      "names" : null,
+      "scores" : [ 671 ]
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "data" : "fw==",
+      "ids" : [ 671 ],
+      "names" : [ "eum" ],
+      "scores" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "data" : null,
+      "ids" : [ 671 ],
+      "names" : [ "eum" ],
+      "scores" : [ 671 ]
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "data" : "fw==",
+      "ids" : null,
+      "names" : [ "eum" ],
+      "scores" : [ 671 ]
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "data" : "fw==",
+      "ids" : [ 671 ],
+      "names" : [ "eum" ],
+      "scores" : [ 671 ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

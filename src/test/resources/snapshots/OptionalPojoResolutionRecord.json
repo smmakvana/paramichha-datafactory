@@ -1,0 +1,23 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "age" : 671,
+      "nickname" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "age" : null,
+      "nickname" : "eum"
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "age" : 671,
+      "nickname" : "eum"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

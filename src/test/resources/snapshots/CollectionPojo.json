@@ -1,0 +1,77 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "labels" : [ "eum" ],
+      "notes" : [ "eum" ],
+      "roles" : null,
+      "scores" : [ 671 ],
+      "tags" : [ "eum" ]
+    },
+    "violations" : [ "roles" ]
+  }, {
+    "object" : {
+      "labels" : [ "eum" ],
+      "notes" : [ "eum" ],
+      "roles" : [ "eum" ],
+      "scores" : [ 671 ],
+      "tags" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "labels" : [ "eum" ],
+      "notes" : [ "eum" ],
+      "roles" : [ "eum" ],
+      "scores" : null,
+      "tags" : [ "eum" ]
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "labels" : [ "eum" ],
+      "notes" : null,
+      "roles" : [ "eum" ],
+      "scores" : [ 671 ],
+      "tags" : [ "eum" ]
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "labels" : [ "eum" ],
+      "notes" : [ ],
+      "roles" : [ "eum" ],
+      "scores" : [ 671 ],
+      "tags" : [ "eum" ]
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "labels" : null,
+      "notes" : [ "eum" ],
+      "roles" : [ "eum" ],
+      "scores" : [ 671 ],
+      "tags" : [ "eum" ]
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "labels" : [ ],
+      "notes" : [ "eum" ],
+      "roles" : [ "eum" ],
+      "scores" : [ 671 ],
+      "tags" : [ "eum" ]
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "labels" : [ "eum" ],
+      "notes" : [ "eum" ],
+      "roles" : [ "eum" ],
+      "scores" : [ 671 ],
+      "tags" : [ "eum" ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

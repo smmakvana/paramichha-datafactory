@@ -1,0 +1,13 @@
+{
+  "invalidList" : [ ],
+  "valid" : {
+    "object" : {
+      "ids" : [ 671 ],
+      "orderedTags" : [ "eum" ],
+      "sortedIds" : [ 671 ],
+      "tags" : [ "eum" ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

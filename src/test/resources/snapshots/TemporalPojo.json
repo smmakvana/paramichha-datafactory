@@ -1,0 +1,239 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "createdAt" : null,
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "createdAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2099-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "createdAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : null,
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "dateOfBirth" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2099-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "dateOfBirth" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : null
+    },
+    "violations" : [ "submittedAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2099-06-15T12:00:00"
+    },
+    "violations" : [ "submittedAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : null,
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "expiresAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2020-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "expiresAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : null,
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "deliverAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2020-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "deliverAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : null,
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "registeredOn" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2099-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "registeredOn" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : null,
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "graduationYear" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2099",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "graduationYear" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : null,
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "renewalMonth" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2020-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "renewalMonth" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : null,
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ "scheduledTime" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "createdAt" : "2020-06-15T00:00:00Z",
+      "dateOfBirth" : "2020-06-15",
+      "deliverAt" : "2099-06-15T12:00:00Z",
+      "expiresAt" : "2099-06-15T12:00:00Z",
+      "graduationYear" : "2020",
+      "registeredOn" : "2020-06-15T00:00:00.000+00:00",
+      "renewalMonth" : "2099-06",
+      "scheduledTime" : "12:00:00",
+      "submittedAt" : "2020-06-15T12:00:00"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

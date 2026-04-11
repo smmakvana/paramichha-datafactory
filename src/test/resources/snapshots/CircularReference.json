@@ -1,0 +1,47 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "b" : {
+        "a" : {
+          "b" : null,
+          "name" : "Victor Mills"
+        },
+        "label" : "facere"
+      },
+      "name" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "b" : {
+        "a" : {
+          "b" : null,
+          "name" : "Victor Mills"
+        },
+        "label" : "facere"
+      },
+      "name" : ""
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "b" : null,
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "b" : {
+        "a" : {
+          "b" : null,
+          "name" : "Victor Mills"
+        },
+        "label" : "facere"
+      },
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

@@ -1,0 +1,45 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "activePrimitive" : false,
+      "archivedWrapper" : false,
+      "deletedPrimitive" : false,
+      "verifiedWrapper" : true
+    },
+    "violations" : [ "activePrimitive" ]
+  }, {
+    "object" : {
+      "activePrimitive" : true,
+      "archivedWrapper" : false,
+      "deletedPrimitive" : false,
+      "verifiedWrapper" : false
+    },
+    "violations" : [ "verifiedWrapper" ]
+  }, {
+    "object" : {
+      "activePrimitive" : true,
+      "archivedWrapper" : false,
+      "deletedPrimitive" : true,
+      "verifiedWrapper" : true
+    },
+    "violations" : [ "deletedPrimitive" ]
+  }, {
+    "object" : {
+      "activePrimitive" : true,
+      "archivedWrapper" : true,
+      "deletedPrimitive" : false,
+      "verifiedWrapper" : true
+    },
+    "violations" : [ "archivedWrapper" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "activePrimitive" : true,
+      "archivedWrapper" : false,
+      "deletedPrimitive" : false,
+      "verifiedWrapper" : true
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

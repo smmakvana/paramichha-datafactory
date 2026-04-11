@@ -1,0 +1,12 @@
+{
+  "invalidList" : [ ],
+  "valid" : {
+    "object" : {
+      "buffer" : [ 671 ],
+      "history" : [ "eum" ],
+      "pending" : [ "eum" ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

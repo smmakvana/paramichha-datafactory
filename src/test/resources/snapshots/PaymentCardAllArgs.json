@@ -1,0 +1,169 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : null,
+      "currency" : "net",
+      "cvv" : "555",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "cardNumber" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "",
+      "currency" : "net",
+      "cvv" : "555",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "cardNumber", "cardNumber" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "1234-bad",
+      "currency" : "net",
+      "cvv" : "555",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "cardNumber" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "4038405589322626",
+      "currency" : "net",
+      "cvv" : "555",
+      "expiryDate" : null
+    },
+    "violations" : [ "expiryDate" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "4038405589322626",
+      "currency" : "net",
+      "cvv" : "555",
+      "expiryDate" : "2020-06"
+    },
+    "violations" : [ "expiryDate" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "4038405589322626",
+      "currency" : "net",
+      "cvv" : null,
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "cvv" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "4038405589322626",
+      "currency" : "net",
+      "cvv" : "",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "cvv", "cvv" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "4038405589322626",
+      "currency" : "net",
+      "cvv" : "!!!INVALID!!!",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "cvv" ]
+  }, {
+    "object" : {
+      "amount" : null,
+      "cardNumber" : "4038405589322626",
+      "currency" : "net",
+      "cvv" : "555",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "amount" ]
+  }, {
+    "object" : {
+      "amount" : 0,
+      "cardNumber" : "4038405589322626",
+      "currency" : "net",
+      "cvv" : "555",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "amount" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "4038405589322626",
+      "currency" : null,
+      "cvv" : "555",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "currency" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "4038405589322626",
+      "currency" : "",
+      "cvv" : "555",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "currency", "currency" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "4038405589322626",
+      "currency" : "xx",
+      "cvv" : "555",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "currency" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "4038405589322626",
+      "currency" : "xxxx",
+      "cvv" : "555",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ "currency" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "amount" : 1.50,
+      "cardNumber" : "4038405589322626",
+      "currency" : "net",
+      "cvv" : "555",
+      "expiryDate" : "2099-06"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "amount" : [ {
+      "object" : {
+        "amount" : 1.50,
+        "cardNumber" : "4038405589322626",
+        "currency" : "net",
+        "cvv" : "555",
+        "expiryDate" : "2099-06"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : 1.00,
+        "cardNumber" : "4038405589322626",
+        "currency" : "net",
+        "cvv" : "555",
+        "expiryDate" : "2099-06"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : 2.00,
+        "cardNumber" : "4038405589322626",
+        "currency" : "net",
+        "cvv" : "555",
+        "expiryDate" : "2099-06"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

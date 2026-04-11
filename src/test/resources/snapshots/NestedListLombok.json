@@ -1,0 +1,70 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "addresses" : [ {
+        "city" : "Port Lyndafort",
+        "line1" : "eum"
+      } ],
+      "name" : null,
+      "tags" : [ {
+        "value" : "eum"
+      } ]
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "addresses" : [ {
+        "city" : "Port Lyndafort",
+        "line1" : "eum"
+      } ],
+      "name" : "",
+      "tags" : [ {
+        "value" : "eum"
+      } ]
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "addresses" : null,
+      "name" : "Garnet VonRueden",
+      "tags" : [ {
+        "value" : "eum"
+      } ]
+    },
+    "violations" : [ "addresses" ]
+  }, {
+    "object" : {
+      "addresses" : [ {
+        "city" : "Port Lyndafort",
+        "line1" : "eum"
+      } ],
+      "name" : "Garnet VonRueden",
+      "tags" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "addresses" : [ {
+        "city" : "Port Lyndafort",
+        "line1" : "eum"
+      } ],
+      "name" : "Garnet VonRueden",
+      "tags" : [ ]
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "addresses" : [ {
+        "city" : "Port Lyndafort",
+        "line1" : "eum"
+      } ],
+      "name" : "Garnet VonRueden",
+      "tags" : [ {
+        "value" : "eum"
+      } ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

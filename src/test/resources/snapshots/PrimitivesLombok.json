@@ -1,0 +1,468 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "boolVal" : true,
+      "byteVal" : -1,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : -1
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : -1,
+      "longVal" : 739,
+      "shortVal" : 346
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : -1,
+      "shortVal" : 346
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "boolVal" : false,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "boolVal" : true,
+      "byteVal" : 127,
+      "charVal" : "A",
+      "doubleVal" : -1.0,
+      "floatVal" : -1.0,
+      "intVal" : 165,
+      "longVal" : 739,
+      "shortVal" : 346
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "byteVal" : [ {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : -128,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : -127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 0,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 126,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    } ],
+    "doubleVal" : [ {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : 0.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : 594.76,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    } ],
+    "floatVal" : [ {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : 0.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : 387.18,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    } ],
+    "intVal" : [ {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 721,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : -2147483648,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : -2147483647,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 0,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 2147483646,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 2147483647,
+        "longVal" : 739,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    } ],
+    "longVal" : [ {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 397,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : -9223372036854775808,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : -9223372036854775807,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 0,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 9223372036854775806,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 9223372036854775807,
+        "shortVal" : 346
+      },
+      "violations" : [ ]
+    } ],
+    "shortVal" : [ {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 612
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : -32768
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : -32767
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 0
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 32766
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "boolVal" : true,
+        "byteVal" : 127,
+        "charVal" : "A",
+        "doubleVal" : -1.0,
+        "floatVal" : -1.0,
+        "intVal" : 165,
+        "longVal" : 739,
+        "shortVal" : 32767
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

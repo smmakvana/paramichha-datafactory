@@ -1,0 +1,29 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "createdAt" : "2024-01-15T00:00:00Z",
+      "id" : null
+    },
+    "violations" : [ "id" ]
+  }, {
+    "object" : {
+      "createdAt" : "2024-01-15T00:00:00Z",
+      "id" : ""
+    },
+    "violations" : [ "id" ]
+  }, {
+    "object" : {
+      "createdAt" : null,
+      "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae"
+    },
+    "violations" : [ "createdAt" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "createdAt" : "2024-01-15T00:00:00Z",
+      "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

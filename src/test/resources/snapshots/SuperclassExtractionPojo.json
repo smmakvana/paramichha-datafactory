@@ -1,0 +1,95 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "createdAt" : "2024-01-15T00:00:00Z",
+      "id" : null,
+      "name" : "Mr. Nanci Stokes",
+      "value" : 2
+    },
+    "violations" : [ "id" ]
+  }, {
+    "object" : {
+      "createdAt" : "2024-01-15T00:00:00Z",
+      "id" : "",
+      "name" : "Mr. Nanci Stokes",
+      "value" : 2
+    },
+    "violations" : [ "id" ]
+  }, {
+    "object" : {
+      "createdAt" : null,
+      "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "name" : "Mr. Nanci Stokes",
+      "value" : 2
+    },
+    "violations" : [ "createdAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2024-01-15T00:00:00Z",
+      "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "name" : null,
+      "value" : 2
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "createdAt" : "2024-01-15T00:00:00Z",
+      "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "name" : "",
+      "value" : 2
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "createdAt" : "2024-01-15T00:00:00Z",
+      "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "name" : "Mr. Nanci Stokes",
+      "value" : null
+    },
+    "violations" : [ "value" ]
+  }, {
+    "object" : {
+      "createdAt" : "2024-01-15T00:00:00Z",
+      "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "name" : "Mr. Nanci Stokes",
+      "value" : 0
+    },
+    "violations" : [ "value" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "createdAt" : "2024-01-15T00:00:00Z",
+      "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "name" : "Mr. Nanci Stokes",
+      "value" : 2
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "value" : [ {
+      "object" : {
+        "createdAt" : "2024-01-15T00:00:00Z",
+        "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+        "name" : "Mr. Nanci Stokes",
+        "value" : 2
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "createdAt" : "2024-01-15T00:00:00Z",
+        "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+        "name" : "Mr. Nanci Stokes",
+        "value" : 1
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "createdAt" : "2024-01-15T00:00:00Z",
+        "id" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+        "name" : "Mr. Nanci Stokes",
+        "value" : 2
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

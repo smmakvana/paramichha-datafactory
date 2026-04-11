@@ -1,0 +1,40 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "optionalDays" : [ "MON" ],
+      "priorities" : [ "LOW" ],
+      "workdays" : null
+    },
+    "violations" : [ "workdays" ]
+  }, {
+    "object" : {
+      "optionalDays" : [ "MON" ],
+      "priorities" : null,
+      "workdays" : [ "MON" ]
+    },
+    "violations" : [ "priorities" ]
+  }, {
+    "object" : {
+      "optionalDays" : null,
+      "priorities" : [ "LOW" ],
+      "workdays" : [ "MON" ]
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "optionalDays" : [ ],
+      "priorities" : [ "LOW" ],
+      "workdays" : [ "MON" ]
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "optionalDays" : [ "MON" ],
+      "priorities" : [ "LOW" ],
+      "workdays" : [ "MON" ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

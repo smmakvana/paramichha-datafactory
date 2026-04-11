@@ -1,0 +1,68 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "notBlankField" : "qui",
+      "notEmptyList" : [ "eum" ],
+      "notEmptyString" : "Dolorem fugit rem.",
+      "notNullField" : null,
+      "nullField" : null
+    },
+    "violations" : [ "notNullField" ]
+  }, {
+    "object" : {
+      "notBlankField" : null,
+      "notEmptyList" : [ "eum" ],
+      "notEmptyString" : "Dolorem fugit rem.",
+      "notNullField" : "eum",
+      "nullField" : null
+    },
+    "violations" : [ "notBlankField" ]
+  }, {
+    "object" : {
+      "notBlankField" : "",
+      "notEmptyList" : [ "eum" ],
+      "notEmptyString" : "Dolorem fugit rem.",
+      "notNullField" : "eum",
+      "nullField" : null
+    },
+    "violations" : [ "notBlankField" ]
+  }, {
+    "object" : {
+      "notBlankField" : "qui",
+      "notEmptyList" : [ "eum" ],
+      "notEmptyString" : null,
+      "notNullField" : "eum",
+      "nullField" : null
+    },
+    "violations" : [ "notEmptyString" ]
+  }, {
+    "object" : {
+      "notBlankField" : "qui",
+      "notEmptyList" : null,
+      "notEmptyString" : "Dolorem fugit rem.",
+      "notNullField" : "eum",
+      "nullField" : null
+    },
+    "violations" : [ "notEmptyList" ]
+  }, {
+    "object" : {
+      "notBlankField" : "qui",
+      "notEmptyList" : [ "eum" ],
+      "notEmptyString" : "Dolorem fugit rem.",
+      "notNullField" : "eum",
+      "nullField" : ""
+    },
+    "violations" : [ "nullField" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "notBlankField" : "qui",
+      "notEmptyList" : [ "eum" ],
+      "notEmptyString" : "Dolorem fugit rem.",
+      "notNullField" : "eum",
+      "nullField" : null
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

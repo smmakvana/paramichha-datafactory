@@ -1,0 +1,135 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "day" : "MON",
+      "priority" : "LOW",
+      "status" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "day" : "MON",
+      "priority" : null,
+      "status" : "ACTIVE"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "day" : null,
+      "priority" : "LOW",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "day" : "MON",
+      "priority" : "LOW",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "day" : [ {
+      "object" : {
+        "day" : "MON",
+        "priority" : "LOW",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "TUE",
+        "priority" : "LOW",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "WED",
+        "priority" : "LOW",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "THU",
+        "priority" : "LOW",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "FRI",
+        "priority" : "LOW",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "SAT",
+        "priority" : "LOW",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "SUN",
+        "priority" : "LOW",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    } ],
+    "priority" : [ {
+      "object" : {
+        "day" : "MON",
+        "priority" : "LOW",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "MON",
+        "priority" : "MEDIUM",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "MON",
+        "priority" : "HIGH",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "MON",
+        "priority" : "CRITICAL",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    } ],
+    "status" : [ {
+      "object" : {
+        "day" : "MON",
+        "priority" : "LOW",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "MON",
+        "priority" : "LOW",
+        "status" : "INACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "day" : "MON",
+        "priority" : "LOW",
+        "status" : "PENDING"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

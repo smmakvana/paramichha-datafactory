@@ -1,0 +1,196 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "SY",
+      "line1" : null,
+      "line2" : "qui",
+      "postcode" : "58932"
+    },
+    "violations" : [ "line1" ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "SY",
+      "line1" : "",
+      "line2" : "qui",
+      "postcode" : "58932"
+    },
+    "violations" : [ "line1" ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "SY",
+      "line1" : "eum",
+      "line2" : null,
+      "postcode" : "58932"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "SY",
+      "line1" : "eum",
+      "line2" : "",
+      "postcode" : "58932"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "city" : null,
+      "countryCode" : "SY",
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : "58932"
+    },
+    "violations" : [ "city" ]
+  }, {
+    "object" : {
+      "city" : "",
+      "countryCode" : "SY",
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : "58932"
+    },
+    "violations" : [ "city" ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "SY",
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : null
+    },
+    "violations" : [ "postcode" ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "SY",
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : ""
+    },
+    "violations" : [ "postcode", "postcode" ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "SY",
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : "x"
+    },
+    "violations" : [ "postcode" ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "SY",
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : "xxxxxxxxxxx"
+    },
+    "violations" : [ "postcode" ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : null,
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : "58932"
+    },
+    "violations" : [ "countryCode" ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "",
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : "58932"
+    },
+    "violations" : [ "countryCode", "countryCode" ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "x",
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : "58932"
+    },
+    "violations" : [ "countryCode" ]
+  }, {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "xxx",
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : "58932"
+    },
+    "violations" : [ "countryCode" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "city" : "Lyndafort",
+      "countryCode" : "SY",
+      "line1" : "eum",
+      "line2" : "qui",
+      "postcode" : "58932"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "postcode" : [ {
+      "object" : {
+        "city" : "Lyndafort",
+        "countryCode" : "SY",
+        "line1" : "eum",
+        "line2" : "qui",
+        "postcode" : "75475"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "city" : "Lyndafort",
+        "countryCode" : "SY",
+        "line1" : "eum",
+        "line2" : "qui",
+        "postcode" : "73"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "city" : "Lyndafort",
+        "countryCode" : "SY",
+        "line1" : "eum",
+        "line2" : "qui",
+        "postcode" : "600"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "city" : "Lyndafort",
+        "countryCode" : "SY",
+        "line1" : "eum",
+        "line2" : "qui",
+        "postcode" : "13792x"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "city" : "Lyndafort",
+        "countryCode" : "SY",
+        "line1" : "eum",
+        "line2" : "qui",
+        "postcode" : "14489xxxx"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "city" : "Lyndafort",
+        "countryCode" : "SY",
+        "line1" : "eum",
+        "line2" : "qui",
+        "postcode" : "59013xxxxx"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

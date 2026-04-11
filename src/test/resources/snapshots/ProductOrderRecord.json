@@ -1,0 +1,152 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "items" : [ "eum" ],
+      "orderId" : null,
+      "placedAt" : "2020-06-15T00:00:00Z",
+      "status" : "DRAFT",
+      "totalAmount" : 1.50
+    },
+    "violations" : [ "orderId" ]
+  }, {
+    "object" : {
+      "items" : [ "eum" ],
+      "orderId" : "",
+      "placedAt" : "2020-06-15T00:00:00Z",
+      "status" : "DRAFT",
+      "totalAmount" : 1.50
+    },
+    "violations" : [ "orderId" ]
+  }, {
+    "object" : {
+      "items" : null,
+      "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "placedAt" : "2020-06-15T00:00:00Z",
+      "status" : "DRAFT",
+      "totalAmount" : 1.50
+    },
+    "violations" : [ "items" ]
+  }, {
+    "object" : {
+      "items" : [ "eum" ],
+      "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "placedAt" : "2020-06-15T00:00:00Z",
+      "status" : "DRAFT",
+      "totalAmount" : null
+    },
+    "violations" : [ "totalAmount" ]
+  }, {
+    "object" : {
+      "items" : [ "eum" ],
+      "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "placedAt" : "2020-06-15T00:00:00Z",
+      "status" : "DRAFT",
+      "totalAmount" : 0
+    },
+    "violations" : [ "totalAmount" ]
+  }, {
+    "object" : {
+      "items" : [ "eum" ],
+      "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "placedAt" : null,
+      "status" : "DRAFT",
+      "totalAmount" : 1.50
+    },
+    "violations" : [ "placedAt" ]
+  }, {
+    "object" : {
+      "items" : [ "eum" ],
+      "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "placedAt" : "2099-06-15T00:00:00Z",
+      "status" : "DRAFT",
+      "totalAmount" : 1.50
+    },
+    "violations" : [ "placedAt" ]
+  }, {
+    "object" : {
+      "items" : [ "eum" ],
+      "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "placedAt" : "2020-06-15T00:00:00Z",
+      "status" : null,
+      "totalAmount" : 1.50
+    },
+    "violations" : [ "status" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "items" : [ "eum" ],
+      "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+      "placedAt" : "2020-06-15T00:00:00Z",
+      "status" : "DRAFT",
+      "totalAmount" : 1.50
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "status" : [ {
+      "object" : {
+        "items" : [ "eum" ],
+        "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+        "placedAt" : "2020-06-15T00:00:00Z",
+        "status" : "DRAFT",
+        "totalAmount" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "items" : [ "eum" ],
+        "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+        "placedAt" : "2020-06-15T00:00:00Z",
+        "status" : "SUBMITTED",
+        "totalAmount" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "items" : [ "eum" ],
+        "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+        "placedAt" : "2020-06-15T00:00:00Z",
+        "status" : "APPROVED",
+        "totalAmount" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "items" : [ "eum" ],
+        "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+        "placedAt" : "2020-06-15T00:00:00Z",
+        "status" : "SHIPPED",
+        "totalAmount" : 1.50
+      },
+      "violations" : [ ]
+    } ],
+    "totalAmount" : [ {
+      "object" : {
+        "items" : [ "eum" ],
+        "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+        "placedAt" : "2020-06-15T00:00:00Z",
+        "status" : "DRAFT",
+        "totalAmount" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "items" : [ "eum" ],
+        "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+        "placedAt" : "2020-06-15T00:00:00Z",
+        "status" : "DRAFT",
+        "totalAmount" : 1.00
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "items" : [ "eum" ],
+        "orderId" : "6f3ec59f-d3e1-41ad-bab5-4192ed25f9ae",
+        "placedAt" : "2020-06-15T00:00:00Z",
+        "status" : "DRAFT",
+        "totalAmount" : 2.00
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

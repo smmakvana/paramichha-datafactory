@@ -1,0 +1,198 @@
+.:
+total 0
+-rw-r--r-- 1 Sanjay Makvana 197121 0 Apr 29 22:02 files.txt
+drwxr-xr-x 1 Sanjay Makvana 197121 0 Apr 25 19:25 main
+drwxr-xr-x 1 Sanjay Makvana 197121 0 Apr 25 19:25 test
+
+./main:
+total 0
+drwxr-xr-x 1 Sanjay Makvana 197121 0 Apr 25 19:25 java
+
+./main/java:
+total 0
+drwxr-xr-x 1 Sanjay Makvana 197121 0 Apr 25 19:25 com
+
+./main/java/com:
+total 0
+drwxr-xr-x 1 Sanjay Makvana 197121 0 Apr 25 19:25 paramichha
+
+./main/java/com/paramichha:
+total 16
+drwxr-xr-x 1 Sanjay Makvana 197121 0 Apr 29 22:01 datafactory
+
+./main/java/com/paramichha/datafactory:
+total 248
+-rw-r--r-- 1 Sanjay Makvana 197121  1014 Apr 29 21:51 AnnotationParseException.java
+-rw-r--r-- 1 Sanjay Makvana 197121   404 Apr 29 21:51 BoolField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3028 Apr 28 18:24 BoolFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121   509 Apr 29 21:51 ByteField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3919 Apr 28 18:24 ByteFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1892 Apr 28 22:14 ConstraintCase.java
+-rw-r--r-- 1 Sanjay Makvana 197121  6357 Apr 29 21:51 DataBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121 16959 Apr 29 22:01 DataFactory.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1072 Apr 29 21:51 DataFactoryException.java
+-rw-r--r-- 1 Sanjay Makvana 197121   471 Apr 29 21:51 DateField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3509 Apr 28 18:24 DateFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121   515 Apr 29 21:51 DateTimeField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3663 Apr 28 18:24 DateTimeFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121   668 Apr 29 21:51 DecimalField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  6023 Apr 28 18:24 DecimalFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3042 Apr 29 22:01 DefaultBoolField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3933 Apr 29 22:01 DefaultByteField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  9187 Apr 29 22:01 DefaultDataBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3523 Apr 29 22:01 DefaultDateField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3681 Apr 29 22:01 DefaultDateTimeField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  6040 Apr 29 22:01 DefaultDecimalField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3329 Apr 29 22:01 DefaultDoubleField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3297 Apr 29 22:01 DefaultFloatField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4186 Apr 29 22:01 DefaultIntegerField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4050 Apr 29 22:01 DefaultLongField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3958 Apr 29 22:01 DefaultShortField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  8495 Apr 29 22:01 DefaultStringField.java
+-rw-r--r-- 1 Sanjay Makvana 197121   444 Apr 29 21:53 DoubleField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3320 Apr 28 18:24 DoubleFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4238 Apr 29 21:51 FieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121   447 Apr 29 21:53 FloatField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3289 Apr 28 18:24 FloatFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1123 Apr 29 21:51 GenerationMode.java
+-rw-r--r-- 1 Sanjay Makvana 197121   534 Apr 29 21:51 IntegerField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4169 Apr 28 18:24 IntegerFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121   511 Apr 29 21:51 LongField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4036 Apr 28 18:24 LongFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121   527 Apr 29 21:51 ShortField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3943 Apr 28 18:24 ShortFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1160 Apr 29 21:51 StringField.java
+-rw-r--r-- 1 Sanjay Makvana 197121  8479 Apr 28 18:24 StringFieldBuilder.java
+drwxr-xr-x 1 Sanjay Makvana 197121     0 Apr 29 21:52 engine
+drwxr-xr-x 1 Sanjay Makvana 197121     0 Apr 29 21:51 examples
+
+./main/java/com/paramichha/datafactory/engine:
+total 249
+-rw-r--r-- 1 Sanjay Makvana 197121  2273 Apr 29 21:51 AllArgsConstructorStrategy.java
+-rw-r--r-- 1 Sanjay Makvana 197121  5981 Apr 29 21:51 AnnotationAnalyzer.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1645 Apr 29 21:51 AnnotationClassifier.java
+-rw-r--r-- 1 Sanjay Makvana 197121   547 Apr 29 21:51 AnnotationParser.java
+-rw-r--r-- 1 Sanjay Makvana 197121  2262 Apr 29 21:51 AnnotationProxyFactory.java
+-rw-r--r-- 1 Sanjay Makvana 197121   398 Apr 29 21:51 AnnotationSupport.java
+-rw-r--r-- 1 Sanjay Makvana 197121   265 Apr 29 21:51 AnnotationType.java
+-rw-r--r-- 1 Sanjay Makvana 197121   466 Apr 29 21:51 AnnotationTypeHandler.java
+-rw-r--r-- 1 Sanjay Makvana 197121   632 Apr 29 21:51 AnnotationTypeHandlerRegistry.java
+-rw-r--r-- 1 Sanjay Makvana 197121  2732 Apr 29 21:51 AnnotationUtils.java
+-rw-r--r-- 1 Sanjay Makvana 197121   905 Apr 29 21:51 BooleanTypeShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121  8134 Apr 29 21:51 BoundaryPlanner.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4628 Apr 29 21:51 BoundaryTarget.java
+-rw-r--r-- 1 Sanjay Makvana 197121   853 Apr 29 21:51 CharacterTypeShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1892 Apr 29 21:52 ConstraintCase.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4230 Apr 29 21:51 DefaultAnnotationParser.java
+-rw-r--r-- 1 Sanjay Makvana 197121 13813 Apr 29 21:52 DefaultFieldBuilder.java
+-rw-r--r-- 1 Sanjay Makvana 197121   942 Apr 29 21:51 EnumTypeShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1384 Apr 29 21:51 FakerProvider.java
+-rw-r--r-- 1 Sanjay Makvana 197121  2644 Apr 29 21:51 FieldBuilderFactory.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4317 Apr 29 21:51 FieldConstraints.java
+-rw-r--r-- 1 Sanjay Makvana 197121  5532 Apr 29 21:51 FieldDescriptor.java
+-rw-r--r-- 1 Sanjay Makvana 197121   223 Apr 29 21:51 FormatType.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1005 Apr 29 21:51 InstantiationStrategy.java
+-rw-r--r-- 1 Sanjay Makvana 197121  5592 Apr 29 21:51 LombokBuilderStrategy.java
+-rw-r--r-- 1 Sanjay Makvana 197121  2185 Apr 29 21:51 MultipleArgumentHandler.java
+-rw-r--r-- 1 Sanjay Makvana 197121   574 Apr 29 21:51 NoArgHandler.java
+-rw-r--r-- 1 Sanjay Makvana 197121  5764 Apr 29 21:51 NumericShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1347 Apr 29 21:51 NumericTypeShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1645 Apr 29 21:51 ObjectAssembler.java
+-rw-r--r-- 1 Sanjay Makvana 197121  5723 Apr 29 21:51 ProductionDefaults.java
+-rw-r--r-- 1 Sanjay Makvana 197121  6486 Apr 29 21:51 QuantityBounds.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1876 Apr 29 21:51 RecordStrategy.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4789 Apr 29 21:51 RuntimeAnnotationClassifier.java
+-rw-r--r-- 1 Sanjay Makvana 197121  2180 Apr 29 21:51 SetterStrategy.java
+-rw-r--r-- 1 Sanjay Makvana 197121  2498 Apr 29 21:51 SingleArgumentHandler.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4884 Apr 29 21:51 StringAnnotationClassifier.java
+-rw-r--r-- 1 Sanjay Makvana 197121 16408 Apr 29 21:51 StringShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121   862 Apr 29 21:51 StringTypeShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121   553 Apr 27 14:58 SyntheticNullable.java
+-rw-r--r-- 1 Sanjay Makvana 197121   219 Apr 29 21:51 TemporalDirection.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3721 Apr 29 21:51 TemporalShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1273 Apr 29 21:51 TemporalTypeShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1012 Apr 29 21:51 TypeShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1581 Apr 29 21:51 TypeShaperRegistry.java
+-rw-r--r-- 1 Sanjay Makvana 197121   833 Apr 29 21:51 UuidTypeShaper.java
+-rw-r--r-- 1 Sanjay Makvana 197121  2024 Apr 29 21:51 ValueGenerator.java
+
+./main/java/com/paramichha/datafactory/examples:
+total 36
+-rw-r--r-- 1 Sanjay Makvana 197121 2664 Apr 29 21:51 AnnotationUtility.java
+-rw-r--r-- 1 Sanjay Makvana 197121 3508 Apr 29 21:51 FintechExample.java
+-rw-r--r-- 1 Sanjay Makvana 197121 3236 Apr 29 21:51 GettingStarted.java
+-rw-r--r-- 1 Sanjay Makvana 197121 3132 Apr 29 21:51 LoadTestData.java
+-rw-r--r-- 1 Sanjay Makvana 197121 4932 Apr 29 21:51 ObjectGeneration.java
+-rw-r--r-- 1 Sanjay Makvana 197121 4763 Apr 29 21:51 ValidationTesting.java
+drwxr-xr-x 1 Sanjay Makvana 197121    0 Apr 29 21:51 advanced
+
+./main/java/com/paramichha/datafactory/examples/advanced:
+total 16
+-rw-r--r-- 1 Sanjay Makvana 197121 4500 Apr 29 21:51 FieldLevelControl.java
+-rw-r--r-- 1 Sanjay Makvana 197121 2351 Apr 29 21:51 GenerationModes.java
+-rw-r--r-- 1 Sanjay Makvana 197121 2275 Apr 29 21:51 SeedDeterminism.java
+
+./test:
+total 0
+drwxr-xr-x 1 Sanjay Makvana 197121 0 Apr 25 19:25 java
+
+./test/java:
+total 0
+drwxr-xr-x 1 Sanjay Makvana 197121 0 Apr 25 19:25 com
+
+./test/java/com:
+total 0
+drwxr-xr-x 1 Sanjay Makvana 197121 0 Apr 25 19:25 paramichha
+
+./test/java/com/paramichha:
+total 8
+drwxr-xr-x 1 Sanjay Makvana 197121 0 Apr 29 22:01 datafactory
+
+./test/java/com/paramichha/datafactory:
+total 156
+-rw-r--r-- 1 Sanjay Makvana 197121  2695 Apr 29 21:51 DataBuilderBooleanTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 14955 Apr 29 22:01 DataFactoryIntegrationTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  8547 Apr 29 21:51 DataFactoryRemainingTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 16306 Apr 29 21:51 DataFactoryTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  8515 Apr 29 21:51 GenerationModeTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  6563 Apr 29 21:51 HelloDataFactory.java
+-rw-r--r-- 1 Sanjay Makvana 197121 54995 Apr 29 21:51 TypedFieldBuildersTest.java
+drwxr-xr-x 1 Sanjay Makvana 197121     0 Apr 29 21:51 engine
+drwxr-xr-x 1 Sanjay Makvana 197121     0 Apr 29 21:51 fixture
+
+./test/java/com/paramichha/datafactory/engine:
+total 332
+-rw-r--r-- 1 Sanjay Makvana 197121 25709 Apr 29 21:51 AnalyzerCoverageTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 20846 Apr 29 21:51 AnnotationAnalyzerTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 14184 Apr 29 21:51 AnnotationParserBranchTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 16125 Apr 29 21:51 BoundaryPlannerTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  8320 Apr 29 21:51 BoundaryTargetTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  1536 Apr 29 21:51 CharacterShaperTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 12897 Apr 29 21:51 CoreBranchTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 15590 Apr 29 21:51 CoreRemainingTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 15082 Apr 29 21:51 DefaultFieldBuilderCoverageTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 14849 Apr 29 21:51 FieldBuilderTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 18358 Apr 29 21:51 FixtureTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 13146 Apr 29 21:51 LombokStrategyTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  5584 Apr 29 21:51 NumericStringRemainingTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  8226 Apr 29 21:51 ProductionDefaultsTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 14610 Apr 29 21:51 QuantityBoundsTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  7904 Apr 29 21:51 ShaperBranchTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 44042 Apr 29 21:51 ShaperCoverageTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 12749 Apr 29 21:51 StrategyEdgeCaseTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  3416 Apr 29 21:51 StringShaperEdgeCaseTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  6788 Apr 29 21:51 StringShaperPatternTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4884 Apr 29 21:51 StringShaperTest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  4913 Apr 29 21:51 TemporalAllDirectionsTest.java
+
+./test/java/com/paramichha/datafactory/fixture:
+total 36
+-rw-r--r-- 1 Sanjay Makvana 197121  893 Apr 29 21:51 AnnotatedPrimitivesRequest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  997 Apr 29 21:51 AnnotatedTemporalRequest.java
+-rw-r--r-- 1 Sanjay Makvana 197121 1367 Apr 29 21:51 AnnotatedWrappersRequest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  679 Apr 29 21:51 CollectionsRequest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  889 Apr 29 21:51 ComplexPrimitivesRequest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  910 Apr 29 21:51 ComplexWrappersRequest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  568 Apr 29 21:51 PrimitivesRequest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  606 Apr 29 21:51 TemporalRequest.java
+-rw-r--r-- 1 Sanjay Makvana 197121  743 Apr 29 21:51 WrappersRequest.java

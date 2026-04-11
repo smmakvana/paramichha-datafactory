@@ -1,0 +1,198 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : null,
+      "password" : "zbvS3^C0M33r*",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "",
+      "password" : "zbvS3^C0M33r*",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "not-an-email",
+      "password" : "zbvS3^C0M33r*",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : null,
+      "status" : "ACTIVE"
+    },
+    "violations" : [ "password" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ "password", "password" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "xxxxxxx",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ "password" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : null,
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "zbvS3^C0M33r*",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ "dateOfBirth" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2099-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "zbvS3^C0M33r*",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ "dateOfBirth" ]
+  }, {
+    "object" : {
+      "age" : null,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "zbvS3^C0M33r*",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ "age" ]
+  }, {
+    "object" : {
+      "age" : 0,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "zbvS3^C0M33r*",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ "age" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "zbvS3^C0M33r*",
+      "status" : null
+    },
+    "violations" : [ "status" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "zbvS3^C0M33r*",
+      "status" : "ACTIVE"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "age" : [ {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "zbvS3^C0M33r*",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 1,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "zbvS3^C0M33r*",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 2,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "zbvS3^C0M33r*",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    } ],
+    "password" : [ {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "ap1SN0C04&teE%RkW0U%",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "v!PQgiS@",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "7^zJI0O2c",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    } ],
+    "status" : [ {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "zbvS3^C0M33r*",
+        "status" : "ACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "zbvS3^C0M33r*",
+        "status" : "INACTIVE"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "zbvS3^C0M33r*",
+        "status" : "PENDING"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

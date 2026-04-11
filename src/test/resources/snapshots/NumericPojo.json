@@ -1,0 +1,464 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "port" : 15000,
+      "quantity" : 1,
+      "score" : 5,
+      "tier" : 0
+    },
+    "violations" : [ "tier" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "port" : 15000,
+      "quantity" : 1,
+      "score" : 5,
+      "tier" : -128
+    },
+    "violations" : [ "tier" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "port" : -1,
+      "quantity" : 1,
+      "score" : 5,
+      "tier" : 64
+    },
+    "violations" : [ "port" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "port" : 30001,
+      "quantity" : 1,
+      "score" : 5,
+      "tier" : 64
+    },
+    "violations" : [ "port" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "port" : 15000,
+      "quantity" : -1,
+      "score" : 5,
+      "tier" : 64
+    },
+    "violations" : [ "quantity" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "port" : 15000,
+      "quantity" : 100000,
+      "score" : 5,
+      "tier" : 64
+    },
+    "violations" : [ "quantity" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 0,
+      "port" : 15000,
+      "quantity" : 1,
+      "score" : 5,
+      "tier" : 64
+    },
+    "violations" : [ "id" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "port" : 15000,
+      "quantity" : 1,
+      "score" : -1,
+      "tier" : 64
+    },
+    "violations" : [ "score" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : 0,
+      "id" : 2,
+      "port" : 15000,
+      "quantity" : 1,
+      "score" : 5,
+      "tier" : 64
+    },
+    "violations" : [ "debt" ]
+  }, {
+    "object" : {
+      "adjustment" : 1,
+      "debt" : -2,
+      "id" : 2,
+      "port" : 15000,
+      "quantity" : 1,
+      "score" : 5,
+      "tier" : 64
+    },
+    "violations" : [ "adjustment" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "port" : 15000,
+      "quantity" : 1,
+      "score" : 5,
+      "tier" : 64
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "adjustment" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : 0,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    } ],
+    "debt" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -1,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    } ],
+    "id" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 1,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    } ],
+    "port" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 0,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 1,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 29999,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 30000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    } ],
+    "quantity" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 0,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 49999,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 99998,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 99999,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    } ],
+    "score" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 0,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 1,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    } ],
+    "tier" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 1
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 2
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 64
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 126
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "port" : 15000,
+        "quantity" : 1,
+        "score" : 5,
+        "tier" : 127
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

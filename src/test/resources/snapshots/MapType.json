@@ -1,0 +1,51 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "counts" : {
+        "eum" : 671
+      },
+      "orderedProps" : {
+        "eum" : "eum"
+      },
+      "properties" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "counts" : null,
+      "orderedProps" : {
+        "eum" : "eum"
+      },
+      "properties" : {
+        "eum" : "eum"
+      }
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "counts" : {
+        "eum" : 671
+      },
+      "orderedProps" : null,
+      "properties" : {
+        "eum" : "eum"
+      }
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "counts" : {
+        "eum" : 671
+      },
+      "orderedProps" : {
+        "eum" : "eum"
+      },
+      "properties" : {
+        "eum" : "eum"
+      }
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

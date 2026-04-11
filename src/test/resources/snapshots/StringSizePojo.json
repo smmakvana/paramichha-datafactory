@@ -1,0 +1,249 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "cupiditate",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : null
+    },
+    "violations" : [ "username" ]
+  }, {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "cupiditate",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : ""
+    },
+    "violations" : [ "username", "username" ]
+  }, {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "cupiditate",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : "x"
+    },
+    "violations" : [ "username" ]
+  }, {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "cupiditate",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "violations" : [ "username" ]
+  }, {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "cupiditate",
+      "notes" : null,
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "notes" ]
+  }, {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "cupiditate",
+      "notes" : "",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "notes" ]
+  }, {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "cupiditate",
+      "notes" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "notes" ]
+  }, {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : null,
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "bio" ]
+  }, {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "bio", "bio" ]
+  }, {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "xxxx",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "bio" ]
+  }, {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "bio" ]
+  }, {
+    "object" : {
+      "accountCode" : null,
+      "bio" : "cupiditate",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "accountCode" ]
+  }, {
+    "object" : {
+      "accountCode" : "",
+      "bio" : "cupiditate",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "accountCode", "accountCode" ]
+  }, {
+    "object" : {
+      "accountCode" : "1111111",
+      "bio" : "cupiditate",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "accountCode" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "accountCode" : "94503",
+      "bio" : "cupiditate",
+      "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "bio" : [ {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "remxx",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "dolor",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "ametxx",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "earumxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "eiusxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "laboriosamxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    } ],
+    "notes" : [ {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "cupiditate",
+        "notes" : "Tenetur at corporis doloremque voluptate minima.",
+        "username" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "cupiditate",
+        "notes" : "Pariatur quod expedita praesentium id ad.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "username" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "cupiditate",
+        "notes" : "Vitae reiciendis corrupti.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "username" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    } ],
+    "username" : [ {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "cupiditate",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Mellissa Schmidt"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "cupiditate",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Ja"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "cupiditate",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Lau"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "cupiditate",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Sherley Crist DDSxxxxxxxxx"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "cupiditate",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Miquel Emmerichxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountCode" : "94503",
+        "bio" : "cupiditate",
+        "notes" : "Dolorum asperiores ab nostrum velit minima minima.",
+        "username" : "Reatha Spinkaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}
