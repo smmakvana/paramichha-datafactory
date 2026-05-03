@@ -1,6 +1,7 @@
 package com.paramichha.datafactory.snapshot;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -11,21 +12,18 @@ import jakarta.validation.Validator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Converts DataFactory output into a deterministic JSON string.
- *
  * Output format per fixture:
  * {
  *   "valid":       { "object": {...}, "violations": [] },
  *   "validMap":    { "fieldName": [ { "object": {...}, "violations": [] }, ... ] },
  *   "invalidList": [ { "object": {...}, "violations": ["fieldName"] }, ... ]
  * }
- *
  * Contract:
- *   valid.violations         → always []
+ *   valid. Violations         → always []
  *   validMap violations      → always []
  *   invalidList violations   → non-[] for every entry (when list is non-empty)
  *   invalidList empty        → valid contract for unannotated fixtures
@@ -44,7 +42,7 @@ public final class SnapshotWriter {
                 .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS)
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .setSerializationInclusion(JsonInclude.Include.ALWAYS)
-                .configure(com.fasterxml.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
+                .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
     }
 
     public static String toJson(
