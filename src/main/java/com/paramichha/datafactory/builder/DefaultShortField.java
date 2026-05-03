@@ -19,9 +19,9 @@ import java.util.List;
  */
 public final class DefaultShortField implements ShortField {
 
-    private FieldBuilder<Short> delegate;
+    private FieldValue<Short> delegate;
 
-    public DefaultShortField(FieldBuilder<Short> delegate) {
+    public DefaultShortField(FieldValue<Short> delegate) {
         this.delegate = delegate;
     }
 

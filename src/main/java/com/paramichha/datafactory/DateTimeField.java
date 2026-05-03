@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 
 /** Fluent builder for {@code LocalDateTime} values. Obtained via {@link DataFactory#dateTime()}. */
-public interface DateTimeField extends FieldBuilder<LocalDateTime> {
+public interface DateTimeField extends FieldValue<LocalDateTime> {
     DateTimeField past();
     DateTimeField pastOrPresent();
     DateTimeField future();

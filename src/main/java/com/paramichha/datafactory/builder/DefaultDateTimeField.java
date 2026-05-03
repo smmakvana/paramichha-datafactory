@@ -24,9 +24,9 @@ import java.util.List;
  */
 public final class DefaultDateTimeField implements DateTimeField {
 
-    private FieldBuilder<LocalDateTime> delegate;
+    private FieldValue<LocalDateTime> delegate;
 
-    public DefaultDateTimeField(FieldBuilder<LocalDateTime> delegate) {
+    public DefaultDateTimeField(FieldValue<LocalDateTime> delegate) {
         this.delegate = delegate;
     }
 

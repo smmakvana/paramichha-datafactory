@@ -22,9 +22,9 @@ import java.util.List;
  */
 public final class DefaultIntegerField implements IntegerField {
 
-    private FieldBuilder<Integer> delegate;
+    private FieldValue<Integer> delegate;
 
-    public DefaultIntegerField(FieldBuilder<Integer> delegate) {
+    public DefaultIntegerField(FieldValue<Integer> delegate) {
         this.delegate = delegate;
     }
 

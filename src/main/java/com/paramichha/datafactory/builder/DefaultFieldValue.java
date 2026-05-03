@@ -1,6 +1,6 @@
 package com.paramichha.datafactory.builder;
 
-import com.paramichha.datafactory.FieldBuilder;
+import com.paramichha.datafactory.FieldValue;
 import com.paramichha.datafactory.constraint.*;
 import com.paramichha.datafactory.generation.BoundaryPlanner;
 import com.paramichha.datafactory.generation.ValueGenerator;
@@ -13,26 +13,26 @@ import java.math.BigInteger;
 import java.time.*;
 import java.util.*;
 
-final public class DefaultFieldBuilder<T> implements FieldBuilder<T> {
+final public class DefaultFieldValue<T> implements FieldValue<T> {
 
     private final FieldConstraints constraints;
     private final List<Annotation> extraAnnotations;
     private final Faker faker;
     private final Long seed;
 
-    DefaultFieldBuilder(FieldConstraints constraints) {
+    DefaultFieldValue(FieldConstraints constraints) {
         this(constraints, List.of(), null, null);
     }
 
-    DefaultFieldBuilder(FieldConstraints constraints, Faker faker) {
+    DefaultFieldValue(FieldConstraints constraints, Faker faker) {
         this(constraints, List.of(), faker, null);
     }
 
-    DefaultFieldBuilder(FieldConstraints constraints, Faker faker, Long seed) {
+    DefaultFieldValue(FieldConstraints constraints, Faker faker, Long seed) {
         this(constraints, List.of(), faker, seed);
     }
 
-    private DefaultFieldBuilder(FieldConstraints constraints, List<Annotation> extraAnnotations, Faker faker, Long seed) {
+    private DefaultFieldValue(FieldConstraints constraints, List<Annotation> extraAnnotations, Faker faker, Long seed) {
         this.constraints = constraints;
         this.extraAnnotations = extraAnnotations;
         this.faker = faker;
@@ -50,22 +50,22 @@ final public class DefaultFieldBuilder<T> implements FieldBuilder<T> {
     }
 
     @Override
-    public DefaultFieldBuilder<T> with(Class<? extends Annotation> annotationClass) {
+    public DefaultFieldValue<T> with(Class<? extends Annotation> annotationClass) {
         Annotation instance = DefaultAnnotationParser.INSTANCE
                 .parse("@" + annotationClass.getSimpleName());
         if (instance == null) return this;
         List<Annotation> next = new ArrayList<>(extraAnnotations);
         next.add(instance);
-        return new DefaultFieldBuilder<>(constraints, List.copyOf(next), faker, seed);
+        return new DefaultFieldValue<>(constraints, List.copyOf(next), faker, seed);
     }
 
     @Override
-    public DefaultFieldBuilder<T> with(String annotationString) {
+    public DefaultFieldValue<T> with(String annotationString) {
         Annotation instance = DefaultAnnotationParser.INSTANCE.parse(annotationString);
         if (instance == null) return this;
         List<Annotation> next = new ArrayList<>(extraAnnotations);
         next.add(instance);
-        return new DefaultFieldBuilder<>(constraints, List.copyOf(next), faker, seed);
+        return new DefaultFieldValue<>(constraints, List.copyOf(next), faker, seed);
     }
 
     private FieldConstraints resolvedConstraints() {

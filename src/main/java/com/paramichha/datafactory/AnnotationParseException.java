@@ -1,7 +1,7 @@
 package com.paramichha.datafactory;
 
 /**
- * Thrown when an annotation string passed to {@link FieldBuilder#with(String)} cannot be parsed.
+ * Thrown when an annotation string passed to {@link FieldValue#with(String)} cannot be parsed.
  *
  * <p>This is a programmer error — it means the annotation string is malformed.
  * The string must start with {@code @} and follow Jakarta annotation syntax:

@@ -18,9 +18,9 @@ import java.util.List;
  */
 public final class ShortFieldBuilder {
 
-    private FieldBuilder<Short> delegate;
+    private FieldValue<Short> delegate;
 
-    ShortFieldBuilder(FieldBuilder<Short> delegate) {
+    ShortFieldBuilder(FieldValue<Short> delegate) {
         this.delegate = delegate;
     }
 

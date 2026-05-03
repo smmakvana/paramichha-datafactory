@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 
 /** Fluent builder for {@code BigDecimal} values. Obtained via {@link DataFactory#decimal()}. */
-public interface DecimalField extends FieldBuilder<BigDecimal> {
+public interface DecimalField extends FieldValue<BigDecimal> {
     DecimalField range(String min, String max);
     DecimalField min(String min);
     DecimalField max(String max);

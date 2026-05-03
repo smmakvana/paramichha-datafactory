@@ -3,7 +3,7 @@ package com.paramichha.datafactory;
 import java.lang.annotation.Annotation;
 
 /** Fluent builder for {@code String} values. Obtained via {@link DataFactory#string()}. */
-public interface StringField extends FieldBuilder<String> {
+public interface StringField extends FieldValue<String> {
     StringField hint(String hint);
     StringField email();
     StringField phone();

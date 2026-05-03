@@ -23,9 +23,9 @@ import java.util.List;
  */
 public final class DefaultDoubleField implements DoubleField {
 
-    private FieldBuilder<Double> delegate;
+    private FieldValue<Double> delegate;
 
-    public DefaultDoubleField(FieldBuilder<Double> delegate) {
+    public DefaultDoubleField(FieldValue<Double> delegate) {
         this.delegate = delegate;
     }
 

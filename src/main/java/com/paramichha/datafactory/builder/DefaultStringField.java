@@ -31,9 +31,9 @@ import java.util.List;
  */
 public final class DefaultStringField implements StringField {
 
-    private FieldBuilder<String> delegate;
+    private FieldValue<String> delegate;
 
-    public DefaultStringField(FieldBuilder<String> delegate) {
+    public DefaultStringField(FieldValue<String> delegate) {
         this.delegate = delegate;
     }
 

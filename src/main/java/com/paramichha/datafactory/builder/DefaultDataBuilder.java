@@ -107,8 +107,8 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
                     .filter(f -> f.name().equals(fieldName))
                     .findFirst()
                     .ifPresent(f -> {
-                        DefaultFieldBuilder<?> fb =
-                                (DefaultFieldBuilder<?>) FieldBuilderFactory.create(f, fkr, seed != null ? seed : 0L);
+                        DefaultFieldValue<?> fb =
+                                (DefaultFieldValue<?>) FieldBuilderFactory.create(f, fkr, seed != null ? seed : 0L);
                         fb.firstInvalidValue().ifPresent(holder ->
                                 values.put(fieldName, ((Object[]) holder)[0]));
                     });

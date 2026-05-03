@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
  */
 public final class DefaultDecimalField implements DecimalField {
 
-    private FieldBuilder<BigDecimal> delegate;
+    private FieldValue<BigDecimal> delegate;
     private int scale = -1;
 
-    public DefaultDecimalField(FieldBuilder<BigDecimal> delegate) {
+    public DefaultDecimalField(FieldValue<BigDecimal> delegate) {
         this.delegate = delegate;
     }
 

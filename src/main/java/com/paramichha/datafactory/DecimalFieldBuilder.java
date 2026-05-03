@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
  */
 public final class DecimalFieldBuilder {
 
-    private FieldBuilder<BigDecimal> delegate;
+    private FieldValue<BigDecimal> delegate;
     private int scale = -1;
 
-    DecimalFieldBuilder(FieldBuilder<BigDecimal> delegate) {
+    DecimalFieldBuilder(FieldValue<BigDecimal> delegate) {
         this.delegate = delegate;
     }
 

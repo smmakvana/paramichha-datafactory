@@ -39,7 +39,7 @@ import java.util.List;
  * @see DataFactory#decimal()
  * @see DataFactory#date()
  */
-public interface FieldBuilder<T> {
+public interface FieldValue<T> {
 
     /**
      * Adds a constraint annotation to this field by class reference.
@@ -49,7 +49,7 @@ public interface FieldBuilder<T> {
      * DataFactory.field(String.class).with(NotBlank.class).with(Email.class).valid()
      * </pre>
      */
-    FieldBuilder<T> with(Class<? extends Annotation> annotation);
+    FieldValue<T> with(Class<? extends Annotation> annotation);
 
     /**
      * Adds a constraint annotation to this field by string.
@@ -61,7 +61,7 @@ public interface FieldBuilder<T> {
      *
      * @throws AnnotationParseException if the string cannot be parsed as an annotation
      */
-    FieldBuilder<T> with(String annotation);
+    FieldValue<T> with(String annotation);
 
     /**
      * Returns one value satisfying all constraints added so far.

@@ -21,9 +21,9 @@ import java.util.List;
  */
 public final class BoolFieldBuilder {
 
-    private FieldBuilder<Boolean> delegate;
+    private FieldValue<Boolean> delegate;
 
-    BoolFieldBuilder(FieldBuilder<Boolean> delegate) {
+    BoolFieldBuilder(FieldValue<Boolean> delegate) {
         this.delegate = delegate;
     }
 

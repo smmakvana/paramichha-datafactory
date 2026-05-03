@@ -31,9 +31,9 @@ import java.util.List;
  */
 public final class StringFieldBuilder {
 
-    private FieldBuilder<String> delegate;
+    private FieldValue<String> delegate;
 
-    StringFieldBuilder(FieldBuilder<String> delegate) {
+    StringFieldBuilder(FieldValue<String> delegate) {
         this.delegate = delegate;
     }
 

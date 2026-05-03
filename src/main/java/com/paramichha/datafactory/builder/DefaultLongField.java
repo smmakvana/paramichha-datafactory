@@ -21,9 +21,9 @@ import java.util.List;
  */
 public final class DefaultLongField implements LongField {
 
-    private FieldBuilder<Long> delegate;
+    private FieldValue<Long> delegate;
 
-    public DefaultLongField(FieldBuilder<Long> delegate) {
+    public DefaultLongField(FieldValue<Long> delegate) {
         this.delegate = delegate;
     }
 

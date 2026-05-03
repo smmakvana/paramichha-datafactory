@@ -23,9 +23,9 @@ import java.util.List;
  */
 public final class DateTimeFieldBuilder {
 
-    private FieldBuilder<LocalDateTime> delegate;
+    private FieldValue<LocalDateTime> delegate;
 
-    DateTimeFieldBuilder(FieldBuilder<LocalDateTime> delegate) {
+    DateTimeFieldBuilder(FieldValue<LocalDateTime> delegate) {
         this.delegate = delegate;
     }
 

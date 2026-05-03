@@ -22,9 +22,9 @@ import java.util.List;
  */
 public final class FloatFieldBuilder {
 
-    private FieldBuilder<Float> delegate;
+    private FieldValue<Float> delegate;
 
-    FloatFieldBuilder(FieldBuilder<Float> delegate) {
+    FloatFieldBuilder(FieldValue<Float> delegate) {
         this.delegate = delegate;
     }
 

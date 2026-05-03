@@ -5,7 +5,7 @@ import java.lang.annotation.Annotation;
 /**
  * Fluent builder for {@code Float} / {@code float} values. Obtained via {@link DataFactory#floats()}.
  */
-public interface FloatField extends FieldBuilder<Float> {
+public interface FloatField extends FieldValue<Float> {
     FloatField positive();
 
     FloatField negative();

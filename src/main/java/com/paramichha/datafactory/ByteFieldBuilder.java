@@ -18,9 +18,9 @@ import java.util.List;
  */
 public final class ByteFieldBuilder {
 
-    private FieldBuilder<Byte> delegate;
+    private FieldValue<Byte> delegate;
 
-    ByteFieldBuilder(FieldBuilder<Byte> delegate) {
+    ByteFieldBuilder(FieldValue<Byte> delegate) {
         this.delegate = delegate;
     }
 

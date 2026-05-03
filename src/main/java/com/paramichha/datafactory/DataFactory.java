@@ -5,6 +5,7 @@ import com.paramichha.datafactory.builder.FieldBuilderFactory;
 
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,7 +53,7 @@ import java.util.stream.IntStream;
  * </pre>
  *
  * @see DataBuilder
- * @see FieldBuilder
+ * @see FieldValue
  * @see GenerationMode
  */
 public final class DataFactory {
@@ -258,22 +259,22 @@ public final class DataFactory {
     }
 
     /**
-     * Returns a {@link FieldBuilder} for {@code BigInteger} values.
+     * Returns a {@link FieldValue} for {@code BigInteger} values.
      * <pre>
      * java.math.BigInteger n = DataFactory.bigInteger().valid();
      * </pre>
      */
-    public static FieldBuilder<java.math.BigInteger> bigInteger() {
+    public static FieldValue<BigInteger> bigInteger() {
         return FieldBuilderFactory.create(java.math.BigInteger.class);
     }
 
     /**
-     * Returns a {@link FieldBuilder} for {@code Character} / {@code char} values.
+     * Returns a {@link FieldValue} for {@code Character} / {@code char} values.
      * <pre>
      * char c = DataFactory.character().valid();
      * </pre>
      */
-    public static FieldBuilder<Character> character() {
+    public static FieldValue<Character> character() {
         return FieldBuilderFactory.create(Character.class);
     }
 
@@ -318,7 +319,7 @@ public final class DataFactory {
     // =========================================================================
 
     /**
-     * Returns a {@link FieldBuilder} for the given type with no constraints.
+     * Returns a {@link FieldValue} for the given type with no constraints.
      * Use this when you want to add constraints manually via {@code .with()}.
      * <pre>
      * String email = DataFactory.field(String.class)
@@ -327,12 +328,12 @@ public final class DataFactory {
      *                           .valid();
      * </pre>
      */
-    public static <T> FieldBuilder<T> field(Class<T> type) {
+    public static <T> FieldValue<T> field(Class<T> type) {
         return FieldBuilderFactory.create(type);
     }
 
     /**
-     * Returns a {@link FieldBuilder} from a reflected {@code Field}.
+     * Returns a {@link FieldValue} from a reflected {@code Field}.
      * All Jakarta validation annotations declared on the field are read automatically.
      * <pre>
      * Field f     = UserRequest.class.getDeclaredField("email");
@@ -340,12 +341,12 @@ public final class DataFactory {
      * String bad  = DataFactory.field(f).invalid();
      * </pre>
      */
-    public static <T> FieldBuilder<T> field(java.lang.reflect.Field field) {
+    public static <T> FieldValue<T> field(java.lang.reflect.Field field) {
         return FieldBuilderFactory.create(field);
     }
 
     /**
-     * Returns a {@link FieldBuilder} from an explicit name, type, and annotation list.
+     * Returns a {@link FieldValue} from an explicit name, type, and annotation list.
      *
      * <p>Use this for record components where Jakarta annotations sit on the
      * constructor parameter rather than the backing field, meaning
@@ -356,8 +357,8 @@ public final class DataFactory {
      * </pre>
      */
     @SuppressWarnings("unchecked")
-    public static <T> FieldBuilder<T> field(String name, Class<T> type,
-                                             List<Annotation> annotations) {
+    public static <T> FieldValue<T> field(String name, Class<T> type,
+                                          List<Annotation> annotations) {
         return FieldBuilderFactory.create(name, type, annotations);
     }
 

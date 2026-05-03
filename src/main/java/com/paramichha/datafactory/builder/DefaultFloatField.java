@@ -23,9 +23,9 @@ import java.util.List;
  */
 public final class DefaultFloatField implements FloatField {
 
-    private FieldBuilder<Float> delegate;
+    private FieldValue<Float> delegate;
 
-    public DefaultFloatField(FieldBuilder<Float> delegate) {
+    public DefaultFloatField(FieldValue<Float> delegate) {
         this.delegate = delegate;
     }
 

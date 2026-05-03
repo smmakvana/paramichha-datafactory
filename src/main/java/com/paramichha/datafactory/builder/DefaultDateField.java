@@ -24,9 +24,9 @@ import java.util.List;
  */
 public final class DefaultDateField implements DateField {
 
-    private FieldBuilder<LocalDate> delegate;
+    private FieldValue<LocalDate> delegate;
 
-    public DefaultDateField(FieldBuilder<LocalDate> delegate) {
+    public DefaultDateField(FieldValue<LocalDate> delegate) {
         this.delegate = delegate;
     }
 

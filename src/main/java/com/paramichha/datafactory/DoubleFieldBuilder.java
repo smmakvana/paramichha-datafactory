@@ -22,9 +22,9 @@ import java.util.List;
  */
 public final class DoubleFieldBuilder {
 
-    private FieldBuilder<Double> delegate;
+    private FieldValue<Double> delegate;
 
-    DoubleFieldBuilder(FieldBuilder<Double> delegate) {
+    DoubleFieldBuilder(FieldValue<Double> delegate) {
         this.delegate = delegate;
     }
 

@@ -3,7 +3,7 @@ package com.paramichha.datafactory;
 import java.lang.annotation.Annotation;
 
 /** Fluent builder for {@code Long} / {@code long} values. Obtained via {@link DataFactory#longVal()}. */
-public interface LongField extends FieldBuilder<Long> {
+public interface LongField extends FieldValue<Long> {
     LongField range(long min, long max);
     LongField min(long min);
     LongField max(long max);

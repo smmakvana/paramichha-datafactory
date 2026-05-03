@@ -20,9 +20,9 @@ import java.util.List;
  */
 public final class LongFieldBuilder {
 
-    private FieldBuilder<Long> delegate;
+    private FieldValue<Long> delegate;
 
-    LongFieldBuilder(FieldBuilder<Long> delegate) {
+    LongFieldBuilder(FieldValue<Long> delegate) {
         this.delegate = delegate;
     }
 

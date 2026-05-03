@@ -21,9 +21,9 @@ import java.util.List;
  */
 public final class IntegerFieldBuilder {
 
-    private FieldBuilder<Integer> delegate;
+    private FieldValue<Integer> delegate;
 
-    IntegerFieldBuilder(FieldBuilder<Integer> delegate) {
+    IntegerFieldBuilder(FieldValue<Integer> delegate) {
         this.delegate = delegate;
     }
 

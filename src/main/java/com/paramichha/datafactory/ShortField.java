@@ -3,7 +3,7 @@ package com.paramichha.datafactory;
 import java.lang.annotation.Annotation;
 
 /** Fluent builder for {@code Short} / {@code short} values. Obtained via {@link DataFactory#shorts()}. */
-public interface ShortField extends FieldBuilder<Short> {
+public interface ShortField extends FieldValue<Short> {
     ShortField range(short min, short max);
     ShortField min(short min);
     ShortField max(short max);

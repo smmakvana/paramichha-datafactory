@@ -22,9 +22,9 @@ import java.util.List;
  */
 public final class DefaultBoolField implements BoolField {
 
-    private FieldBuilder<Boolean> delegate;
+    private FieldValue<Boolean> delegate;
 
-    public DefaultBoolField(FieldBuilder<Boolean> delegate) {
+    public DefaultBoolField(FieldValue<Boolean> delegate) {
         this.delegate = delegate;
     }
 

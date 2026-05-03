@@ -19,9 +19,9 @@ import java.util.List;
  */
 public final class DefaultByteField implements ByteField {
 
-    private FieldBuilder<Byte> delegate;
+    private FieldValue<Byte> delegate;
 
-    public DefaultByteField(FieldBuilder<Byte> delegate) {
+    public DefaultByteField(FieldValue<Byte> delegate) {
         this.delegate = delegate;
     }
 

@@ -1,7 +1,7 @@
 package com.paramichha.datafactory.constraint;
 
 import com.paramichha.datafactory.builder.ConstraintCase;
-import com.paramichha.datafactory.builder.DefaultFieldBuilder;
+import com.paramichha.datafactory.builder.DefaultFieldValue;
 import com.paramichha.datafactory.builder.FieldBuilderFactory;
 import jakarta.validation.constraints.*;
 import org.junit.jupiter.api.DisplayName;
@@ -14,12 +14,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("FieldBuilder")
-class FieldBuilderTest {
+class FieldValueTest {
 
     // ── helper — returns DefaultFieldBuilder so constraintCases() is accessible ──
     @SuppressWarnings("unchecked")
-    private static <T> DefaultFieldBuilder<T> dfb(Class<T> type) {
-        return (DefaultFieldBuilder<T>) FieldBuilderFactory.create(type);
+    private static <T> DefaultFieldValue<T> dfb(Class<T> type) {
+        return (DefaultFieldValue<T>) FieldBuilderFactory.create(type);
     }
 
     // ═══════════════════════════════════════════════════════════════════════
