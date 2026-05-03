@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
  * List&lt;BigDecimal&gt; prices = DataFactory.decimal().positive().scale(2).stream(100);
  * </pre>
  */
-public final class DefaultDecimalField implements DecimalField {
+public final class DefaultBigDecimalValue implements BigDecimalValue {
 
     private FieldValue<BigDecimal> delegate;
     private int scale = -1;
 
-    public DefaultDecimalField(FieldValue<BigDecimal> delegate) {
+    public DefaultBigDecimalValue(FieldValue<BigDecimal> delegate) {
         this.delegate = delegate;
     }
 
@@ -39,7 +39,7 @@ public final class DefaultDecimalField implements DecimalField {
      * @param min inclusive minimum as a string, e.g. {@code "0.01"}
      * @param max inclusive maximum as a string, e.g. {@code "999.99"}
      */
-    public DefaultDecimalField range(String min, String max) {
+    public DefaultBigDecimalValue range(String min, String max) {
         return with("@DecimalMin(value=\"" + min + "\")")
               .with("@DecimalMax(value=\"" + max + "\")");
     }
@@ -50,7 +50,7 @@ public final class DefaultDecimalField implements DecimalField {
      *
      * @param min inclusive minimum as a string
      */
-    public DefaultDecimalField min(String min) {
+    public DefaultBigDecimalValue min(String min) {
         return with("@DecimalMin(value=\"" + min + "\")");
     }
 
@@ -60,7 +60,7 @@ public final class DefaultDecimalField implements DecimalField {
      *
      * @param max inclusive maximum as a string
      */
-    public DefaultDecimalField max(String max) {
+    public DefaultBigDecimalValue max(String max) {
         return with("@DecimalMax(value=\"" + max + "\")");
     }
 
@@ -68,7 +68,7 @@ public final class DefaultDecimalField implements DecimalField {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
-    public DefaultDecimalField positive() {
+    public DefaultBigDecimalValue positive() {
         return with(Positive.class);
     }
 
@@ -76,7 +76,7 @@ public final class DefaultDecimalField implements DecimalField {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
-    public DefaultDecimalField negative() {
+    public DefaultBigDecimalValue negative() {
         return with(Negative.class);
     }
 
@@ -86,7 +86,7 @@ public final class DefaultDecimalField implements DecimalField {
      *
      * @param scale number of decimal places, e.g. {@code 2} for currency
      */
-    public DefaultDecimalField scale(int scale) {
+    public DefaultBigDecimalValue scale(int scale) {
         this.scale = scale;
         return this;
     }
@@ -99,7 +99,7 @@ public final class DefaultDecimalField implements DecimalField {
      * @param integer  maximum number of integer digits
      * @param fraction maximum number of fraction digits (also sets the scale)
      */
-    public DefaultDecimalField digits(int integer, int fraction) {
+    public DefaultBigDecimalValue digits(int integer, int fraction) {
         this.scale = fraction;
         return with("@Digits(integer=" + integer + ", fraction=" + fraction + ")");
     }
@@ -109,7 +109,7 @@ public final class DefaultDecimalField implements DecimalField {
      *
      * @param annotation the annotation type to add
      */
-    public DefaultDecimalField with(Class<? extends Annotation> annotation) {
+    public DefaultBigDecimalValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
@@ -120,7 +120,7 @@ public final class DefaultDecimalField implements DecimalField {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
-    public DefaultDecimalField with(String annotation) {
+    public DefaultBigDecimalValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
     }

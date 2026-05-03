@@ -22,11 +22,11 @@ import java.util.List;
  * List&lt;LocalDateTime&gt; times = DataFactory.dateTime().past().stream(10);
  * </pre>
  */
-public final class DefaultDateTimeField implements DateTimeField {
+public final class DefaultLocalDateTimeValue implements LocalDateTimeValue {
 
     private FieldValue<LocalDateTime> delegate;
 
-    public DefaultDateTimeField(FieldValue<LocalDateTime> delegate) {
+    public DefaultLocalDateTimeValue(FieldValue<LocalDateTime> delegate) {
         this.delegate = delegate;
     }
 
@@ -34,7 +34,7 @@ public final class DefaultDateTimeField implements DateTimeField {
      * The generated datetime must be strictly in the past.
      * Equivalent to {@code @Past}.
      */
-    public DefaultDateTimeField past() {
+    public DefaultLocalDateTimeValue past() {
         return with(Past.class);
     }
 
@@ -42,7 +42,7 @@ public final class DefaultDateTimeField implements DateTimeField {
      * The generated datetime must be in the past or now.
      * Equivalent to {@code @PastOrPresent}.
      */
-    public DefaultDateTimeField pastOrPresent() {
+    public DefaultLocalDateTimeValue pastOrPresent() {
         return with(PastOrPresent.class);
     }
 
@@ -50,7 +50,7 @@ public final class DefaultDateTimeField implements DateTimeField {
      * The generated datetime must be strictly in the future.
      * Equivalent to {@code @Future}.
      */
-    public DefaultDateTimeField future() {
+    public DefaultLocalDateTimeValue future() {
         return with(Future.class);
     }
 
@@ -58,7 +58,7 @@ public final class DefaultDateTimeField implements DateTimeField {
      * The generated datetime must be in the future or now.
      * Equivalent to {@code @FutureOrPresent}.
      */
-    public DefaultDateTimeField futureOrPresent() {
+    public DefaultLocalDateTimeValue futureOrPresent() {
         return with(FutureOrPresent.class);
     }
 
@@ -67,7 +67,7 @@ public final class DefaultDateTimeField implements DateTimeField {
      *
      * @param annotation the annotation type to add
      */
-    public DefaultDateTimeField with(Class<? extends Annotation> annotation) {
+    public DefaultLocalDateTimeValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
@@ -78,7 +78,7 @@ public final class DefaultDateTimeField implements DateTimeField {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
-    public DefaultDateTimeField with(String annotation) {
+    public DefaultLocalDateTimeValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
     }

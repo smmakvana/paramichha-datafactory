@@ -8,23 +8,20 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * Fluent builder for {@code Integer} and {@code int} values.
+ * Fluent builder for {@code Byte} and {@code byte} values.
  *
- * <p>Obtained via {@link DataFactory#integer()}.
+ * <p>Obtained via {@link DataFactory#bytes()}.
  *
  * <pre>
- * int age   = DataFactory.integer().range(18, 65).valid();
- * int score = DataFactory.integer().positive().valid();
- *
- * List&lt;Integer&gt; ages = DataFactory.integer().range(18, 90).stream(1000);
- * List&lt;Integer&gt; bad  = DataFactory.integer().range(18, 65).invalidList();
+ * byte flags = DataFactory.bytes().positive().toByte();
+ * byte n     = DataFactory.bytes().range((byte)1, (byte)100).toByte();
  * </pre>
  */
-public final class DefaultIntegerField implements IntegerField {
+public final class DefaultByteValue implements ByteValue {
 
-    private FieldValue<Integer> delegate;
+    private FieldValue<Byte> delegate;
 
-    public DefaultIntegerField(FieldValue<Integer> delegate) {
+    public DefaultByteValue(FieldValue<Byte> delegate) {
         this.delegate = delegate;
     }
 
@@ -35,7 +32,7 @@ public final class DefaultIntegerField implements IntegerField {
      * @param min inclusive minimum
      * @param max inclusive maximum
      */
-    public DefaultIntegerField range(int min, int max) {
+    public DefaultByteValue range(byte min, byte max) {
         return with("@Min(" + min + ")").with("@Max(" + max + ")");
     }
 
@@ -45,7 +42,7 @@ public final class DefaultIntegerField implements IntegerField {
      *
      * @param min inclusive minimum
      */
-    public DefaultIntegerField min(int min) {
+    public DefaultByteValue min(byte min) {
         return with("@Min(" + min + ")");
     }
 
@@ -55,7 +52,7 @@ public final class DefaultIntegerField implements IntegerField {
      *
      * @param max inclusive maximum
      */
-    public DefaultIntegerField max(int max) {
+    public DefaultByteValue max(byte max) {
         return with("@Max(" + max + ")");
     }
 
@@ -63,7 +60,7 @@ public final class DefaultIntegerField implements IntegerField {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
-    public DefaultIntegerField positive() {
+    public DefaultByteValue positive() {
         return with(Positive.class);
     }
 
@@ -71,7 +68,7 @@ public final class DefaultIntegerField implements IntegerField {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
-    public DefaultIntegerField negative() {
+    public DefaultByteValue negative() {
         return with(Negative.class);
     }
 
@@ -80,57 +77,57 @@ public final class DefaultIntegerField implements IntegerField {
      *
      * @param annotation the annotation type to add
      */
-    public DefaultIntegerField with(Class<? extends Annotation> annotation) {
+    public DefaultByteValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
 
     /**
-     * Adds a constraint annotation by string, e.g. {@code "@Min(18)"}.
+     * Adds a constraint annotation by string, e.g. {@code "@Min(1)"}.
      *
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
-    public DefaultIntegerField with(String annotation) {
+    public DefaultByteValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
 
     /**
-     * Returns one valid value as a primitive {@code int}.
+     * Returns one valid value as a primitive {@code byte}.
      *
-     * @return a valid int
+     * @return a valid byte
      * @throws DataFactoryException if no valid value can be generated
      */
-    public int toInt() {
+    public byte toByte() {
         return delegate.valid();
     }
 
     /**
-     * Returns one valid {@code Integer}.
+     * Returns one valid {@code Byte}.
      *
-     * @return a valid Integer
+     * @return a valid Byte
      * @throws DataFactoryException if no valid value can be generated
      */
-    public Integer valid() {
+    public Byte valid() {
         return delegate.valid();
     }
 
     /**
-     * Returns all boundary-covering valid values — minimum, midpoint, maximum, semantic.
+     * Returns all boundary-covering valid values.
      *
      * @return list of valid boundary values
      */
-    public List<Integer> validList() {
+    public List<Byte> validList() {
         return delegate.validList();
     }
 
     /**
-     * Returns one invalid {@code Integer}.
+     * Returns one invalid {@code Byte}.
      *
      * @return a value that violates at least one constraint
      */
-    public Integer invalid() {
+    public Byte invalid() {
         return delegate.invalid();
     }
 
@@ -139,7 +136,7 @@ public final class DefaultIntegerField implements IntegerField {
      *
      * @return list of invalid values
      */
-    public List<Integer> invalidList() {
+    public List<Byte> invalidList() {
         return delegate.invalidList();
     }
 
@@ -149,7 +146,7 @@ public final class DefaultIntegerField implements IntegerField {
      * @param count the number of values to generate
      * @return list of valid values
      */
-    public List<Integer> stream(int count) {
+    public List<Byte> stream(int count) {
         return delegate.stream(count);
     }
 }

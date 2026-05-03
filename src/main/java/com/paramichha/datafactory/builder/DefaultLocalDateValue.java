@@ -22,11 +22,11 @@ import java.util.List;
  * List&lt;LocalDate&gt; dates = DataFactory.date().past().stream(10);
  * </pre>
  */
-public final class DefaultDateField implements DateField {
+public final class DefaultLocalDateValue implements LocalDateValue {
 
     private FieldValue<LocalDate> delegate;
 
-    public DefaultDateField(FieldValue<LocalDate> delegate) {
+    public DefaultLocalDateValue(FieldValue<LocalDate> delegate) {
         this.delegate = delegate;
     }
 
@@ -34,7 +34,7 @@ public final class DefaultDateField implements DateField {
      * The generated date must be strictly in the past.
      * Equivalent to {@code @Past}.
      */
-    public DefaultDateField past() {
+    public DefaultLocalDateValue past() {
         return with(Past.class);
     }
 
@@ -42,7 +42,7 @@ public final class DefaultDateField implements DateField {
      * The generated date must be in the past or today.
      * Equivalent to {@code @PastOrPresent}.
      */
-    public DefaultDateField pastOrPresent() {
+    public DefaultLocalDateValue pastOrPresent() {
         return with(PastOrPresent.class);
     }
 
@@ -50,7 +50,7 @@ public final class DefaultDateField implements DateField {
      * The generated date must be strictly in the future.
      * Equivalent to {@code @Future}.
      */
-    public DefaultDateField future() {
+    public DefaultLocalDateValue future() {
         return with(Future.class);
     }
 
@@ -58,7 +58,7 @@ public final class DefaultDateField implements DateField {
      * The generated date must be in the future or today.
      * Equivalent to {@code @FutureOrPresent}.
      */
-    public DefaultDateField futureOrPresent() {
+    public DefaultLocalDateValue futureOrPresent() {
         return with(FutureOrPresent.class);
     }
 
@@ -67,7 +67,7 @@ public final class DefaultDateField implements DateField {
      *
      * @param annotation the annotation type to add
      */
-    public DefaultDateField with(Class<? extends Annotation> annotation) {
+    public DefaultLocalDateValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
@@ -78,7 +78,7 @@ public final class DefaultDateField implements DateField {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
-    public DefaultDateField with(String annotation) {
+    public DefaultLocalDateValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
     }

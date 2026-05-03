@@ -8,32 +8,59 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * Fluent builder for {@code Float} and {@code float} values.
+ * Fluent builder for {@code Short} and {@code short} values.
  *
- * <p>Obtained via {@link DataFactory#floats()}.
+ * <p>Obtained via {@link DataFactory#shorts()}.
  *
  * <pre>
- * float rate  = DataFactory.floats().positive().toFloat();
- * float ratio = DataFactory.floats().valid();
+ * short flags = DataFactory.shorts().positive().toShort();
+ * short n     = DataFactory.shorts().range(1, 100).toShort();
  * </pre>
- *
- * <p>Note: Jakarta's {@code @Min} and {@code @Max} do not support {@code float}.
- * Use {@link DecimalField} via {@link DataFactory#decimal()} for
- * precise decimal range constraints.
  */
-public final class DefaultFloatField implements FloatField {
+public final class DefaultShortValue implements ShortValue {
 
-    private FieldValue<Float> delegate;
+    private FieldValue<Short> delegate;
 
-    public DefaultFloatField(FieldValue<Float> delegate) {
+    public DefaultShortValue(FieldValue<Short> delegate) {
         this.delegate = delegate;
+    }
+
+    /**
+     * Constrains the value to the given inclusive range.
+     * Equivalent to {@code @Min(min) @Max(max)}.
+     *
+     * @param min inclusive minimum
+     * @param max inclusive maximum
+     */
+    public DefaultShortValue range(short min, short max) {
+        return with("@Min(" + min + ")").with("@Max(" + max + ")");
+    }
+
+    /**
+     * Constrains the value to a minimum.
+     * Equivalent to {@code @Min(min)}.
+     *
+     * @param min inclusive minimum
+     */
+    public DefaultShortValue min(short min) {
+        return with("@Min(" + min + ")");
+    }
+
+    /**
+     * Constrains the value to a maximum.
+     * Equivalent to {@code @Max(max)}.
+     *
+     * @param max inclusive maximum
+     */
+    public DefaultShortValue max(short max) {
+        return with("@Max(" + max + ")");
     }
 
     /**
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
-    public DefaultFloatField positive() {
+    public DefaultShortValue positive() {
         return with(Positive.class);
     }
 
@@ -41,7 +68,7 @@ public final class DefaultFloatField implements FloatField {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
-    public DefaultFloatField negative() {
+    public DefaultShortValue negative() {
         return with(Negative.class);
     }
 
@@ -50,39 +77,39 @@ public final class DefaultFloatField implements FloatField {
      *
      * @param annotation the annotation type to add
      */
-    public DefaultFloatField with(Class<? extends Annotation> annotation) {
+    public DefaultShortValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
 
     /**
-     * Adds a constraint annotation by string, e.g. {@code "@Positive"}.
+     * Adds a constraint annotation by string, e.g. {@code "@Min(1)"}.
      *
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
-    public DefaultFloatField with(String annotation) {
+    public DefaultShortValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
 
     /**
-     * Returns one valid value as a primitive {@code float}.
+     * Returns one valid value as a primitive {@code short}.
      *
-     * @return a valid float
+     * @return a valid short
      * @throws DataFactoryException if no valid value can be generated
      */
-    public float toFloat() {
+    public short toShort() {
         return delegate.valid();
     }
 
     /**
-     * Returns one valid {@code Float}.
+     * Returns one valid {@code Short}.
      *
-     * @return a valid Float
+     * @return a valid Short
      * @throws DataFactoryException if no valid value can be generated
      */
-    public Float valid() {
+    public Short valid() {
         return delegate.valid();
     }
 
@@ -91,16 +118,16 @@ public final class DefaultFloatField implements FloatField {
      *
      * @return list of valid boundary values
      */
-    public List<Float> validList() {
+    public List<Short> validList() {
         return delegate.validList();
     }
 
     /**
-     * Returns one invalid {@code Float}.
+     * Returns one invalid {@code Short}.
      *
      * @return a value that violates at least one constraint
      */
-    public Float invalid() {
+    public Short invalid() {
         return delegate.invalid();
     }
 
@@ -109,7 +136,7 @@ public final class DefaultFloatField implements FloatField {
      *
      * @return list of invalid values
      */
-    public List<Float> invalidList() {
+    public List<Short> invalidList() {
         return delegate.invalidList();
     }
 
@@ -119,7 +146,7 @@ public final class DefaultFloatField implements FloatField {
      * @param count the number of values to generate
      * @return list of valid values
      */
-    public List<Float> stream(int count) {
+    public List<Short> stream(int count) {
         return delegate.stream(count);
     }
 }

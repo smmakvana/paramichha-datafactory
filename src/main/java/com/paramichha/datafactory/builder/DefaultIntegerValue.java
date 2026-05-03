@@ -8,20 +8,23 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * Fluent builder for {@code Short} and {@code short} values.
+ * Fluent builder for {@code Integer} and {@code int} values.
  *
- * <p>Obtained via {@link DataFactory#shorts()}.
+ * <p>Obtained via {@link DataFactory#integer()}.
  *
  * <pre>
- * short flags = DataFactory.shorts().positive().toShort();
- * short n     = DataFactory.shorts().range(1, 100).toShort();
+ * int age   = DataFactory.integer().range(18, 65).valid();
+ * int score = DataFactory.integer().positive().valid();
+ *
+ * List&lt;Integer&gt; ages = DataFactory.integer().range(18, 90).stream(1000);
+ * List&lt;Integer&gt; bad  = DataFactory.integer().range(18, 65).invalidList();
  * </pre>
  */
-public final class DefaultShortField implements ShortField {
+public final class DefaultIntegerValue implements IntegerValue {
 
-    private FieldValue<Short> delegate;
+    private FieldValue<Integer> delegate;
 
-    public DefaultShortField(FieldValue<Short> delegate) {
+    public DefaultIntegerValue(FieldValue<Integer> delegate) {
         this.delegate = delegate;
     }
 
@@ -32,7 +35,7 @@ public final class DefaultShortField implements ShortField {
      * @param min inclusive minimum
      * @param max inclusive maximum
      */
-    public DefaultShortField range(short min, short max) {
+    public DefaultIntegerValue range(int min, int max) {
         return with("@Min(" + min + ")").with("@Max(" + max + ")");
     }
 
@@ -42,7 +45,7 @@ public final class DefaultShortField implements ShortField {
      *
      * @param min inclusive minimum
      */
-    public DefaultShortField min(short min) {
+    public DefaultIntegerValue min(int min) {
         return with("@Min(" + min + ")");
     }
 
@@ -52,7 +55,7 @@ public final class DefaultShortField implements ShortField {
      *
      * @param max inclusive maximum
      */
-    public DefaultShortField max(short max) {
+    public DefaultIntegerValue max(int max) {
         return with("@Max(" + max + ")");
     }
 
@@ -60,7 +63,7 @@ public final class DefaultShortField implements ShortField {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
-    public DefaultShortField positive() {
+    public DefaultIntegerValue positive() {
         return with(Positive.class);
     }
 
@@ -68,7 +71,7 @@ public final class DefaultShortField implements ShortField {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
-    public DefaultShortField negative() {
+    public DefaultIntegerValue negative() {
         return with(Negative.class);
     }
 
@@ -77,57 +80,57 @@ public final class DefaultShortField implements ShortField {
      *
      * @param annotation the annotation type to add
      */
-    public DefaultShortField with(Class<? extends Annotation> annotation) {
+    public DefaultIntegerValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
 
     /**
-     * Adds a constraint annotation by string, e.g. {@code "@Min(1)"}.
+     * Adds a constraint annotation by string, e.g. {@code "@Min(18)"}.
      *
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
-    public DefaultShortField with(String annotation) {
+    public DefaultIntegerValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
 
     /**
-     * Returns one valid value as a primitive {@code short}.
+     * Returns one valid value as a primitive {@code int}.
      *
-     * @return a valid short
+     * @return a valid int
      * @throws DataFactoryException if no valid value can be generated
      */
-    public short toShort() {
+    public int toInt() {
         return delegate.valid();
     }
 
     /**
-     * Returns one valid {@code Short}.
+     * Returns one valid {@code Integer}.
      *
-     * @return a valid Short
+     * @return a valid Integer
      * @throws DataFactoryException if no valid value can be generated
      */
-    public Short valid() {
+    public Integer valid() {
         return delegate.valid();
     }
 
     /**
-     * Returns all boundary-covering valid values.
+     * Returns all boundary-covering valid values — minimum, midpoint, maximum, semantic.
      *
      * @return list of valid boundary values
      */
-    public List<Short> validList() {
+    public List<Integer> validList() {
         return delegate.validList();
     }
 
     /**
-     * Returns one invalid {@code Short}.
+     * Returns one invalid {@code Integer}.
      *
      * @return a value that violates at least one constraint
      */
-    public Short invalid() {
+    public Integer invalid() {
         return delegate.invalid();
     }
 
@@ -136,7 +139,7 @@ public final class DefaultShortField implements ShortField {
      *
      * @return list of invalid values
      */
-    public List<Short> invalidList() {
+    public List<Integer> invalidList() {
         return delegate.invalidList();
     }
 
@@ -146,7 +149,7 @@ public final class DefaultShortField implements ShortField {
      * @param count the number of values to generate
      * @return list of valid values
      */
-    public List<Short> stream(int count) {
+    public List<Integer> stream(int count) {
         return delegate.stream(count);
     }
 }

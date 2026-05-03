@@ -29,11 +29,11 @@ import java.util.List;
  * List&lt;String&gt; invalid = DataFactory.string().email().invalidList();
  * </pre>
  */
-public final class DefaultStringField implements StringField {
+public final class DefaultStringValue implements StringValue {
 
     private FieldValue<String> delegate;
 
-    public DefaultStringField(FieldValue<String> delegate) {
+    public DefaultStringValue(FieldValue<String> delegate) {
         this.delegate = delegate;
     }
 
@@ -49,88 +49,88 @@ public final class DefaultStringField implements StringField {
      *
      * @param hint a DataFaker-compatible field name hint
      */
-    public DefaultStringField hint(String hint) {
+    public DefaultStringValue hint(String hint) {
         this.delegate = FieldBuilderFactory.create(String.class, hint);
         return this;
     }
 
     /** Generates a realistic email address. Example: {@code alice.johnson@example.com} */
-    public DefaultStringField email()         { return hint("email"); }
+    public DefaultStringValue email()         { return hint("email"); }
 
     /** Generates a realistic phone number. Example: {@code +44 7700 900123} */
-    public DefaultStringField phone()         { return hint("phone"); }
+    public DefaultStringValue phone()         { return hint("phone"); }
 
     /** Generates a realistic full name. Example: {@code Alice Johnson} */
-    public DefaultStringField name()          { return hint("name"); }
+    public DefaultStringValue name()          { return hint("name"); }
 
     /** Generates a realistic first name. Example: {@code Alice} */
-    public DefaultStringField firstName()     { return hint("firstName"); }
+    public DefaultStringValue firstName()     { return hint("firstName"); }
 
     /** Generates a realistic last name. Example: {@code Johnson} */
-    public DefaultStringField lastName()      { return hint("lastName"); }
+    public DefaultStringValue lastName()      { return hint("lastName"); }
 
     /** Generates a realistic credit card number. */
-    public DefaultStringField creditCard()    { return hint("creditCard"); }
+    public DefaultStringValue creditCard()    { return hint("creditCard"); }
 
     /** Generates a realistic IBAN. Example: {@code GB29NWBK60161331926819} */
-    public DefaultStringField iban()          { return hint("iban"); }
+    public DefaultStringValue iban()          { return hint("iban"); }
 
     /** Generates a realistic BIC/SWIFT code. Example: {@code NWBKGB2L} */
-    public DefaultStringField bic()           { return hint("bic"); }
+    public DefaultStringValue bic()           { return hint("bic"); }
 
     /** Generates a realistic postcode. Example: {@code SW1A 1AA} */
-    public DefaultStringField postcode()      { return hint("postcode"); }
+    public DefaultStringValue postcode()      { return hint("postcode"); }
 
     /** Generates a realistic street address. */
-    public DefaultStringField address()       { return hint("address"); }
+    public DefaultStringValue address()       { return hint("address"); }
 
     /** Generates a realistic city name. Example: {@code London} */
-    public DefaultStringField city()          { return hint("city"); }
+    public DefaultStringValue city()          { return hint("city"); }
 
     /** Generates a realistic country name. Example: {@code United Kingdom} */
-    public DefaultStringField country()       { return hint("country"); }
+    public DefaultStringValue country()       { return hint("country"); }
 
     /** Generates a realistic company name. Example: {@code Acme Corp} */
-    public DefaultStringField company()       { return hint("company"); }
+    public DefaultStringValue company()       { return hint("company"); }
 
     /** Generates a realistic URL. Example: {@code https://example.com} */
-    public DefaultStringField url()           { return hint("url"); }
+    public DefaultStringValue url()           { return hint("url"); }
 
     /** Generates a random UUID string. */
-    public DefaultStringField uuid()          { return hint("uuid"); }
+    public DefaultStringValue uuid()          { return hint("uuid"); }
 
     /** Generates a realistic IP address. Example: {@code 192.168.1.1} */
-    public DefaultStringField ipAddress()     { return hint("ipAddress"); }
+    public DefaultStringValue ipAddress()     { return hint("ipAddress"); }
 
     /** Generates a realistic colour name. Example: {@code Cerulean} */
-    public DefaultStringField colour()        { return hint("colour"); }
+    public DefaultStringValue colour()        { return hint("colour"); }
 
     /** Generates a realistic username. Example: {@code alice_j42} */
-    public DefaultStringField username()      { return hint("username"); }
+    public DefaultStringValue username()      { return hint("username"); }
 
     /** Generates a realistic sentence or description. */
-    public DefaultStringField description()   { return hint("description"); }
+    public DefaultStringValue description()   { return hint("description"); }
 
     /** Generates a realistic password string. */
-    public DefaultStringField password()      { return hint("password"); }
+    public DefaultStringValue password()      { return hint("password"); }
 
     /** Generates a realistic sort code. Example: {@code 60-16-13} */
-    public DefaultStringField sortCode()      { return hint("sortCode"); }
+    public DefaultStringValue sortCode()      { return hint("sortCode"); }
 
     /** Generates a realistic bank account number. */
-    public DefaultStringField accountNumber() { return hint("accountNumber"); }
+    public DefaultStringValue accountNumber() { return hint("accountNumber"); }
 
     /** Generates a realistic product name. */
-    public DefaultStringField product()       { return hint("product"); }
+    public DefaultStringValue product()       { return hint("product"); }
 
     /** Generates a realistic department name. Example: {@code Engineering} */
-    public DefaultStringField department()    { return hint("department"); }
+    public DefaultStringValue department()    { return hint("department"); }
 
     /**
      * The generated value must not be blank.
      * Equivalent to adding {@code @NotBlank}.
      */
-    public DefaultStringField notBlank() {
+    public DefaultStringValue notBlank() {
         delegate = delegate.with(NotBlank.class);
         return this;
     }
@@ -142,7 +142,7 @@ public final class DefaultStringField implements StringField {
      * @param min minimum length, inclusive
      * @param max maximum length, inclusive
      */
-    public DefaultStringField length(int min, int max) {
+    public DefaultStringValue length(int min, int max) {
         return with("@Size(min=" + min + ", max=" + max + ")");
     }
 
@@ -152,7 +152,7 @@ public final class DefaultStringField implements StringField {
      *
      * @param max maximum length, inclusive
      */
-    public DefaultStringField maxLength(int max) {
+    public DefaultStringValue maxLength(int max) {
         return with("@Size(max=" + max + ")");
     }
 
@@ -162,7 +162,7 @@ public final class DefaultStringField implements StringField {
      *
      * @param min minimum length, inclusive
      */
-    public DefaultStringField minLength(int min) {
+    public DefaultStringValue minLength(int min) {
         return with("@Size(min=" + min + ")");
     }
 
@@ -171,7 +171,7 @@ public final class DefaultStringField implements StringField {
      *
      * @param annotation the annotation type to add
      */
-    public DefaultStringField with(Class<? extends Annotation> annotation) {
+    public DefaultStringValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
@@ -182,7 +182,7 @@ public final class DefaultStringField implements StringField {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
-    public DefaultStringField with(String annotation) {
+    public DefaultStringValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
     }

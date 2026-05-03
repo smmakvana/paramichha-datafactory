@@ -5,14 +5,14 @@ import java.lang.annotation.Annotation;
 /**
  * Fluent builder for {@code Float} / {@code float} values. Obtained via {@link DataFactory#floats()}.
  */
-public interface FloatField extends FieldValue<Float> {
-    FloatField positive();
+public interface FloatValue extends FieldValue<Float> {
+    FloatValue positive();
 
-    FloatField negative();
+    FloatValue negative();
 
-    FloatField with(Class<? extends Annotation> annotation);
+    FloatValue with(Class<? extends Annotation> annotation);
 
-    FloatField with(String annotation);
+    FloatValue with(String annotation);
 
     float toFloat();
 }

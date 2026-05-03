@@ -18,14 +18,14 @@ import java.util.List;
  * </pre>
  *
  * <p>Note: Jakarta's {@code @Min} and {@code @Max} do not support {@code double}.
- * Use {@link DecimalField} via {@link DataFactory#decimal()} for
+ * Use {@link BigDecimalValue} via {@link DataFactory#decimal()} for
  * precise decimal range constraints.
  */
-public final class DefaultDoubleField implements DoubleField {
+public final class DefaultDoubleValue implements DoubleValue {
 
     private FieldValue<Double> delegate;
 
-    public DefaultDoubleField(FieldValue<Double> delegate) {
+    public DefaultDoubleValue(FieldValue<Double> delegate) {
         this.delegate = delegate;
     }
 
@@ -33,7 +33,7 @@ public final class DefaultDoubleField implements DoubleField {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
-    public DefaultDoubleField positive() {
+    public DefaultDoubleValue positive() {
         return with(Positive.class);
     }
 
@@ -41,7 +41,7 @@ public final class DefaultDoubleField implements DoubleField {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
-    public DefaultDoubleField negative() {
+    public DefaultDoubleValue negative() {
         return with(Negative.class);
     }
 
@@ -50,7 +50,7 @@ public final class DefaultDoubleField implements DoubleField {
      *
      * @param annotation the annotation type to add
      */
-    public DefaultDoubleField with(Class<? extends Annotation> annotation) {
+    public DefaultDoubleValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
@@ -61,7 +61,7 @@ public final class DefaultDoubleField implements DoubleField {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
-    public DefaultDoubleField with(String annotation) {
+    public DefaultDoubleValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
     }

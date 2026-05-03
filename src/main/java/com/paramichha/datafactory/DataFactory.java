@@ -134,12 +134,12 @@ public final class DataFactory {
      * String name  = DataFactory.string().name().valid();
      * </pre>
      */
-    public static StringField string() {
-        return new DefaultStringField(FieldBuilderFactory.create(String.class));
+    public static StringValue string() {
+        return new DefaultStringValue(FieldBuilderFactory.create(String.class));
     }
 
     /**
-     * Returns a {@link StringField} pre-seeded with a semantic hint.
+     * Returns a {@link StringValue} pre-seeded with a semantic hint.
      * Shorthand for {@code DataFactory.string().hint(hint)}.
      * <pre>
      * String email = DataFactory.string("email").valid();
@@ -148,8 +148,8 @@ public final class DataFactory {
      * List&lt;String&gt; phones = DataFactory.string("phone").stream(50);
      * </pre>
      */
-    public static StringField string(String hint) {
-        return new DefaultStringField(FieldBuilderFactory.create(String.class, hint));
+    public static StringValue string(String hint) {
+        return new DefaultStringValue(FieldBuilderFactory.create(String.class, hint));
     }
 
     /**
@@ -159,8 +159,8 @@ public final class DataFactory {
      * int score = DataFactory.integer().positive().toInt();
      * </pre>
      */
-    public static IntegerField integer() {
-        return new DefaultIntegerField(FieldBuilderFactory.create(Integer.class));
+    public static IntegerValue integer() {
+        return new DefaultIntegerValue(FieldBuilderFactory.create(Integer.class));
     }
 
     /**
@@ -170,8 +170,8 @@ public final class DataFactory {
      * long price = DataFactory.longVal().range(1L, 9999L).toLong();
      * </pre>
      */
-    public static LongField longVal() {
-        return new DefaultLongField(FieldBuilderFactory.create(Long.class));
+    public static LongValue longVal() {
+        return new DefaultLongValue(FieldBuilderFactory.create(Long.class));
     }
 
     /**
@@ -181,8 +181,8 @@ public final class DataFactory {
      * BigDecimal gbp   = DataFactory.decimal().range(0.01, 999.99).valid();
      * </pre>
      */
-    public static DecimalField decimal() {
-        return new DefaultDecimalField(FieldBuilderFactory.create(BigDecimal.class));
+    public static BigDecimalValue decimal() {
+        return new DefaultBigDecimalValue(FieldBuilderFactory.create(BigDecimal.class));
     }
 
     /**
@@ -192,8 +192,8 @@ public final class DataFactory {
      * boolean deleted = DataFactory.bool().assertFalse().valid();
      * </pre>
      */
-    public static BoolField bool() {
-        return new DefaultBoolField(FieldBuilderFactory.create(Boolean.class));
+    public static BooleanValue bool() {
+        return new DefaultBooleanValue(FieldBuilderFactory.create(Boolean.class));
     }
 
     /**
@@ -203,8 +203,8 @@ public final class DataFactory {
      * LocalDate expiry = DataFactory.date().future().valid();
      * </pre>
      */
-    public static DateField date() {
-        return new DefaultDateField(FieldBuilderFactory.create(LocalDate.class));
+    public static LocalDateValue date() {
+        return new DefaultLocalDateValue(FieldBuilderFactory.create(LocalDate.class));
     }
 
     /**
@@ -214,48 +214,48 @@ public final class DataFactory {
      * LocalDateTime deadline = DataFactory.dateTime().future().valid();
      * </pre>
      */
-    public static DateTimeField dateTime() {
-        return new DefaultDateTimeField(FieldBuilderFactory.create(LocalDateTime.class));
+    public static LocalDateTimeValue dateTime() {
+        return new DefaultLocalDateTimeValue(FieldBuilderFactory.create(LocalDateTime.class));
     }
 
     /**
-     * Returns a {@link DoubleField} for {@code Double} / {@code double} values.
+     * Returns a {@link DoubleValue} for {@code Double} / {@code double} values.
      * <pre>
      * double price = DataFactory.doubles().positive().toDouble();
      * </pre>
      */
-    public static DoubleField doubles() {
-        return new DefaultDoubleField(FieldBuilderFactory.create(Double.class));
+    public static DoubleValue doubles() {
+        return new DefaultDoubleValue(FieldBuilderFactory.create(Double.class));
     }
 
     /**
-     * Returns a {@link FloatField} for {@code Float} / {@code float} values.
+     * Returns a {@link FloatValue} for {@code Float} / {@code float} values.
      * <pre>
      * float rate = DataFactory.floats().positive().toFloat();
      * </pre>
      */
-    public static FloatField floats() {
-        return new DefaultFloatField(FieldBuilderFactory.create(Float.class));
+    public static FloatValue floats() {
+        return new DefaultFloatValue(FieldBuilderFactory.create(Float.class));
     }
 
     /**
-     * Returns a {@link ShortField} for {@code Short} / {@code short} values.
+     * Returns a {@link ShortValue} for {@code Short} / {@code short} values.
      * <pre>
      * short flags = DataFactory.shorts().positive().toShort();
      * </pre>
      */
-    public static ShortField shorts() {
-        return new DefaultShortField(FieldBuilderFactory.create(Short.class));
+    public static ShortValue shorts() {
+        return new DefaultShortValue(FieldBuilderFactory.create(Short.class));
     }
 
     /**
-     * Returns a {@link ByteField} for {@code Byte} / {@code byte} values.
+     * Returns a {@link ByteValue} for {@code Byte} / {@code byte} values.
      * <pre>
      * byte n = DataFactory.bytes().positive().toByte();
      * </pre>
      */
-    public static ByteField bytes() {
-        return new DefaultByteField(FieldBuilderFactory.create(Byte.class));
+    public static ByteValue bytes() {
+        return new DefaultByteValue(FieldBuilderFactory.create(Byte.class));
     }
 
     /**

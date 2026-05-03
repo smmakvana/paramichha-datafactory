@@ -8,20 +8,22 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * Fluent builder for {@code Byte} and {@code byte} values.
+ * Fluent builder for {@code Long} and {@code long} values.
  *
- * <p>Obtained via {@link DataFactory#bytes()}.
+ * <p>Obtained via {@link DataFactory#longVal()}.
  *
  * <pre>
- * byte flags = DataFactory.bytes().positive().toByte();
- * byte n     = DataFactory.bytes().range((byte)1, (byte)100).toByte();
+ * long id    = DataFactory.longVal().positive().toLong();
+ * long price = DataFactory.longVal().range(1L, 9999L).toLong();
+ *
+ * List&lt;Long&gt; ids = DataFactory.longVal().positive().stream(500);
  * </pre>
  */
-public final class DefaultByteField implements ByteField {
+public final class DefaultLongValue implements LongValue {
 
-    private FieldValue<Byte> delegate;
+    private FieldValue<Long> delegate;
 
-    public DefaultByteField(FieldValue<Byte> delegate) {
+    public DefaultLongValue(FieldValue<Long> delegate) {
         this.delegate = delegate;
     }
 
@@ -32,7 +34,7 @@ public final class DefaultByteField implements ByteField {
      * @param min inclusive minimum
      * @param max inclusive maximum
      */
-    public DefaultByteField range(byte min, byte max) {
+    public DefaultLongValue range(long min, long max) {
         return with("@Min(" + min + ")").with("@Max(" + max + ")");
     }
 
@@ -42,7 +44,7 @@ public final class DefaultByteField implements ByteField {
      *
      * @param min inclusive minimum
      */
-    public DefaultByteField min(byte min) {
+    public DefaultLongValue min(long min) {
         return with("@Min(" + min + ")");
     }
 
@@ -52,7 +54,7 @@ public final class DefaultByteField implements ByteField {
      *
      * @param max inclusive maximum
      */
-    public DefaultByteField max(byte max) {
+    public DefaultLongValue max(long max) {
         return with("@Max(" + max + ")");
     }
 
@@ -60,7 +62,7 @@ public final class DefaultByteField implements ByteField {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
-    public DefaultByteField positive() {
+    public DefaultLongValue positive() {
         return with(Positive.class);
     }
 
@@ -68,7 +70,7 @@ public final class DefaultByteField implements ByteField {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
-    public DefaultByteField negative() {
+    public DefaultLongValue negative() {
         return with(Negative.class);
     }
 
@@ -77,57 +79,57 @@ public final class DefaultByteField implements ByteField {
      *
      * @param annotation the annotation type to add
      */
-    public DefaultByteField with(Class<? extends Annotation> annotation) {
+    public DefaultLongValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
 
     /**
-     * Adds a constraint annotation by string, e.g. {@code "@Min(1)"}.
+     * Adds a constraint annotation by string, e.g. {@code "@Min(100)"}.
      *
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
-    public DefaultByteField with(String annotation) {
+    public DefaultLongValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
 
     /**
-     * Returns one valid value as a primitive {@code byte}.
+     * Returns one valid value as a primitive {@code long}.
      *
-     * @return a valid byte
+     * @return a valid long
      * @throws DataFactoryException if no valid value can be generated
      */
-    public byte toByte() {
+    public long toLong() {
         return delegate.valid();
     }
 
     /**
-     * Returns one valid {@code Byte}.
+     * Returns one valid {@code Long}.
      *
-     * @return a valid Byte
+     * @return a valid Long
      * @throws DataFactoryException if no valid value can be generated
      */
-    public Byte valid() {
+    public Long valid() {
         return delegate.valid();
     }
 
     /**
-     * Returns all boundary-covering valid values.
+     * Returns all boundary-covering valid values — minimum, midpoint, maximum, semantic.
      *
      * @return list of valid boundary values
      */
-    public List<Byte> validList() {
+    public List<Long> validList() {
         return delegate.validList();
     }
 
     /**
-     * Returns one invalid {@code Byte}.
+     * Returns one invalid {@code Long}.
      *
      * @return a value that violates at least one constraint
      */
-    public Byte invalid() {
+    public Long invalid() {
         return delegate.invalid();
     }
 
@@ -136,7 +138,7 @@ public final class DefaultByteField implements ByteField {
      *
      * @return list of invalid values
      */
-    public List<Byte> invalidList() {
+    public List<Long> invalidList() {
         return delegate.invalidList();
     }
 
@@ -146,7 +148,7 @@ public final class DefaultByteField implements ByteField {
      * @param count the number of values to generate
      * @return list of valid values
      */
-    public List<Byte> stream(int count) {
+    public List<Long> stream(int count) {
         return delegate.stream(count);
     }
 }

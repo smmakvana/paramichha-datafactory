@@ -20,11 +20,11 @@ import java.util.List;
  * List&lt;Boolean&gt; bad = DataFactory.bool().assertTrue().invalidList();
  * </pre>
  */
-public final class DefaultBoolField implements BoolField {
+public final class DefaultBooleanValue implements BooleanValue {
 
     private FieldValue<Boolean> delegate;
 
-    public DefaultBoolField(FieldValue<Boolean> delegate) {
+    public DefaultBooleanValue(FieldValue<Boolean> delegate) {
         this.delegate = delegate;
     }
 
@@ -32,7 +32,7 @@ public final class DefaultBoolField implements BoolField {
      * The generated value must be {@code true}.
      * Maps to {@code @AssertTrue}.
      */
-    public DefaultBoolField assertTrue() {
+    public DefaultBooleanValue assertTrue() {
         return with(AssertTrue.class);
     }
 
@@ -40,7 +40,7 @@ public final class DefaultBoolField implements BoolField {
      * The generated value must be {@code false}.
      * Maps to {@code @AssertFalse}.
      */
-    public DefaultBoolField assertFalse() {
+    public DefaultBooleanValue assertFalse() {
         return with(AssertFalse.class);
     }
 
@@ -49,7 +49,7 @@ public final class DefaultBoolField implements BoolField {
      *
      * @param annotation the annotation type to add
      */
-    public DefaultBoolField with(Class<? extends Annotation> annotation) {
+    public DefaultBooleanValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
     }
@@ -60,7 +60,7 @@ public final class DefaultBoolField implements BoolField {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
-    public DefaultBoolField with(String annotation) {
+    public DefaultBooleanValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
     }

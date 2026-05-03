@@ -45,7 +45,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("StringFieldBuilder — DataFactory.string()")
-    class StringFieldValueTests {
+    class StringValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -194,7 +194,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("IntegerFieldBuilder — DataFactory.integer()")
-    class IntegerFieldValueTests {
+    class IntegerValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -278,7 +278,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("LongFieldBuilder — DataFactory.longVal()")
-    class LongFieldValueTests {
+    class LongValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -337,7 +337,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("DecimalFieldBuilder — DataFactory.decimal()")
-    class DecimalFieldValueTests {
+    class BigDecimalValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -400,7 +400,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("BoolFieldBuilder — DataFactory.bool()")
-    class BoolFieldValueTests {
+    class BooleanValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -457,7 +457,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("DateFieldBuilder — DataFactory.date()")
-    class DateFieldValueTests {
+    class LocalDateValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -519,7 +519,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("DateTimeFieldBuilder — DataFactory.dateTime()")
-    class DateTimeFieldValueTests {
+    class LocalDateTimeValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -917,7 +917,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("DoubleFieldBuilder — DataFactory.doubles()")
-    class DoubleFieldValueTests {
+    class DoubleValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -978,7 +978,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("FloatFieldBuilder — DataFactory.floats()")
-    class FloatFieldValueTests {
+    class FloatValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -1035,7 +1035,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("ShortFieldBuilder — DataFactory.shorts()")
-    class ShortFieldValueTests {
+    class ShortValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -1108,7 +1108,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("ByteFieldBuilder — DataFactory.bytes()")
-    class ByteFieldValueTests {
+    class ByteValueValueTests {
 
         @Nested
         @DisplayName("Construction")
@@ -1264,7 +1264,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("LongFieldBuilder — untested methods")
-    class LongFieldValueCoverage {
+    class LongValueValueCoverage {
 
         @Nested
         @DisplayName("Behaviour")
@@ -1308,7 +1308,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("BoolFieldBuilder — untested methods")
-    class BoolFieldValueCoverage {
+    class BooleanValueValueCoverage {
 
         @Nested
         @DisplayName("Behaviour")
@@ -1331,7 +1331,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("DecimalFieldBuilder — untested methods")
-    class DecimalFieldValueCoverage {
+    class BigDecimalValueValueCoverage {
 
         @Nested
         @DisplayName("Validation")
@@ -1377,7 +1377,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("DateFieldBuilder — untested methods")
-    class DateFieldValueCoverage {
+    class LocalDateValueValueCoverage {
 
         @Nested
         @DisplayName("Behaviour")
@@ -1396,7 +1396,7 @@ class TypedFieldBuildersTest {
 
     @Nested
     @DisplayName("DateTimeFieldBuilder — untested methods")
-    class DateTimeFieldValueCoverage {
+    class LocalDateTimeValueValueCoverage {
 
         @Nested
         @DisplayName("Behaviour")
