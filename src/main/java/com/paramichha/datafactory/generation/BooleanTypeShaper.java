@@ -1,6 +1,7 @@
 package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
+import net.datafaker.Faker;
 
 /**
  * Produces {@code Boolean} values; returns {@code true} for the "true" target label.
@@ -23,7 +24,7 @@ final class BooleanTypeShaper implements TypeShaper {
     }
 
     @Override
-    public Object shape(FieldConstraints field, BoundaryTarget target, net.datafaker.Faker faker) {
+    public Object shape(FieldConstraints field, BoundaryTarget target, Faker faker) {
         return "true".equals(target.label());
     }
 }

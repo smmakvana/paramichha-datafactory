@@ -3,7 +3,7 @@ package com.paramichha.datafactory.builder;
 import com.paramichha.datafactory.FieldValue;
 import com.paramichha.datafactory.constraint.*;
 import com.paramichha.datafactory.generation.BoundaryPlanner;
-import com.paramichha.datafactory.generation.ValueGenerator;
+import com.paramichha.datafactory.generation.DataGenerator;
 
 import net.datafaker.Faker;
 import com.paramichha.datafactory.generation.FakerProvider;
@@ -89,7 +89,7 @@ final public class DefaultFieldValue<T> implements FieldValue<T> {
         FieldConstraints rc = resolvedConstraints();
         setSeededRandom();
         try {
-            List<Object> values = ValueGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), resolvedFaker());
+            List<Object> values = DataGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), resolvedFaker());
             return (T) (values.isEmpty() ? null : values.getFirst());
         } finally {
             FakerProvider.SEEDED_RANDOM.remove();
@@ -102,7 +102,7 @@ final public class DefaultFieldValue<T> implements FieldValue<T> {
         FieldConstraints rc = resolvedConstraints();
         setSeededRandom();
         try {
-            return (List<T>) ValueGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), resolvedFaker());
+            return (List<T>) DataGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), resolvedFaker());
         } finally {
             FakerProvider.SEEDED_RANDOM.remove();
         }

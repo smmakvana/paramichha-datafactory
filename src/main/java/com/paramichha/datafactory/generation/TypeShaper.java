@@ -1,6 +1,7 @@
 package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
+import net.datafaker.Faker;
 
 /**
  * Produces a realistic value for one field at one boundary target.
@@ -23,6 +24,6 @@ interface TypeShaper {
         return shape(field, target, FakerProvider.random());
     }
 
-    Object shape(FieldConstraints field, BoundaryTarget target, net.datafaker.Faker faker);
+    Object shape(FieldConstraints field, BoundaryTarget target, Faker faker);
 
 }

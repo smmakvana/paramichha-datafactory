@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Returns all enum constants as a {@code List}.
- * {@link ValueGenerator#shapeAll} expands the list into individual values.
+ * {@link DataGenerator#shapeAll} expands the list into individual values.
  */
 final class EnumTypeShaper implements TypeShaper {
 

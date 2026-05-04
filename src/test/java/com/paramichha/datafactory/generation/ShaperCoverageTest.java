@@ -513,7 +513,7 @@ class ShaperCoverageTest {
         @Test
         void nullTarget_returnsNull() {
             var f = fieldOf("x", String.class);
-            assertThat(ValueGenerator.shape(f, BoundaryTarget.nullTarget())).isNull();
+            assertThat(DataGenerator.shape(f, BoundaryTarget.nullTarget())).isNull();
         }
 
         @Test
@@ -522,7 +522,7 @@ class ShaperCoverageTest {
             enum Color {RED, GREEN, BLUE}
             var analyzed = FieldConstraints.builder("color", Color.class).build();
             var targets = BoundaryPlanner.plan(analyzed);
-            var result = ValueGenerator.shapeAll(analyzed, targets);
+            var result = DataGenerator.shapeAll(analyzed, targets);
             assertThat(result).containsExactlyInAnyOrder(Color.RED, Color.GREEN, Color.BLUE);
         }
 
@@ -531,7 +531,7 @@ class ShaperCoverageTest {
             // Unrecognised type → registry returns null → shapeAll filters it
             var f = AnnotationResolver.analyzeFromStrings("tags", "List", List.of());
             var targets = List.of(BoundaryTarget.semantic());
-            var result = ValueGenerator.shapeAll(f, targets);
+            var result = DataGenerator.shapeAll(f, targets);
             // null removed — result should be empty rather than throwing
             assertThat(result).isEmpty();
         }
@@ -539,7 +539,7 @@ class ShaperCoverageTest {
         @Test
         void shapeAll_singleValidString() {
             var f = AnnotationResolver.analyzeFromStrings("name", "String", List.of("@NotBlank"));
-            var result = ValueGenerator.shapeAll(f, BoundaryPlanner.plan(f));
+            var result = DataGenerator.shapeAll(f, BoundaryPlanner.plan(f));
             assertThat(result).isNotEmpty();
             result.forEach(v -> assertThat(v).isInstanceOf(String.class));
         }

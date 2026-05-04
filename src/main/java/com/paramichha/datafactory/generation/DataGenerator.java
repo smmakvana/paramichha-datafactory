@@ -9,11 +9,11 @@ import java.util.List;
  * Entry point for value generation. Delegates to {@link TypeShaperRegistry}.
  * This class never changes — add a new type by implementing {@link TypeShaper}.
  */
-public final class ValueGenerator {
+public final class DataGenerator {
 
     private static final TypeShaperRegistry REGISTRY = TypeShaperRegistry.INSTANCE;
 
-    private ValueGenerator() {
+    private DataGenerator() {
     }
 
     /**

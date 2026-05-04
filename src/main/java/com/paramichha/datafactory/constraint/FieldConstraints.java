@@ -1,12 +1,12 @@
 package com.paramichha.datafactory.constraint;
 
 import com.paramichha.datafactory.generation.BoundaryPlanner;
-import com.paramichha.datafactory.generation.ValueGenerator;
+import com.paramichha.datafactory.generation.DataGenerator;
 
 /**
  * Immutable snapshot of a field's resolved constraints.
  * Produced by {@link AnnotationResolver}; consumed by
- * {@link BoundaryPlanner} and {@link ValueGenerator}.
+ * {@link BoundaryPlanner} and {@link DataGenerator}.
  */
 public record FieldConstraints(
         String fieldName,

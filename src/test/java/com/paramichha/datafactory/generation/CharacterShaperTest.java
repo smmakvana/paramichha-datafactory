@@ -40,7 +40,7 @@ class CharacterShaperTest {
     void shapeAll_via_value_generator() {
         var fc = AnnotationResolver.analyzeFromStrings("c", "char", List.of());
         var targets = List.of(BoundaryTarget.semantic());
-        var result = ValueGenerator.shapeAll(fc, targets);
+        var result = DataGenerator.shapeAll(fc, targets);
         assertThat(result).hasSize(1);
         assertThat(result.get(0)).isInstanceOf(Character.class);
     }

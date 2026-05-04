@@ -14,8 +14,7 @@ import java.util.Random;
  */
 public final class FakerProvider {
 
-    private static final ThreadLocal<Faker> RANDOM_FAKER =
-            ThreadLocal.withInitial(() -> new Faker(Locale.ENGLISH));
+    private static final ThreadLocal<Faker> RANDOM_FAKER = ThreadLocal.withInitial(() -> new Faker(Locale.ENGLISH));
 
     /** Set by DefaultFieldBuilder when seed is active. Used by UuidTypeShaper. */
     public static final ThreadLocal<Random> SEEDED_RANDOM = new ThreadLocal<>();
