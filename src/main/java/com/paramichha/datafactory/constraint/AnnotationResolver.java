@@ -8,7 +8,7 @@ import java.util.List;
  *
  * <p>Single five-pass pipeline: presence → format → quantity → temporal → boolean.
  * Works against both real {@code Annotation} instances and annotation strings from YAML
- * via the {@link AnnotationClassifier} strategy.
+ * via the {@link AnnotationReader} strategy.
  */
 public final class AnnotationResolver {
 
@@ -17,19 +17,19 @@ public final class AnnotationResolver {
     /** Analyzes a field at runtime using real {@code Annotation} instances. */
     public static FieldConstraints analyze(String fieldName, Class<?> fieldType,
                                            List<Annotation> annotations) {
-        return runPipeline(fieldName, fieldType, annotations, RuntimeAnnotationClassifier.INSTANCE);
+        return runPipeline(fieldName, fieldType, annotations, ClassAnnotationReader.INSTANCE);
     }
 
     /** Analyzes a field at codegen time using annotation strings from YAML. */
     public static FieldConstraints analyzeFromStrings(String fieldName, String fieldTypeName,
                                                       List<String> annotationStrings) {
         return runPipeline(fieldName, resolveType(fieldTypeName), annotationStrings,
-                StringAnnotationClassifier.INSTANCE);
+                TextAnnotationReader.INSTANCE);
     }
 
     private static <A> FieldConstraints runPipeline(String fieldName, Class<?> fieldType,
                                                      List<A> annotations,
-                                                     AnnotationClassifier classifier) {
+                                                     AnnotationReader classifier) {
         FieldConstraints.Builder b = FieldConstraints.builder(fieldName, fieldType);
 
         if (isIntegerType(fieldType)) b.integerOnly(true);
@@ -67,9 +67,9 @@ public final class AnnotationResolver {
         b.format(fmt);
 
         // Pass 3 — quantity
-        QuantityBounds bounds = QuantityBounds.unbounded();
+        NumericBounds bounds = NumericBounds.unbounded();
         for (A a : annotations) {
-            QuantityBounds ab = classifier.classifyQuantity(a);
+            NumericBounds ab = classifier.classifyQuantity(a);
             if (ab != null) bounds = bounds.intersect(ab);
             int intDigits  = classifier.extractIntegerDigits(a);
             int fracDigits = classifier.extractFractionDigits(a);

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * 90%+ branch coverage for {@link QuantityBounds}.
+ * 90%+ branch coverage for {@link NumericBounds}.
  *
  * Covers:
  *  — all three variants: Unbounded, IntegerBounds, DecimalBounds
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *  — maxOfDec / minOfDec null-first / null-second / both-present arms
  */
 @DisplayName("QuantityBounds")
-class QuantityBoundsTest {
+class NumericBoundsTest {
 
     // ═══════════════════════════════════════════════════════════════════════
     // Unbounded variant
@@ -34,7 +34,7 @@ class QuantityBoundsTest {
     @DisplayName("Unbounded")
     class UnboundedTests {
 
-        private final QuantityBounds u = QuantityBounds.unbounded();
+        private final NumericBounds u = NumericBounds.unbounded();
 
         @Test void isUnbounded_true()        { assertThat(u.isUnbounded()).isTrue(); }
         @Test void min_null()                { assertThat(u.min()).isNull(); }
@@ -55,7 +55,7 @@ class QuantityBoundsTest {
 
         @Test
         void hasMin_true_hasMax_false() {
-            var b = QuantityBounds.atLeast(5);
+            var b = NumericBounds.atLeast(5);
             assertThat(b.hasMin()).isTrue();
             assertThat(b.hasMax()).isFalse();
             assertThat(b.hasBoth()).isFalse();
@@ -67,7 +67,7 @@ class QuantityBoundsTest {
 
         @Test
         void hasMin_false_hasMax_true() {
-            var b = QuantityBounds.atMost(100);
+            var b = NumericBounds.atMost(100);
             assertThat(b.hasMin()).isFalse();
             assertThat(b.hasMax()).isTrue();
             assertThat(b.hasBoth()).isFalse();
@@ -77,20 +77,20 @@ class QuantityBoundsTest {
 
         @Test
         void hasBoth_true_notContradictory() {
-            var b = QuantityBounds.of(1L, 10L);
+            var b = NumericBounds.of(1L, 10L);
             assertThat(b.hasBoth()).isTrue();
             assertThat(b.isContradictory()).isFalse();
         }
 
         @Test
         void isContradictory_true_when_min_greater_than_max() {
-            var b = QuantityBounds.of(10L, 5L);
+            var b = NumericBounds.of(10L, 5L);
             assertThat(b.isContradictory()).isTrue();
         }
 
         @Test
         void exactly_factory_sets_both_equal() {
-            var b = QuantityBounds.exactly(42);
+            var b = NumericBounds.exactly(42);
             assertThat(b.min()).isEqualTo(42L);
             assertThat(b.max()).isEqualTo(42L);
             assertThat(b.hasBoth()).isTrue();
@@ -99,7 +99,7 @@ class QuantityBoundsTest {
 
         @Test
         void of_both_null() {
-            var b = QuantityBounds.of(null, null);
+            var b = NumericBounds.of(null, null);
             assertThat(b.hasMin()).isFalse();
             assertThat(b.hasMax()).isFalse();
             assertThat(b.isContradictory()).isFalse();
@@ -116,7 +116,7 @@ class QuantityBoundsTest {
 
         @Test
         void hasMin_true_hasMax_false() {
-            var b = QuantityBounds.atLeastDecimal(new BigDecimal("1.5"));
+            var b = NumericBounds.atLeastDecimal(new BigDecimal("1.5"));
             assertThat(b.hasMin()).isTrue();
             assertThat(b.hasMax()).isFalse();
             assertThat(b.hasBoth()).isFalse();
@@ -128,7 +128,7 @@ class QuantityBoundsTest {
 
         @Test
         void hasMin_false_hasMax_true() {
-            var b = QuantityBounds.atMostDecimal(new BigDecimal("99.9"));
+            var b = NumericBounds.atMostDecimal(new BigDecimal("99.9"));
             assertThat(b.hasMin()).isFalse();
             assertThat(b.hasMax()).isTrue();
             assertThat(b.hasBoth()).isFalse();
@@ -138,20 +138,20 @@ class QuantityBoundsTest {
 
         @Test
         void hasBoth_true_notContradictory() {
-            var b = new QuantityBounds.DecimalBounds(new BigDecimal("1.0"), new BigDecimal("9.0"));
+            var b = new NumericBounds.DecimalBounds(new BigDecimal("1.0"), new BigDecimal("9.0"));
             assertThat(b.hasBoth()).isTrue();
             assertThat(b.isContradictory()).isFalse();
         }
 
         @Test
         void isContradictory_true_when_decMin_greater_than_decMax() {
-            var b = new QuantityBounds.DecimalBounds(new BigDecimal("10.0"), new BigDecimal("5.0"));
+            var b = new NumericBounds.DecimalBounds(new BigDecimal("10.0"), new BigDecimal("5.0"));
             assertThat(b.isContradictory()).isTrue();
         }
 
         @Test
         void both_null_decimalBounds() {
-            var b = new QuantityBounds.DecimalBounds(null, null);
+            var b = new NumericBounds.DecimalBounds(null, null);
             assertThat(b.hasMin()).isFalse();
             assertThat(b.hasMax()).isFalse();
             assertThat(b.min()).isNull();
@@ -171,28 +171,28 @@ class QuantityBoundsTest {
         // 1. Unbounded ∩ anything → other
         @Test
         void unbounded_intersect_unbounded() {
-            var r = QuantityBounds.unbounded().intersect(QuantityBounds.unbounded());
+            var r = NumericBounds.unbounded().intersect(NumericBounds.unbounded());
             assertThat(r.isUnbounded()).isTrue();
         }
 
         @Test
         void unbounded_intersect_integer() {
-            var r = QuantityBounds.unbounded().intersect(QuantityBounds.of(2L, 8L));
+            var r = NumericBounds.unbounded().intersect(NumericBounds.of(2L, 8L));
             assertThat(r.min()).isEqualTo(2L);
             assertThat(r.max()).isEqualTo(8L);
         }
 
         @Test
         void unbounded_intersect_decimal() {
-            var r = QuantityBounds.unbounded().intersect(
-                    QuantityBounds.atLeastDecimal(new BigDecimal("1.5")));
+            var r = NumericBounds.unbounded().intersect(
+                    NumericBounds.atLeastDecimal(new BigDecimal("1.5")));
             assertThat(r.hasMin()).isTrue();
         }
 
         // 2. IntegerBounds ∩ Unbounded → self
         @Test
         void integer_intersect_unbounded() {
-            var r = QuantityBounds.of(3L, 7L).intersect(QuantityBounds.unbounded());
+            var r = NumericBounds.of(3L, 7L).intersect(NumericBounds.unbounded());
             assertThat(r.min()).isEqualTo(3L);
             assertThat(r.max()).isEqualTo(7L);
         }
@@ -200,7 +200,7 @@ class QuantityBoundsTest {
         // 3. IntegerBounds ∩ IntegerBounds → narrower range
         @Test
         void integer_intersect_integer_overlapping() {
-            var r = QuantityBounds.of(2L, 10L).intersect(QuantityBounds.of(5L, 15L));
+            var r = NumericBounds.of(2L, 10L).intersect(NumericBounds.of(5L, 15L));
             assertThat(r.min()).isEqualTo(5L);
             assertThat(r.max()).isEqualTo(10L);
         }
@@ -208,7 +208,7 @@ class QuantityBoundsTest {
         @Test
         void integer_intersect_integer_one_null_min() {
             // maxOf: a=null → returns b
-            var r = QuantityBounds.atMost(10L).intersect(QuantityBounds.atLeast(3L));
+            var r = NumericBounds.atMost(10L).intersect(NumericBounds.atLeast(3L));
             assertThat(r.min()).isEqualTo(3L);
             assertThat(r.max()).isEqualTo(10L);
         }
@@ -216,7 +216,7 @@ class QuantityBoundsTest {
         @Test
         void integer_intersect_integer_one_null_max() {
             // minOf: a=null → returns b
-            var r = QuantityBounds.atLeast(5L).intersect(QuantityBounds.atMost(20L));
+            var r = NumericBounds.atLeast(5L).intersect(NumericBounds.atMost(20L));
             assertThat(r.min()).isEqualTo(5L);
             assertThat(r.max()).isEqualTo(20L);
         }
@@ -224,7 +224,7 @@ class QuantityBoundsTest {
         @Test
         void integer_intersect_integer_both_max_null() {
             // minOf: b=null → returns a (which is also null)
-            var r = QuantityBounds.atLeast(1L).intersect(QuantityBounds.atLeast(2L));
+            var r = NumericBounds.atLeast(1L).intersect(NumericBounds.atLeast(2L));
             assertThat(r.min()).isEqualTo(2L);
             assertThat(r.max()).isNull();
         }
@@ -232,34 +232,34 @@ class QuantityBoundsTest {
         // 4. IntegerBounds ∩ DecimalBounds → promote
         @Test
         void integer_intersect_decimal() {
-            var r = QuantityBounds.of(1L, 100L).intersect(
-                    QuantityBounds.atLeastDecimal(new BigDecimal("10.5")));
-            assertThat(r).isInstanceOf(QuantityBounds.DecimalBounds.class);
+            var r = NumericBounds.of(1L, 100L).intersect(
+                    NumericBounds.atLeastDecimal(new BigDecimal("10.5")));
+            assertThat(r).isInstanceOf(NumericBounds.DecimalBounds.class);
             assertThat(r.hasMin()).isTrue();
         }
 
         // 5. DecimalBounds ∩ Unbounded → self
         @Test
         void decimal_intersect_unbounded() {
-            var dec = QuantityBounds.atLeastDecimal(new BigDecimal("3.0"));
-            var r = dec.intersect(QuantityBounds.unbounded());
+            var dec = NumericBounds.atLeastDecimal(new BigDecimal("3.0"));
+            var r = dec.intersect(NumericBounds.unbounded());
             assertThat(r.hasMin()).isTrue();
         }
 
         // 6. DecimalBounds ∩ IntegerBounds → promote
         @Test
         void decimal_intersect_integer() {
-            var r = QuantityBounds.atLeastDecimal(new BigDecimal("2.5"))
-                    .intersect(QuantityBounds.atMost(50L));
-            assertThat(r).isInstanceOf(QuantityBounds.DecimalBounds.class);
+            var r = NumericBounds.atLeastDecimal(new BigDecimal("2.5"))
+                    .intersect(NumericBounds.atMost(50L));
+            assertThat(r).isInstanceOf(NumericBounds.DecimalBounds.class);
             assertThat(r.hasMax()).isTrue();
         }
 
         // 7. DecimalBounds ∩ DecimalBounds
         @Test
         void decimal_intersect_decimal() {
-            var r = new QuantityBounds.DecimalBounds(new BigDecimal("1.0"), new BigDecimal("10.0"))
-                    .intersect(new QuantityBounds.DecimalBounds(new BigDecimal("3.0"), new BigDecimal("7.0")));
+            var r = new NumericBounds.DecimalBounds(new BigDecimal("1.0"), new BigDecimal("10.0"))
+                    .intersect(new NumericBounds.DecimalBounds(new BigDecimal("3.0"), new BigDecimal("7.0")));
             assertThat(r.min()).isEqualTo(3L);
             assertThat(r.max()).isEqualTo(7L);
         }
@@ -267,8 +267,8 @@ class QuantityBoundsTest {
         @Test
         void decimal_intersect_decimal_nulls() {
             // maxOfDec: a=null → returns b; minOfDec: b=null → returns a
-            var r = new QuantityBounds.DecimalBounds(null, new BigDecimal("20.0"))
-                    .intersect(new QuantityBounds.DecimalBounds(new BigDecimal("5.0"), null));
+            var r = new NumericBounds.DecimalBounds(null, new BigDecimal("20.0"))
+                    .intersect(new NumericBounds.DecimalBounds(new BigDecimal("5.0"), null));
             assertThat(r.hasMin()).isTrue();
             assertThat(r.hasMax()).isTrue();
         }
@@ -286,9 +286,9 @@ class QuantityBoundsTest {
         // → both if-branches fire (dMin = max(i.min, d.decMin), dMax = min(i.max, d.decMax))
         @Test
         void both_integer_and_decimal_bounds_present() {
-            var r = QuantityBounds.of(5L, 50L)
-                    .intersect(new QuantityBounds.DecimalBounds(new BigDecimal("10.0"), new BigDecimal("40.0")));
-            var dec = (QuantityBounds.DecimalBounds) r;
+            var r = NumericBounds.of(5L, 50L)
+                    .intersect(new NumericBounds.DecimalBounds(new BigDecimal("10.0"), new BigDecimal("40.0")));
+            var dec = (NumericBounds.DecimalBounds) r;
             assertThat(dec.decMin()).isEqualByComparingTo("10.0");
             assertThat(dec.decMax()).isEqualByComparingTo("40.0");
         }
@@ -297,9 +297,9 @@ class QuantityBoundsTest {
         // → dMin = i.min promoted, dMax = d.decMax; neither if-branch fires
         @Test
         void integer_min_only_decimal_max_only() {
-            var r = QuantityBounds.atLeast(3L)
-                    .intersect(QuantityBounds.atMostDecimal(new BigDecimal("30.0")));
-            var dec = (QuantityBounds.DecimalBounds) r;
+            var r = NumericBounds.atLeast(3L)
+                    .intersect(NumericBounds.atMostDecimal(new BigDecimal("30.0")));
+            var dec = (NumericBounds.DecimalBounds) r;
             assertThat(dec.decMin()).isEqualByComparingTo("3");
             assertThat(dec.decMax()).isEqualByComparingTo("30.0");
         }
@@ -307,9 +307,9 @@ class QuantityBoundsTest {
         // IntegerBounds max only (no min), DecimalBounds min only (no max)
         @Test
         void integer_max_only_decimal_min_only() {
-            var r = QuantityBounds.atMost(20L)
-                    .intersect(QuantityBounds.atLeastDecimal(new BigDecimal("5.5")));
-            var dec = (QuantityBounds.DecimalBounds) r;
+            var r = NumericBounds.atMost(20L)
+                    .intersect(NumericBounds.atLeastDecimal(new BigDecimal("5.5")));
+            var dec = (NumericBounds.DecimalBounds) r;
             assertThat(dec.decMin()).isEqualByComparingTo("5.5");
             assertThat(dec.decMax()).isEqualByComparingTo("20");
         }
@@ -317,9 +317,9 @@ class QuantityBoundsTest {
         // Both have null min, both have null max
         @Test
         void both_unbounded_decimal() {
-            var r = QuantityBounds.of(null, null)
-                    .intersect(new QuantityBounds.DecimalBounds(null, null));
-            var dec = (QuantityBounds.DecimalBounds) r;
+            var r = NumericBounds.of(null, null)
+                    .intersect(new NumericBounds.DecimalBounds(null, null));
+            var dec = (NumericBounds.DecimalBounds) r;
             assertThat(dec.decMin()).isNull();
             assertThat(dec.decMax()).isNull();
         }

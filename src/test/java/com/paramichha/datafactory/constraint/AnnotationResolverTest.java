@@ -294,14 +294,14 @@ class AnnotationResolverTest {
             var f = str("name");
             assertThat(f.nullable()).isTrue();
             assertThat(f.format()).isEqualTo(FormatType.NONE);
-            assertThat(f.bounds()).isEqualTo(QuantityBounds.unbounded());
+            assertThat(f.bounds()).isEqualTo(com.paramichha.datafactory.constraint.NumericBounds.unbounded());
         }
 
         @Test
         void integer_isNullable_noBounds() {
             var f = integer("count");
             assertThat(f.nullable()).isTrue();
-            assertThat(f.bounds()).isEqualTo(QuantityBounds.unbounded());
+            assertThat(f.bounds()).isEqualTo(com.paramichha.datafactory.constraint.NumericBounds.unbounded());
         }
 
         @Test

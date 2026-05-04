@@ -17,23 +17,23 @@ import java.math.BigDecimal;
  * and {@link DecimalBounds#decMax()} to avoid a return-type conflict with the Long
  * convenience methods on the interface.
  */
-public sealed interface QuantityBounds
-        permits QuantityBounds.Unbounded,
-                QuantityBounds.IntegerBounds,
-                QuantityBounds.DecimalBounds {
+public sealed interface NumericBounds
+        permits NumericBounds.Unbounded,
+                NumericBounds.IntegerBounds,
+                NumericBounds.DecimalBounds {
 
     // ── variants ──────────────────────────────────────────────────────────
 
-    record Unbounded() implements QuantityBounds {}
+    record Unbounded() implements NumericBounds {}
 
-    record IntegerBounds(Long min, Long max) implements QuantityBounds {
+    record IntegerBounds(Long min, Long max) implements NumericBounds {
         public boolean hasMin()          { return min != null; }
         public boolean hasMax()          { return max != null; }
         public boolean hasBoth()         { return min != null && max != null; }
         public boolean isContradictory() { return min != null && max != null && min > max; }
     }
 
-    record DecimalBounds(BigDecimal decMin, BigDecimal decMax) implements QuantityBounds {
+    record DecimalBounds(BigDecimal decMin, BigDecimal decMax) implements NumericBounds {
         public boolean hasMin()          { return decMin != null; }
         public boolean hasMax()          { return decMax != null; }
         public boolean hasBoth()         { return decMin != null && decMax != null; }
@@ -75,18 +75,18 @@ public sealed interface QuantityBounds
 
     // ── factories ─────────────────────────────────────────────────────────
 
-    static QuantityBounds unbounded()            { return new Unbounded(); }
-    static QuantityBounds of(Long min, Long max) { return new IntegerBounds(min, max); }
-    static QuantityBounds atLeast(long min)      { return new IntegerBounds(min, null); }
-    static QuantityBounds atMost(long max)       { return new IntegerBounds(null, max); }
-    static QuantityBounds exactly(long v)        { return new IntegerBounds(v, v); }
+    static NumericBounds unbounded()            { return new Unbounded(); }
+    static NumericBounds of(Long min, Long max) { return new IntegerBounds(min, max); }
+    static NumericBounds atLeast(long min)      { return new IntegerBounds(min, null); }
+    static NumericBounds atMost(long max)       { return new IntegerBounds(null, max); }
+    static NumericBounds exactly(long v)        { return new IntegerBounds(v, v); }
 
-    static QuantityBounds atLeastDecimal(BigDecimal min) { return new DecimalBounds(min, null); }
-    static QuantityBounds atMostDecimal(BigDecimal max)  { return new DecimalBounds(null, max); }
+    static NumericBounds atLeastDecimal(BigDecimal min) { return new DecimalBounds(min, null); }
+    static NumericBounds atMostDecimal(BigDecimal max)  { return new DecimalBounds(null, max); }
 
     // ── intersection ─────────────────────────────────────────────────────
 
-    default QuantityBounds intersect(QuantityBounds other) {
+    default NumericBounds intersect(NumericBounds other) {
         return switch (this) {
             case Unbounded ignored -> other;
             case IntegerBounds a -> switch (other) {
@@ -104,7 +104,7 @@ public sealed interface QuantityBounds
 
     // ── private helpers ───────────────────────────────────────────────────
 
-    private static QuantityBounds promoteAndIntersect(IntegerBounds i, DecimalBounds d) {
+    private static NumericBounds promoteAndIntersect(IntegerBounds i, DecimalBounds d) {
         BigDecimal dMin = d.decMin() != null ? d.decMin() : (i.min() != null ? BigDecimal.valueOf(i.min()) : null);
         BigDecimal dMax = d.decMax() != null ? d.decMax() : (i.max() != null ? BigDecimal.valueOf(i.max()) : null);
         if (i.min() != null && d.decMin() != null) dMin = maxOfDec(BigDecimal.valueOf(i.min()), d.decMin());

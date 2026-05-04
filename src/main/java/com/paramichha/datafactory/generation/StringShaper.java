@@ -3,7 +3,7 @@ package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
 import com.paramichha.datafactory.constraint.FormatType;
-import com.paramichha.datafactory.constraint.QuantityBounds;
+import com.paramichha.datafactory.constraint.NumericBounds;
 
 /**
  * Produces realistic strings shaped to hit a {@link BoundaryTarget}.
@@ -50,9 +50,9 @@ public final class StringShaper {
             return fracPart > 0 ? digits + "." + faker.number().digits(fracPart) : digits;
         }
         // @DecimalMin/@DecimalMax on String — generate a conforming decimal string
-        java.math.BigDecimal decMin = field.bounds() instanceof com.paramichha.datafactory.constraint.QuantityBounds.DecimalBounds db
+        java.math.BigDecimal decMin = field.bounds() instanceof NumericBounds.DecimalBounds db
                 ? db.decMin() : null;
-        java.math.BigDecimal decMax = field.bounds() instanceof com.paramichha.datafactory.constraint.QuantityBounds.DecimalBounds db2
+        java.math.BigDecimal decMax = field.bounds() instanceof NumericBounds.DecimalBounds db2
                 ? db2.decMax() : null;
         if (decMin != null || decMax != null) {
             java.math.BigDecimal val = decMin != null ? decMin.add(java.math.BigDecimal.ONE)
@@ -342,19 +342,19 @@ public final class StringShaper {
         return result;
     }
 
-    private static Long intMin(QuantityBounds b) {
+    private static Long intMin(NumericBounds b) {
         return switch (b) {
-            case QuantityBounds.IntegerBounds i -> i.min();
-            case QuantityBounds.DecimalBounds d -> d.decMin() != null ? d.decMin().longValue() : null;
-            case QuantityBounds.Unbounded ignored -> null;
+            case NumericBounds.IntegerBounds i -> i.min();
+            case NumericBounds.DecimalBounds d -> d.decMin() != null ? d.decMin().longValue() : null;
+            case NumericBounds.Unbounded ignored -> null;
         };
     }
 
-    private static Long intMax(QuantityBounds b) {
+    private static Long intMax(NumericBounds b) {
         return switch (b) {
-            case QuantityBounds.IntegerBounds i -> i.max();
-            case QuantityBounds.DecimalBounds d -> d.decMax() != null ? d.decMax().longValue() : null;
-            case QuantityBounds.Unbounded ignored -> null;
+            case NumericBounds.IntegerBounds i -> i.max();
+            case NumericBounds.DecimalBounds d -> d.decMax() != null ? d.decMax().longValue() : null;
+            case NumericBounds.Unbounded ignored -> null;
         };
     }
 }

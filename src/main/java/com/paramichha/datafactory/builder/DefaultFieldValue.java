@@ -206,7 +206,7 @@ final public class DefaultFieldValue<T> implements FieldValue<T> {
             long tooMany = (long) Math.pow(10, c.maxIntegerDigits() + 1);
             cases.add(ConstraintCase.of(fn, "Digits", BigDecimal.valueOf(tooMany)));
         }
-        if (type == String.class && c.bounds() instanceof QuantityBounds.DecimalBounds db) {
+        if (type == String.class && c.bounds() instanceof NumericBounds.DecimalBounds db) {
             if (db.decMax() != null)
                 cases.add(ConstraintCase.of(fn, "DecimalMax",
                         db.decMax().add(BigDecimal.TEN).toPlainString()));
@@ -298,27 +298,27 @@ final public class DefaultFieldValue<T> implements FieldValue<T> {
         return com.paramichha.datafactory.generation.TemporalAnchor.PAST_INSTANT;
     }
 
-    private static boolean boundsHasMin(QuantityBounds b) {
+    private static boolean boundsHasMin(NumericBounds b) {
         return switch (b) {
-            case QuantityBounds.IntegerBounds i -> i.hasMin();
-            case QuantityBounds.DecimalBounds d -> d.hasMin();
-            case QuantityBounds.Unbounded u -> false;
+            case NumericBounds.IntegerBounds i -> i.hasMin();
+            case NumericBounds.DecimalBounds d -> d.hasMin();
+            case NumericBounds.Unbounded u -> false;
         };
     }
 
-    private static Long intMin(QuantityBounds b) {
+    private static Long intMin(NumericBounds b) {
         return switch (b) {
-            case QuantityBounds.IntegerBounds i -> i.min();
-            case QuantityBounds.DecimalBounds d -> d.decMin() != null ? d.decMin().longValue() : null;
-            case QuantityBounds.Unbounded u -> null;
+            case NumericBounds.IntegerBounds i -> i.min();
+            case NumericBounds.DecimalBounds d -> d.decMin() != null ? d.decMin().longValue() : null;
+            case NumericBounds.Unbounded u -> null;
         };
     }
 
-    private static Long intMax(QuantityBounds b) {
+    private static Long intMax(NumericBounds b) {
         return switch (b) {
-            case QuantityBounds.IntegerBounds i -> i.max();
-            case QuantityBounds.DecimalBounds d -> d.decMax() != null ? d.decMax().longValue() : null;
-            case QuantityBounds.Unbounded u -> null;
+            case NumericBounds.IntegerBounds i -> i.max();
+            case NumericBounds.DecimalBounds d -> d.decMax() != null ? d.decMax().longValue() : null;
+            case NumericBounds.Unbounded u -> null;
         };
     }
 }

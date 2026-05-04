@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *   ProxyFactory → AnnotationProxyFactory create methods
  */
 @DisplayName("ProductionDefaults")
-class ProductionDefaultsTest {
+class ConstraintCheckerTest {
 
     private static List<Annotation> anns(Annotation... annotations) {
         return new ArrayList<>(List.of(annotations));
@@ -38,7 +38,7 @@ class ProductionDefaultsTest {
         PrintStream old = System.out;
         System.setOut(new PrintStream(buf));
         try {
-            ProductionDefaults.warn(name, type, declared);
+            ConstraintChecker.warn(name, type, declared);
         } finally {
             System.setOut(old);
         }

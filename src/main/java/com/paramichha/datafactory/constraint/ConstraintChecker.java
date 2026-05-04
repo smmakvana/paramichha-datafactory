@@ -24,9 +24,9 @@ import java.util.List;
  *   <li>{@code @Size/@Length} without {@code @NotNull} → null bypasses size check</li>
  * </ul>
  */
-public final class ProductionDefaults {
+public final class ConstraintChecker {
 
-    private ProductionDefaults() {}
+    private ConstraintChecker() {}
 
     public static void warn(String fieldName, Class<?> fieldType, List<Annotation> declared) {
         if (neverWarn(fieldType)) return;

@@ -17,15 +17,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("BoundaryPlanner")
 class BoundaryPlannerTest {
 
-    private FieldConstraints strField(String name, QuantityBounds bounds) {
+    private FieldConstraints strField(String name, NumericBounds bounds) {
         return FieldConstraints.builder(name, String.class).bounds(bounds).build();
     }
 
-    private FieldConstraints intField(String name, QuantityBounds bounds) {
+    private FieldConstraints intField(String name, NumericBounds bounds) {
         return FieldConstraints.builder(name, Integer.class).bounds(bounds).integerOnly(true).build();
     }
 
-    private FieldConstraints longField(String name, QuantityBounds bounds) {
+    private FieldConstraints longField(String name, NumericBounds bounds) {
         return FieldConstraints.builder(name, Long.class).bounds(bounds).integerOnly(true).build();
     }
 
@@ -46,14 +46,14 @@ class BoundaryPlannerTest {
     class NoBounds {
         @Test
         void string_semanticOnly() {
-            assertThat(labels(BoundaryPlanner.plan(strField("name", QuantityBounds.unbounded()))))
+            assertThat(labels(BoundaryPlanner.plan(strField("name", NumericBounds.unbounded()))))
                     .containsExactly("semantic");
         }
 
         @Test
         void integer_typeDefaults_negative_zero_semantic() {
             // Unbounded int → type-natural bounds Integer.MIN_VALUE to Integer.MAX_VALUE
-            assertThat(labels(BoundaryPlanner.plan(intField("count", QuantityBounds.unbounded()))))
+            assertThat(labels(BoundaryPlanner.plan(intField("count", NumericBounds.unbounded()))))
                     .containsExactly("semantic", "atMin", "justAboveMin", "midpoint", "justBelowMax", "atMax");
         }
     }
@@ -67,13 +67,13 @@ class BoundaryPlannerTest {
     class MinOnly {
         @Test
         void integer_threeTargets() {
-            assertThat(labels(BoundaryPlanner.plan(intField("age", QuantityBounds.atLeast(18)))))
+            assertThat(labels(BoundaryPlanner.plan(intField("age", NumericBounds.atLeast(18)))))
                     .containsExactly("semantic", "atMin", "justAboveMin");
         }
 
         @Test
         void integer_correctQuantities() {
-            var m = byLabel(BoundaryPlanner.plan(intField("age", QuantityBounds.atLeast(18))));
+            var m = byLabel(BoundaryPlanner.plan(intField("age", NumericBounds.atLeast(18))));
             assertThat(m.get("atMin").targetQuantity()).isEqualTo(18L);
             assertThat(m.get("justAboveMin").targetQuantity()).isEqualTo(19L);
             assertThat(m.get("semantic").targetQuantity()).isNull();
@@ -81,7 +81,7 @@ class BoundaryPlannerTest {
 
         @Test
         void string_correctLengthTargets() {
-            var m = byLabel(BoundaryPlanner.plan(strField("name", QuantityBounds.atLeast(5))));
+            var m = byLabel(BoundaryPlanner.plan(strField("name", NumericBounds.atLeast(5))));
             assertThat(m.get("atMin").targetQuantity()).isEqualTo(5L);
             assertThat(m.get("justAboveMin").targetQuantity()).isEqualTo(6L);
         }
@@ -96,13 +96,13 @@ class BoundaryPlannerTest {
     class MaxOnly {
         @Test
         void integer_threeTargets() {
-            assertThat(labels(BoundaryPlanner.plan(intField("rating", QuantityBounds.atMost(5)))))
+            assertThat(labels(BoundaryPlanner.plan(intField("rating", NumericBounds.atMost(5)))))
                     .containsExactly("semantic", "justBelowMax", "atMax");
         }
 
         @Test
         void integer_correctQuantities() {
-            var m = byLabel(BoundaryPlanner.plan(intField("rating", QuantityBounds.atMost(5))));
+            var m = byLabel(BoundaryPlanner.plan(intField("rating", NumericBounds.atMost(5))));
             assertThat(m.get("atMax").targetQuantity()).isEqualTo(5L);
             assertThat(m.get("justBelowMax").targetQuantity()).isEqualTo(4L);
         }
@@ -117,13 +117,13 @@ class BoundaryPlannerTest {
     class BothBounds {
         @Test
         void sixTargets() {
-            assertThat(labels(BoundaryPlanner.plan(intField("age", QuantityBounds.of(18L, 120L)))))
+            assertThat(labels(BoundaryPlanner.plan(intField("age", NumericBounds.of(18L, 120L)))))
                     .containsExactly("semantic", "atMin", "justAboveMin", "midpoint", "justBelowMax", "atMax");
         }
 
         @Test
         void correctQuantities() {
-            var m = byLabel(BoundaryPlanner.plan(intField("age", QuantityBounds.of(18L, 120L))));
+            var m = byLabel(BoundaryPlanner.plan(intField("age", NumericBounds.of(18L, 120L))));
             assertThat(m.get("atMin").targetQuantity()).isEqualTo(18L);
             assertThat(m.get("justAboveMin").targetQuantity()).isEqualTo(19L);
             assertThat(m.get("midpoint").targetQuantity()).isEqualTo(69L);
@@ -133,13 +133,13 @@ class BoundaryPlannerTest {
 
         @Test
         void string_midpointIsLengthMidpoint() {
-            var m = byLabel(BoundaryPlanner.plan(strField("name", QuantityBounds.of(2L, 50L))));
+            var m = byLabel(BoundaryPlanner.plan(strField("name", NumericBounds.of(2L, 50L))));
             assertThat(m.get("midpoint").targetQuantity()).isEqualTo(26L);
         }
 
         @Test
         void allTargetsWithinBounds() {
-            BoundaryPlanner.plan(intField("v", QuantityBounds.of(10L, 100L))).stream()
+            BoundaryPlanner.plan(intField("v", NumericBounds.of(10L, 100L))).stream()
                     .filter(t -> t.targetQuantity() != null)
                     .forEach(t -> assertThat(t.targetQuantity()).isBetween(10L, 100L));
         }
@@ -154,14 +154,14 @@ class BoundaryPlannerTest {
     class Exact {
         @Test
         void singleTarget() {
-            var targets = BoundaryPlanner.plan(intField("pin", QuantityBounds.exactly(6)));
+            var targets = BoundaryPlanner.plan(intField("pin", NumericBounds.exactly(6)));
             assertThat(labels(targets)).containsExactly("atMin");
             assertThat(targets.get(0).targetQuantity()).isEqualTo(6L);
         }
 
         @Test
         void string_singleTarget() {
-            var targets = BoundaryPlanner.plan(strField("otp", QuantityBounds.exactly(6)));
+            var targets = BoundaryPlanner.plan(strField("otp", NumericBounds.exactly(6)));
             assertThat(labels(targets)).containsExactly("atMin");
         }
     }
@@ -224,7 +224,7 @@ class BoundaryPlannerTest {
         @Test
         void adjacentBounds_noDuplicateLabels() {
             // min=5, max=6: justAboveMin(6)==atMax(6) → should deduplicate
-            var targets = BoundaryPlanner.plan(intField("flag", QuantityBounds.of(5L, 6L)));
+            var targets = BoundaryPlanner.plan(intField("flag", NumericBounds.of(5L, 6L)));
             assertThat(labels(targets)).doesNotHaveDuplicates();
         }
     }
@@ -289,20 +289,20 @@ class BoundaryPlannerTest {
     @DisplayName("Decimal bounds (@DecimalMin/@DecimalMax)")
     class DecimalBounds {
 
-        private FieldConstraints decimalField(String name, QuantityBounds bounds) {
+        private FieldConstraints decimalField(String name, NumericBounds bounds) {
             return FieldConstraints.builder(name, java.math.BigDecimal.class).bounds(bounds).build();
         }
 
         @Test
         void decimalMin_only_three_targets() {
-            var fc = decimalField("price", QuantityBounds.atLeastDecimal(new BigDecimal("0.01")));
+            var fc = decimalField("price", NumericBounds.atLeastDecimal(new BigDecimal("0.01")));
             var labels = labels(BoundaryPlanner.plan(fc));
             assertThat(labels).containsExactly("semantic", "atMin", "justAboveMin");
         }
 
         @Test
         void decimalMin_atMin_has_decimal_precision() {
-            var fc = decimalField("price", QuantityBounds.atLeastDecimal(new BigDecimal("0.01")));
+            var fc = decimalField("price", NumericBounds.atLeastDecimal(new BigDecimal("0.01")));
             var m = byLabel(BoundaryPlanner.plan(fc));
             assertThat(((BoundaryTarget.DecimalFixed) m.get("atMin")).value()).isEqualByComparingTo("0.01");
             assertThat(((BoundaryTarget.DecimalFixed) m.get("justAboveMin")).value()).isEqualByComparingTo("0.02");
@@ -310,8 +310,8 @@ class BoundaryPlannerTest {
 
         @Test
         void decimalBoth_six_targets() {
-            var bounds = QuantityBounds.atLeastDecimal(new BigDecimal("0.01"))
-                    .intersect(QuantityBounds.atMostDecimal(new BigDecimal("999.99")));
+            var bounds = NumericBounds.atLeastDecimal(new BigDecimal("0.01"))
+                    .intersect(NumericBounds.atMostDecimal(new BigDecimal("999.99")));
             var fc = decimalField("price", bounds);
             var labels = labels(BoundaryPlanner.plan(fc));
             assertThat(labels).containsExactly("semantic", "atMin", "justAboveMin", "midpoint", "justBelowMax", "atMax");
@@ -319,8 +319,8 @@ class BoundaryPlannerTest {
 
         @Test
         void decimalBoth_boundary_values_preserve_precision() {
-            var bounds = QuantityBounds.atLeastDecimal(new BigDecimal("0.01"))
-                    .intersect(QuantityBounds.atMostDecimal(new BigDecimal("999.99")));
+            var bounds = NumericBounds.atLeastDecimal(new BigDecimal("0.01"))
+                    .intersect(NumericBounds.atMostDecimal(new BigDecimal("999.99")));
             var fc = decimalField("price", bounds);
             var m = byLabel(BoundaryPlanner.plan(fc));
             assertThat(((BoundaryTarget.DecimalFixed) m.get("atMin")).value()).isEqualByComparingTo("0.01");

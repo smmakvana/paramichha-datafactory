@@ -25,70 +25,70 @@ class AnalyzerCoverageTest {
 
     @Nested
     @DisplayName("QuantityBounds")
-    class QuantityBoundsCoverage {
+    class NumericBoundsCoverage {
 
         @Test
         void unbounded() {
-            assertThat(QuantityBounds.unbounded().isUnbounded()).isTrue();
+            assertThat(NumericBounds.unbounded().isUnbounded()).isTrue();
         }
 
         @Test
         void of() {
-            var b = QuantityBounds.of(1L, 10L);
+            var b = NumericBounds.of(1L, 10L);
             assertThat(b.min()).isEqualTo(1L);
             assertThat(b.max()).isEqualTo(10L);
         }
 
         @Test
         void atLeast() {
-            var b = QuantityBounds.atLeast(5L);
+            var b = NumericBounds.atLeast(5L);
             assertThat(b.hasMin()).isTrue();
             assertThat(b.hasMax()).isFalse();
         }
 
         @Test
         void atMost() {
-            var b = QuantityBounds.atMost(5L);
+            var b = NumericBounds.atMost(5L);
             assertThat(b.hasMax()).isTrue();
             assertThat(b.hasMin()).isFalse();
         }
 
         @Test
         void exactly() {
-            var b = QuantityBounds.exactly(5L);
+            var b = NumericBounds.exactly(5L);
             assertThat(b.min()).isEqualTo(b.max());
         }
 
         @Test
         void hasBoth() {
-            assertThat(QuantityBounds.of(1L, 10L).hasBoth()).isTrue();
+            assertThat(NumericBounds.of(1L, 10L).hasBoth()).isTrue();
         }
 
         @Test
         void hasBoth_false() {
-            assertThat(QuantityBounds.atLeast(1L).hasBoth()).isFalse();
+            assertThat(NumericBounds.atLeast(1L).hasBoth()).isFalse();
         }
 
         @Test
         void isContradictory_true() {
-            assertThat(new QuantityBounds.IntegerBounds(10L, 5L).isContradictory()).isTrue();
+            assertThat(new NumericBounds.IntegerBounds(10L, 5L).isContradictory()).isTrue();
         }
 
         @Test
         void isContradictory_false() {
-            assertThat(new QuantityBounds.IntegerBounds(5L, 10L).isContradictory()).isFalse();
+            assertThat(new NumericBounds.IntegerBounds(5L, 10L).isContradictory()).isFalse();
         }
 
         @Test
         void isContradictory_noMin() {
-            assertThat(QuantityBounds.atMost(5L).isContradictory()).isFalse();
+            assertThat(NumericBounds.atMost(5L).isContradictory()).isFalse();
         }
 
         // intersect — all branch combinations in maxOf/minOf
         @Test
         void intersect_bothBounds() {
-            var a = QuantityBounds.of(2L, 8L);
-            var b = QuantityBounds.of(5L, 10L);
+            var a = NumericBounds.of(2L, 8L);
+            var b = NumericBounds.of(5L, 10L);
             var r = a.intersect(b);
             assertThat(r.min()).isEqualTo(5L); // max of 2,5
             assertThat(r.max()).isEqualTo(8L); // min of 8,10
@@ -97,8 +97,8 @@ class AnalyzerCoverageTest {
         @Test
         void intersect_thisMinNull() {
             // maxOf(null, 5) → 5
-            var a = QuantityBounds.atMost(10L);
-            var b = QuantityBounds.atLeast(5L);
+            var a = NumericBounds.atMost(10L);
+            var b = NumericBounds.atLeast(5L);
             var r = a.intersect(b);
             assertThat(r.min()).isEqualTo(5L);
             assertThat(r.max()).isEqualTo(10L);
@@ -107,8 +107,8 @@ class AnalyzerCoverageTest {
         @Test
         void intersect_otherMinNull() {
             // maxOf(5, null) → 5
-            var a = QuantityBounds.atLeast(5L);
-            var b = QuantityBounds.atMost(10L);
+            var a = NumericBounds.atLeast(5L);
+            var b = NumericBounds.atMost(10L);
             var r = a.intersect(b);
             assertThat(r.min()).isEqualTo(5L);
         }
@@ -116,8 +116,8 @@ class AnalyzerCoverageTest {
         @Test
         void intersect_thisMaxNull() {
             // minOf(null, 10) → 10
-            var a = QuantityBounds.atLeast(1L);
-            var b = QuantityBounds.atMost(10L);
+            var a = NumericBounds.atLeast(1L);
+            var b = NumericBounds.atMost(10L);
             var r = a.intersect(b);
             assertThat(r.max()).isEqualTo(10L);
         }
@@ -125,15 +125,15 @@ class AnalyzerCoverageTest {
         @Test
         void intersect_otherMaxNull() {
             // minOf(10, null) → 10
-            var a = QuantityBounds.atMost(10L);
-            var b = QuantityBounds.atLeast(1L);
+            var a = NumericBounds.atMost(10L);
+            var b = NumericBounds.atLeast(1L);
             var r = a.intersect(b);
             assertThat(r.max()).isEqualTo(10L);
         }
 
         @Test
         void intersect_bothNull_remainsUnbounded() {
-            var r = QuantityBounds.unbounded().intersect(QuantityBounds.unbounded());
+            var r = NumericBounds.unbounded().intersect(NumericBounds.unbounded());
             assertThat(r.isUnbounded()).isTrue();
         }
     }
@@ -558,8 +558,8 @@ class AnalyzerCoverageTest {
             var ann = (jakarta.validation.constraints.DecimalMax)
                     DecimalMaxHolder.class.getDeclaredField("f").getAnnotations()[0];
             var fc = AnnotationResolver.analyze("price", java.math.BigDecimal.class, java.util.List.of(ann));
-            assertThat(fc.bounds() instanceof QuantityBounds.DecimalBounds).isTrue();
-            assertThat(((QuantityBounds.DecimalBounds) fc.bounds()).decMax()).isEqualByComparingTo("999");
+            assertThat(fc.bounds() instanceof NumericBounds.DecimalBounds).isTrue();
+            assertThat(((NumericBounds.DecimalBounds) fc.bounds()).decMax()).isEqualByComparingTo("999");
         }
 
         @Test
@@ -628,7 +628,7 @@ class AnalyzerCoverageTest {
     @DisplayName("StringAnnotationClassifier — branch gaps")
     class StringClassifierGaps {
 
-        private final StringAnnotationClassifier C = StringAnnotationClassifier.INSTANCE;
+        private final TextAnnotationReader C = TextAnnotationReader.INSTANCE;
 
         @Test
         void classifyFormat_isbn()  { assertThat(C.classifyFormat("@ISBN")).isEqualTo(FormatType.ISBN); }

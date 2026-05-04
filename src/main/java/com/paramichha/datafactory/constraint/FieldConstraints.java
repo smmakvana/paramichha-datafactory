@@ -16,7 +16,7 @@ public record FieldConstraints(
         boolean mustBeNull,
         FormatType format,
         String patternRegexp,
-        QuantityBounds bounds,
+        NumericBounds bounds,
         boolean integerOnly,
         int maxIntegerDigits,
         int maxFractionDigits,
@@ -31,7 +31,7 @@ public record FieldConstraints(
     }
 
     public boolean hasFormat()   { return format != FormatType.NONE; }
-    public boolean hasBounds()   { return !(bounds instanceof QuantityBounds.Unbounded); }
+    public boolean hasBounds()   { return !(bounds instanceof NumericBounds.Unbounded); }
     public boolean hasTemporal() { return temporal != TemporalDirection.NONE; }
 
     public boolean isPast() {
@@ -51,7 +51,7 @@ public record FieldConstraints(
         private boolean mustBeNull        = false;
         private FormatType format         = FormatType.NONE;
         private String patternRegexp      = null;
-        private QuantityBounds bounds     = QuantityBounds.unbounded();
+        private NumericBounds bounds     = NumericBounds.unbounded();
         private boolean integerOnly       = false;
         private int maxIntegerDigits      = Integer.MAX_VALUE;
         private int maxFractionDigits     = Integer.MAX_VALUE;
@@ -70,7 +70,7 @@ public record FieldConstraints(
         public Builder mustBeNull(boolean v)          { this.mustBeNull = v;          return this; }
         public Builder format(FormatType v)           { this.format = v;              return this; }
         public Builder patternRegexp(String v)        { this.patternRegexp = v;       return this; }
-        public Builder bounds(QuantityBounds v)       { this.bounds = v;              return this; }
+        public Builder bounds(NumericBounds v)       { this.bounds = v;              return this; }
         public Builder integerOnly(boolean v)         { this.integerOnly = v;         return this; }
         public Builder maxIntegerDigits(int v)        { this.maxIntegerDigits = v;    return this; }
         public Builder maxFractionDigits(int v)       { this.maxFractionDigits = v;   return this; }

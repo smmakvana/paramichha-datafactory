@@ -7,7 +7,7 @@ import com.paramichha.datafactory.constraint.FieldDescriptor;
 import com.paramichha.datafactory.generation.FakerProvider;
 import net.datafaker.Faker;
 import com.paramichha.datafactory.instantiation.ObjectAssembler;
-import com.paramichha.datafactory.constraint.ProductionDefaults;
+import com.paramichha.datafactory.constraint.ConstraintChecker;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -73,7 +73,7 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
 
     private void surfaceProductionWarnings(List<FieldDescriptor> fields) {
         for (FieldDescriptor field : fields) {
-            ProductionDefaults.warn(field.name(), field.rawType(), field.validations());
+            ConstraintChecker.warn(field.name(), field.rawType(), field.validations());
         }
     }
 

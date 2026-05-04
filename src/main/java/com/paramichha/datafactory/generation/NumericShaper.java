@@ -1,7 +1,7 @@
 package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
-import com.paramichha.datafactory.constraint.QuantityBounds;
+import com.paramichha.datafactory.constraint.NumericBounds;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -99,19 +99,19 @@ public final class NumericShaper {
         return (s > 0 && s != Integer.MAX_VALUE) ? s : 2;
     }
 
-    private static Long intMin(QuantityBounds b) {
+    private static Long intMin(NumericBounds b) {
         return switch (b) {
-            case QuantityBounds.IntegerBounds i -> i.min();
-            case QuantityBounds.DecimalBounds d -> d.decMin() != null ? d.decMin().longValue() : null;
-            case QuantityBounds.Unbounded u     -> null;
+            case NumericBounds.IntegerBounds i -> i.min();
+            case NumericBounds.DecimalBounds d -> d.decMin() != null ? d.decMin().longValue() : null;
+            case NumericBounds.Unbounded u     -> null;
         };
     }
 
-    private static Long intMax(QuantityBounds b) {
+    private static Long intMax(NumericBounds b) {
         return switch (b) {
-            case QuantityBounds.IntegerBounds i -> i.max();
-            case QuantityBounds.DecimalBounds d -> d.decMax() != null ? d.decMax().longValue() : null;
-            case QuantityBounds.Unbounded u     -> null;
+            case NumericBounds.IntegerBounds i -> i.max();
+            case NumericBounds.DecimalBounds d -> d.decMax() != null ? d.decMax().longValue() : null;
+            case NumericBounds.Unbounded u     -> null;
         };
     }
 }

@@ -1,7 +1,7 @@
 package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
-import com.paramichha.datafactory.constraint.QuantityBounds;
+import com.paramichha.datafactory.constraint.NumericBounds;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -35,13 +35,13 @@ public final class BoundaryPlanner {
         if (field.fieldType() == java.util.UUID.class) return List.of(BoundaryTarget.semantic());
 
         return switch (field.bounds()) {
-            case QuantityBounds.Unbounded u ->
+            case NumericBounds.Unbounded u ->
                 isNumeric(field.fieldType())
                     ? planTypeNaturalBounds(field.fieldType())
                     : List.of(BoundaryTarget.semantic());
 
-            case QuantityBounds.IntegerBounds b -> planInteger(b);
-            case QuantityBounds.DecimalBounds b -> planDecimal(b);
+            case NumericBounds.IntegerBounds b -> planInteger(b);
+            case NumericBounds.DecimalBounds b -> planDecimal(b);
         };
     }
 
@@ -49,13 +49,13 @@ public final class BoundaryPlanner {
 
     private static List<BoundaryTarget> planTypeNaturalBounds(Class<?> type) {
         if (type == Byte.class    || type == byte.class)
-            return planInteger(new QuantityBounds.IntegerBounds((long) Byte.MIN_VALUE,    (long) Byte.MAX_VALUE));
+            return planInteger(new NumericBounds.IntegerBounds((long) Byte.MIN_VALUE,    (long) Byte.MAX_VALUE));
         if (type == Short.class   || type == short.class)
-            return planInteger(new QuantityBounds.IntegerBounds((long) Short.MIN_VALUE,   (long) Short.MAX_VALUE));
+            return planInteger(new NumericBounds.IntegerBounds((long) Short.MIN_VALUE,   (long) Short.MAX_VALUE));
         if (type == Integer.class || type == int.class)
-            return planInteger(new QuantityBounds.IntegerBounds((long) Integer.MIN_VALUE, (long) Integer.MAX_VALUE));
+            return planInteger(new NumericBounds.IntegerBounds((long) Integer.MIN_VALUE, (long) Integer.MAX_VALUE));
         if (type == Long.class    || type == long.class)
-            return planInteger(new QuantityBounds.IntegerBounds(Long.MIN_VALUE,           Long.MAX_VALUE));
+            return planInteger(new NumericBounds.IntegerBounds(Long.MIN_VALUE,           Long.MAX_VALUE));
         // float/double/BigDecimal/BigInteger — semantic + zero + negative as before
         return List.of(BoundaryTarget.typeDefaultNegative(),
                        BoundaryTarget.typeDefaultZero(),
@@ -72,7 +72,7 @@ public final class BoundaryPlanner {
 
     // ── integer bounds ────────────────────────────────────────────────────
 
-    private static List<BoundaryTarget> planInteger(QuantityBounds.IntegerBounds b) {
+    private static List<BoundaryTarget> planInteger(NumericBounds.IntegerBounds b) {
         Long min = b.min();
         Long max = b.max();
 
@@ -99,7 +99,7 @@ public final class BoundaryPlanner {
 
     // ── decimal bounds ────────────────────────────────────────────────────
 
-    private static List<BoundaryTarget> planDecimal(QuantityBounds.DecimalBounds b) {
+    private static List<BoundaryTarget> planDecimal(NumericBounds.DecimalBounds b) {
         BigDecimal min = b.decMin();
         BigDecimal max = b.decMax();
 

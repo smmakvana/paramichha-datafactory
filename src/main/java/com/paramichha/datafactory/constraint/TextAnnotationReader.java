@@ -4,11 +4,11 @@ package com.paramichha.datafactory.constraint;
  * Classifies annotation strings from YAML config,
  * e.g. {@code "@NotBlank"}, {@code "@Min(18)"}, {@code "@Size(min=2, max=50)"}.
  */
-final class StringAnnotationClassifier implements AnnotationClassifier {
+final class TextAnnotationReader implements AnnotationReader {
 
-    public static final StringAnnotationClassifier INSTANCE = new StringAnnotationClassifier();
+    public static final TextAnnotationReader INSTANCE = new TextAnnotationReader();
 
-    private StringAnnotationClassifier() {
+    private TextAnnotationReader() {
     }
 
     private static String s(Object o) {
@@ -89,26 +89,26 @@ final class StringAnnotationClassifier implements AnnotationClassifier {
     }
 
     @Override
-    public QuantityBounds classifyQuantity(Object raw) {
+    public NumericBounds classifyQuantity(Object raw) {
         String s = s(raw);
-        if (has(s, "PositiveOrZero")) return QuantityBounds.atLeast(0L);
-        if (has(s, "Positive") && !has(s, "PositiveOrZero")) return QuantityBounds.atLeast(1L);
-        if (has(s, "NegativeOrZero")) return QuantityBounds.atMost(0L);
-        if (has(s, "Negative") && !has(s, "NegativeOrZero")) return QuantityBounds.atMost(-1L);
+        if (has(s, "PositiveOrZero")) return NumericBounds.atLeast(0L);
+        if (has(s, "Positive") && !has(s, "PositiveOrZero")) return NumericBounds.atLeast(1L);
+        if (has(s, "NegativeOrZero")) return NumericBounds.atMost(0L);
+        if (has(s, "Negative") && !has(s, "NegativeOrZero")) return NumericBounds.atMost(-1L);
         if (has(s, "Min(")) {
             Long v = extractLong(s, "Min(");
-            if (v != null) return QuantityBounds.atLeast(v);
+            if (v != null) return NumericBounds.atLeast(v);
         }
         if (has(s, "Max(")) {
             Long v = extractLong(s, "Max(");
-            if (v != null) return QuantityBounds.atMost(v);
+            if (v != null) return NumericBounds.atMost(v);
         }
         if (has(s, "Size") || has(s, "Length")) {
             Long min = extractNamedLong(s, "min=");
             Long max = extractNamedLong(s, "max=");
             if (min != null && min == 0) min = null;
             if (max != null && max == Integer.MAX_VALUE) max = null;
-            if (min != null || max != null) return QuantityBounds.of(min, max);
+            if (min != null || max != null) return NumericBounds.of(min, max);
         }
         return null;
     }

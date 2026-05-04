@@ -5,13 +5,13 @@ package com.paramichha.datafactory.constraint;
  *
  * <p>Two implementations:
  * <ul>
- *   <li>{@link RuntimeAnnotationClassifier} — real {@code Annotation} instances from reflection
- *   <li>{@link StringAnnotationClassifier} — annotation strings from YAML, e.g. {@code "@Min(18)"}
+ *   <li>{@link ClassAnnotationReader} — real {@code Annotation} instances from reflection
+ *   <li>{@link TextAnnotationReader} — annotation strings from YAML, e.g. {@code "@Min(18)"}
  * </ul>
  *
  * <p>{@link AnnotationResolver} runs the same five-pass pipeline against either implementation.
  */
-public interface AnnotationClassifier {
+public interface AnnotationReader {
 
     boolean isNotNull(Object annotation);
 
@@ -33,7 +33,7 @@ public interface AnnotationClassifier {
     /**
      * Returns bounds if the annotation constrains quantity, otherwise {@code null}.
      */
-    QuantityBounds classifyQuantity(Object annotation);
+    NumericBounds classifyQuantity(Object annotation);
 
     /**
      * Returns the integer-digit count if the annotation is {@code @Digits}, otherwise {@code -1}.

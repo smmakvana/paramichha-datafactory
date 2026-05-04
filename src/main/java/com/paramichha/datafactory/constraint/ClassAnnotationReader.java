@@ -12,11 +12,11 @@ import java.lang.annotation.Annotation;
 /**
  * Classifies real {@code java.lang.annotation.Annotation} instances obtained via reflection.
  */
-final class RuntimeAnnotationClassifier implements AnnotationClassifier {
+final class ClassAnnotationReader implements AnnotationReader {
 
-    public static final RuntimeAnnotationClassifier INSTANCE = new RuntimeAnnotationClassifier();
+    public static final ClassAnnotationReader INSTANCE = new ClassAnnotationReader();
 
-    private RuntimeAnnotationClassifier() {
+    private ClassAnnotationReader() {
     }
 
     @Override
@@ -63,29 +63,29 @@ final class RuntimeAnnotationClassifier implements AnnotationClassifier {
     }
 
     @Override
-    public QuantityBounds classifyQuantity(Object raw) {
+    public NumericBounds classifyQuantity(Object raw) {
         Annotation a = (Annotation) raw;
-        if (a instanceof Min m) return QuantityBounds.atLeast(m.value());
-        if (a instanceof Max m) return QuantityBounds.atMost(m.value());
-        if (a instanceof Positive) return QuantityBounds.atLeast(1L);
-        if (a instanceof PositiveOrZero) return QuantityBounds.atLeast(0L);
-        if (a instanceof Negative) return QuantityBounds.atMost(-1L);
-        if (a instanceof NegativeOrZero) return QuantityBounds.atMost(0L);
+        if (a instanceof Min m) return NumericBounds.atLeast(m.value());
+        if (a instanceof Max m) return NumericBounds.atMost(m.value());
+        if (a instanceof Positive) return NumericBounds.atLeast(1L);
+        if (a instanceof PositiveOrZero) return NumericBounds.atLeast(0L);
+        if (a instanceof Negative) return NumericBounds.atMost(-1L);
+        if (a instanceof NegativeOrZero) return NumericBounds.atMost(0L);
         if (a instanceof Size s) {
             Long min = s.min() > 0 ? (long) s.min() : null;
             Long max = s.max() < Integer.MAX_VALUE ? (long) s.max() : null;
-            return (min != null || max != null) ? QuantityBounds.of(min, max) : null;
+            return (min != null || max != null) ? NumericBounds.of(min, max) : null;
         }
         if (a instanceof Length l) {
             Long min = l.min() > 0 ? (long) l.min() : null;
             Long max = l.max() < Integer.MAX_VALUE ? (long) l.max() : null;
-            return (min != null || max != null) ? QuantityBounds.of(min, max) : null;
+            return (min != null || max != null) ? NumericBounds.of(min, max) : null;
         }
         if (a instanceof DecimalMin dm) {
             try {
                 // Round up — e.g. 0.01 → 1, so boundaries stay above minimum
                 java.math.BigDecimal dec = new java.math.BigDecimal(dm.value());
-                return QuantityBounds.atLeastDecimal(dec);
+                return NumericBounds.atLeastDecimal(dec);
             } catch (NumberFormatException ignored) {
             }
         }
@@ -93,7 +93,7 @@ final class RuntimeAnnotationClassifier implements AnnotationClassifier {
             try {
                 // Round down — e.g. 999.99 → 999, so boundaries stay below maximum
                 java.math.BigDecimal dec = new java.math.BigDecimal(dm.value());
-                return QuantityBounds.atMostDecimal(dec);
+                return NumericBounds.atMostDecimal(dec);
             } catch (NumberFormatException ignored) {
             }
         }
