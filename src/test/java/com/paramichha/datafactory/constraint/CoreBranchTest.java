@@ -1,9 +1,9 @@
 package com.paramichha.datafactory.constraint;
 
-import com.paramichha.datafactory.instantiation.AllArgsConstructorStrategy;
-import com.paramichha.datafactory.instantiation.LombokBuilderStrategy;
-import com.paramichha.datafactory.instantiation.RecordStrategy;
-import com.paramichha.datafactory.instantiation.SetterStrategy;
+import com.paramichha.datafactory.instantiation.ConstructorObjectCreation;
+import com.paramichha.datafactory.instantiation.LombokObjectCreation;
+import com.paramichha.datafactory.instantiation.RecordObjectCreation;
+import com.paramichha.datafactory.instantiation.PojoObjectCreation;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Value;
@@ -46,7 +46,7 @@ class CoreBranchTest {
             var fields = FieldDescriptor.extract(BoolPrimRequest.class);
             var values = new LinkedHashMap<String, Object>();
             values.put("flag", true);
-            var result = LombokBuilderStrategy.INSTANCE.instantiate(BoolPrimRequest.class, fields, values);
+            var result = LombokObjectCreation.INSTANCE.create(BoolPrimRequest.class, fields, values);
             assertThat(result.isFlag()).isTrue();
         }
 
@@ -55,7 +55,7 @@ class CoreBranchTest {
             var fields = FieldDescriptor.extract(CharPrimRequest.class);
             var values = new LinkedHashMap<String, Object>();
             values.put("letter", 'Q');
-            var result = LombokBuilderStrategy.INSTANCE.instantiate(CharPrimRequest.class, fields, values);
+            var result = LombokObjectCreation.INSTANCE.create(CharPrimRequest.class, fields, values);
             assertThat(result.getLetter()).isEqualTo('Q');
         }
 
@@ -68,7 +68,7 @@ class CoreBranchTest {
             var values = Map.of("flag", (Object) Boolean.TRUE);
             // getMethod("flag", Boolean.class) will fail (Lombok generates boolean)
             // toPrimitive(Boolean.class) = boolean.class → getMethod("flag", boolean.class) succeeds
-            var result = LombokBuilderStrategy.INSTANCE.instantiate(BoolPrimRequest.class, List.of(fd), values);
+            var result = LombokObjectCreation.INSTANCE.create(BoolPrimRequest.class, List.of(fd), values);
             assertThat(result.isFlag()).isTrue();
         }
 
@@ -76,7 +76,7 @@ class CoreBranchTest {
         void toPrimitive_char_fallback() throws Exception {
             var fd = new FieldDescriptor("letter", Character.class, Character.class, Collections.emptyList());
             var values = Map.of("letter", (Object) 'Z');
-            var result = LombokBuilderStrategy.INSTANCE.instantiate(CharPrimRequest.class, List.of(fd), values);
+            var result = LombokObjectCreation.INSTANCE.create(CharPrimRequest.class, List.of(fd), values);
             assertThat(result.getLetter()).isEqualTo('Z');
         }
 
@@ -86,7 +86,7 @@ class CoreBranchTest {
             var fd = new FieldDescriptor("flag", boolean.class, boolean.class, Collections.emptyList());
             var values = Map.of("flag", (Object) Boolean.TRUE);
             // getMethod("flag", boolean.class) fails → toWrapper(boolean.class) = Boolean.class → succeeds
-            var result = LombokBuilderStrategy.INSTANCE.instantiate(BoolWrapperRequest.class, List.of(fd), values);
+            var result = LombokObjectCreation.INSTANCE.create(BoolWrapperRequest.class, List.of(fd), values);
             assertThat(result.getFlag()).isTrue();
         }
 
@@ -96,7 +96,7 @@ class CoreBranchTest {
             var fields = FieldDescriptor.extract(BoolWrapperRequest.class);
             var values = new LinkedHashMap<String, Object>();
             values.put("flag", null);   // Boolean wrapper — null is valid, coerce(null, Boolean) → null
-            var result = LombokBuilderStrategy.INSTANCE.instantiate(BoolWrapperRequest.class, fields, values);
+            var result = LombokObjectCreation.INSTANCE.create(BoolWrapperRequest.class, fields, values);
             assertThat(result.getFlag()).isNull();
         }
 
@@ -104,7 +104,7 @@ class CoreBranchTest {
         void coerce_non_number_passthrough() throws Exception {
             var fields = FieldDescriptor.extract(StringRequest.class);
             var values = Map.of("name", (Object) "hello");
-            var result = LombokBuilderStrategy.INSTANCE.instantiate(StringRequest.class, fields, values);
+            var result = LombokObjectCreation.INSTANCE.create(StringRequest.class, fields, values);
             assertThat(result.getName()).isEqualTo("hello");
         }
 
@@ -142,7 +142,7 @@ class CoreBranchTest {
 
     @Nested
     @DisplayName("SetterStrategy — findField null return")
-    class SetterFindFieldNull {
+    class PojoObjectCreationFindFieldNull {
 
         @Test
         void nonexistent_field_silently_skipped() throws Exception {
@@ -154,7 +154,7 @@ class CoreBranchTest {
             var values = new LinkedHashMap<String, Object>();
             values.put("real", "ok");
             values.put("ghost", "ignored");
-            var result = SetterStrategy.INSTANCE.instantiate(SimpleBean.class, fields, values);
+            var result = PojoObjectCreation.INSTANCE.create(SimpleBean.class, fields, values);
             assertThat(result.real).isEqualTo("ok");
         }
 
@@ -173,16 +173,16 @@ class CoreBranchTest {
 
         @Test
         void interface_returns_false() {
-            assertThat(AllArgsConstructorStrategy.INSTANCE
-                    .canHandle(NoConstructorInterface.class, List.of()))
+            assertThat(ConstructorObjectCreation.INSTANCE
+                    .canCreate(NoConstructorInterface.class, List.of()))
                     .isFalse();
         }
 
         @Test
         void zero_fields_no_match_returns_false() {
             // Class with only a 2-arg constructor, but we pass 0 fields — count mismatch, null returned
-            assertThat(AllArgsConstructorStrategy.INSTANCE
-                    .canHandle(NoConstructorInterface.class, List.of()))
+            assertThat(ConstructorObjectCreation.INSTANCE
+                    .canCreate(NoConstructorInterface.class, List.of()))
                     .isFalse();
         }
 
@@ -200,7 +200,7 @@ class CoreBranchTest {
 
     @Nested
     @DisplayName("RecordStrategy — defaultPrimitive double arm")
-    class RecordDoublePrimitive {
+    class RecordObjectCreationDoublePrimitive {
 
         @Test
         void null_double_uses_default_zero() throws Exception {
@@ -208,7 +208,7 @@ class CoreBranchTest {
             var values = new LinkedHashMap<String, Object>();
             values.put("d", null);
             values.put("f", null);
-            var result = RecordStrategy.INSTANCE.instantiate(WithDouble.class, fields, values);
+            var result = RecordObjectCreation.INSTANCE.create(WithDouble.class, fields, values);
             assertThat(result.d()).isEqualTo(0.0d);
             assertThat(result.f()).isEqualTo(0.0f);
         }

@@ -8,21 +8,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Assembles an instance of any class from a field-value map by delegating to the first
- * {@link InstantiationStrategy} that can handle it.
+ * {@link ObjectCreation} that can handle it.
  *
  * <p>The winning strategy per class is cached so {@code canHandle()} reflection is only
  * paid once per class — not once per call.
  */
 public final class ObjectAssembler {
 
-    private static final List<InstantiationStrategy> STRATEGIES = List.of(
-            LombokBuilderStrategy.INSTANCE,
-            RecordStrategy.INSTANCE,
-            AllArgsConstructorStrategy.INSTANCE,
-            SetterStrategy.INSTANCE
+    private static final List<ObjectCreation> STRATEGIES = List.of(
+            LombokObjectCreation.INSTANCE,
+            RecordObjectCreation.INSTANCE,
+            ConstructorObjectCreation.INSTANCE,
+            PojoObjectCreation.INSTANCE
     );
 
-    private static final ConcurrentHashMap<Class<?>, InstantiationStrategy> STRATEGY_CACHE
+    private static final ConcurrentHashMap<Class<?>, ObjectCreation> STRATEGY_CACHE
             = new ConcurrentHashMap<>();
 
     private ObjectAssembler() {
@@ -30,13 +30,13 @@ public final class ObjectAssembler {
 
     public static <T> T instantiate(Class<T> type, List<FieldDescriptor> fields,
                                     Map<String, Object> values) throws Exception {
-        InstantiationStrategy strategy = STRATEGY_CACHE.computeIfAbsent(type,
+        ObjectCreation strategy = STRATEGY_CACHE.computeIfAbsent(type,
                 t -> STRATEGIES.stream()
-                        .filter(s -> s.canHandle(t, fields))
+                        .filter(s -> s.canCreate(t, fields))
                         .findFirst()
                         .orElseThrow(() -> new IllegalStateException(
                                 "No instantiation strategy found for " + t.getSimpleName()
                                         + ". Implement InstantiationStrategy and add it to ObjectAssembler.")));
-        return strategy.instantiate(type, fields, values);
+        return strategy.create(type, fields, values);
     }
 }

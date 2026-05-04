@@ -2,8 +2,8 @@ package com.paramichha.datafactory.constraint;
 
 import com.paramichha.datafactory.builder.DefaultFieldValue;
 import com.paramichha.datafactory.builder.FieldBuilderFactory;
-import com.paramichha.datafactory.instantiation.AllArgsConstructorStrategy;
-import com.paramichha.datafactory.instantiation.RecordStrategy;
+import com.paramichha.datafactory.instantiation.ConstructorObjectCreation;
+import com.paramichha.datafactory.instantiation.RecordObjectCreation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -242,7 +242,7 @@ class DefaultFieldValueCoverageTest {
             var values = new java.util.LinkedHashMap<String, Object>();
             fields.forEach(f -> values.put(f.name(), null));
 
-            var obj = AllArgsConstructorStrategy.INSTANCE.instantiate(
+            var obj = ConstructorObjectCreation.INSTANCE.create(
                     AllArgsClass.class, fields, values);
             assertThat(obj.boolV).isFalse();
             assertThat(obj.charV).isEqualTo('\0');
@@ -260,7 +260,7 @@ class DefaultFieldValueCoverageTest {
             var values = new java.util.LinkedHashMap<String, Object>();
             fields.forEach(f -> values.put(f.name(), null));
 
-            var obj = RecordStrategy.INSTANCE.instantiate(
+            var obj = RecordObjectCreation.INSTANCE.create(
                     AllArgsRecord.class, fields, values);
             assertThat(obj.boolV()).isFalse();
             assertThat(obj.charV()).isEqualTo('\0');

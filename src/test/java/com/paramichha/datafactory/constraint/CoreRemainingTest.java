@@ -1,9 +1,9 @@
 package com.paramichha.datafactory.constraint;
 
-import com.paramichha.datafactory.instantiation.AllArgsConstructorStrategy;
-import com.paramichha.datafactory.instantiation.LombokBuilderStrategy;
-import com.paramichha.datafactory.instantiation.RecordStrategy;
-import com.paramichha.datafactory.instantiation.SetterStrategy;
+import com.paramichha.datafactory.instantiation.ConstructorObjectCreation;
+import com.paramichha.datafactory.instantiation.LombokObjectCreation;
+import com.paramichha.datafactory.instantiation.RecordObjectCreation;
+import com.paramichha.datafactory.instantiation.PojoObjectCreation;
 import lombok.Builder;
 import lombok.Value;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +50,7 @@ class CoreRemainingTest {
                     new FieldDescriptor("floatVal", Float.class, Float.class, Collections.emptyList()),
                     new FieldDescriptor("doubleVal", Double.class, Double.class, Collections.emptyList())
             );
-            return LombokBuilderStrategy.INSTANCE.instantiate(AllPrimitivesLombok.class, fields, values);
+            return LombokObjectCreation.INSTANCE.create(AllPrimitivesLombok.class, fields, values);
         }
 
         @Test
@@ -108,7 +108,7 @@ class CoreRemainingTest {
                     new FieldDescriptor("floatVal", float.class, float.class, Collections.emptyList()),
                     new FieldDescriptor("doubleVal", double.class, double.class, Collections.emptyList())
             );
-            return LombokBuilderStrategy.INSTANCE.instantiate(AllWrappersLombok.class, fields, values);
+            return LombokObjectCreation.INSTANCE.create(AllWrappersLombok.class, fields, values);
         }
 
         @Test
@@ -167,7 +167,7 @@ class CoreRemainingTest {
             values.put("byteVal", 42);   // Integer → Byte
             values.put("doubleVal", 42);   // Integer → Double
             values.put("floatVal", 42);   // Integer → Float
-            var r = LombokBuilderStrategy.INSTANCE.instantiate(AllWrappersForCoerce.class, fields, values);
+            var r = LombokObjectCreation.INSTANCE.create(AllWrappersForCoerce.class, fields, values);
             assertThat(r.getLongVal()).isEqualTo(42L);
             assertThat(r.getIntVal()).isEqualTo(42);
             assertThat(r.getShortVal()).isEqualTo((short) 42);
@@ -195,7 +195,7 @@ class CoreRemainingTest {
 
     @Nested
     @DisplayName("SetterStrategy — findField exits when c==null")
-    class SetterFindFieldNull {
+    class PojoObjectCreationFindFieldNull {
 
         @Test
         void field_not_in_any_class_returns_null_skip() throws Exception {
@@ -207,7 +207,7 @@ class CoreRemainingTest {
             var values = new LinkedHashMap<String, Object>();
             values.put("childField", "child");
             values.put("ghost", "ignored");
-            var r = SetterStrategy.INSTANCE.instantiate(ChildBean.class, fields, values);
+            var r = PojoObjectCreation.INSTANCE.create(ChildBean.class, fields, values);
             assertThat(r.childField).isEqualTo("child");
         }
 
@@ -236,7 +236,7 @@ class CoreRemainingTest {
                     new FieldDescriptor("b", String.class, String.class, Collections.emptyList()),
                     new FieldDescriptor("c", String.class, String.class, Collections.emptyList())
             );
-            assertThat(AllArgsConstructorStrategy.INSTANCE.canHandle(TwoArgsClass.class, fields))
+            assertThat(ConstructorObjectCreation.INSTANCE.canCreate(TwoArgsClass.class, fields))
                     .isFalse();
         }
 
@@ -254,14 +254,14 @@ class CoreRemainingTest {
 
     @Nested
     @DisplayName("RecordStrategy — all defaultPrimitive arms")
-    class RecordAllPrimitives {
+    class RecordObjectCreationAllPrimitives {
 
         @Test
         void all_primitives_null_use_defaults() throws Exception {
             var fields = FieldDescriptor.extract(AllPrimRec.class);
             var values = new LinkedHashMap<String, Object>();
             fields.forEach(fd -> values.put(fd.name(), null));
-            var r = RecordStrategy.INSTANCE.instantiate(AllPrimRec.class, fields, values);
+            var r = RecordObjectCreation.INSTANCE.create(AllPrimRec.class, fields, values);
             assertThat(r.b()).isFalse();
             assertThat(r.c()).isEqualTo('\0');
             assertThat(r.by()).isEqualTo((byte) 0);

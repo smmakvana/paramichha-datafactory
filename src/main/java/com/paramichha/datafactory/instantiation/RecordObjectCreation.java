@@ -9,11 +9,11 @@ import java.util.Map;
 /**
  * Instantiates a Java Record via its canonical constructor.
  */
-public final class RecordStrategy implements InstantiationStrategy {
+public final class RecordObjectCreation implements ObjectCreation {
 
-    public static final RecordStrategy INSTANCE = new RecordStrategy();
+    public static final RecordObjectCreation INSTANCE = new RecordObjectCreation();
 
-    private RecordStrategy() {
+    private RecordObjectCreation() {
     }
 
     private static Object defaultPrimitive(Class<?> type) {
@@ -29,14 +29,14 @@ public final class RecordStrategy implements InstantiationStrategy {
     }
 
     @Override
-    public boolean canHandle(Class<?> type, List<FieldDescriptor> fields) {
+    public boolean canCreate(Class<?> type, List<FieldDescriptor> fields) {
         return type.isRecord();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T instantiate(Class<T> type, List<FieldDescriptor> fields,
-                             Map<String, Object> values) throws Exception {
+    public <T> T create(Class<T> type, List<FieldDescriptor> fields,
+                        Map<String, Object> values) throws Exception {
         java.lang.reflect.RecordComponent[] components = type.getRecordComponents();
         Class<?>[] paramTypes = Arrays.stream(components)
                 .map(java.lang.reflect.RecordComponent::getType)

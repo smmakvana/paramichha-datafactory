@@ -1,6 +1,6 @@
 package com.paramichha.datafactory.constraint;
 
-import com.paramichha.datafactory.instantiation.LombokBuilderStrategy;
+import com.paramichha.datafactory.instantiation.LombokObjectCreation;
 import lombok.Builder;
 import lombok.Value;
 import org.junit.jupiter.api.DisplayName;
@@ -75,15 +75,15 @@ class LombokStrategyTest {
     class CanHandle {
         @Test
         void true_for_lombok_builder() {
-            assertThat(LombokBuilderStrategy.INSTANCE
-                    .canHandle(AllPrimitivesRequest.class, fields(AllPrimitivesRequest.class)))
+            assertThat(LombokObjectCreation.INSTANCE
+                    .canCreate(AllPrimitivesRequest.class, fields(AllPrimitivesRequest.class)))
                     .isTrue();
         }
 
         @Test
         void false_for_no_builder() {
-            assertThat(LombokBuilderStrategy.INSTANCE
-                    .canHandle(NoBuilderClass.class, fields(NoBuilderClass.class)))
+            assertThat(LombokObjectCreation.INSTANCE
+                    .canCreate(NoBuilderClass.class, fields(NoBuilderClass.class)))
                     .isFalse();
         }
     }
@@ -97,7 +97,7 @@ class LombokStrategyTest {
     class PrimitiveFields {
 
         private AllPrimitivesRequest build(Map<String, Object> values) throws Exception {
-            return LombokBuilderStrategy.INSTANCE.instantiate(
+            return LombokObjectCreation.INSTANCE.create(
                     AllPrimitivesRequest.class, fields(AllPrimitivesRequest.class), values);
         }
 
@@ -159,7 +159,7 @@ class LombokStrategyTest {
     class WrapperFields {
 
         private AllWrappersRequest build(Map<String, Object> values) throws Exception {
-            return LombokBuilderStrategy.INSTANCE.instantiate(
+            return LombokObjectCreation.INSTANCE.create(
                     AllWrappersRequest.class, fields(AllWrappersRequest.class), values);
         }
 

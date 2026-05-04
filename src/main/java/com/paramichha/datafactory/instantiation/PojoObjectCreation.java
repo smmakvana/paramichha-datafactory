@@ -10,11 +10,11 @@ import java.util.Map;
 /**
  * Instantiates a class via a no-args constructor, then populates fields via setters or direct access.
  */
-public final class SetterStrategy implements InstantiationStrategy {
+public final class PojoObjectCreation implements ObjectCreation {
 
-    public static final SetterStrategy INSTANCE = new SetterStrategy();
+    public static final PojoObjectCreation INSTANCE = new PojoObjectCreation();
 
-    private SetterStrategy() {
+    private PojoObjectCreation() {
     }
 
     private static Field findField(Class<?> type, String name) {
@@ -28,7 +28,7 @@ public final class SetterStrategy implements InstantiationStrategy {
     }
 
     @Override
-    public boolean canHandle(Class<?> type, List<FieldDescriptor> fields) {
+    public boolean canCreate(Class<?> type, List<FieldDescriptor> fields) {
         try {
             type.getDeclaredConstructor();
             return true;
@@ -39,8 +39,8 @@ public final class SetterStrategy implements InstantiationStrategy {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T instantiate(Class<T> type, List<FieldDescriptor> fields,
-                             Map<String, Object> values) throws Exception {
+    public <T> T create(Class<T> type, List<FieldDescriptor> fields,
+                        Map<String, Object> values) throws Exception {
         Constructor<?> noArgs = type.getDeclaredConstructor();
         noArgs.setAccessible(true);
         T instance = (T) noArgs.newInstance();

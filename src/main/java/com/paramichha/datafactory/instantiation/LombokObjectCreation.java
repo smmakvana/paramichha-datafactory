@@ -15,14 +15,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * Instantiates a class via its Lombok {@code @Builder} static {@code builder()} method.
  * {@code setAccessible(true)} is required for non-public inner classes.
  */
-public final class LombokBuilderStrategy implements InstantiationStrategy {
+public final class LombokObjectCreation implements ObjectCreation {
 
-    public static final LombokBuilderStrategy INSTANCE = new LombokBuilderStrategy();
+    public static final LombokObjectCreation INSTANCE = new LombokObjectCreation();
 
     private static final ConcurrentHashMap<Class<?>, ConcurrentHashMap<String, Optional<Method>>>
             SETTER_CACHE = new ConcurrentHashMap<>();
 
-    private LombokBuilderStrategy() {
+    private LombokObjectCreation() {
     }
 
     private static Method findSetter(Class<?> builderClass, String name, Class<?> fieldType) {
@@ -106,7 +106,7 @@ public final class LombokBuilderStrategy implements InstantiationStrategy {
     }
 
     @Override
-    public boolean canHandle(Class<?> type, List<FieldDescriptor> fields) {
+    public boolean canCreate(Class<?> type, List<FieldDescriptor> fields) {
         try {
             return Modifier.isStatic(type.getDeclaredMethod("builder").getModifiers());
         } catch (NoSuchMethodException e) {
@@ -116,8 +116,8 @@ public final class LombokBuilderStrategy implements InstantiationStrategy {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T instantiate(Class<T> type, List<FieldDescriptor> fields,
-                             Map<String, Object> values) throws Exception {
+    public <T> T create(Class<T> type, List<FieldDescriptor> fields,
+                        Map<String, Object> values) throws Exception {
         Method builderMethod = type.getDeclaredMethod("builder");
         builderMethod.setAccessible(true);
         Object builder = builderMethod.invoke(null);

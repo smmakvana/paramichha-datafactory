@@ -1,9 +1,9 @@
 package com.paramichha.datafactory.constraint;
 
-import com.paramichha.datafactory.instantiation.AllArgsConstructorStrategy;
-import com.paramichha.datafactory.instantiation.LombokBuilderStrategy;
-import com.paramichha.datafactory.instantiation.RecordStrategy;
-import com.paramichha.datafactory.instantiation.SetterStrategy;
+import com.paramichha.datafactory.instantiation.ConstructorObjectCreation;
+import com.paramichha.datafactory.instantiation.LombokObjectCreation;
+import com.paramichha.datafactory.instantiation.RecordObjectCreation;
+import com.paramichha.datafactory.instantiation.PojoObjectCreation;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Value;
@@ -42,7 +42,7 @@ class StrategyEdgeCaseTest {
             var values = new LinkedHashMap<String, Object>();
             values.put("boolPrim", true);
             values.put("charPrim", 'Z');
-            var result = LombokBuilderStrategy.INSTANCE.instantiate(BoolCharRequest.class, fields, values);
+            var result = LombokObjectCreation.INSTANCE.create(BoolCharRequest.class, fields, values);
             assertThat(result.isBoolPrim()).isTrue();
             assertThat(result.getCharPrim()).isEqualTo('Z');
         }
@@ -55,7 +55,7 @@ class StrategyEdgeCaseTest {
             values.put("boolPrim", null);  // primitive -> skipped before coerce
             values.put("charPrim", 'A');
             // Should not throw — null skipped for primitive
-            var result = LombokBuilderStrategy.INSTANCE.instantiate(BoolCharRequest.class, fields, values);
+            var result = LombokObjectCreation.INSTANCE.create(BoolCharRequest.class, fields, values);
             assertThat(result).isNotNull();
         }
 
@@ -64,7 +64,7 @@ class StrategyEdgeCaseTest {
             // String value for String field — coerce's "return value" fallback
             var fields = FieldDescriptor.extract(StringOnlyRequest.class);
             var values = Map.of("name", (Object) "hello");
-            var result = LombokBuilderStrategy.INSTANCE.instantiate(StringOnlyRequest.class, fields, values);
+            var result = LombokObjectCreation.INSTANCE.create(StringOnlyRequest.class, fields, values);
             assertThat(result.getName()).isEqualTo("hello");
         }
 
@@ -76,7 +76,7 @@ class StrategyEdgeCaseTest {
             var values = Map.of("unknownFieldXYZ", (Object) "test");
             // Should not throw even though setter not found
             // canHandle will be true (has builder() method)
-            assertThat(LombokBuilderStrategy.INSTANCE.canHandle(NoSetterForField.class, fields)).isTrue();
+            assertThat(LombokObjectCreation.INSTANCE.canCreate(NoSetterForField.class, fields)).isTrue();
         }
 
         @Value
@@ -111,7 +111,7 @@ class StrategyEdgeCaseTest {
 
     @Nested
     @DisplayName("SetterStrategy — superclass field and null-not-found")
-    class SetterEdgeCases {
+    class PojoObjectCreationEdgeCases {
 
         @Test
         void field_found_in_superclass_via_direct_access() throws Exception {
@@ -120,7 +120,7 @@ class StrategyEdgeCaseTest {
             var values = new LinkedHashMap<String, Object>();
             fields.forEach(f -> values.put(f.name(), f.name().equals("localInt") ? 7 : "parent-value"));
 
-            var result = SetterStrategy.INSTANCE.instantiate(Child.class, fields, values);
+            var result = PojoObjectCreation.INSTANCE.create(Child.class, fields, values);
             assertThat(result.inherited).isEqualTo("parent-value");
             assertThat(result.localInt).isEqualTo(7);
         }
@@ -131,7 +131,7 @@ class StrategyEdgeCaseTest {
             var values = new LinkedHashMap<String, Object>();
             values.put("count", null);  // primitive int — must be skipped
             values.put("name", "test");
-            var result = SetterStrategy.INSTANCE.instantiate(WithPrimitive.class, fields, values);
+            var result = PojoObjectCreation.INSTANCE.create(WithPrimitive.class, fields, values);
             assertThat(result.count).isEqualTo(0);
             assertThat(result.name).isEqualTo("test");
         }
@@ -143,7 +143,7 @@ class StrategyEdgeCaseTest {
                     new FieldDescriptor("ghost", String.class, String.class, Collections.emptyList())
             );
             var values = Map.of("real", (Object) "ok", "ghost", (Object) "ignored");
-            var result = SetterStrategy.INSTANCE.instantiate(FieldNotFound.class, fields, values);
+            var result = PojoObjectCreation.INSTANCE.create(FieldNotFound.class, fields, values);
             assertThat(result.real).isEqualTo("ok");
         }
 
@@ -188,16 +188,16 @@ class StrategyEdgeCaseTest {
                     new FieldDescriptor("a", String.class, String.class, Collections.emptyList()),
                     new FieldDescriptor("b", String.class, String.class, Collections.emptyList())
             );
-            assertThat(AllArgsConstructorStrategy.INSTANCE.canHandle(ObjectArgs.class, fields)).isTrue();
+            assertThat(ConstructorObjectCreation.INSTANCE.canCreate(ObjectArgs.class, fields)).isTrue();
             var values = Map.of("a", (Object) "x", "b", (Object) "y");
-            var result = AllArgsConstructorStrategy.INSTANCE.instantiate(ObjectArgs.class, fields, values);
+            var result = ConstructorObjectCreation.INSTANCE.create(ObjectArgs.class, fields, values);
             assertThat(result.a).isEqualTo("x");
         }
 
         @Test
         void canHandle_false_when_no_constructor() {
-            assertThat(AllArgsConstructorStrategy.INSTANCE
-                    .canHandle(OnlyAnInterface.class, List.of()))
+            assertThat(ConstructorObjectCreation.INSTANCE
+                    .canCreate(OnlyAnInterface.class, List.of()))
                     .isFalse();
         }
 
@@ -219,14 +219,14 @@ class StrategyEdgeCaseTest {
 
     @Nested
     @DisplayName("RecordStrategy — defaultPrimitive double arm")
-    class RecordDefaultPrimitive {
+    class RecordObjectCreationDefaultPrimitive {
 
         @Test
         void null_for_double_primitive_uses_zero() throws Exception {
             var fields = FieldDescriptor.extract(DoubleRecord.class);
             var values = new LinkedHashMap<String, Object>();
             values.put("d", null);
-            var result = RecordStrategy.INSTANCE.instantiate(DoubleRecord.class, fields, values);
+            var result = RecordObjectCreation.INSTANCE.create(DoubleRecord.class, fields, values);
             assertThat(result.d()).isEqualTo(0.0d);
         }
 

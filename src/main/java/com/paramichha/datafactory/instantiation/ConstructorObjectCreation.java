@@ -10,11 +10,11 @@ import java.util.Map;
 /**
  * Instantiates a class via an all-args constructor matched by parameter count or exact types.
  */
-public final class AllArgsConstructorStrategy implements InstantiationStrategy {
+public final class ConstructorObjectCreation implements ObjectCreation {
 
-    public static final AllArgsConstructorStrategy INSTANCE = new AllArgsConstructorStrategy();
+    public static final ConstructorObjectCreation INSTANCE = new ConstructorObjectCreation();
 
-    private AllArgsConstructorStrategy() {
+    private ConstructorObjectCreation() {
     }
 
     private static Constructor<?> findConstructor(Class<?> type, List<FieldDescriptor> fields) {
@@ -42,14 +42,14 @@ public final class AllArgsConstructorStrategy implements InstantiationStrategy {
     }
 
     @Override
-    public boolean canHandle(Class<?> type, List<FieldDescriptor> fields) {
+    public boolean canCreate(Class<?> type, List<FieldDescriptor> fields) {
         return findConstructor(type, fields) != null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T instantiate(Class<T> type, List<FieldDescriptor> fields,
-                             Map<String, Object> values) throws Exception {
+    public <T> T create(Class<T> type, List<FieldDescriptor> fields,
+                        Map<String, Object> values) throws Exception {
         Constructor<?> ctor = findConstructor(type, fields);
         ctor.setAccessible(true);
         Object[] args = fields.stream()
