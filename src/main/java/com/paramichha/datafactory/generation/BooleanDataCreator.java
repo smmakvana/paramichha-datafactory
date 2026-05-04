@@ -6,11 +6,11 @@ import net.datafaker.Faker;
 /**
  * Produces {@code Boolean} values; returns {@code true} for the "true" target label.
  */
-final class BooleanTypeShaper implements TypeShaper {
+final class BooleanDataCreator implements DataCreator {
 
-    static final BooleanTypeShaper INSTANCE = new BooleanTypeShaper();
+    static final BooleanDataCreator INSTANCE = new BooleanDataCreator();
 
-    private BooleanTypeShaper() {
+    private BooleanDataCreator() {
     }
 
     @Override

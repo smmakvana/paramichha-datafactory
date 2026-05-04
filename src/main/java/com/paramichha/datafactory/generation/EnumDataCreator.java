@@ -8,11 +8,11 @@ import java.util.List;
  * Returns all enum constants as a {@code List}.
  * {@link DataGenerator#shapeAll} expands the list into individual values.
  */
-final class EnumTypeShaper implements TypeShaper {
+final class EnumDataCreator implements DataCreator {
 
-    static final EnumTypeShaper INSTANCE = new EnumTypeShaper();
+    static final EnumDataCreator INSTANCE = new EnumDataCreator();
 
-    private EnumTypeShaper() {
+    private EnumDataCreator() {
     }
 
     @Override

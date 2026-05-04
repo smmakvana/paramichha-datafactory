@@ -9,11 +9,11 @@ import java.util.UUID;
  * When {@link FakerProvider#SEEDED_RANDOM} is set (seed active), output is deterministic.
  * Otherwise produces random UUIDs via UUID.randomUUID().
  */
-final class UuidTypeShaper implements TypeShaper {
+final class UuidDataCreator implements DataCreator {
 
-    static final UuidTypeShaper INSTANCE = new UuidTypeShaper();
+    static final UuidDataCreator INSTANCE = new UuidDataCreator();
 
-    private UuidTypeShaper() {}
+    private UuidDataCreator() {}
 
     @Override
     public boolean supports(Class<?> type) {

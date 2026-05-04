@@ -570,27 +570,27 @@ class ShaperCoverageTest {
     class BooleanShaperCoverage {
         @Test
         void supports_Boolean() {
-            assertThat(BooleanTypeShaper.INSTANCE.supports(Boolean.class)).isTrue();
+            assertThat(BooleanDataCreator.INSTANCE.supports(Boolean.class)).isTrue();
         }
 
         @Test
         void supports_booleanPrimitive() {
-            assertThat(BooleanTypeShaper.INSTANCE.supports(boolean.class)).isTrue();
+            assertThat(BooleanDataCreator.INSTANCE.supports(boolean.class)).isTrue();
         }
 
         @Test
         void supports_String_false() {
-            assertThat(BooleanTypeShaper.INSTANCE.supports(String.class)).isFalse();
+            assertThat(BooleanDataCreator.INSTANCE.supports(String.class)).isFalse();
         }
 
         @Test
         void shape_true() {
-            assertThat(BooleanTypeShaper.INSTANCE.shape(fieldOf("f", Boolean.class), BoundaryTarget.trueTarget())).isEqualTo(true);
+            assertThat(BooleanDataCreator.INSTANCE.shape(fieldOf("f", Boolean.class), BoundaryTarget.trueTarget())).isEqualTo(true);
         }
 
         @Test
         void shape_false() {
-            assertThat(BooleanTypeShaper.INSTANCE.shape(fieldOf("f", Boolean.class), BoundaryTarget.falseTarget())).isEqualTo(false);
+            assertThat(BooleanDataCreator.INSTANCE.shape(fieldOf("f", Boolean.class), BoundaryTarget.falseTarget())).isEqualTo(false);
         }
     }
 
@@ -599,12 +599,12 @@ class ShaperCoverageTest {
     class EnumShaperCoverage {
         @Test
         void supports_enum() {
-            assertThat(EnumTypeShaper.INSTANCE.supports(Status.class)).isTrue();
+            assertThat(EnumDataCreator.INSTANCE.supports(Status.class)).isTrue();
         }
 
         @Test
         void supports_string_false() {
-            assertThat(EnumTypeShaper.INSTANCE.supports(String.class)).isFalse();
+            assertThat(EnumDataCreator.INSTANCE.supports(String.class)).isFalse();
         }
 
         @Test
@@ -612,7 +612,7 @@ class ShaperCoverageTest {
             // Build an FieldConstraints with fieldType = Status.class directly via the builder
             var analyzed = FieldConstraints.builder("status", Status.class).build();
             @SuppressWarnings("unchecked")
-            var result = (List<Object>) EnumTypeShaper.INSTANCE.shape(analyzed, semantic());
+            var result = (List<Object>) EnumDataCreator.INSTANCE.shape(analyzed, semantic());
             assertThat(result).containsExactlyInAnyOrder(Status.ACTIVE, Status.INACTIVE);
         }
 
@@ -624,18 +624,18 @@ class ShaperCoverageTest {
     class UuidShaperCoverage {
         @Test
         void supports_UUID() {
-            assertThat(UuidTypeShaper.INSTANCE.supports(UUID.class)).isTrue();
+            assertThat(UuidDataCreator.INSTANCE.supports(UUID.class)).isTrue();
         }
 
         @Test
         void supports_string_false() {
-            assertThat(UuidTypeShaper.INSTANCE.supports(String.class)).isFalse();
+            assertThat(UuidDataCreator.INSTANCE.supports(String.class)).isFalse();
         }
 
         @Test
         void shape_returnsUUID() {
             var f = fieldOf("id", UUID.class);
-            assertThat(UuidTypeShaper.INSTANCE.shape(f, semantic())).isInstanceOf(UUID.class);
+            assertThat(UuidDataCreator.INSTANCE.shape(f, semantic())).isInstanceOf(UUID.class);
         }
     }
 
@@ -644,158 +644,158 @@ class ShaperCoverageTest {
     class CharacterShaperCoverage {
         @Test
         void supports_Character() {
-            assertThat(CharacterTypeShaper.INSTANCE.supports(Character.class)).isTrue();
+            assertThat(CharacterDataCreator.INSTANCE.supports(Character.class)).isTrue();
         }
 
         @Test
         void supports_charPrimitive() {
-            assertThat(CharacterTypeShaper.INSTANCE.supports(char.class)).isTrue();
+            assertThat(CharacterDataCreator.INSTANCE.supports(char.class)).isTrue();
         }
 
         @Test
         void supports_String_false() {
-            assertThat(CharacterTypeShaper.INSTANCE.supports(String.class)).isFalse();
+            assertThat(CharacterDataCreator.INSTANCE.supports(String.class)).isFalse();
         }
 
         @Test
         void shape_returnsChar() {
             var f = fieldOf("c", Character.class);
-            assertThat(CharacterTypeShaper.INSTANCE.shape(f, semantic())).isInstanceOf(Character.class);
+            assertThat(CharacterDataCreator.INSTANCE.shape(f, semantic())).isInstanceOf(Character.class);
         }
     }
 
     @Nested
     @DisplayName("StringTypeShaper")
-    class StringTypeShaperCoverage {
+    class StringDataCreatorCoverage {
         @Test
         void supports_String() {
-            assertThat(StringTypeShaper.INSTANCE.supports(String.class)).isTrue();
+            assertThat(StringDataCreator.INSTANCE.supports(String.class)).isTrue();
         }
 
         @Test
         void supports_int_false() {
-            assertThat(StringTypeShaper.INSTANCE.supports(int.class)).isFalse();
+            assertThat(StringDataCreator.INSTANCE.supports(int.class)).isFalse();
         }
 
         @Test
         void shape_delegates() {
             var f = field("name", String.class, "@NotBlank");
-            assertThat(StringTypeShaper.INSTANCE.shape(f, semantic())).isInstanceOf(String.class);
+            assertThat(StringDataCreator.INSTANCE.shape(f, semantic())).isInstanceOf(String.class);
         }
     }
 
     @Nested
     @DisplayName("NumericTypeShaper")
-    class NumericTypeShaperCoverage {
+    class NumericDataCreatorCoverage {
         @Test
         void supports_Integer() {
-            assertThat(NumericTypeShaper.INSTANCE.supports(Integer.class)).isTrue();
+            assertThat(NumericDataCreator.INSTANCE.supports(Integer.class)).isTrue();
         }
 
         @Test
         void supports_long() {
-            assertThat(NumericTypeShaper.INSTANCE.supports(long.class)).isTrue();
+            assertThat(NumericDataCreator.INSTANCE.supports(long.class)).isTrue();
         }
 
         @Test
         void supports_double() {
-            assertThat(NumericTypeShaper.INSTANCE.supports(double.class)).isTrue();
+            assertThat(NumericDataCreator.INSTANCE.supports(double.class)).isTrue();
         }
 
         @Test
         void supports_float() {
-            assertThat(NumericTypeShaper.INSTANCE.supports(float.class)).isTrue();
+            assertThat(NumericDataCreator.INSTANCE.supports(float.class)).isTrue();
         }
 
         @Test
         void supports_short() {
-            assertThat(NumericTypeShaper.INSTANCE.supports(short.class)).isTrue();
+            assertThat(NumericDataCreator.INSTANCE.supports(short.class)).isTrue();
         }
 
         @Test
         void supports_byte() {
-            assertThat(NumericTypeShaper.INSTANCE.supports(byte.class)).isTrue();
+            assertThat(NumericDataCreator.INSTANCE.supports(byte.class)).isTrue();
         }
 
         @Test
         void supports_bigDec() {
-            assertThat(NumericTypeShaper.INSTANCE.supports(BigDecimal.class)).isTrue();
+            assertThat(NumericDataCreator.INSTANCE.supports(BigDecimal.class)).isTrue();
         }
 
         @Test
         void supports_bigInt() {
-            assertThat(NumericTypeShaper.INSTANCE.supports(BigInteger.class)).isTrue();
+            assertThat(NumericDataCreator.INSTANCE.supports(BigInteger.class)).isTrue();
         }
 
         @Test
         void supports_String_false() {
-            assertThat(NumericTypeShaper.INSTANCE.supports(String.class)).isFalse();
+            assertThat(NumericDataCreator.INSTANCE.supports(String.class)).isFalse();
         }
 
         @Test
         void shape_delegates() {
             var f = field("n", Integer.class, "@Min(1)");
-            assertThat(NumericTypeShaper.INSTANCE.shape(f, atMin(1))).isEqualTo(1);
+            assertThat(NumericDataCreator.INSTANCE.shape(f, atMin(1))).isEqualTo(1);
         }
     }
 
     @Nested
     @DisplayName("TemporalTypeShaper")
-    class TemporalTypeShaperCoverage {
+    class TemporalDataCreatorCoverage {
         @Test
         void supports_Instant() {
-            assertThat(TemporalTypeShaper.INSTANCE.supports(Instant.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(Instant.class)).isTrue();
         }
 
         @Test
         void supports_LocalDate() {
-            assertThat(TemporalTypeShaper.INSTANCE.supports(LocalDate.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(LocalDate.class)).isTrue();
         }
 
         @Test
         void supports_LocalDateTime() {
-            assertThat(TemporalTypeShaper.INSTANCE.supports(LocalDateTime.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(LocalDateTime.class)).isTrue();
         }
 
         @Test
         void supports_LocalTime() {
-            assertThat(TemporalTypeShaper.INSTANCE.supports(LocalTime.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(LocalTime.class)).isTrue();
         }
 
         @Test
         void supports_ZonedDateTime() {
-            assertThat(TemporalTypeShaper.INSTANCE.supports(ZonedDateTime.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(ZonedDateTime.class)).isTrue();
         }
 
         @Test
         void supports_OffsetDateTime() {
-            assertThat(TemporalTypeShaper.INSTANCE.supports(OffsetDateTime.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(OffsetDateTime.class)).isTrue();
         }
 
         @Test
         void supports_Date() {
-            assertThat(TemporalTypeShaper.INSTANCE.supports(java.util.Date.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(java.util.Date.class)).isTrue();
         }
 
         @Test
         void supports_Year() {
-            assertThat(TemporalTypeShaper.INSTANCE.supports(Year.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(Year.class)).isTrue();
         }
 
         @Test
         void supports_YearMonth() {
-            assertThat(TemporalTypeShaper.INSTANCE.supports(YearMonth.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(YearMonth.class)).isTrue();
         }
 
         @Test
         void supports_String_false() {
-            assertThat(TemporalTypeShaper.INSTANCE.supports(String.class)).isFalse();
+            assertThat(TemporalDataCreator.INSTANCE.supports(String.class)).isFalse();
         }
 
         @Test
         void shape_delegates() {
             var f = field("dt", LocalDate.class, "@Past");
-            assertThat(TemporalTypeShaper.INSTANCE.shape(f, semantic())).isInstanceOf(LocalDate.class);
+            assertThat(TemporalDataCreator.INSTANCE.shape(f, semantic())).isInstanceOf(LocalDate.class);
         }
     }
 

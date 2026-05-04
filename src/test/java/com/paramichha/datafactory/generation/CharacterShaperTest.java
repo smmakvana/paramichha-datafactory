@@ -16,23 +16,23 @@ class CharacterShaperTest {
 
     @Test
     void supports_Character() {
-        assertThat(CharacterTypeShaper.INSTANCE.supports(Character.class)).isTrue();
+        assertThat(CharacterDataCreator.INSTANCE.supports(Character.class)).isTrue();
     }
 
     @Test
     void supports_char() {
-        assertThat(CharacterTypeShaper.INSTANCE.supports(char.class)).isTrue();
+        assertThat(CharacterDataCreator.INSTANCE.supports(char.class)).isTrue();
     }
 
     @Test
     void supports_String_false() {
-        assertThat(CharacterTypeShaper.INSTANCE.supports(String.class)).isFalse();
+        assertThat(CharacterDataCreator.INSTANCE.supports(String.class)).isFalse();
     }
 
     @Test
     void shape_returns_char() {
         var fc = AnnotationResolver.analyzeFromStrings("c", "Character", List.of());
-        var result = CharacterTypeShaper.INSTANCE.shape(fc, BoundaryTarget.semantic());
+        var result = CharacterDataCreator.INSTANCE.shape(fc, BoundaryTarget.semantic());
         assertThat(result).isInstanceOf(Character.class);
     }
 

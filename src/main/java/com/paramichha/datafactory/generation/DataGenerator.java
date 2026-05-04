@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Entry point for value generation. Delegates to {@link TypeShaperRegistry}.
- * This class never changes — add a new type by implementing {@link TypeShaper}.
+ * This class never changes — add a new type by implementing {@link DataCreator}.
  */
 public final class DataGenerator {
 

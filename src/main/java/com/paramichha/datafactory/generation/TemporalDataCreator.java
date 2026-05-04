@@ -8,11 +8,11 @@ import java.util.Date;
 /**
  * Produces temporal values for all standard Java date/time types.
  */
-final class TemporalTypeShaper implements TypeShaper {
+final class TemporalDataCreator implements DataCreator {
 
-    static final TemporalTypeShaper INSTANCE = new TemporalTypeShaper();
+    static final TemporalDataCreator INSTANCE = new TemporalDataCreator();
 
-    private TemporalTypeShaper() {
+    private TemporalDataCreator() {
     }
 
     @Override

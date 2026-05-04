@@ -3,18 +3,18 @@ package com.paramichha.datafactory.generation;
 import com.paramichha.datafactory.constraint.FieldConstraints;
 
 /**
- * Produces {@code String} values; catch-all for text fields.
+ * Produces {@code Character} / {@code char} values.
  */
-final class StringTypeShaper implements TypeShaper {
+final class CharacterDataCreator implements DataCreator {
 
-    static final StringTypeShaper INSTANCE = new StringTypeShaper();
+    static final CharacterDataCreator INSTANCE = new CharacterDataCreator();
 
-    private StringTypeShaper() {
+    private CharacterDataCreator() {
     }
 
     @Override
     public boolean supports(Class<?> type) {
-        return type == String.class;
+        return type == Character.class || type == char.class;
     }
 
     @Override
@@ -24,6 +24,6 @@ final class StringTypeShaper implements TypeShaper {
 
     @Override
     public Object shape(FieldConstraints field, BoundaryTarget target, net.datafaker.Faker faker) {
-        return StringShaper.shape(field, target, faker);
+        return 'A';
     }
 }

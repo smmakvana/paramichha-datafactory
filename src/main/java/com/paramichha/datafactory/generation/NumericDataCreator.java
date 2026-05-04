@@ -8,11 +8,11 @@ import java.math.BigInteger;
 /**
  * Produces numeric values for all Java numeric types.
  */
-final class NumericTypeShaper implements TypeShaper {
+final class NumericDataCreator implements DataCreator {
 
-    static final NumericTypeShaper INSTANCE = new NumericTypeShaper();
+    static final NumericDataCreator INSTANCE = new NumericDataCreator();
 
-    private NumericTypeShaper() {
+    private NumericDataCreator() {
     }
 
     @Override
