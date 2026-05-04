@@ -1,7 +1,7 @@
 package com.paramichha.datafactory.annotation;
 
 import com.paramichha.datafactory.AnnotationParseException;
-import com.paramichha.datafactory.builder.DefaultAnnotationParser;
+import com.paramichha.datafactory.builder.StringAnnotationParser;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -39,7 +39,7 @@ public final class AnnotationUtils {
     public static boolean isValid(String annotationString) {
         if (annotationString == null || !annotationString.startsWith("@")) return false;
         try {
-            return DefaultAnnotationParser.INSTANCE.parse(annotationString) != null;
+            return StringAnnotationParser.INSTANCE.parse(annotationString) != null;
         } catch (AnnotationParseException e) {
             return false;
         }
@@ -53,7 +53,7 @@ public final class AnnotationUtils {
      * @throws AnnotationParseException if the string is malformed
      */
     public static Annotation parse(String annotationString) {
-        return DefaultAnnotationParser.INSTANCE.parse(annotationString);
+        return StringAnnotationParser.INSTANCE.parse(annotationString);
     }
 
     /**
@@ -65,7 +65,7 @@ public final class AnnotationUtils {
      */
     public static List<Annotation> parseAll(List<String> annotationStrings) {
         return annotationStrings.stream()
-                .map(DefaultAnnotationParser.INSTANCE::parse)
+                .map(StringAnnotationParser.INSTANCE::parse)
                 .filter(a -> a != null)
                 .collect(Collectors.toList());
     }

@@ -1,7 +1,7 @@
 package com.paramichha.datafactory.constraint;
 
 import com.paramichha.datafactory.AnnotationParseException;
-import com.paramichha.datafactory.builder.DefaultAnnotationParser;
+import com.paramichha.datafactory.builder.StringAnnotationParser;
 import com.paramichha.datafactory.generation.BoundaryTarget;
 import jakarta.validation.constraints.*;
 import org.junit.jupiter.api.*;
@@ -23,19 +23,19 @@ class AnnotationParserBranchTest {
 
     @Nested
     @DisplayName("DefaultAnnotationParser")
-    class DefaultAnnotationParserTests {
+    class StringAnnotationParserTests {
 
         @Nested
         @DisplayName("Construction")
         class Construction {
             @Test @DisplayName("INSTANCE is non-null singleton")
             void instanceNonNull() {
-                assertThat(DefaultAnnotationParser.INSTANCE).isNotNull();
+                assertThat(StringAnnotationParser.INSTANCE).isNotNull();
             }
 
             @Test @DisplayName("new instance parses same as INSTANCE")
             void newInstanceWorks() {
-                var parser = new DefaultAnnotationParser();
+                var parser = new StringAnnotationParser();
                 assertThat(parser.parse("@NotNull")).isNotNull();
             }
         }
@@ -46,45 +46,45 @@ class AnnotationParserBranchTest {
 
             @Test @DisplayName("no-arg annotation without parens")
             void noArgNoParens() {
-                var ann = DefaultAnnotationParser.INSTANCE.parse("@NotNull");
+                var ann = StringAnnotationParser.INSTANCE.parse("@NotNull");
                 assertThat(ann.annotationType()).isEqualTo(NotNull.class);
             }
 
             @Test @DisplayName("no-arg annotation with empty parens")
             void noArgEmptyParens() {
-                var ann = DefaultAnnotationParser.INSTANCE.parse("@NotNull()");
+                var ann = StringAnnotationParser.INSTANCE.parse("@NotNull()");
                 assertThat(ann.annotationType()).isEqualTo(NotNull.class);
             }
 
             @Test @DisplayName("one-arg positional form @Min(18)")
             void oneArgPositional() {
-                var ann = (Min) DefaultAnnotationParser.INSTANCE.parse("@Min(18)");
+                var ann = (Min) StringAnnotationParser.INSTANCE.parse("@Min(18)");
                 assertThat(ann.value()).isEqualTo(18L);
             }
 
             @Test @DisplayName("one-arg named form @Min(value=18)")
             void oneArgNamed() {
-                var ann = (Min) DefaultAnnotationParser.INSTANCE.parse("@Min(value=18)");
+                var ann = (Min) StringAnnotationParser.INSTANCE.parse("@Min(value=18)");
                 assertThat(ann.value()).isEqualTo(18L);
             }
 
             @Test @DisplayName("one-arg string @Pattern(regexp=\"^[A-Z]+$\")")
             void oneArgString() {
-                var ann = (Pattern) DefaultAnnotationParser.INSTANCE.parse(
+                var ann = (Pattern) StringAnnotationParser.INSTANCE.parse(
                         "@Pattern(regexp=\"^[A-Z]+$\")");
                 assertThat(ann.regexp()).isEqualTo("^[A-Z]+$");
             }
 
             @Test @DisplayName("one-arg named string @DecimalMin(value=\"0.01\")")
             void oneArgNamedString() {
-                var ann = (DecimalMin) DefaultAnnotationParser.INSTANCE.parse(
+                var ann = (DecimalMin) StringAnnotationParser.INSTANCE.parse(
                         "@DecimalMin(value=\"0.01\")");
                 assertThat(ann.value()).isEqualTo("0.01");
             }
 
             @Test @DisplayName("multi-arg @Size(min=2, max=50)")
             void multiArg() {
-                var ann = (Size) DefaultAnnotationParser.INSTANCE.parse("@Size(min=2, max=50)");
+                var ann = (Size) StringAnnotationParser.INSTANCE.parse("@Size(min=2, max=50)");
                 assertThat(ann.min()).isEqualTo(2);
                 assertThat(ann.max()).isEqualTo(50);
             }
@@ -92,33 +92,33 @@ class AnnotationParserBranchTest {
             @Test @DisplayName("unknown annotation throws AnnotationParseException")
             void unknownThrows() {
                 assertThatThrownBy(() ->
-                    DefaultAnnotationParser.INSTANCE.parse("@UnknownAnnotation")
+                    StringAnnotationParser.INSTANCE.parse("@UnknownAnnotation")
                 ).isInstanceOf(AnnotationParseException.class);
             }
 
             @Test @DisplayName("missing @ prefix throws AnnotationParseException")
             void missingAtThrows() {
                 assertThatThrownBy(() ->
-                    DefaultAnnotationParser.INSTANCE.parse("NotNull")
+                    StringAnnotationParser.INSTANCE.parse("NotNull")
                 ).isInstanceOf(AnnotationParseException.class);
             }
 
             @Test @DisplayName("malformed value throws AnnotationParseException")
             void malformedValueThrows() {
                 assertThatThrownBy(() ->
-                    DefaultAnnotationParser.INSTANCE.parse("@Min(notanumber)")
+                    StringAnnotationParser.INSTANCE.parse("@Min(notanumber)")
                 ).isInstanceOf(AnnotationParseException.class);
             }
 
             @Test @DisplayName("getSupportedAnnotation returns null for unknown")
             void getSupportedAnnotationUnknown() {
-                assertThat(DefaultAnnotationParser.INSTANCE.getSupportedAnnotation("Unknown"))
+                assertThat(StringAnnotationParser.INSTANCE.getSupportedAnnotation("Unknown"))
                         .isNull();
             }
 
             @Test @DisplayName("getAnnotationType returns null for unknown class")
             void getAnnotationTypeUnknown() {
-                assertThat(DefaultAnnotationParser.INSTANCE.getAnnotationType(Override.class))
+                assertThat(StringAnnotationParser.INSTANCE.getAnnotationType(Override.class))
                         .isNull();
             }
         }
@@ -138,20 +138,20 @@ class AnnotationParserBranchTest {
 
             @Test @DisplayName("long value coerced for @Min")
             void longCoerced() {
-                var ann = (Min) DefaultAnnotationParser.INSTANCE.parse("@Min(100)");
+                var ann = (Min) StringAnnotationParser.INSTANCE.parse("@Min(100)");
                 assertThat(ann.value()).isEqualTo(100L);
             }
 
             @Test @DisplayName("String value kept for @Pattern")
             void stringKept() {
-                var ann = (Pattern) DefaultAnnotationParser.INSTANCE.parse(
+                var ann = (Pattern) StringAnnotationParser.INSTANCE.parse(
                         "@Pattern(regexp=\"[A-Z]+\")");
                 assertThat(ann.regexp()).isEqualTo("[A-Z]+");
             }
 
             @Test @DisplayName("single-quoted string stripped")
             void singleQuoteStripped() {
-                var ann = (DecimalMax) DefaultAnnotationParser.INSTANCE.parse(
+                var ann = (DecimalMax) StringAnnotationParser.INSTANCE.parse(
                         "@DecimalMax(value='9.99')");
                 assertThat(ann.value()).isEqualTo("9.99");
             }
@@ -159,20 +159,20 @@ class AnnotationParserBranchTest {
             @Test @DisplayName("unmatched quotes not stripped")
             void unmatchedQuotesKept() {
                 assertThatThrownBy(() ->
-                    DefaultAnnotationParser.INSTANCE.parse("@Min(\"abc\")")
+                    StringAnnotationParser.INSTANCE.parse("@Min(\"abc\")")
                 ).isInstanceOf(AnnotationParseException.class);
             }
 
             @Test @DisplayName("named form with spaces: value = 42")
             void namedWithSpaces() {
-                var ann = (Max) DefaultAnnotationParser.INSTANCE.parse("@Max(value = 42)");
+                var ann = (Max) StringAnnotationParser.INSTANCE.parse("@Max(value = 42)");
                 assertThat(ann.value()).isEqualTo(42L);
             }
 
             @Test @DisplayName("empty raw string throws")
             void emptyRawThrows() {
                 assertThatThrownBy(() ->
-                    DefaultAnnotationParser.INSTANCE.parse("@Min()")
+                    StringAnnotationParser.INSTANCE.parse("@Min()")
                 ).isInstanceOf(AnnotationParseException.class);
             }
         }
@@ -191,13 +191,13 @@ class AnnotationParserBranchTest {
         class Validation {
             @Test @DisplayName("no attributes parses correctly")
             void noAttributesOk() {
-                assertThat(DefaultAnnotationParser.INSTANCE.parse("@NotNull")).isNotNull();
+                assertThat(StringAnnotationParser.INSTANCE.parse("@NotNull")).isNotNull();
             }
 
             @Test @DisplayName("attributes given throws AnnotationParseException")
             void attributesThrows() {
                 assertThatThrownBy(() ->
-                    DefaultAnnotationParser.INSTANCE.parse("@NotNull(someValue)")
+                    StringAnnotationParser.INSTANCE.parse("@NotNull(someValue)")
                 ).isInstanceOf(AnnotationParseException.class);
             }
         }

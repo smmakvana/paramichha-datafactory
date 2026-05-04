@@ -1,7 +1,7 @@
 package com.paramichha.datafactory.constraint;
 
-import com.paramichha.datafactory.builder.DefaultFieldValue;
-import com.paramichha.datafactory.builder.FieldBuilderFactory;
+import com.paramichha.datafactory.builder.FieldValueBuilder;
+import com.paramichha.datafactory.builder.ValueBuilderFactory;
 import com.paramichha.datafactory.instantiation.ConstructorObjectCreation;
 import com.paramichha.datafactory.instantiation.RecordObjectCreation;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * isNegativeAllowed edge cases
  */
 @DisplayName("DefaultFieldBuilder — coverage gaps")
-class DefaultFieldValueCoverageTest {
+class FieldValueBuilderCoverageTest {
 
     // ═══════════════════════════════════════════════════════════════════════
     // toSourceCode — all missing type branches
@@ -38,27 +38,27 @@ class DefaultFieldValueCoverageTest {
 
         @Test
         void short_has_no_suffix() {
-            var codes = FieldBuilderFactory.create(Short.class).with("@Min(1)").with("@Max(10)").validList().stream().map(Object::toString).toList();
+            var codes = ValueBuilderFactory.create(Short.class).with("@Min(1)").with("@Max(10)").validList().stream().map(Object::toString).toList();
             assertThat(codes).isNotEmpty();
             codes.forEach(c -> assertThat(c).doesNotEndWith("L").doesNotEndWith("f"));
         }
 
         @Test
         void byte_has_no_suffix() {
-            var codes = FieldBuilderFactory.create(Byte.class).with("@Min(1)").with("@Max(5)").validList().stream().map(Object::toString).toList();
+            var codes = ValueBuilderFactory.create(Byte.class).with("@Min(1)").with("@Max(5)").validList().stream().map(Object::toString).toList();
             assertThat(codes).isNotEmpty();
         }
 
         @Test
         void double_returns_double_values() {
-            var values = FieldBuilderFactory.create(Double.class).with("@Min(1)").with("@Max(100)").validList();
+            var values = ValueBuilderFactory.create(Double.class).with("@Min(1)").with("@Max(100)").validList();
             assertThat(values).isNotEmpty();
             values.forEach(v -> assertThat(v).isInstanceOf(Double.class));
         }
 
         @Test
         void character_toString() {
-            var codes = FieldBuilderFactory.create(Character.class).validList().stream().map(Object::toString).toList();
+            var codes = ValueBuilderFactory.create(Character.class).validList().stream().map(Object::toString).toList();
             assertThat(codes).isNotEmpty();
         }
 
@@ -66,25 +66,25 @@ class DefaultFieldValueCoverageTest {
         void date_source_code() {
             // Date field with @Past — validValues produces a past Date
             // toSourceCode hits the fallback value.toString()
-            var codes = FieldBuilderFactory.create(Date.class).with("@Past").validList().stream().map(Object::toString).toList();
+            var codes = ValueBuilderFactory.create(Date.class).with("@Past").validList().stream().map(Object::toString).toList();
             assertThat(codes).isNotEmpty();
         }
 
         @Test
         void year_source_code() {
-            var codes = FieldBuilderFactory.create(Year.class).with("@Past").validList().stream().map(Object::toString).toList();
+            var codes = ValueBuilderFactory.create(Year.class).with("@Past").validList().stream().map(Object::toString).toList();
             assertThat(codes).isNotEmpty();
         }
 
         @Test
         void yearMonth_source_code() {
-            var codes = FieldBuilderFactory.create(YearMonth.class).with("@Past").validList().stream().map(Object::toString).toList();
+            var codes = ValueBuilderFactory.create(YearMonth.class).with("@Past").validList().stream().map(Object::toString).toList();
             assertThat(codes).isNotEmpty();
         }
 
         @Test
         void bigInteger_source_code() {
-            var codes = FieldBuilderFactory.create(BigInteger.class).with("@Min(1)").with("@Max(100)").validList().stream().map(Object::toString).toList();
+            var codes = ValueBuilderFactory.create(BigInteger.class).with("@Min(1)").with("@Max(100)").validList().stream().map(Object::toString).toList();
             assertThat(codes).isNotEmpty();
         }
     }
@@ -99,14 +99,14 @@ class DefaultFieldValueCoverageTest {
 
         @Test
         void belowMin_returns_biginteger() {
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(BigInteger.class)).with("@Min(5)").constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(BigInteger.class)).with("@Min(5)").constraintCases();
             var belowMin = cases.stream().filter(c -> c.constraint().equals("Min") && c.value() instanceof java.math.BigInteger).findFirst();
             assertThat(belowMin).isPresent();
         }
 
         @Test
         void aboveMax_returns_biginteger() {
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(BigInteger.class)).with("@Max(10)").constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(BigInteger.class)).with("@Max(10)").constraintCases();
             var aboveMax = cases.stream().filter(c -> c.constraint().equals("Max") && c.value() instanceof java.math.BigInteger).findFirst();
             assertThat(aboveMax).isPresent();
         }
@@ -122,7 +122,7 @@ class DefaultFieldValueCoverageTest {
 
         @Test
         void date_past_notPast_is_date() {
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(Date.class)).with("@Past").constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(Date.class)).with("@Past").constraintCases();
             var notPast = cases.stream().filter(c -> c.constraint().equals("Past")).findFirst();
             assertThat(notPast).isPresent();
             assertThat(notPast.get().value()).isInstanceOf(Date.class);
@@ -130,7 +130,7 @@ class DefaultFieldValueCoverageTest {
 
         @Test
         void year_past_notPast_is_year() {
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(Year.class)).with("@Past").constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(Year.class)).with("@Past").constraintCases();
             var notPast = cases.stream().filter(c -> c.constraint().equals("Past")).findFirst();
             assertThat(notPast).isPresent();
             assertThat(notPast.get().value()).isInstanceOf(Year.class);
@@ -139,7 +139,7 @@ class DefaultFieldValueCoverageTest {
 
         @Test
         void yearMonth_past_notPast_is_yearmonth() {
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(YearMonth.class)).with("@Past").constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(YearMonth.class)).with("@Past").constraintCases();
             var notPast = cases.stream().filter(c -> c.constraint().equals("Past")).findFirst();
             assertThat(notPast).isPresent();
             assertThat(notPast.get().value()).isInstanceOf(YearMonth.class);
@@ -148,7 +148,7 @@ class DefaultFieldValueCoverageTest {
 
         @Test
         void date_future_notFuture_is_date() {
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(Date.class)).with("@Future").constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(Date.class)).with("@Future").constraintCases();
             var notFuture = cases.stream().filter(c -> c.constraint().equals("Future")).findFirst();
             assertThat(notFuture).isPresent();
             assertThat(notFuture.get().value()).isInstanceOf(Date.class);
@@ -156,7 +156,7 @@ class DefaultFieldValueCoverageTest {
 
         @Test
         void year_future_notFuture_is_year() {
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(Year.class)).with("@Future").constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(Year.class)).with("@Future").constraintCases();
             var notFuture = cases.stream().filter(c -> c.constraint().equals("Future")).findFirst();
             assertThat(notFuture).isPresent();
             assertThat(notFuture.get().value()).isInstanceOf(Year.class);
@@ -165,7 +165,7 @@ class DefaultFieldValueCoverageTest {
 
         @Test
         void yearMonth_future_notFuture_is_yearmonth() {
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(YearMonth.class)).with("@Future").constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(YearMonth.class)).with("@Future").constraintCases();
             var notFuture = cases.stream().filter(c -> c.constraint().equals("Future")).findFirst();
             assertThat(notFuture).isPresent();
             assertThat(notFuture.get().value()).isInstanceOf(YearMonth.class);
@@ -183,7 +183,7 @@ class DefaultFieldValueCoverageTest {
 
         @Test
         void collection_type_default_null_and_empty() {
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(Collection.class)).constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(Collection.class)).constraintCases();
             assertThat(cases).anyMatch(c -> c.value() == null);
             assertThat(cases).anyMatch(c -> c.value() instanceof List<?> l && l.isEmpty());
         }
@@ -200,7 +200,7 @@ class DefaultFieldValueCoverageTest {
         @Test
         void negative_allowed_positive_is_invalid() {
             // @NegativeOrZero: max=0 -> aboveMax=1
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(Integer.class)).with("@NegativeOrZero").constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(Integer.class)).with("@NegativeOrZero").constraintCases();
             assertThat(cases).anyMatch(c -> c.constraint().equals("Max")
                     && ((Integer)c.value()) == 1);
         }
@@ -208,7 +208,7 @@ class DefaultFieldValueCoverageTest {
         @Test
         void negative_only_positive_is_invalid() {
             // @Negative: max=-1 -> aboveMax=0
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(Integer.class)).with("@Negative").constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(Integer.class)).with("@Negative").constraintCases();
             assertThat(cases).anyMatch(c -> c.constraint().equals("Max")
                     && ((Integer)c.value()) == 0);
         }
@@ -216,14 +216,14 @@ class DefaultFieldValueCoverageTest {
         @Test
         void positive_not_allowed_negative_is_type_default() {
             // No min annotation -> negative type default appears
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(Integer.class)).constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(Integer.class)).constraintCases();
             assertThat(cases).anyMatch(c -> !c.annotationDriven() && c.value() instanceof Integer i && i < 0);
         }
 
         @Test
         void with_min_no_negative_type_default() {
             // @Min(5) -> bounds.hasMin()=true -> no negative type default
-            var cases = ((DefaultFieldValue<?>) FieldBuilderFactory.create(Integer.class).with("@Min(5)")).constraintCases();
+            var cases = ((FieldValueBuilder<?>) ValueBuilderFactory.create(Integer.class).with("@Min(5)")).constraintCases();
             assertThat(cases).noneMatch(c -> !c.annotationDriven() && c.value() instanceof Integer i && i < 0);
         }
     }

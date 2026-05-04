@@ -1,8 +1,8 @@
 package com.paramichha.datafactory.constraint;
 
 import com.paramichha.datafactory.builder.ConstraintCase;
-import com.paramichha.datafactory.builder.DefaultFieldValue;
-import com.paramichha.datafactory.builder.FieldBuilderFactory;
+import com.paramichha.datafactory.builder.FieldValueBuilder;
+import com.paramichha.datafactory.builder.ValueBuilderFactory;
 import jakarta.validation.constraints.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,8 +18,8 @@ class FieldValueTest {
 
     // ── helper — returns DefaultFieldBuilder so constraintCases() is accessible ──
     @SuppressWarnings("unchecked")
-    private static <T> DefaultFieldValue<T> dfb(Class<T> type) {
-        return (DefaultFieldValue<T>) FieldBuilderFactory.create(type);
+    private static <T> FieldValueBuilder<T> dfb(Class<T> type) {
+        return (FieldValueBuilder<T>) ValueBuilderFactory.create(type);
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -32,14 +32,14 @@ class FieldValueTest {
 
         @Test
         void email_allValuesContainAt() {
-            var fb = FieldBuilderFactory.create(String.class).with(NotBlank.class).with(Email.class);
+            var fb = ValueBuilderFactory.create(String.class).with(NotBlank.class).with(Email.class);
             assertThat(fb.validList()).isNotEmpty();
             fb.validList().forEach(v -> assertThat(v).contains("@"));
         }
 
         @Test
         void stringWithSize_allValuesFitBounds() {
-            var fb = FieldBuilderFactory.create(String.class)
+            var fb = ValueBuilderFactory.create(String.class)
                                         .with(NotBlank.class)
                                         .with("@Size(min=5, max=20)");
             fb.validList().forEach(v -> assertThat(v.length()).isBetween(5, 20));
@@ -47,7 +47,7 @@ class FieldValueTest {
 
         @Test
         void emailWithSize_allValuesAreEmailAndFitBounds() {
-            var fb = FieldBuilderFactory.create(String.class)
+            var fb = ValueBuilderFactory.create(String.class)
                                         .with(NotBlank.class).with(Email.class)
                                         .with("@Size(min=8, max=50)");
             fb.validList().forEach(v -> {
@@ -58,7 +58,7 @@ class FieldValueTest {
 
         @Test
         void integerWithMinMax_allWithinBoundsAndIncludesBoundaries() {
-            var fb = FieldBuilderFactory.create(Integer.class).with("@Min(18)").with("@Max(120)");
+            var fb = ValueBuilderFactory.create(Integer.class).with("@Min(18)").with("@Max(120)");
             List<Integer> values = fb.validList();
             assertThat(values).hasSizeGreaterThanOrEqualTo(3);
             values.forEach(v -> assertThat(v).isBetween(18, 120));
@@ -67,13 +67,13 @@ class FieldValueTest {
 
         @Test
         void booleanAssertTrue_onlyTrue() {
-            var fb = FieldBuilderFactory.create(Boolean.class).with(AssertTrue.class);
+            var fb = ValueBuilderFactory.create(Boolean.class).with(AssertTrue.class);
             assertThat(fb.validList()).containsExactly(true);
         }
 
         @Test
         void localDatePast_valueIsBeforeToday() {
-            var fb = FieldBuilderFactory.create(LocalDate.class).with(Past.class);
+            var fb = ValueBuilderFactory.create(LocalDate.class).with(Past.class);
             fb.validList().forEach(v -> assertThat(v).isBefore(LocalDate.now()));
         }
     }
@@ -88,14 +88,14 @@ class FieldValueTest {
 
         @Test
         void string_noAnnotations_returnsNonBlankValue() {
-            var fb = FieldBuilderFactory.create(String.class);
+            var fb = ValueBuilderFactory.create(String.class);
             assertThat(fb.validList()).isNotEmpty();
             fb.validList().forEach(v -> assertThat(v).isNotBlank());
         }
 
         @Test
         void integer_noAnnotations_returnsTypeDefaultRange() {
-            var values = FieldBuilderFactory.create(Integer.class).validList();
+            var values = ValueBuilderFactory.create(Integer.class).validList();
             assertThat(values).isNotEmpty();
             // unannotated int → type-natural bounds: MIN_VALUE, MIN_VALUE+1, midpoint, MAX_VALUE-1, MAX_VALUE + semantic
             assertThat(values).contains(Integer.MIN_VALUE, 0, Integer.MAX_VALUE);
@@ -103,12 +103,12 @@ class FieldValueTest {
 
         @Test
         void boolean_noAnnotations_returnsTrue() {
-            assertThat(FieldBuilderFactory.create(Boolean.class).validList()).contains(true);
+            assertThat(ValueBuilderFactory.create(Boolean.class).validList()).contains(true);
         }
 
         @Test
         void long_noAnnotations_returnsTypeDefaultRange() {
-            var values = FieldBuilderFactory.create(Long.class).validList();
+            var values = ValueBuilderFactory.create(Long.class).validList();
             assertThat(values).isNotEmpty();
             // unannotated long → type-natural bounds: Long.MIN_VALUE to Long.MAX_VALUE
             assertThat(values).contains(Long.MIN_VALUE, 0L, Long.MAX_VALUE);
@@ -116,7 +116,7 @@ class FieldValueTest {
 
         @Test
         void localDate_noAnnotations_returnsNonNull() {
-            var fb = FieldBuilderFactory.create(LocalDate.class);
+            var fb = ValueBuilderFactory.create(LocalDate.class);
             assertThat(fb.validList()).isNotEmpty();
             fb.validList().forEach(v -> assertThat(v).isNotNull());
         }

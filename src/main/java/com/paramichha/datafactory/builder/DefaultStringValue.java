@@ -50,7 +50,7 @@ public final class DefaultStringValue implements StringValue {
      * @param hint a DataFaker-compatible field name hint
      */
     public DefaultStringValue hint(String hint) {
-        this.delegate = FieldBuilderFactory.create(String.class, hint);
+        this.delegate = ValueBuilderFactory.create(String.class, hint);
         return this;
     }
 

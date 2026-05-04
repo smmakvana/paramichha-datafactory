@@ -1,7 +1,7 @@
 package com.paramichha.datafactory;
 
 import com.paramichha.datafactory.builder.*;
-import com.paramichha.datafactory.builder.FieldBuilderFactory;
+import com.paramichha.datafactory.builder.ValueBuilderFactory;
 
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
@@ -135,7 +135,7 @@ public final class DataFactory {
      * </pre>
      */
     public static StringValue string() {
-        return new DefaultStringValue(FieldBuilderFactory.create(String.class));
+        return new DefaultStringValue(ValueBuilderFactory.create(String.class));
     }
 
     /**
@@ -149,7 +149,7 @@ public final class DataFactory {
      * </pre>
      */
     public static StringValue string(String hint) {
-        return new DefaultStringValue(FieldBuilderFactory.create(String.class, hint));
+        return new DefaultStringValue(ValueBuilderFactory.create(String.class, hint));
     }
 
     /**
@@ -160,7 +160,7 @@ public final class DataFactory {
      * </pre>
      */
     public static IntegerValue integer() {
-        return new DefaultIntegerValue(FieldBuilderFactory.create(Integer.class));
+        return new DefaultIntegerValue(ValueBuilderFactory.create(Integer.class));
     }
 
     /**
@@ -171,7 +171,7 @@ public final class DataFactory {
      * </pre>
      */
     public static LongValue longVal() {
-        return new DefaultLongValue(FieldBuilderFactory.create(Long.class));
+        return new DefaultLongValue(ValueBuilderFactory.create(Long.class));
     }
 
     /**
@@ -182,7 +182,7 @@ public final class DataFactory {
      * </pre>
      */
     public static BigDecimalValue decimal() {
-        return new DefaultBigDecimalValue(FieldBuilderFactory.create(BigDecimal.class));
+        return new DefaultBigDecimalValue(ValueBuilderFactory.create(BigDecimal.class));
     }
 
     /**
@@ -193,7 +193,7 @@ public final class DataFactory {
      * </pre>
      */
     public static BooleanValue bool() {
-        return new DefaultBooleanValue(FieldBuilderFactory.create(Boolean.class));
+        return new DefaultBooleanValue(ValueBuilderFactory.create(Boolean.class));
     }
 
     /**
@@ -204,7 +204,7 @@ public final class DataFactory {
      * </pre>
      */
     public static LocalDateValue date() {
-        return new DefaultLocalDateValue(FieldBuilderFactory.create(LocalDate.class));
+        return new DefaultLocalDateValue(ValueBuilderFactory.create(LocalDate.class));
     }
 
     /**
@@ -215,7 +215,7 @@ public final class DataFactory {
      * </pre>
      */
     public static LocalDateTimeValue dateTime() {
-        return new DefaultLocalDateTimeValue(FieldBuilderFactory.create(LocalDateTime.class));
+        return new DefaultLocalDateTimeValue(ValueBuilderFactory.create(LocalDateTime.class));
     }
 
     /**
@@ -225,7 +225,7 @@ public final class DataFactory {
      * </pre>
      */
     public static DoubleValue doubles() {
-        return new DefaultDoubleValue(FieldBuilderFactory.create(Double.class));
+        return new DefaultDoubleValue(ValueBuilderFactory.create(Double.class));
     }
 
     /**
@@ -235,7 +235,7 @@ public final class DataFactory {
      * </pre>
      */
     public static FloatValue floats() {
-        return new DefaultFloatValue(FieldBuilderFactory.create(Float.class));
+        return new DefaultFloatValue(ValueBuilderFactory.create(Float.class));
     }
 
     /**
@@ -245,7 +245,7 @@ public final class DataFactory {
      * </pre>
      */
     public static ShortValue shorts() {
-        return new DefaultShortValue(FieldBuilderFactory.create(Short.class));
+        return new DefaultShortValue(ValueBuilderFactory.create(Short.class));
     }
 
     /**
@@ -255,7 +255,7 @@ public final class DataFactory {
      * </pre>
      */
     public static ByteValue bytes() {
-        return new DefaultByteValue(FieldBuilderFactory.create(Byte.class));
+        return new DefaultByteValue(ValueBuilderFactory.create(Byte.class));
     }
 
     /**
@@ -265,7 +265,7 @@ public final class DataFactory {
      * </pre>
      */
     public static FieldValue<BigInteger> bigInteger() {
-        return FieldBuilderFactory.create(java.math.BigInteger.class);
+        return ValueBuilderFactory.create(java.math.BigInteger.class);
     }
 
     /**
@@ -275,7 +275,7 @@ public final class DataFactory {
      * </pre>
      */
     public static FieldValue<Character> character() {
-        return FieldBuilderFactory.create(Character.class);
+        return ValueBuilderFactory.create(Character.class);
     }
 
     /**
@@ -329,7 +329,7 @@ public final class DataFactory {
      * </pre>
      */
     public static <T> FieldValue<T> field(Class<T> type) {
-        return FieldBuilderFactory.create(type);
+        return ValueBuilderFactory.create(type);
     }
 
     /**
@@ -342,7 +342,7 @@ public final class DataFactory {
      * </pre>
      */
     public static <T> FieldValue<T> field(java.lang.reflect.Field field) {
-        return FieldBuilderFactory.create(field);
+        return ValueBuilderFactory.create(field);
     }
 
     /**
@@ -359,7 +359,7 @@ public final class DataFactory {
     @SuppressWarnings("unchecked")
     public static <T> FieldValue<T> field(String name, Class<T> type,
                                           List<Annotation> annotations) {
-        return FieldBuilderFactory.create(name, type, annotations);
+        return ValueBuilderFactory.create(name, type, annotations);
     }
 
     // =========================================================================

@@ -13,19 +13,19 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class DefaultAnnotationParser implements AnnotationParser, AnnotationSupport {
+public final class StringAnnotationParser implements AnnotationParser, AnnotationSupport {
 
-    public static final DefaultAnnotationParser INSTANCE = new DefaultAnnotationParser();
+    public static final StringAnnotationParser INSTANCE = new StringAnnotationParser();
 
     private final Map<String, Class<? extends Annotation>> byName = new HashMap<>();
     private final Map<String, AnnotationType> byType = new HashMap<>();
     private final AnnotationTypeHandlerRegistry handlerRegistry;
 
-    public DefaultAnnotationParser() {
+    public StringAnnotationParser() {
         this(new AnnotationTypeHandlerRegistry());
     }
 
-    public DefaultAnnotationParser(AnnotationTypeHandlerRegistry handlerRegistry) {
+    public StringAnnotationParser(AnnotationTypeHandlerRegistry handlerRegistry) {
         this.handlerRegistry = handlerRegistry;
 
         register(AnnotationType.NO_ARG,

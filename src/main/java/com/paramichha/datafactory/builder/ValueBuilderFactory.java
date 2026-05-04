@@ -10,24 +10,24 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-public final class FieldBuilderFactory {
+public final class ValueBuilderFactory {
 
-    private FieldBuilderFactory() {}
+    private ValueBuilderFactory() {}
 
     // ── without faker — uses FakerProvider.random() internally ───────────
 
     public static <T> FieldValue<T> create(Class<T> type) {
-        return new DefaultFieldValue<>(
+        return new FieldValueBuilder<>(
                 AnnotationResolver.analyze("field", type, List.of()));
     }
 
     public static <T> FieldValue<T> create(Class<T> type, String hint) {
-        return new DefaultFieldValue<>(
+        return new FieldValueBuilder<>(
                 AnnotationResolver.analyze(hint, type, List.of()));
     }
 
     public static <T> FieldValue<T> create(FieldDescriptor descriptor) {
-        return new DefaultFieldValue<>(
+        return new FieldValueBuilder<>(
                 AnnotationResolver.analyze(
                         descriptor.name(), descriptor.rawType(), descriptor.validations()));
     }
@@ -35,36 +35,36 @@ public final class FieldBuilderFactory {
     @SuppressWarnings("unchecked")
     public static <T> FieldValue<T> create(Field field) {
         List<Annotation> annotations = Arrays.asList(field.getAnnotations());
-        return new DefaultFieldValue<>(
+        return new FieldValueBuilder<>(
                 AnnotationResolver.analyze(
                         field.getName(), (Class<T>) field.getType(), annotations));
     }
 
     public static <T> FieldValue<T> create(String name, Class<T> type, List<Annotation> annotations) {
-        return new DefaultFieldValue<>(
+        return new FieldValueBuilder<>(
                 AnnotationResolver.analyze(name, type, annotations));
     }
 
     // ── with faker — deterministic when seed is set ───────────────────────
 
     public static <T> FieldValue<T> create(Class<T> type, Faker faker) {
-        return new DefaultFieldValue<>(
+        return new FieldValueBuilder<>(
                 AnnotationResolver.analyze("field", type, List.of()), faker);
     }
 
     public static <T> FieldValue<T> create(Class<T> type, Faker faker, long seed) {
-        return new DefaultFieldValue<>(
+        return new FieldValueBuilder<>(
                 AnnotationResolver.analyze("field", type, List.of()), faker, seed);
     }
 
     public static <T> FieldValue<T> create(FieldDescriptor descriptor, Faker faker) {
-        return new DefaultFieldValue<>(
+        return new FieldValueBuilder<>(
                 AnnotationResolver.analyze(
                         descriptor.name(), descriptor.rawType(), descriptor.validations()), faker);
     }
 
     public static <T> FieldValue<T> create(FieldDescriptor descriptor, Faker faker, long seed) {
-        return new DefaultFieldValue<>(
+        return new FieldValueBuilder<>(
                 AnnotationResolver.analyze(
                         descriptor.name(), descriptor.rawType(), descriptor.validations()), faker, seed);
     }
