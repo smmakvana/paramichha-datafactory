@@ -1,6 +1,6 @@
 package com.paramichha.datafactory.generation;
 
-import com.paramichha.datafactory.constraint.AnnotationAnalyzer;
+import com.paramichha.datafactory.constraint.AnnotationResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TemporalAllDirectionsTest {
 
     private static Object shape(String type, String annotation) {
-        var fc = AnnotationAnalyzer.analyzeFromStrings("f", type, List.of(annotation));
+        var fc = AnnotationResolver.analyzeFromStrings("f", type, List.of(annotation));
         return TemporalShaper.shape(fc, BoundaryTarget.semantic());
     }
 

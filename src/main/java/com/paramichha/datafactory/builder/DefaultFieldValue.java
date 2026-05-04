@@ -79,7 +79,7 @@ final public class DefaultFieldValue<T> implements FieldValue<T> {
         // using .with() to supply the full annotation list via FieldBuilderFactory.create(name, type, list).
         // For the common .with(annotationString) path, merge into a fresh analysis.
         List<Annotation> merged = new ArrayList<>(extraAnnotations);
-        return AnnotationAnalyzer.analyze(
+        return AnnotationResolver.analyze(
                 constraints.fieldName(), constraints.fieldType(), merged);
     }
 

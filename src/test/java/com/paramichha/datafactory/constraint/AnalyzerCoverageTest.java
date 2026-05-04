@@ -147,7 +147,7 @@ class AnalyzerCoverageTest {
     class FieldConstraintsMethods {
 
         private FieldConstraints make(String ann) {
-            return AnnotationAnalyzer.analyzeFromStrings("f", "LocalDate", List.of(ann));
+            return AnnotationResolver.analyzeFromStrings("f", "LocalDate", List.of(ann));
         }
 
         @Test
@@ -202,22 +202,22 @@ class AnalyzerCoverageTest {
 
         @Test
         void hasFormat_true() {
-            assertThat(AnnotationAnalyzer.analyzeFromStrings("e", "String", List.of("@Email")).hasFormat()).isTrue();
+            assertThat(AnnotationResolver.analyzeFromStrings("e", "String", List.of("@Email")).hasFormat()).isTrue();
         }
 
         @Test
         void hasFormat_false() {
-            assertThat(AnnotationAnalyzer.analyzeFromStrings("n", "String", List.of()).hasFormat()).isFalse();
+            assertThat(AnnotationResolver.analyzeFromStrings("n", "String", List.of()).hasFormat()).isFalse();
         }
 
         @Test
         void hasBounds_true() {
-            assertThat(AnnotationAnalyzer.analyzeFromStrings("n", "Integer", List.of("@Min(1)")).hasBounds()).isTrue();
+            assertThat(AnnotationResolver.analyzeFromStrings("n", "Integer", List.of("@Min(1)")).hasBounds()).isTrue();
         }
 
         @Test
         void hasBounds_false() {
-            assertThat(AnnotationAnalyzer.analyzeFromStrings("n", "Integer", List.of()).hasBounds()).isFalse();
+            assertThat(AnnotationResolver.analyzeFromStrings("n", "Integer", List.of()).hasBounds()).isFalse();
         }
 
         @Test
@@ -227,7 +227,7 @@ class AnalyzerCoverageTest {
 
         @Test
         void hasTemporal_false() {
-            assertThat(AnnotationAnalyzer.analyzeFromStrings("n", "String", List.of()).hasTemporal()).isFalse();
+            assertThat(AnnotationResolver.analyzeFromStrings("n", "String", List.of()).hasTemporal()).isFalse();
         }
     }
 
@@ -241,19 +241,19 @@ class AnalyzerCoverageTest {
 
         @Test
         void creditCardNumber() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("cc", "String", List.of("@CreditCardNumber"));
+            var f = AnnotationResolver.analyzeFromStrings("cc", "String", List.of("@CreditCardNumber"));
             assertThat(f.format()).isEqualTo(FormatType.CREDIT_CARD);
         }
 
         @Test
         void isbn() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("isbn", "String", List.of("@ISBN"));
+            var f = AnnotationResolver.analyzeFromStrings("isbn", "String", List.of("@ISBN"));
             assertThat(f.format()).isEqualTo(FormatType.ISBN);
         }
 
         @Test
         void ean() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("ean", "String", List.of("@EAN"));
+            var f = AnnotationResolver.analyzeFromStrings("ean", "String", List.of("@EAN"));
             assertThat(f.format()).isEqualTo(FormatType.EAN);
         }
 
@@ -270,7 +270,7 @@ class AnalyzerCoverageTest {
     class StringClassifierBranches {
 
         private FieldConstraints fromStr(String type, String... anns) {
-            return AnnotationAnalyzer.analyzeFromStrings("f", type, List.of(anns));
+            return AnnotationResolver.analyzeFromStrings("f", type, List.of(anns));
         }
 
         @Test
@@ -372,7 +372,7 @@ class AnalyzerCoverageTest {
     class ResolveType {
 
         private FieldConstraints make(String type) {
-            return AnnotationAnalyzer.analyzeFromStrings("f", type, List.of());
+            return AnnotationResolver.analyzeFromStrings("f", type, List.of());
         }
 
         @Test
@@ -549,7 +549,7 @@ class AnalyzerCoverageTest {
         void uuid_string_format() throws Exception {
             var ann = (org.hibernate.validator.constraints.UUID)
                     UuidHolder.class.getDeclaredField("f").getAnnotations()[0];
-            var fc = AnnotationAnalyzer.analyze("uid", String.class, java.util.List.of(ann));
+            var fc = AnnotationResolver.analyze("uid", String.class, java.util.List.of(ann));
             assertThat(fc.format()).isEqualTo(FormatType.UUID_STRING);
         }
 
@@ -557,7 +557,7 @@ class AnalyzerCoverageTest {
         void decimalMax_sets_upper_bound() throws Exception {
             var ann = (jakarta.validation.constraints.DecimalMax)
                     DecimalMaxHolder.class.getDeclaredField("f").getAnnotations()[0];
-            var fc = AnnotationAnalyzer.analyze("price", java.math.BigDecimal.class, java.util.List.of(ann));
+            var fc = AnnotationResolver.analyze("price", java.math.BigDecimal.class, java.util.List.of(ann));
             assertThat(fc.bounds() instanceof QuantityBounds.DecimalBounds).isTrue();
             assertThat(((QuantityBounds.DecimalBounds) fc.bounds()).decMax()).isEqualByComparingTo("999");
         }
@@ -566,7 +566,7 @@ class AnalyzerCoverageTest {
         void length_zero_min_omitted() throws Exception {
             var ann = (org.hibernate.validator.constraints.Length)
                     LengthZeroMinHolder.class.getDeclaredField("f").getAnnotations()[0];
-            var fc = AnnotationAnalyzer.analyze("name", String.class, java.util.List.of(ann));
+            var fc = AnnotationResolver.analyze("name", String.class, java.util.List.of(ann));
             assertThat(fc.bounds().hasMin()).isFalse();
             assertThat(fc.bounds().max()).isEqualTo(30L);
         }
@@ -575,20 +575,20 @@ class AnalyzerCoverageTest {
         void length_maxint_max_omitted() throws Exception {
             var ann = (org.hibernate.validator.constraints.Length)
                     LengthMaxIntHolder.class.getDeclaredField("f").getAnnotations()[0];
-            var fc = AnnotationAnalyzer.analyze("name", String.class, java.util.List.of(ann));
+            var fc = AnnotationResolver.analyze("name", String.class, java.util.List.of(ann));
             assertThat(fc.bounds().hasMax()).isFalse();
             assertThat(fc.bounds().min()).isEqualTo(3L);
         }
 
         @Test
         void char_primitive_resolves_to_Character() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("c", "char", java.util.List.of());
+            var fc = AnnotationResolver.analyzeFromStrings("c", "char", java.util.List.of());
             assertThat(fc.fieldType()).isEqualTo(Character.class);
         }
 
         @Test
         void Character_wrapper_resolves_to_Character() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("c", "Character", java.util.List.of());
+            var fc = AnnotationResolver.analyzeFromStrings("c", "Character", java.util.List.of());
             assertThat(fc.fieldType()).isEqualTo(Character.class);
         }
 

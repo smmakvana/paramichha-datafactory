@@ -9,7 +9,7 @@ package com.paramichha.datafactory.constraint;
  *   <li>{@link StringAnnotationClassifier} — annotation strings from YAML, e.g. {@code "@Min(18)"}
  * </ul>
  *
- * <p>{@link AnnotationAnalyzer} runs the same five-pass pipeline against either implementation.
+ * <p>{@link AnnotationResolver} runs the same five-pass pipeline against either implementation.
  */
 public interface AnnotationClassifier {
 

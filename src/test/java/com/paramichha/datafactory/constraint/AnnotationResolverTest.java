@@ -16,12 +16,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("AnnotationAnalyzer")
-class AnnotationAnalyzerTest {
+class AnnotationResolverTest {
 
     // ── helpers ────────────────────────────────────────────────────────────
 
     private FieldConstraints analyze(String name, Class<?> type, Annotation... annotations) {
-        return AnnotationAnalyzer.analyze(name, type, List.of(annotations));
+        return AnnotationResolver.analyze(name, type, List.of(annotations));
     }
 
     private FieldConstraints str(String name, Annotation... annotations) {
@@ -542,7 +542,7 @@ class AnnotationAnalyzerTest {
 
         @Test
         void notBlank_email() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("email", "String",
+            var f = AnnotationResolver.analyzeFromStrings("email", "String",
                     List.of("@NotBlank", "@Email"));
             assertThat(f.nullable()).isFalse();
             assertThat(f.format()).isEqualTo(FormatType.EMAIL);
@@ -550,7 +550,7 @@ class AnnotationAnalyzerTest {
 
         @Test
         void min_max() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("age", "Integer",
+            var f = AnnotationResolver.analyzeFromStrings("age", "Integer",
                     List.of("@Min(18)", "@Max(120)"));
             assertThat(f.bounds().min()).isEqualTo(18L);
             assertThat(f.bounds().max()).isEqualTo(120L);
@@ -558,7 +558,7 @@ class AnnotationAnalyzerTest {
 
         @Test
         void size_parsesMinMax() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("name", "String",
+            var f = AnnotationResolver.analyzeFromStrings("name", "String",
                     List.of("@Size(min=2, max=50)"));
             assertThat(f.bounds().min()).isEqualTo(2L);
             assertThat(f.bounds().max()).isEqualTo(50L);
@@ -566,7 +566,7 @@ class AnnotationAnalyzerTest {
 
         @Test
         void pattern_extractsRegexp() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("code", "String",
+            var f = AnnotationResolver.analyzeFromStrings("code", "String",
                     List.of("@Pattern(regexp=\"^[A-Z]{2}\\\\d{4}$\")"));
             assertThat(f.format()).isEqualTo(FormatType.PATTERN);
             assertThat(f.patternRegexp()).isEqualTo("^[A-Z]{2}\\d{4}$");
@@ -574,14 +574,14 @@ class AnnotationAnalyzerTest {
 
         @Test
         void positive_setsMinOne() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("count", "Integer",
+            var f = AnnotationResolver.analyzeFromStrings("count", "Integer",
                     List.of("@Positive"));
             assertThat(f.bounds().min()).isEqualTo(1L);
         }
 
         @Test
         void past_setsPastDirection() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("dob", "LocalDate",
+            var f = AnnotationResolver.analyzeFromStrings("dob", "LocalDate",
                     List.of("@Past"));
             assertThat(f.temporal()).isEqualTo(TemporalDirection.PAST);
         }

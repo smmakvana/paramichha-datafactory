@@ -5,7 +5,7 @@ import com.paramichha.datafactory.generation.ValueGenerator;
 
 /**
  * Immutable snapshot of a field's resolved constraints.
- * Produced by {@link AnnotationAnalyzer}; consumed by
+ * Produced by {@link AnnotationResolver}; consumed by
  * {@link BoundaryPlanner} and {@link ValueGenerator}.
  */
 public record FieldConstraints(

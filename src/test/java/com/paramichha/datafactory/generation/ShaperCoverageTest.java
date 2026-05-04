@@ -1,6 +1,6 @@
 package com.paramichha.datafactory.generation;
 
-import com.paramichha.datafactory.constraint.AnnotationAnalyzer;
+import com.paramichha.datafactory.constraint.AnnotationResolver;
 import com.paramichha.datafactory.constraint.FieldConstraints;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -29,11 +29,11 @@ class ShaperCoverageTest {
     // ── helpers ────────────────────────────────────────────────────────────
 
     private FieldConstraints field(String name, Class<?> type, String... annotations) {
-        return AnnotationAnalyzer.analyzeFromStrings(name, type.getSimpleName(), List.of(annotations));
+        return AnnotationResolver.analyzeFromStrings(name, type.getSimpleName(), List.of(annotations));
     }
 
     private FieldConstraints fieldOf(String name, Class<?> type) {
-        return AnnotationAnalyzer.analyzeFromStrings(name, type.getSimpleName(), List.of());
+        return AnnotationResolver.analyzeFromStrings(name, type.getSimpleName(), List.of());
     }
 
     private BoundaryTarget semantic() {
@@ -61,98 +61,98 @@ class ShaperCoverageTest {
 
         @Test
         void intPrimitive() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "int", List.of("@Min(1)"));
+            var f = AnnotationResolver.analyzeFromStrings("n", "int", List.of("@Min(1)"));
             var v = NumericShaper.shape(f, atMin(1));
             assertThat(v).isInstanceOf(Integer.class);
         }
 
         @Test
         void longType() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("amount", "Long", List.of("@Min(100)"));
+            var f = AnnotationResolver.analyzeFromStrings("amount", "Long", List.of("@Min(100)"));
             var v = NumericShaper.shape(f, atMin(100));
             assertThat(v).isInstanceOf(Long.class).isEqualTo(100L);
         }
 
         @Test
         void longPrimitive() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "long", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("n", "long", List.of());
             var v = NumericShaper.shape(f, semantic());
             assertThat(v).isInstanceOf(Long.class);
         }
 
         @Test
         void shortType() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "Short", List.of("@Min(1)"));
+            var f = AnnotationResolver.analyzeFromStrings("n", "Short", List.of("@Min(1)"));
             var v = NumericShaper.shape(f, atMin(1));
             assertThat(v).isInstanceOf(Short.class);
         }
 
         @Test
         void shortPrimitive() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "short", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("n", "short", List.of());
             var v = NumericShaper.shape(f, semantic());
             assertThat(v).isInstanceOf(Short.class);
         }
 
         @Test
         void byteType() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "Byte", List.of("@Min(1)"));
+            var f = AnnotationResolver.analyzeFromStrings("n", "Byte", List.of("@Min(1)"));
             var v = NumericShaper.shape(f, atMin(1));
             assertThat(v).isInstanceOf(Byte.class);
         }
 
         @Test
         void bytePrimitive() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "byte", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("n", "byte", List.of());
             var v = NumericShaper.shape(f, semantic());
             assertThat(v).isInstanceOf(Byte.class);
         }
 
         @Test
         void doubleType() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("price", "Double", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("price", "Double", List.of());
             var v = NumericShaper.shape(f, semantic());
             assertThat(v).isInstanceOf(Double.class);
         }
 
         @Test
         void doublePrimitive() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "double", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("n", "double", List.of());
             var v = NumericShaper.shape(f, semantic());
             assertThat(v).isInstanceOf(Double.class);
         }
 
         @Test
         void floatType() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "Float", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("n", "Float", List.of());
             var v = NumericShaper.shape(f, semantic());
             assertThat(v).isInstanceOf(Float.class);
         }
 
         @Test
         void floatPrimitive() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "float", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("n", "float", List.of());
             var v = NumericShaper.shape(f, semantic());
             assertThat(v).isInstanceOf(Float.class);
         }
 
         @Test
         void bigDecimal() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("price", "BigDecimal", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("price", "BigDecimal", List.of());
             var v = NumericShaper.shape(f, semantic());
             assertThat(v).isInstanceOf(BigDecimal.class);
         }
 
         @Test
         void bigDecimal_withTarget() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("price", "BigDecimal", List.of("@Min(5)"));
+            var f = AnnotationResolver.analyzeFromStrings("price", "BigDecimal", List.of("@Min(5)"));
             var v = NumericShaper.shape(f, atMin(5));
             assertThat(v).isInstanceOf(BigDecimal.class);
         }
 
         @Test
         void bigInteger() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "BigInteger", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("n", "BigInteger", List.of());
             var v = NumericShaper.shape(f, semantic());
             assertThat(v).isInstanceOf(BigInteger.class);
         }
@@ -287,7 +287,7 @@ class ShaperCoverageTest {
 
         @Test
         void bigDecimal_fractionDigits() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("price", "BigDecimal",
+            var f = AnnotationResolver.analyzeFromStrings("price", "BigDecimal",
                     List.of("@Digits(integer=5, fraction=2)"));
             var v = (BigDecimal) NumericShaper.shape(f, semantic());
             assertThat(v.scale()).isEqualTo(2);
@@ -492,7 +492,7 @@ class ShaperCoverageTest {
         @Test
         void unknownType_fallsBackToInstant() {
             // hits the default return Instant.now() at end of shape()
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "String", List.of("@Past"));
+            var f = AnnotationResolver.analyzeFromStrings("n", "String", List.of("@Past"));
             // Override fieldType by using a known non-temporal that TemporalShaper won't match
             // but hasTemporal is true — ValueGenerator routes to TemporalShaper
             // Use a temporal field that falls through all type checks
@@ -529,7 +529,7 @@ class ShaperCoverageTest {
         @Test
         void shapeAll_removesNulls() {
             // Unrecognised type → registry returns null → shapeAll filters it
-            var f = AnnotationAnalyzer.analyzeFromStrings("tags", "List", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("tags", "List", List.of());
             var targets = List.of(BoundaryTarget.semantic());
             var result = ValueGenerator.shapeAll(f, targets);
             // null removed — result should be empty rather than throwing
@@ -538,7 +538,7 @@ class ShaperCoverageTest {
 
         @Test
         void shapeAll_singleValidString() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("name", "String", List.of("@NotBlank"));
+            var f = AnnotationResolver.analyzeFromStrings("name", "String", List.of("@NotBlank"));
             var result = ValueGenerator.shapeAll(f, BoundaryPlanner.plan(f));
             assertThat(result).isNotEmpty();
             result.forEach(v -> assertThat(v).isInstanceOf(String.class));
@@ -555,7 +555,7 @@ class ShaperCoverageTest {
 
         @Test
         void unknownType_returnsNull() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("tags", "List", List.of());
+            var f = AnnotationResolver.analyzeFromStrings("tags", "List", List.of());
             Object result = TypeShaperRegistry.INSTANCE.shape(f, BoundaryTarget.semantic());
             assertThat(result).isNull();
         }
@@ -1121,7 +1121,7 @@ class ShaperCoverageTest {
         @Test
         void unknown_type_fallsBackToInstant() {
             // String field routed to TemporalShaper (non-temporal type) hits final Instant.now() fallback
-            var f = AnnotationAnalyzer.analyzeFromStrings("f", "String", List.of("@Past"));
+            var f = AnnotationResolver.analyzeFromStrings("f", "String", List.of("@Past"));
             assertThat(TemporalShaper.shape(f, semantic())).isInstanceOf(java.time.Instant.class);
         }
     }
@@ -1136,14 +1136,14 @@ class ShaperCoverageTest {
 
         @Test
         void double_atMin_target() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("n", "Double", List.of("@Min(1)", "@Max(10)"));
+            var f = AnnotationResolver.analyzeFromStrings("n", "Double", List.of("@Min(1)", "@Max(10)"));
             double v = (double) NumericShaper.shape(f, atMin(1));
             assertThat(v).isEqualTo(1.0d);
         }
 
         @Test
         void bigDecimal_withDigits_atMin() {
-            var f = AnnotationAnalyzer.analyzeFromStrings("price", "BigDecimal",
+            var f = AnnotationResolver.analyzeFromStrings("price", "BigDecimal",
                     List.of("@Digits(integer=5, fraction=2)"));
             var v = (java.math.BigDecimal) NumericShaper.shape(f, atMin(5));
             assertThat(v.scale()).isEqualTo(2);

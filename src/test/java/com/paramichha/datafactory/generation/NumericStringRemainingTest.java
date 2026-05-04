@@ -1,6 +1,6 @@
 package com.paramichha.datafactory.generation;
 
-import com.paramichha.datafactory.constraint.AnnotationAnalyzer;
+import com.paramichha.datafactory.constraint.AnnotationResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class NumericStringRemainingTest {
         // This path is hit when NO field-name hint matches AND both bounds present
         @Test
         void both_bounds_midpoint_no_hint() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("zzz", "Integer",
+            var fc = AnnotationResolver.analyzeFromStrings("zzz", "Integer",
                     List.of("@Min(10)", "@Max(20)"));
             var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v).isEqualTo(15); // (10+20)/2
@@ -36,7 +36,7 @@ class NumericStringRemainingTest {
         // semanticValue: min only (line 54) — no hint, min present, no max
         @Test
         void min_only_no_hint() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("zzz", "Integer", List.of("@Min(7)"));
+            var fc = AnnotationResolver.analyzeFromStrings("zzz", "Integer", List.of("@Min(7)"));
             var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v).isEqualTo(8); // min + 1
         }
@@ -44,7 +44,7 @@ class NumericStringRemainingTest {
         // semanticValue: max only (line 55) — no hint, max present, no min
         @Test
         void max_only_no_hint() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("zzz", "Integer", List.of("@Max(50)"));
+            var fc = AnnotationResolver.analyzeFromStrings("zzz", "Integer", List.of("@Max(50)"));
             var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v).isEqualTo(49); // max - 1
         }
@@ -79,7 +79,7 @@ class NumericStringRemainingTest {
         @Test
         void fitToBounds_default_max_trim() {
             // Plain string with max bound exceeded — hits default arm in max switch
-            var fc = AnnotationAnalyzer.analyzeFromStrings("desc", "String",
+            var fc = AnnotationResolver.analyzeFromStrings("desc", "String",
                     List.of("@Size(min=2, max=5)"));
             var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v.length()).isLessThanOrEqualTo(5);
@@ -88,7 +88,7 @@ class NumericStringRemainingTest {
         // fitToBounds: default (NONE format) in min-not-met switch
         @Test
         void fitToBounds_default_min_pad() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("code", "String",
+            var fc = AnnotationResolver.analyzeFromStrings("code", "String",
                     List.of("@Size(min=20, max=50)"));
             var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v.length()).isGreaterThanOrEqualTo(20);
@@ -97,7 +97,7 @@ class NumericStringRemainingTest {
         // fitToBounds URL max trim — hits URL arm in max-exceeded switch
         @Test
         void fitToBounds_url_max_trim() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("site", "String",
+            var fc = AnnotationResolver.analyzeFromStrings("site", "String",
                     List.of("@URL", "@Size(min=5, max=15)"));
             var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v.length()).isLessThanOrEqualTo(15);
@@ -106,7 +106,7 @@ class NumericStringRemainingTest {
         // fitToBounds URL min pad — hits URL arm in min-not-met switch
         @Test
         void fitToBounds_url_min_pad() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("link", "String",
+            var fc = AnnotationResolver.analyzeFromStrings("link", "String",
                     List.of("@URL", "@Size(min=40, max=200)"));
             var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v.length()).isGreaterThanOrEqualTo(40);

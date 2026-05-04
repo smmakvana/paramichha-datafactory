@@ -1,5 +1,5 @@
 package com.paramichha.datafactory.generation;
-import com.paramichha.datafactory.constraint.AnnotationAnalyzer;
+import com.paramichha.datafactory.constraint.AnnotationResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,14 +23,14 @@ class StringShaperEdgeCaseTest {
 
         @Test
         void isbn_format() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("isbn", "String", List.of("@ISBN"));
+            var fc = AnnotationResolver.analyzeFromStrings("isbn", "String", List.of("@ISBN"));
             var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v).isNotBlank();
         }
 
         @Test
         void ean_format() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("ean", "String", List.of("@EAN"));
+            var fc = AnnotationResolver.analyzeFromStrings("ean", "String", List.of("@EAN"));
             var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v).isNotBlank();
         }
@@ -68,7 +68,7 @@ class StringShaperEdgeCaseTest {
 
         @Test
         void url_exceeds_max_trimmed() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("site", "String",
+            var fc = AnnotationResolver.analyzeFromStrings("site", "String",
                     List.of("@URL", "@Size(min=5, max=20)"));
             var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v.length()).isLessThanOrEqualTo(20);
@@ -76,7 +76,7 @@ class StringShaperEdgeCaseTest {
 
         @Test
         void url_below_min_padded() {
-            var fc = AnnotationAnalyzer.analyzeFromStrings("site", "String",
+            var fc = AnnotationResolver.analyzeFromStrings("site", "String",
                     List.of("@URL", "@Size(min=50, max=200)"));
             var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
             assertThat(v.length()).isGreaterThanOrEqualTo(50);

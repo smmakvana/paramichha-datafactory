@@ -10,9 +10,9 @@ import java.util.List;
  * Works against both real {@code Annotation} instances and annotation strings from YAML
  * via the {@link AnnotationClassifier} strategy.
  */
-public final class AnnotationAnalyzer {
+public final class AnnotationResolver {
 
-    private AnnotationAnalyzer() {}
+    private AnnotationResolver() {}
 
     /** Analyzes a field at runtime using real {@code Annotation} instances. */
     public static FieldConstraints analyze(String fieldName, Class<?> fieldType,
