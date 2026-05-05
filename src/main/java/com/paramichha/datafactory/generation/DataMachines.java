@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.data;
+package com.paramichha.datafactory.generation;
 
 import net.datafaker.Faker;
 
@@ -8,28 +8,19 @@ import java.util.Random;
 /**
  * Factory for {@link DataMachine} instances.
  *
- * <p>Two modes:
  * <pre>
  *   DataMachines.random()      — different values each run
  *   DataMachines.seeded(42L)   — same sequence for same seed, every run
  * </pre>
  *
- * <p>One machine is created per {@link com.paramichha.datafactory.DataBuilder}
- * and reused for all fields and objects built by that builder.
- * The machine is stateful — each call advances its internal position
- * in the deterministic sequence.
- *
  * <p>Only this class and {@link FakerDataMachine} import DataFaker.
- * To swap the library: implement {@link DataMachine} and update these two classes only.
+ * To swap the library: implement {@link DataMachine} and update only these two classes.
  */
 public final class DataMachines {
 
     private DataMachines() {}
 
-    /**
-     * Returns a random-mode machine.
-     * Produces different values on every call — suitable for load test data.
-     */
+    /** Returns a random-mode machine. Different values every call. */
     public static DataMachine random() {
         return new FakerDataMachine(new Faker(Locale.ENGLISH), null);
     }
@@ -37,10 +28,6 @@ public final class DataMachines {
     /**
      * Returns a seeded machine.
      * Same seed → same sequence of values, every run.
-     * The machine advances state with each call so successive fields
-     * and objects get different but reproducible values.
-     *
-     * @param seed deterministic seed
      */
     public static DataMachine seeded(long seed) {
         Random rng = new Random(seed);

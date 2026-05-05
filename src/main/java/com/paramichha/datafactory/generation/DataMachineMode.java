@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.data;
+package com.paramichha.datafactory.generation;
 
 public enum DataMachineMode {
     RANDOM,   // different output each run
