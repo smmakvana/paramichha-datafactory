@@ -34,7 +34,7 @@ class CharacterShaperTest {
     @Test
     void shape_returns_char() {
         var fc = AnnotationResolver.analyzeFromStrings("c", "Character", List.of());
-        var result = CharacterDataCreator.INSTANCE.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
+        var result = CharacterDataCreator.INSTANCE.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
         assertThat(result).isInstanceOf(Character.class);
     }
 
