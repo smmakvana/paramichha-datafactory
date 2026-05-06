@@ -4,7 +4,6 @@ import com.paramichha.datafactory.FieldValue;
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import com.paramichha.datafactory.constraint.FieldDescriptor;
 import com.paramichha.datafactory.generation.DataMachine;
-import com.paramichha.datafactory.generation.DataMachines;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -46,22 +45,15 @@ public final class ValueBuilderFactory {
                 AnnotationResolver.analyze(name, type, annotations));
     }
 
-    // ── with machine — deterministic when seeded ────────────────────────────
+    // ── with machine — deterministic when seeded ─────────────────────────────
 
     public static <T> FieldValue<T> create(Class<T> type, DataMachine machine) {
         return new FieldValueBuilder<>(
                 AnnotationResolver.analyze("field", type, List.of()), machine);
     }
 
-                AnnotationResolver.analyze("field", type, List.of()), machine);
-    }
-
     public static <T> FieldValue<T> create(FieldDescriptor descriptor, DataMachine machine) {
         return new FieldValueBuilder<>(
-                AnnotationResolver.analyze(
-                        descriptor.name(), descriptor.rawType(), descriptor.validations()), machine);
-    }
-
                 AnnotationResolver.analyze(
                         descriptor.name(), descriptor.rawType(), descriptor.validations()), machine);
     }
