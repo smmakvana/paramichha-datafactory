@@ -19,7 +19,7 @@ class TemporalAllDirectionsTest {
 
     private static Object shape(String type, String annotation) {
         var fc = AnnotationResolver.analyzeFromStrings("f", type, List.of(annotation));
-        return TemporalShaper.shape(fc, BoundaryTarget.semantic());
+        return TemporalDataCreator.getTemporal(fc, BoundaryTarget.semantic());
     }
 
     // ── Instant ────────────────────────────────────────────────────────────

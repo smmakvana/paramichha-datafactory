@@ -1,6 +1,5 @@
 package com.paramichha.datafactory.generation;
 
-import com.paramichha.datafactory.generation.DataMachines;
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -26,14 +25,14 @@ class StringShaperEdgeCaseTest {
         @Test
         void isbn_format() {
             var fc = AnnotationResolver.analyzeFromStrings("isbn", "String", List.of("@ISBN"));
-            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v).isNotBlank();
         }
 
         @Test
         void ean_format() {
             var fc = AnnotationResolver.analyzeFromStrings("ean", "String", List.of("@EAN"));
-            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v).isNotBlank();
         }
     }
@@ -48,7 +47,7 @@ class StringShaperEdgeCaseTest {
             String longLocal = "a".repeat(64);
             String email = longLocal + "@example.com";
             // target > email.length() AND local is already at max 64 -> needed > 0 after localGrowth
-            String result = StringShaper.fitEmail(email, email.length() + 5);
+            String result = StringDataCreator.fitEmail(email, email.length() + 5);
             assertThat(result).hasSize(email.length() + 5);
             assertThat(result).contains("@");
         }
@@ -58,7 +57,7 @@ class StringShaperEdgeCaseTest {
             // local has room to grow, all needed filled by local — needed becomes 0
             String email = "ab@example.com"; // local="ab", domain="@example.com"
             // target = email.length() + 2 — local can grow 2, needed becomes 0
-            String result = StringShaper.fitEmail(email, email.length() + 2);
+            String result = StringDataCreator.fitEmail(email, email.length() + 2);
             assertThat(result).hasSize(email.length() + 2);
             assertThat(result).endsWith("@example.com");
         }
@@ -72,7 +71,7 @@ class StringShaperEdgeCaseTest {
         void url_exceeds_max_trimmed() {
             var fc = AnnotationResolver.analyzeFromStrings("site", "String",
                     List.of("@URL", "@Size(min=5, max=20)"));
-            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v.length()).isLessThanOrEqualTo(20);
         }
 
@@ -80,7 +79,7 @@ class StringShaperEdgeCaseTest {
         void url_below_min_padded() {
             var fc = AnnotationResolver.analyzeFromStrings("site", "String",
                     List.of("@URL", "@Size(min=50, max=200)"));
-            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v.length()).isGreaterThanOrEqualTo(50);
         }
     }

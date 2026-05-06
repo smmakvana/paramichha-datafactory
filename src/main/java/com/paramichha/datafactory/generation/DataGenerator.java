@@ -1,20 +1,35 @@
 package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Entry point for value generation. Delegates to {@link TypeShaperRegistry}.
  * Never changes — add a new type by implementing {@link DataCreator}.
  */
 public final class DataGenerator {
-    private static final TypeShaperRegistry REGISTRY = TypeShaperRegistry.INSTANCE;
-    private DataGenerator() {}
+    private static final List<DataCreator> creators = List.of(
+            BooleanDataCreator.INSTANCE,    // before String
+            EnumDataCreator.INSTANCE,       // before Object
+            UuidDataCreator.INSTANCE,       // before String
+            TemporalDataCreator.INSTANCE,   // before Object
+            NumericDataCreator.INSTANCE,    // before Object
+            CharacterDataCreator.INSTANCE,  // before String
+            StringDataCreator.INSTANCE      // catch-all
+    );
+
+    private DataGenerator() {
+    }
 
     public static Object shape(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
         if ("null".equals(target.label())) return null;
-        return REGISTRY.shape(field, target, machine);
+        for (DataCreator creator : creators) {
+            if (creator.supports(field.fieldType())) {
+                return creator.shape(field, target, machine);
+            }
+        }
+        return null;
     }
 
     /**

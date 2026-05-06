@@ -1,7 +1,5 @@
 package com.paramichha.datafactory.generation;
 
-import com.paramichha.datafactory.generation.DataMachines;
-
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import com.paramichha.datafactory.constraint.FieldConstraints;
 import org.junit.jupiter.api.DisplayName;
@@ -57,105 +55,105 @@ class ShaperCoverageTest {
         @Test
         void integer() {
             var f = field("age", Integer.class, "@Min(18)", "@Max(120)");
-            var v = NumericShaper.shape(f, atMin(18), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, atMin(18), DataMachines.random());
             assertThat(v).isInstanceOf(Integer.class).isEqualTo(18);
         }
 
         @Test
         void intPrimitive() {
             var f = AnnotationResolver.analyzeFromStrings("n", "int", List.of("@Min(1)"));
-            var v = NumericShaper.shape(f, atMin(1), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, atMin(1), DataMachines.random());
             assertThat(v).isInstanceOf(Integer.class);
         }
 
         @Test
         void longType() {
             var f = AnnotationResolver.analyzeFromStrings("amount", "Long", List.of("@Min(100)"));
-            var v = NumericShaper.shape(f, atMin(100), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, atMin(100), DataMachines.random());
             assertThat(v).isInstanceOf(Long.class).isEqualTo(100L);
         }
 
         @Test
         void longPrimitive() {
             var f = AnnotationResolver.analyzeFromStrings("n", "long", List.of());
-            var v = NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isInstanceOf(Long.class);
         }
 
         @Test
         void shortType() {
             var f = AnnotationResolver.analyzeFromStrings("n", "Short", List.of("@Min(1)"));
-            var v = NumericShaper.shape(f, atMin(1), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, atMin(1), DataMachines.random());
             assertThat(v).isInstanceOf(Short.class);
         }
 
         @Test
         void shortPrimitive() {
             var f = AnnotationResolver.analyzeFromStrings("n", "short", List.of());
-            var v = NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isInstanceOf(Short.class);
         }
 
         @Test
         void byteType() {
             var f = AnnotationResolver.analyzeFromStrings("n", "Byte", List.of("@Min(1)"));
-            var v = NumericShaper.shape(f, atMin(1), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, atMin(1), DataMachines.random());
             assertThat(v).isInstanceOf(Byte.class);
         }
 
         @Test
         void bytePrimitive() {
             var f = AnnotationResolver.analyzeFromStrings("n", "byte", List.of());
-            var v = NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isInstanceOf(Byte.class);
         }
 
         @Test
         void doubleType() {
             var f = AnnotationResolver.analyzeFromStrings("price", "Double", List.of());
-            var v = NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isInstanceOf(Double.class);
         }
 
         @Test
         void doublePrimitive() {
             var f = AnnotationResolver.analyzeFromStrings("n", "double", List.of());
-            var v = NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isInstanceOf(Double.class);
         }
 
         @Test
         void floatType() {
             var f = AnnotationResolver.analyzeFromStrings("n", "Float", List.of());
-            var v = NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isInstanceOf(Float.class);
         }
 
         @Test
         void floatPrimitive() {
             var f = AnnotationResolver.analyzeFromStrings("n", "float", List.of());
-            var v = NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isInstanceOf(Float.class);
         }
 
         @Test
         void bigDecimal() {
             var f = AnnotationResolver.analyzeFromStrings("price", "BigDecimal", List.of());
-            var v = NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isInstanceOf(BigDecimal.class);
         }
 
         @Test
         void bigDecimal_withTarget() {
             var f = AnnotationResolver.analyzeFromStrings("price", "BigDecimal", List.of("@Min(5)"));
-            var v = NumericShaper.shape(f, atMin(5), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, atMin(5), DataMachines.random());
             assertThat(v).isInstanceOf(BigDecimal.class);
         }
 
         @Test
         void bigInteger() {
             var f = AnnotationResolver.analyzeFromStrings("n", "BigInteger", List.of());
-            var v = NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isInstanceOf(BigInteger.class);
         }
     }
@@ -167,138 +165,138 @@ class ShaperCoverageTest {
         @Test
         void age_hint() {
             var f = fieldOf("age", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isEqualTo(30);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(30);
         }
 
         @Test
         void year_hint() {
             var f = fieldOf("year", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isEqualTo(2024);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(2024);
         }
 
         @Test
         void count_hint() {
             var f = fieldOf("count", Integer.class);
-            assertThat((Integer) NumericShaper.shape(f, semantic(), DataMachines.random())).isGreaterThan(0);
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isGreaterThan(0);
         }
 
         @Test
         void total_hint() {
             var f = fieldOf("total", Integer.class);
-            assertThat((Integer) NumericShaper.shape(f, semantic(), DataMachines.random())).isGreaterThan(0);
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isGreaterThan(0);
         }
 
         @Test
         void page_hint() {
             var f = fieldOf("page", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isNotNull();
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNull();
         }
 
         @Test
         void retry_hint() {
             var f = fieldOf("retryCount", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isNotNull();
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNull();
         }
 
         @Test
         void attempt_hint() {
             var f = fieldOf("attempts", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isNotNull();
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNull();
         }
 
         @Test
         void rating_hint() {
             var f = fieldOf("rating", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isEqualTo(5);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(5);
         }
 
         @Test
         void score_hint() {
             var f = fieldOf("score", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isEqualTo(5);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(5);
         }
 
         @Test
         void price_hint() {
             var f = fieldOf("price", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isEqualTo(100);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(100);
         }
 
         @Test
         void amount_hint() {
             var f = fieldOf("amount", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isEqualTo(100);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(100);
         }
 
         @Test
         void quantity_hint() {
             var f = fieldOf("quantity", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isEqualTo(1);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(1);
         }
 
         @Test
         void qty_hint() {
             var f = fieldOf("qty", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isEqualTo(1);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(1);
         }
 
         @Test
         void minOnly_returnsMinPlusOne() {
             var f = field("n", Integer.class, "@Min(10)");
-            assertThat((Integer) NumericShaper.shape(f, semantic(), DataMachines.random())).isEqualTo(11);
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(11);
         }
 
         @Test
         void maxOnly_returnsMaxMinusOne() {
             var f = field("n", Integer.class, "@Max(100)");
-            assertThat((Integer) NumericShaper.shape(f, semantic(), DataMachines.random())).isEqualTo(99);
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(99);
         }
 
         @Test
         void noBounds_noHint_returnsFakerValue() {
             var f = fieldOf("value", Integer.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isNotNull();
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNull();
         }
 
         @Test
         void double_minMax_midpoint() {
             var f = field("n", Double.class, "@Min(0)", "@Max(10)");
-            double v = (double) NumericShaper.shape(f, semantic(), DataMachines.random());
+            double v = (double) NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isEqualTo(5.0);
         }
 
         @Test
         void double_minOnly() {
             var f = field("n", Double.class, "@Min(2)");
-            double v = (double) NumericShaper.shape(f, semantic(), DataMachines.random());
+            double v = (double) NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isEqualTo(2.5);
         }
 
         @Test
         void double_maxOnly() {
             var f = field("n", Double.class, "@Max(10)");
-            double v = (double) NumericShaper.shape(f, semantic(), DataMachines.random());
+            double v = (double) NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v).isEqualTo(9.5);
         }
 
         @Test
         void double_noBounds_faker() {
             var f = fieldOf("n", Double.class);
-            assertThat(NumericShaper.shape(f, semantic(), DataMachines.random())).isInstanceOf(Double.class);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isInstanceOf(Double.class);
         }
 
         @Test
         void bigDecimal_fractionDigits() {
             var f = AnnotationResolver.analyzeFromStrings("price", "BigDecimal",
                     List.of("@Digits(integer=5, fraction=2)"));
-            var v = (BigDecimal) NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = (BigDecimal) NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v.scale()).isEqualTo(2);
         }
 
         @Test
         void bigDecimal_noFractionDigits_defaultsToTwo() {
             var f = fieldOf("price", BigDecimal.class);
-            var v = (BigDecimal) NumericShaper.shape(f, semantic(), DataMachines.random());
+            var v = (BigDecimal) NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v.scale()).isEqualTo(2);
         }
     }
@@ -314,180 +312,180 @@ class ShaperCoverageTest {
         @Test
         void instant_past() {
             var f = field("ts", Instant.class, "@Past");
-            var v = TemporalShaper.shape(f, semantic());
+            var v = TemporalDataCreator.getTemporal(f, semantic());
             assertThat((Instant) v).isBefore(Instant.now());
         }
 
         @Test
         void instant_pastOrNow() {
             var f = field("ts", Instant.class, "@PastOrPresent");
-            var v = (Instant) TemporalShaper.shape(f, semantic());
+            var v = (Instant) TemporalDataCreator.getTemporal(f, semantic());
             assertThat(v).isBefore(Instant.now().plusSeconds(1));
         }
 
         @Test
         void instant_future() {
             var f = field("ts", Instant.class, "@Future");
-            var v = (Instant) TemporalShaper.shape(f, semantic());
+            var v = (Instant) TemporalDataCreator.getTemporal(f, semantic());
             assertThat(v).isAfter(Instant.now());
         }
 
         @Test
         void instant_futureOrNow() {
             var f = field("ts", Instant.class, "@FutureOrPresent");
-            var v = (Instant) TemporalShaper.shape(f, semantic());
+            var v = (Instant) TemporalDataCreator.getTemporal(f, semantic());
             assertThat(v).isAfter(Instant.now().minusSeconds(1));
         }
 
         @Test
         void instant_none() {
             var f = fieldOf("ts", Instant.class);
-            assertThat(TemporalShaper.shape(f, semantic())).isInstanceOf(Instant.class);
+            assertThat(TemporalDataCreator.getTemporal(f, semantic())).isInstanceOf(Instant.class);
         }
 
         @Test
         void localDate_past() {
             var f = field("dob", LocalDate.class, "@Past");
-            assertThat((LocalDate) TemporalShaper.shape(f, semantic()))
+            assertThat((LocalDate) TemporalDataCreator.getTemporal(f, semantic()))
                     .isBefore(LocalDate.now());
         }
 
         @Test
         void localDate_future() {
             var f = field("dob", LocalDate.class, "@Future");
-            assertThat((LocalDate) TemporalShaper.shape(f, semantic()))
+            assertThat((LocalDate) TemporalDataCreator.getTemporal(f, semantic()))
                     .isAfter(LocalDate.now());
         }
 
         @Test
         void localDate_none() {
             var f = fieldOf("dob", LocalDate.class);
-            assertThat(TemporalShaper.shape(f, semantic())).isInstanceOf(LocalDate.class);
+            assertThat(TemporalDataCreator.getTemporal(f, semantic())).isInstanceOf(LocalDate.class);
         }
 
         @Test
         void localDateTime_past() {
             var f = field("dt", LocalDateTime.class, "@Past");
-            assertThat((LocalDateTime) TemporalShaper.shape(f, semantic()))
+            assertThat((LocalDateTime) TemporalDataCreator.getTemporal(f, semantic()))
                     .isBefore(LocalDateTime.now());
         }
 
         @Test
         void localDateTime_future() {
             var f = field("dt", LocalDateTime.class, "@Future");
-            assertThat((LocalDateTime) TemporalShaper.shape(f, semantic()))
+            assertThat((LocalDateTime) TemporalDataCreator.getTemporal(f, semantic()))
                     .isAfter(LocalDateTime.now());
         }
 
         @Test
         void localDateTime_none() {
-            assertThat(TemporalShaper.shape(fieldOf("dt", LocalDateTime.class), semantic()))
+            assertThat(TemporalDataCreator.getTemporal(fieldOf("dt", LocalDateTime.class), semantic()))
                     .isInstanceOf(LocalDateTime.class);
         }
 
         @Test
         void localTime() {
-            assertThat(TemporalShaper.shape(fieldOf("t", LocalTime.class), semantic()))
+            assertThat(TemporalDataCreator.getTemporal(fieldOf("t", LocalTime.class), semantic()))
                     .isInstanceOf(LocalTime.class);
         }
 
         @Test
         void zonedDateTime_past() {
             var f = field("dt", ZonedDateTime.class, "@Past");
-            assertThat((ZonedDateTime) TemporalShaper.shape(f, semantic()))
+            assertThat((ZonedDateTime) TemporalDataCreator.getTemporal(f, semantic()))
                     .isBefore(ZonedDateTime.now());
         }
 
         @Test
         void zonedDateTime_future() {
             var f = field("dt", ZonedDateTime.class, "@Future");
-            assertThat((ZonedDateTime) TemporalShaper.shape(f, semantic()))
+            assertThat((ZonedDateTime) TemporalDataCreator.getTemporal(f, semantic()))
                     .isAfter(ZonedDateTime.now());
         }
 
         @Test
         void zonedDateTime_none() {
-            assertThat(TemporalShaper.shape(fieldOf("dt", ZonedDateTime.class), semantic()))
+            assertThat(TemporalDataCreator.getTemporal(fieldOf("dt", ZonedDateTime.class), semantic()))
                     .isInstanceOf(ZonedDateTime.class);
         }
 
         @Test
         void offsetDateTime_past() {
             var f = field("dt", OffsetDateTime.class, "@Past");
-            assertThat((OffsetDateTime) TemporalShaper.shape(f, semantic()))
+            assertThat((OffsetDateTime) TemporalDataCreator.getTemporal(f, semantic()))
                     .isBefore(OffsetDateTime.now());
         }
 
         @Test
         void offsetDateTime_future() {
             var f = field("dt", OffsetDateTime.class, "@Future");
-            assertThat((OffsetDateTime) TemporalShaper.shape(f, semantic()))
+            assertThat((OffsetDateTime) TemporalDataCreator.getTemporal(f, semantic()))
                     .isAfter(OffsetDateTime.now());
         }
 
         @Test
         void offsetDateTime_none() {
-            assertThat(TemporalShaper.shape(fieldOf("dt", OffsetDateTime.class), semantic()))
+            assertThat(TemporalDataCreator.getTemporal(fieldOf("dt", OffsetDateTime.class), semantic()))
                     .isInstanceOf(OffsetDateTime.class);
         }
 
         @Test
         void date_past() {
             var f = field("dt", java.util.Date.class, "@Past");
-            assertThat((java.util.Date) TemporalShaper.shape(f, semantic()))
+            assertThat((java.util.Date) TemporalDataCreator.getTemporal(f, semantic()))
                     .isBefore(new java.util.Date());
         }
 
         @Test
         void date_future() {
             var f = field("dt", java.util.Date.class, "@Future");
-            assertThat((java.util.Date) TemporalShaper.shape(f, semantic()))
+            assertThat((java.util.Date) TemporalDataCreator.getTemporal(f, semantic()))
                     .isAfter(new java.util.Date());
         }
 
         @Test
         void date_none() {
-            assertThat(TemporalShaper.shape(fieldOf("dt", java.util.Date.class), semantic()))
+            assertThat(TemporalDataCreator.getTemporal(fieldOf("dt", java.util.Date.class), semantic()))
                     .isInstanceOf(java.util.Date.class);
         }
 
         @Test
         void year_past() {
             var f = field("y", Year.class, "@Past");
-            assertThat((Year) TemporalShaper.shape(f, semantic()))
+            assertThat((Year) TemporalDataCreator.getTemporal(f, semantic()))
                     .isLessThan(Year.now());
         }
 
         @Test
         void year_future() {
             var f = field("y", Year.class, "@Future");
-            assertThat((Year) TemporalShaper.shape(f, semantic()))
+            assertThat((Year) TemporalDataCreator.getTemporal(f, semantic()))
                     .isGreaterThan(Year.now());
         }
 
         @Test
         void year_none() {
-            assertThat(TemporalShaper.shape(fieldOf("y", Year.class), semantic()))
+            assertThat(TemporalDataCreator.getTemporal(fieldOf("y", Year.class), semantic()))
                     .isInstanceOf(Year.class);
         }
 
         @Test
         void yearMonth_past() {
             var f = field("ym", YearMonth.class, "@Past");
-            assertThat((YearMonth) TemporalShaper.shape(f, semantic()))
+            assertThat((YearMonth) TemporalDataCreator.getTemporal(f, semantic()))
                     .isLessThan(YearMonth.now());
         }
 
         @Test
         void yearMonth_future() {
             var f = field("ym", YearMonth.class, "@Future");
-            assertThat((YearMonth) TemporalShaper.shape(f, semantic()))
+            assertThat((YearMonth) TemporalDataCreator.getTemporal(f, semantic()))
                     .isGreaterThan(YearMonth.now());
         }
 
         @Test
         void yearMonth_none() {
-            assertThat(TemporalShaper.shape(fieldOf("ym", YearMonth.class), semantic()))
+            assertThat(TemporalDataCreator.getTemporal(fieldOf("ym", YearMonth.class), semantic()))
                     .isInstanceOf(YearMonth.class);
         }
 
@@ -499,7 +497,7 @@ class ShaperCoverageTest {
             // but hasTemporal is true — ValueGenerator routes to TemporalShaper
             // Use a temporal field that falls through all type checks
             // This is covered by the Instant.now() fallback at line 36
-            assertThat(TemporalShaper.shape(fieldOf("ts", Instant.class), semantic()))
+            assertThat(TemporalDataCreator.getTemporal(fieldOf("ts", Instant.class), semantic()))
                     .isInstanceOf(Instant.class);
         }
     }
@@ -558,7 +556,7 @@ class ShaperCoverageTest {
         @Test
         void unknownType_returnsNull() {
             var f = AnnotationResolver.analyzeFromStrings("tags", "List", List.of());
-            Object result = TypeShaperRegistry.INSTANCE.shape(f, BoundaryTarget.semantic(), DataMachines.random());
+            Object result = DataGenerator.shape(f, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(result).isNull();
         }
     }
@@ -813,21 +811,21 @@ class ShaperCoverageTest {
         void email_semantic_fits_bounds() {
             // @Email with @Size bounds — semantic path calls fitToBounds
             var f = field("email", String.class, "@Email", "@NotBlank", "@Size(min=8, max=100)");
-            String v = (String) StringShaper.shape(f, semantic(), DataMachines.random());
+            String v = (String) StringDataCreator.getString(f, semantic(), DataMachines.random());
             assertThat(v).contains("@");
         }
 
         @Test
         void url_semantic() {
             var f = field("site", String.class, "@URL");
-            String v = (String) StringShaper.shape(f, semantic(), DataMachines.random());
+            String v = (String) StringDataCreator.getString(f, semantic(), DataMachines.random());
             assertThat(v).isNotBlank();
         }
 
         @Test
         void url_withTarget() {
             var f = field("site", String.class, "@URL");
-            String v = (String) StringShaper.shape(f, atMin(30), DataMachines.random());
+            String v = (String) StringDataCreator.getString(f, atMin(30), DataMachines.random());
             assertThat(v).hasSizeGreaterThanOrEqualTo(20);
         }
 
@@ -835,172 +833,172 @@ class ShaperCoverageTest {
         void pattern_semantic() {
             // @Pattern — best-effort, returns base value
             var f = field("code", String.class, "@Pattern(regexp=\"^[A-Z]+$\")");
-            String v = (String) StringShaper.shape(f, semantic(), DataMachines.random());
+            String v = (String) StringDataCreator.getString(f, semantic(), DataMachines.random());
             assertThat(v).isNotNull();
         }
 
         @Test
         void plain_withTarget() {
             var f = field("name", String.class, "@NotBlank", "@Size(min=2, max=50)");
-            String v = (String) StringShaper.shape(f, atMin(5), DataMachines.random());
+            String v = (String) StringDataCreator.getString(f, atMin(5), DataMachines.random());
             assertThat(v).hasSize(5);
         }
 
         @Test
         void semanticByName_phone() {
             var f = fieldOf("phone", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_mobile() {
             var f = fieldOf("mobile", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_firstName() {
             var f = fieldOf("firstName", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_lastName() {
             var f = fieldOf("lastName", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_name() {
             var f = fieldOf("name", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_password() {
             var f = fieldOf("password", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_url() {
             var f = fieldOf("url", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_city() {
             var f = fieldOf("city", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_countryCode() {
             var f = fieldOf("countryCode", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_country() {
             var f = fieldOf("country", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_address() {
             var f = fieldOf("address", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_postcode() {
             var f = fieldOf("postcode", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_zip() {
             var f = fieldOf("zip", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_currency() {
             var f = fieldOf("currency", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_description() {
             var f = fieldOf("description", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_title() {
             var f = fieldOf("title", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_company() {
             var f = fieldOf("company", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_token() {
             var f = fieldOf("token", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_reference() {
             var f = fieldOf("reference", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_id() {
             var f = fieldOf("userId", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_code() {
             var f = fieldOf("productCode", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_status() {
             var f = fieldOf("status", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_type() {
             var f = fieldOf("type", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_message() {
             var f = fieldOf("message", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void semanticByName_fallback_word() {
             var f = fieldOf("zzz", String.class);
-            assertThat((String) StringShaper.shape(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void fitToBounds_tooLong_email() {
             // semantic email longer than @Size max → fitToBounds trims via fitEmail
             var f = field("email", String.class, "@Email", "@Size(min=8, max=20)");
-            String v = (String) StringShaper.shape(f, semantic(), DataMachines.random());
+            String v = (String) StringDataCreator.getString(f, semantic(), DataMachines.random());
             assertThat(v.length()).isLessThanOrEqualTo(20);
         }
 
@@ -1008,14 +1006,14 @@ class ShaperCoverageTest {
         void fitToBounds_tooShort_email() {
             // semantic email shorter than @Size min → fitToBounds pads via fitEmail
             var f = field("email", String.class, "@Email", "@Size(min=30, max=80)");
-            String v = (String) StringShaper.shape(f, semantic(), DataMachines.random());
+            String v = (String) StringDataCreator.getString(f, semantic(), DataMachines.random());
             assertThat(v.length()).isGreaterThanOrEqualTo(30);
         }
 
         @Test
         void fitToBounds_url_tooLong() {
             var f = field("site", String.class, "@URL", "@Size(min=5, max=15)");
-            String v = (String) StringShaper.shape(f, semantic(), DataMachines.random());
+            String v = (String) StringDataCreator.getString(f, semantic(), DataMachines.random());
             assertThat(v.length()).isLessThanOrEqualTo(15);
         }
     }
@@ -1030,47 +1028,47 @@ class ShaperCoverageTest {
 
         @Test
         void link_hint() {
-            assertThat((String) StringShaper.shape(fieldOf("link", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(fieldOf("link", String.class), semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void website_hint() {
-            assertThat((String) StringShaper.shape(fieldOf("website", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(fieldOf("website", String.class), semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void postal_hint() {
-            assertThat((String) StringShaper.shape(fieldOf("postalCode", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(fieldOf("postalCode", String.class), semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void ccy_hint() {
-            assertThat((String) StringShaper.shape(fieldOf("ccy", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(fieldOf("ccy", String.class), semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void note_hint() {
-            assertThat((String) StringShaper.shape(fieldOf("note", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(fieldOf("note", String.class), semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void comment_hint() {
-            assertThat((String) StringShaper.shape(fieldOf("comment", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(fieldOf("comment", String.class), semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void organisation_hint() {
-            assertThat((String) StringShaper.shape(fieldOf("organisation", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(fieldOf("organisation", String.class), semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void ref_hint() {
-            assertThat((String) StringShaper.shape(fieldOf("ref", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(fieldOf("ref", String.class), semantic(), DataMachines.random())).isNotBlank();
         }
 
         @Test
         void reason_hint() {
-            assertThat((String) StringShaper.shape(fieldOf("reason", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat((String) StringDataCreator.getString(fieldOf("reason", String.class), semantic(), DataMachines.random())).isNotBlank();
         }
     }
 
@@ -1085,46 +1083,46 @@ class ShaperCoverageTest {
         @Test
         void date_pastOrNow() {
             var f = field("dt", java.util.Date.class, "@PastOrPresent");
-            assertThat(((java.util.Date) TemporalShaper.shape(f, semantic()))
+            assertThat(((java.util.Date) TemporalDataCreator.getTemporal(f, semantic()))
                     .before(new java.util.Date(System.currentTimeMillis() + 1000))).isTrue();
         }
 
         @Test
         void year_pastOrNow() {
             var f = field("y", Year.class, "@PastOrPresent");
-            assertThat((Year) TemporalShaper.shape(f, semantic())).isLessThanOrEqualTo(Year.now());
+            assertThat((Year) TemporalDataCreator.getTemporal(f, semantic())).isLessThanOrEqualTo(Year.now());
         }
 
         @Test
         void yearMonth_pastOrNow() {
             var f = field("ym", YearMonth.class, "@PastOrPresent");
-            assertThat((YearMonth) TemporalShaper.shape(f, semantic())).isLessThanOrEqualTo(YearMonth.now());
+            assertThat((YearMonth) TemporalDataCreator.getTemporal(f, semantic())).isLessThanOrEqualTo(YearMonth.now());
         }
 
         @Test
         void date_futureOrNow() {
             var f = field("dt", java.util.Date.class, "@FutureOrPresent");
-            assertThat(((java.util.Date) TemporalShaper.shape(f, semantic()))
+            assertThat(((java.util.Date) TemporalDataCreator.getTemporal(f, semantic()))
                     .after(new java.util.Date(System.currentTimeMillis() - 1000))).isTrue();
         }
 
         @Test
         void year_futureOrNow() {
             var f = field("y", Year.class, "@FutureOrPresent");
-            assertThat((Year) TemporalShaper.shape(f, semantic())).isGreaterThanOrEqualTo(Year.now());
+            assertThat((Year) TemporalDataCreator.getTemporal(f, semantic())).isGreaterThanOrEqualTo(Year.now());
         }
 
         @Test
         void yearMonth_futureOrNow() {
             var f = field("ym", YearMonth.class, "@FutureOrPresent");
-            assertThat((YearMonth) TemporalShaper.shape(f, semantic())).isGreaterThanOrEqualTo(YearMonth.now());
+            assertThat((YearMonth) TemporalDataCreator.getTemporal(f, semantic())).isGreaterThanOrEqualTo(YearMonth.now());
         }
 
         @Test
         void unknown_type_fallsBackToInstant() {
             // String field routed to TemporalShaper (non-temporal type) hits final Instant.now() fallback
             var f = AnnotationResolver.analyzeFromStrings("f", "String", List.of("@Past"));
-            assertThat(TemporalShaper.shape(f, semantic())).isInstanceOf(java.time.Instant.class);
+            assertThat(TemporalDataCreator.getTemporal(f, semantic())).isInstanceOf(java.time.Instant.class);
         }
     }
 
@@ -1139,7 +1137,7 @@ class ShaperCoverageTest {
         @Test
         void double_atMin_target() {
             var f = AnnotationResolver.analyzeFromStrings("n", "Double", List.of("@Min(1)", "@Max(10)"));
-            double v = (double) NumericShaper.shape(f, atMin(1), DataMachines.random());
+            double v = (double) NumericDataCreator.getNumber(f, atMin(1), DataMachines.random());
             assertThat(v).isEqualTo(1.0d);
         }
 
@@ -1147,7 +1145,7 @@ class ShaperCoverageTest {
         void bigDecimal_withDigits_atMin() {
             var f = AnnotationResolver.analyzeFromStrings("price", "BigDecimal",
                     List.of("@Digits(integer=5, fraction=2)"));
-            var v = (java.math.BigDecimal) NumericShaper.shape(f, atMin(5), DataMachines.random());
+            var v = (java.math.BigDecimal) NumericDataCreator.getNumber(f, atMin(5), DataMachines.random());
             assertThat(v.scale()).isEqualTo(2);
         }
     }

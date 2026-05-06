@@ -1,7 +1,5 @@
 package com.paramichha.datafactory.generation;
 
-import com.paramichha.datafactory.generation.DataMachines;
-
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +29,7 @@ class ShaperBranchTest {
 
         private Object shape(String type) {
             var fc = AnnotationResolver.analyzeFromStrings("f", type, List.of());
-            return TemporalShaper.shape(fc, BoundaryTarget.semantic());
+            return TemporalDataCreator.getTemporal(fc, BoundaryTarget.semantic());
         }
 
         @Test
@@ -70,7 +68,7 @@ class ShaperBranchTest {
 
         private Object shape(String name, String type, String... anns) {
             var fc = AnnotationResolver.analyzeFromStrings(name, type, List.of(anns));
-            return NumericShaper.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
+            return NumericDataCreator.getNumber(fc, BoundaryTarget.semantic(), DataMachines.random());
         }
 
         // bounded() — preferred < min → result clamped up to min
@@ -78,7 +76,7 @@ class ShaperBranchTest {
         void bounded_clamped_to_min() {
             // "age" hint prefers 30, but min=50 → result must be >= 50
             var fc = AnnotationResolver.analyzeFromStrings("age", "Integer", List.of("@Min(50)", "@Max(200)"));
-            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = (Integer) NumericDataCreator.getNumber(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v).isGreaterThanOrEqualTo(50);
         }
 
@@ -87,7 +85,7 @@ class ShaperBranchTest {
         void bounded_clamped_to_max() {
             // "price" hint prefers 100, but max=5 → result must be <= 5
             var fc = AnnotationResolver.analyzeFromStrings("price", "Integer", List.of("@Min(1)", "@Max(5)"));
-            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = (Integer) NumericDataCreator.getNumber(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v).isLessThanOrEqualTo(5);
         }
 
@@ -95,7 +93,7 @@ class ShaperBranchTest {
         @Test
         void shapeDouble_both_bounds_midpoint() {
             var fc = AnnotationResolver.analyzeFromStrings("n", "Double", List.of("@Min(10)", "@Max(20)"));
-            var v = (Double) NumericShaper.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = (Double) NumericDataCreator.getNumber(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v).isEqualTo(15.0d);
         }
 
@@ -103,7 +101,7 @@ class ShaperBranchTest {
         @Test
         void shapeDouble_min_only() {
             var fc = AnnotationResolver.analyzeFromStrings("n", "Double", List.of("@Min(10)"));
-            var v = (Double) NumericShaper.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = (Double) NumericDataCreator.getNumber(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v).isEqualTo(10.5d);
         }
 
@@ -111,7 +109,7 @@ class ShaperBranchTest {
         @Test
         void shapeDouble_max_only() {
             var fc = AnnotationResolver.analyzeFromStrings("n", "Double", List.of("@Max(20)"));
-            var v = (Double) NumericShaper.shape(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = (Double) NumericDataCreator.getNumber(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v).isEqualTo(19.5d);
         }
 
@@ -133,7 +131,7 @@ class ShaperBranchTest {
         // fitEmail — no '@' in input → falls back to fitPlain
         @Test
         void fitEmail_no_at_sign() {
-            String result = StringShaper.fitEmail("noemail", 10);
+            String result = StringDataCreator.fitEmail("noemail", 10);
             assertThat(result).hasSize(10);
         }
 
@@ -141,7 +139,7 @@ class ShaperBranchTest {
         @Test
         void fitEmail_exact_length() {
             String email = "a@b.com"; // 7 chars
-            assertThat(StringShaper.fitEmail(email, 7)).isEqualTo(email);
+            assertThat(StringDataCreator.fitEmail(email, 7)).isEqualTo(email);
         }
 
         // fitEmail — needed <= 0 after local fills gap → return local + domain without domain extension
@@ -150,7 +148,7 @@ class ShaperBranchTest {
             // local = "ab" (2 chars), domain = "@x.com" (6 chars), total = 8
             // target = 10, needed = 2, localRoom = 62, localGrowth = 2, needed becomes 0
             String email = "ab@x.com";
-            String result = StringShaper.fitEmail(email, 10);
+            String result = StringDataCreator.fitEmail(email, 10);
             assertThat(result).hasSize(10);
             assertThat(result).endsWith("@x.com");
         }
@@ -159,14 +157,14 @@ class ShaperBranchTest {
         @Test
         void fitUrl_exact_length() {
             String url = "http://x.com"; // 12 chars
-            assertThat(StringShaper.fitUrl(url, 12)).isEqualTo(url);
+            assertThat(StringDataCreator.fitUrl(url, 12)).isEqualTo(url);
         }
 
         // fitUrl — url longer than target → trimmed
         @Test
         void fitUrl_trimmed() {
             String url = "http://example.com/path";
-            String result = StringShaper.fitUrl(url, 10);
+            String result = StringDataCreator.fitUrl(url, 10);
             assertThat(result).hasSize(10);
         }
 
@@ -174,7 +172,7 @@ class ShaperBranchTest {
         @Test
         void fitUrl_padded() {
             String url = "http://x.io";
-            String result = StringShaper.fitUrl(url, 20);
+            String result = StringDataCreator.fitUrl(url, 20);
             assertThat(result).hasSize(20);
         }
     }
