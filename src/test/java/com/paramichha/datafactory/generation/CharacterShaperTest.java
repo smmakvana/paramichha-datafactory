@@ -1,5 +1,7 @@
 package com.paramichha.datafactory.generation;
 
+import com.paramichha.datafactory.generation.DataMachines;
+
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ class CharacterShaperTest {
     @Test
     void shape_returns_char() {
         var fc = AnnotationResolver.analyzeFromStrings("c", "Character", List.of());
-        var result = CharacterDataCreator.INSTANCE.shape(fc, BoundaryTarget.semantic());
+        var result = CharacterDataCreator.INSTANCE.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
         assertThat(result).isInstanceOf(Character.class);
     }
 
@@ -40,7 +42,7 @@ class CharacterShaperTest {
     void shapeAll_via_value_generator() {
         var fc = AnnotationResolver.analyzeFromStrings("c", "char", List.of());
         var targets = List.of(BoundaryTarget.semantic());
-        var result = DataGenerator.shapeAll(fc, targets);
+        var result = DataGenerator.shapeAll(fc, targets, DataMachines.random());
         assertThat(result).hasSize(1);
         assertThat(result.get(0)).isInstanceOf(Character.class);
     }

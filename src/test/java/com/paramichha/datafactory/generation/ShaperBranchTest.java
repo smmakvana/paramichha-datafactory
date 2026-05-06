@@ -1,5 +1,7 @@
 package com.paramichha.datafactory.generation;
 
+import com.paramichha.datafactory.generation.DataMachines;
+
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -68,7 +70,7 @@ class ShaperBranchTest {
 
         private Object shape(String name, String type, String... anns) {
             var fc = AnnotationResolver.analyzeFromStrings(name, type, List.of(anns));
-            return NumericShaper.shape(fc, BoundaryTarget.semantic());
+            return NumericShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
         }
 
         // bounded() — preferred < min → result clamped up to min
@@ -76,7 +78,7 @@ class ShaperBranchTest {
         void bounded_clamped_to_min() {
             // "age" hint prefers 30, but min=50 → result must be >= 50
             var fc = AnnotationResolver.analyzeFromStrings("age", "Integer", List.of("@Min(50)", "@Max(200)"));
-            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v).isGreaterThanOrEqualTo(50);
         }
 
@@ -85,7 +87,7 @@ class ShaperBranchTest {
         void bounded_clamped_to_max() {
             // "price" hint prefers 100, but max=5 → result must be <= 5
             var fc = AnnotationResolver.analyzeFromStrings("price", "Integer", List.of("@Min(1)", "@Max(5)"));
-            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v).isLessThanOrEqualTo(5);
         }
 
@@ -93,7 +95,7 @@ class ShaperBranchTest {
         @Test
         void shapeDouble_both_bounds_midpoint() {
             var fc = AnnotationResolver.analyzeFromStrings("n", "Double", List.of("@Min(10)", "@Max(20)"));
-            var v = (Double) NumericShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (Double) NumericShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v).isEqualTo(15.0d);
         }
 
@@ -101,7 +103,7 @@ class ShaperBranchTest {
         @Test
         void shapeDouble_min_only() {
             var fc = AnnotationResolver.analyzeFromStrings("n", "Double", List.of("@Min(10)"));
-            var v = (Double) NumericShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (Double) NumericShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v).isEqualTo(10.5d);
         }
 
@@ -109,7 +111,7 @@ class ShaperBranchTest {
         @Test
         void shapeDouble_max_only() {
             var fc = AnnotationResolver.analyzeFromStrings("n", "Double", List.of("@Max(20)"));
-            var v = (Double) NumericShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (Double) NumericShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v).isEqualTo(19.5d);
         }
 

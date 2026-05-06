@@ -1,5 +1,7 @@
 package com.paramichha.datafactory.generation;
 
+import com.paramichha.datafactory.generation.DataMachines;
+
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -29,7 +31,7 @@ class NumericStringRemainingTest {
         void both_bounds_midpoint_no_hint() {
             var fc = AnnotationResolver.analyzeFromStrings("zzz", "Integer",
                     List.of("@Min(10)", "@Max(20)"));
-            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v).isEqualTo(15); // (10+20)/2
         }
 
@@ -37,7 +39,7 @@ class NumericStringRemainingTest {
         @Test
         void min_only_no_hint() {
             var fc = AnnotationResolver.analyzeFromStrings("zzz", "Integer", List.of("@Min(7)"));
-            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v).isEqualTo(8); // min + 1
         }
 
@@ -45,7 +47,7 @@ class NumericStringRemainingTest {
         @Test
         void max_only_no_hint() {
             var fc = AnnotationResolver.analyzeFromStrings("zzz", "Integer", List.of("@Max(50)"));
-            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (Integer) NumericShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v).isEqualTo(49); // max - 1
         }
     }
@@ -81,7 +83,7 @@ class NumericStringRemainingTest {
             // Plain string with max bound exceeded — hits default arm in max switch
             var fc = AnnotationResolver.analyzeFromStrings("desc", "String",
                     List.of("@Size(min=2, max=5)"));
-            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v.length()).isLessThanOrEqualTo(5);
         }
 
@@ -90,7 +92,7 @@ class NumericStringRemainingTest {
         void fitToBounds_default_min_pad() {
             var fc = AnnotationResolver.analyzeFromStrings("code", "String",
                     List.of("@Size(min=20, max=50)"));
-            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v.length()).isGreaterThanOrEqualTo(20);
         }
 
@@ -99,7 +101,7 @@ class NumericStringRemainingTest {
         void fitToBounds_url_max_trim() {
             var fc = AnnotationResolver.analyzeFromStrings("site", "String",
                     List.of("@URL", "@Size(min=5, max=15)"));
-            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v.length()).isLessThanOrEqualTo(15);
         }
 
@@ -108,7 +110,7 @@ class NumericStringRemainingTest {
         void fitToBounds_url_min_pad() {
             var fc = AnnotationResolver.analyzeFromStrings("link", "String",
                     List.of("@URL", "@Size(min=40, max=200)"));
-            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic());
+            var v = (String) StringShaper.shape(fc, BoundaryTarget.semantic(, DataMachines.random()));
             assertThat(v.length()).isGreaterThanOrEqualTo(40);
         }
     }

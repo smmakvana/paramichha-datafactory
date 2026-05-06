@@ -1,5 +1,7 @@
 package com.paramichha.datafactory.generation;
 
+import com.paramichha.datafactory.generation.DataMachines;
+
 import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.*;
