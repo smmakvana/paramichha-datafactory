@@ -3,7 +3,8 @@ package com.paramichha.datafactory.builder;
 import com.paramichha.datafactory.FieldValue;
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import com.paramichha.datafactory.constraint.FieldDescriptor;
-import net.datafaker.Faker;
+import com.paramichha.datafactory.generation.DataMachine;
+import com.paramichha.datafactory.generation.DataMachines;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -14,7 +15,7 @@ public final class ValueBuilderFactory {
 
     private ValueBuilderFactory() {}
 
-    // ── without faker — uses FakerProvider.random() internally ───────────
+    // ── without machine — uses DataMachines.random() internally ─────────────
 
     public static <T> FieldValue<T> create(Class<T> type) {
         return new FieldValueBuilder<>(
@@ -45,27 +46,23 @@ public final class ValueBuilderFactory {
                 AnnotationResolver.analyze(name, type, annotations));
     }
 
-    // ── with faker — deterministic when seed is set ───────────────────────
+    // ── with machine — deterministic when seeded ────────────────────────────
 
-    public static <T> FieldValue<T> create(Class<T> type, Faker faker) {
+    public static <T> FieldValue<T> create(Class<T> type, DataMachine machine) {
         return new FieldValueBuilder<>(
-                AnnotationResolver.analyze("field", type, List.of()), faker);
+                AnnotationResolver.analyze("field", type, List.of()), machine);
     }
 
-    public static <T> FieldValue<T> create(Class<T> type, Faker faker, long seed) {
-        return new FieldValueBuilder<>(
-                AnnotationResolver.analyze("field", type, List.of()), faker, seed);
+                AnnotationResolver.analyze("field", type, List.of()), machine);
     }
 
-    public static <T> FieldValue<T> create(FieldDescriptor descriptor, Faker faker) {
+    public static <T> FieldValue<T> create(FieldDescriptor descriptor, DataMachine machine) {
         return new FieldValueBuilder<>(
                 AnnotationResolver.analyze(
-                        descriptor.name(), descriptor.rawType(), descriptor.validations()), faker);
+                        descriptor.name(), descriptor.rawType(), descriptor.validations()), machine);
     }
 
-    public static <T> FieldValue<T> create(FieldDescriptor descriptor, Faker faker, long seed) {
-        return new FieldValueBuilder<>(
                 AnnotationResolver.analyze(
-                        descriptor.name(), descriptor.rawType(), descriptor.validations()), faker, seed);
+                        descriptor.name(), descriptor.rawType(), descriptor.validations()), machine);
     }
 }

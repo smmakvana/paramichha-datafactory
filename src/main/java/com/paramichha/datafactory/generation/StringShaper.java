@@ -20,16 +20,11 @@ public final class StringShaper {
     private StringShaper() {
     }
 
-    /** Convenience overload — uses a random Faker. Used by tests and internal callers. */
-    static String shape(FieldConstraints field, BoundaryTarget target) {
-        return shape(field, target, FakerProvider.random());
-    }
-
-    static String shape(FieldConstraints field, BoundaryTarget target, net.datafaker.Faker faker) {
-        String base = baseValue(field, faker);
+    static String shape(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
+        String base = baseValue(field, machine);
 
         if (!(target instanceof BoundaryTarget.Fixed)) {
-            return fitToBounds(base, field, field.format(), faker);
+            return fitToBounds(base, field, field.format(), machine);
         }
 
         long targetLength = ((BoundaryTarget.Fixed) target).value();
@@ -41,13 +36,13 @@ public final class StringShaper {
         };
     }
 
-    private static String baseValue(FieldConstraints field, net.datafaker.Faker faker) {
+    private static String baseValue(FieldConstraints field, DataMachine machine) {
         // @Digits on String — generate a purely numeric string of the right length
         if (field.maxIntegerDigits() < Integer.MAX_VALUE) {
             int intPart = Math.min(field.maxIntegerDigits(), 6);
             int fracPart = field.maxFractionDigits() < Integer.MAX_VALUE ? field.maxFractionDigits() : 0;
-            String digits = faker.number().digits(Math.max(1, intPart));
-            return fracPart > 0 ? digits + "." + faker.number().digits(fracPart) : digits;
+            String digits = machine.digits(Math.max(1, intPart));
+            return fracPart > 0 ? digits + "." + machine.digits(fracPart) : digits;
         }
         // @DecimalMin/@DecimalMax on String — generate a conforming decimal string
         java.math.BigDecimal decMin = field.bounds() instanceof NumericBounds.DecimalBounds db
@@ -60,14 +55,14 @@ public final class StringShaper {
             return val.toPlainString();
         }
         return switch (field.format()) {
-            case EMAIL -> faker.internet().emailAddress();
-            case URL -> faker.internet().url();
-            case CREDIT_CARD -> luhnValidCard(faker);
-            case ISBN -> faker.code().isbn13();
-            case EAN -> faker.code().ean13();
-            case UUID_STRING -> faker.internet().uuid();
+            case EMAIL -> machine.text("email");
+            case URL -> machine.text("url");
+            case CREDIT_CARD -> luhnValidCard(machine);
+            case ISBN -> machine.text("isbn");
+            case EAN -> machine.text("ean");
+            case UUID_STRING -> machine.text("uuid");
             case PATTERN -> generateFromPattern(field.patternRegexp());
-            default -> semanticByName(field.fieldName(), faker);
+            default -> semanticByName(field.fieldName(), machine);
         };
     }
 
@@ -202,11 +197,11 @@ public final class StringShaper {
      * Generates a credit card number that passes the Luhn check.
      * Uses the Visa prefix (4) and generates the check digit arithmetically.
      */
-    static String luhnValidCard(net.datafaker.Faker faker) {
+    static String luhnValidCard(DataMachine machine) {
         // 15 random digits with Visa prefix 4 — seeded faker for determinism
         StringBuilder sb = new StringBuilder("4");
         for (int i = 0; i < 14; i++) {
-            sb.append(faker.number().randomDigit());
+            sb.append(machine.digit());
         }
         // compute Luhn check digit
         String partial = sb.toString();
@@ -220,58 +215,58 @@ public final class StringShaper {
         return partial + check;
     }
 
-    private static String semanticByName(String name, net.datafaker.Faker faker) {
+    private static String semanticByName(String name, DataMachine machine) {
         String n = name.toLowerCase();
-        if (n.contains("email")) return faker.internet().emailAddress();
-        if (n.contains("phone") || n.contains("mobile")) return faker.phoneNumber().phoneNumber();
-        if (n.contains("firstname") || (n.contains("first") && n.contains("name"))) return faker.name().firstName();
-        if (n.contains("lastname") || (n.contains("last") && n.contains("name"))) return faker.name().lastName();
-        if (n.contains("name")) return faker.name().fullName();
-        if (n.contains("password")) return faker.internet().password(10, 20, true, true, true);
-        if (n.contains("url") || n.contains("link") || n.contains("website")) return faker.internet().url();
-        if (n.contains("city")) return faker.address().city();
-        if (n.contains("country") && n.contains("code")) return faker.address().countryCode();
-        if (n.contains("country")) return faker.address().country();
-        if (n.contains("address")) return faker.address().streetAddress();
-        if (n.contains("postcode") || n.contains("zip") || n.contains("postal")) return faker.address().zipCode();
-        if (n.contains("currency") || n.equals("ccy")) return faker.currency().toString();
-        if (n.contains("description") || n.contains("note") || n.contains("comment")) return faker.lorem().sentence();
-        if (n.contains("title")) return faker.job().title();
+        if (n.contains("email")) return machine.text("email");
+        if (n.contains("phone") || n.contains("mobile")) return machine.text("phone");
+        if (n.contains("firstname") || (n.contains("first") && n.contains("name"))) return machine.text("firstname");
+        if (n.contains("lastname") || (n.contains("last") && n.contains("name"))) return machine.text("lastname");
+        if (n.contains("name")) return machine.text("name");
+        if (n.contains("password")) return machine.text("password");
+        if (n.contains("url") || n.contains("link") || n.contains("website")) return machine.text("url");
+        if (n.contains("city")) return machine.text("city");
+        if (n.contains("country") && n.contains("code")) return machine.text("countrycode");
+        if (n.contains("country")) return machine.text("country");
+        if (n.contains("address")) return machine.text("street");
+        if (n.contains("postcode") || n.contains("zip") || n.contains("postal")) return machine.text("zipcode");
+        if (n.contains("currency") || n.equals("ccy")) return machine.text("currency");
+        if (n.contains("description") || n.contains("note") || n.contains("comment")) return machine.text("sentence");
+        if (n.contains("title")) return machine.text("jobtitle");
         if (n.contains("company") || n.contains("organisation") || n.contains("organization"))
-            return faker.company().name();
-        if (n.contains("token")) return faker.internet().uuid();
-        if (n.contains("reference") || n.equals("ref")) return "REF-" + faker.number().digits(6);
-        if (n.endsWith("id") || n.endsWith("Id")) return faker.internet().uuid();
-        if (n.contains("code")) return faker.code().isbn10();
+            return machine.text("company");
+        if (n.contains("token")) return machine.text("uuid");
+        if (n.contains("reference") || n.equals("ref")) return "REF-" + machine.digits(6);
+        if (n.endsWith("id") || n.endsWith("Id")) return machine.text("uuid");
+        if (n.contains("code")) return machine.text("isbn10");
         if (n.contains("status")) return "ACTIVE";
         if (n.contains("type")) return "DEFAULT";
-        if (n.contains("message") || n.contains("reason")) return faker.lorem().sentence(5);
-        if (n.contains("iban")) return faker.finance().iban();
+        if (n.contains("message") || n.contains("reason")) return machine.text("sentence");
+        if (n.contains("iban")) return machine.text("iban");
         if (n.contains("creditcard") || n.contains("credit_card") || n.contains("cardnumber"))
-            return faker.finance().creditCard();
-        if (n.contains("bic") || n.contains("swift")) return faker.finance().bic();
-        if (n.contains("ip") && !n.contains("zip")) return faker.internet().ipV4Address();
-        if (n.contains("mac") && n.contains("address")) return faker.internet().macAddress();
-        if (n.contains("colour") || n.contains("color")) return faker.color().name();
-        if (n.contains("job") || n.contains("role") || n.contains("position")) return faker.job().title();
-        if (n.contains("department")) return faker.commerce().department();
-        if (n.contains("product")) return faker.commerce().productName();
+            return machine.text("creditcard");
+        if (n.contains("bic") || n.contains("swift")) return machine.text("bic");
+        if (n.contains("ip") && !n.contains("zip")) return machine.text("ip");
+        if (n.contains("mac") && n.contains("address")) return machine.text("ip");
+        if (n.contains("colour") || n.contains("color")) return machine.text("color");
+        if (n.contains("job") || n.contains("role") || n.contains("position")) return machine.text("jobtitle");
+        if (n.contains("department")) return machine.text("department");
+        if (n.contains("product")) return machine.text("product");
         if (n.contains("price") || n.contains("amount") || n.contains("cost"))
-            return faker.commerce().price();
-        if (n.contains("username") || n.contains("user_name")) return faker.internet().username();
+            return machine.text("price");
+        if (n.contains("username") || n.contains("user_name")) return machine.text("username");
         if (n.contains("firstname") || (n.contains("first") && n.contains("name")))
-            return faker.name().firstName();
-        if (n.contains("prefix") || n.contains("salutation")) return faker.name().prefix();
-        if (n.contains("suffix")) return faker.name().suffix();
-        if (n.contains("nationality")) return faker.nation().nationality();
-        if (n.contains("language")) return faker.nation().language();
+            return machine.text("firstname");
+        if (n.contains("prefix") || n.contains("salutation")) return machine.text("prefix");
+        if (n.contains("suffix")) return machine.text("suffix");
+        if (n.contains("nationality")) return machine.text("nationality");
+        if (n.contains("language")) return machine.text("language");
         if (n.contains("paragraph") || n.contains("body") || n.contains("content"))
-            return faker.lorem().paragraph();
-        if (n.contains("uuid") || n.contains("guid")) return faker.internet().uuid();
-        if (n.contains("sortcode") || n.contains("sort_code")) return faker.number().digits(6);
+            return machine.text("paragraph");
+        if (n.contains("uuid") || n.contains("guid")) return machine.text("uuid");
+        if (n.contains("sortcode") || n.contains("sort_code")) return machine.digits(6);
         if (n.contains("accountnumber") || n.contains("account_number"))
-            return faker.number().digits(8);
-        return faker.lorem().word();
+            return machine.digits(8);
+        return machine.text("word");
     }
 
     static String fitPlain(String value, long targetLength) {
@@ -320,7 +315,7 @@ public final class StringShaper {
                 .substring(0, target - url.length());
     }
 
-    private static String fitToBounds(String base, FieldConstraints field, FormatType fmt, net.datafaker.Faker faker) {
+    private static String fitToBounds(String base, FieldConstraints field, FormatType fmt, DataMachine machine) {
         Long min = intMin(field.bounds());
         Long max = intMax(field.bounds());
         String result = base;

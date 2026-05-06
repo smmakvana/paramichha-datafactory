@@ -5,8 +5,8 @@ import com.paramichha.datafactory.constraint.*;
 import com.paramichha.datafactory.generation.BoundaryPlanner;
 import com.paramichha.datafactory.generation.DataGenerator;
 
-import net.datafaker.Faker;
-import com.paramichha.datafactory.generation.FakerProvider;
+import com.paramichha.datafactory.generation.DataMachine;
+import com.paramichha.datafactory.generation.DataMachines;
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -17,36 +17,30 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
 
     private final FieldConstraints constraints;
     private final List<Annotation> extraAnnotations;
-    private final Faker faker;
+    private final DataMachine machine;
     private final Long seed;
 
     FieldValueBuilder(FieldConstraints constraints) {
         this(constraints, List.of(), null, null);
     }
 
-    FieldValueBuilder(FieldConstraints constraints, Faker faker) {
-        this(constraints, List.of(), faker, null);
+    FieldValueBuilder(FieldConstraints constraints, DataMachine machine) {
+        this(constraints, List.of(), machine, null);
     }
 
-    FieldValueBuilder(FieldConstraints constraints, Faker faker, Long seed) {
-        this(constraints, List.of(), faker, seed);
+    FieldValueBuilder(FieldConstraints constraints, DataMachine machine, Long seed) {
+        this(constraints, List.of(), machine, seed);
     }
 
-    private FieldValueBuilder(FieldConstraints constraints, List<Annotation> extraAnnotations, Faker faker, Long seed) {
+    private FieldValueBuilder(FieldConstraints constraints, List<Annotation> extraAnnotations, DataMachine machine, Long seed) {
         this.constraints = constraints;
         this.extraAnnotations = extraAnnotations;
-        this.faker = faker;
+        this.machine = machine;
         this.seed = seed;
     }
 
-    private Faker resolvedFaker() {
-        return faker != null ? faker : FakerProvider.random();
-    }
-
-    private void setSeededRandom() {
-        if (seed != null) {
-            FakerProvider.SEEDED_RANDOM.set(FakerProvider.randomForSeed(seed));
-        }
+    private DataMachine machine() {
+        return machine != null ? machine : DataMachines.random();
     }
 
     @Override
@@ -56,7 +50,7 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
         if (instance == null) return this;
         List<Annotation> next = new ArrayList<>(extraAnnotations);
         next.add(instance);
-        return new FieldValueBuilder<>(constraints, List.copyOf(next), faker, seed);
+        return new FieldValueBuilder<>(constraints, List.copyOf(next), machine, seed);
     }
 
     @Override
@@ -65,7 +59,7 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
         if (instance == null) return this;
         List<Annotation> next = new ArrayList<>(extraAnnotations);
         next.add(instance);
-        return new FieldValueBuilder<>(constraints, List.copyOf(next), faker, seed);
+        return new FieldValueBuilder<>(constraints, List.copyOf(next), machine, seed);
     }
 
     private FieldConstraints resolvedConstraints() {
@@ -87,12 +81,10 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     @SuppressWarnings("unchecked")
     public T valid() {
         FieldConstraints rc = resolvedConstraints();
-        setSeededRandom();
         try {
-            List<Object> values = DataGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), resolvedFaker());
+            List<Object> values = DataGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), machine());
             return (T) (values.isEmpty() ? null : values.getFirst());
         } finally {
-            FakerProvider.SEEDED_RANDOM.remove();
         }
     }
 
@@ -100,11 +92,9 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     @SuppressWarnings("unchecked")
     public List<T> validList() {
         FieldConstraints rc = resolvedConstraints();
-        setSeededRandom();
         try {
-            return (List<T>) DataGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), resolvedFaker());
+            return (List<T>) DataGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), machine());
         } finally {
-            FakerProvider.SEEDED_RANDOM.remove();
         }
     }
 

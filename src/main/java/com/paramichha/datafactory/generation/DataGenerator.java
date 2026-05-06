@@ -1,47 +1,30 @@
 package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Entry point for value generation. Delegates to {@link TypeShaperRegistry}.
- * This class never changes — add a new type by implementing {@link DataCreator}.
+ * Never changes — add a new type by implementing {@link DataCreator}.
  */
 public final class DataGenerator {
-
     private static final TypeShaperRegistry REGISTRY = TypeShaperRegistry.INSTANCE;
+    private DataGenerator() {}
 
-    private DataGenerator() {
-    }
-
-    /**
-     * Produces one value for the field at the given boundary target.
-     */
-    public static Object shape(FieldConstraints field, BoundaryTarget target) {
-        return shape(field, target, FakerProvider.random());
-    }
-
-    public static Object shape(FieldConstraints field, BoundaryTarget target, net.datafaker.Faker faker) {
+    public static Object shape(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
         if ("null".equals(target.label())) return null;
-        return REGISTRY.shape(field, target, faker);
-    }
-
-    public static List<Object> shapeAll(FieldConstraints field, List<BoundaryTarget> targets) {
-        return shapeAll(field, targets, FakerProvider.random());
+        return REGISTRY.shape(field, target, machine);
     }
 
     /**
-     * Produces all valid values for a field — one per boundary target.
-     * Enum shapers return a {@code List} of constants which is expanded inline.
-     * Unrecognised types produce {@code null} from the registry; those are removed
-     * before returning since {@link List#copyOf} rejects nulls.
+     * Produces all values for a field — one per boundary target.
+     * Enum creators return a {@code List} of constants expanded inline.
      */
-    public static List<Object> shapeAll(FieldConstraints field, List<BoundaryTarget> targets, net.datafaker.Faker faker) {
+    public static List<Object> shapeAll(FieldConstraints field, List<BoundaryTarget> targets, DataMachine machine) {
         List<Object> results = new ArrayList<>();
         for (BoundaryTarget target : targets) {
-            Object value = shape(field, target, faker);
+            Object value = shape(field, target, machine);
             if (value instanceof List<?> list) {
                 results.addAll(list);
             } else {

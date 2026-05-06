@@ -17,33 +17,28 @@ public final class NumericShaper {
     private NumericShaper() {
     }
 
-    /** Convenience overload — uses a random Faker. Used by tests and internal callers. */
-    static Object shape(FieldConstraints field, BoundaryTarget target) {
-        return shape(field, target, FakerProvider.random());
-    }
-
-    static Object shape(FieldConstraints field, BoundaryTarget target, net.datafaker.Faker faker) {
+    static Object shape(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
         Class<?> type = field.fieldType();
-        long value = resolveValue(field, target, faker);
+        long value = resolveValue(field, target, machine);
 
         if (type == Integer.class || type == int.class) return (int) clamp(value, Integer.MIN_VALUE, Integer.MAX_VALUE);
         if (type == Long.class || type == long.class) return value;
         if (type == Short.class || type == short.class) return (short) clamp(value, Short.MIN_VALUE, Short.MAX_VALUE);
         if (type == Byte.class || type == byte.class) return (byte) clamp(value, Byte.MIN_VALUE, Byte.MAX_VALUE);
-        if (type == Double.class || type == double.class) return shapeDouble(field, target, faker);
-        if (type == Float.class || type == float.class) return (float) shapeDouble(field, target, faker);
-        if (type == BigDecimal.class) return shapeBigDecimal(field, target, faker);
+        if (type == Double.class || type == double.class) return shapeDouble(field, target, machine);
+        if (type == Float.class || type == float.class) return (float) shapeDouble(field, target, machine);
+        if (type == BigDecimal.class) return shapeBigDecimal(field, target, machine);
         if (type == BigInteger.class) return BigInteger.valueOf(value);
         return value;
     }
 
-    private static long resolveValue(FieldConstraints field, BoundaryTarget target, net.datafaker.Faker faker) {
+    private static long resolveValue(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
         if (target instanceof BoundaryTarget.Fixed f) return f.value();
         if (target instanceof BoundaryTarget.DecimalFixed d) return d.value().longValue();
-        return semanticValue(field, faker);
+        return semanticValue(field, machine);
     }
 
-    private static long semanticValue(FieldConstraints field, net.datafaker.Faker faker) {
+    private static long semanticValue(FieldConstraints field, DataMachine machine) {
         Long min = intMin(field.bounds());
         Long max = intMax(field.bounds());
         String name = field.fieldName().toLowerCase();
@@ -60,7 +55,7 @@ public final class NumericShaper {
         if (min != null && max != null) return (min + max) / 2;
         if (min != null) return min + 1;
         if (max != null) return max - 1;
-        return faker.number().numberBetween(1L, 1000L);
+        return machine.number(1L, 1000L);
     }
 
     private static long bounded(long preferred, Long min, Long max) {
@@ -70,7 +65,7 @@ public final class NumericShaper {
         return result;
     }
 
-    private static double shapeDouble(FieldConstraints field, BoundaryTarget target, net.datafaker.Faker faker) {
+    private static double shapeDouble(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
         if (target instanceof BoundaryTarget.DecimalFixed d) return d.value().doubleValue();
         if (target instanceof BoundaryTarget.Fixed f) return (double) f.value();
         Long min = intMin(field.bounds());
@@ -78,16 +73,16 @@ public final class NumericShaper {
         if (min != null && max != null) return (double) (min + max) / 2.0;
         if (min != null) return min + 0.5;
         if (max != null) return max - 0.5;
-        return faker.number().randomDouble(2, 1, 1000);
+        return machine.decimal(2, 1L, 1000L);
     }
 
-    private static BigDecimal shapeBigDecimal(FieldConstraints field, BoundaryTarget target, net.datafaker.Faker faker) {
+    private static BigDecimal shapeBigDecimal(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
         if (target instanceof BoundaryTarget.DecimalFixed d) return d.value().setScale(resolveScale(field), java.math.RoundingMode.HALF_UP);
         int scale = field.maxFractionDigits() == Integer.MAX_VALUE ? 2 : field.maxFractionDigits();
         if (target instanceof BoundaryTarget.Fixed f) {
             return BigDecimal.valueOf(f.value()).setScale(scale, java.math.RoundingMode.HALF_UP);
         }
-        return BigDecimal.valueOf(shapeDouble(field, target, faker)).setScale(scale, RoundingMode.HALF_UP);
+        return BigDecimal.valueOf(shapeDouble(field, target, machine)).setScale(scale, RoundingMode.HALF_UP);
     }
 
     private static long clamp(long value, long min, long max) {
