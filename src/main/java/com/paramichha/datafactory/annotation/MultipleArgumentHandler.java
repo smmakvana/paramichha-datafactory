@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-class MultipleArgumentHandler implements AnnotationTypeHandler {
+class MultipleArgumentHandler implements AnnotationCreator {
 
     private static final Set<Class<? extends Annotation>> RANGE_ANNOTATIONS = Set.of(
             Size.class,

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.lang.annotation.Annotation;
 
-public interface AnnotationTypeHandler {
+public interface AnnotationCreator {
     /**
      * Each handler decides how to parse attributes and build annotation.
      */

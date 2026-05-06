@@ -13,22 +13,22 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class StringAnnotationParser implements AnnotationParser, AnnotationSupport {
+public final class StringAnnotationParser implements AnnotationParser, AnnotationLookup {
 
     public static final StringAnnotationParser INSTANCE = new StringAnnotationParser();
 
     private final Map<String, Class<? extends Annotation>> byName = new HashMap<>();
-    private final Map<String, AnnotationType> byType = new HashMap<>();
-    private final AnnotationTypeHandlerRegistry handlerRegistry;
+    private final Map<String, ArgumentType> byType = new HashMap<>();
+    private final AnnotationCreatorRegistry handlerRegistry;
 
     public StringAnnotationParser() {
-        this(new AnnotationTypeHandlerRegistry());
+        this(new AnnotationCreatorRegistry());
     }
 
-    public StringAnnotationParser(AnnotationTypeHandlerRegistry handlerRegistry) {
+    public StringAnnotationParser(AnnotationCreatorRegistry handlerRegistry) {
         this.handlerRegistry = handlerRegistry;
 
-        register(AnnotationType.NO_ARG,
+        register(ArgumentType.NO_ARG,
                 NotNull.class,
                 NotBlank.class,
                 NotEmpty.class,
@@ -51,14 +51,14 @@ public final class StringAnnotationParser implements AnnotationParser, Annotatio
                 AssertTrue.class,
                 AssertFalse.class);
 
-        register(AnnotationType.ONE_ARG,
+        register(ArgumentType.ONE_ARG,
                 Min.class,
                 Max.class,
                 DecimalMin.class,
                 DecimalMax.class,
                 Pattern.class);
 
-        register(AnnotationType.MULTI_ARG,
+        register(ArgumentType.MULTI_ARG,
                 Size.class,
                 Length.class,
                 Digits.class);
@@ -85,10 +85,10 @@ public final class StringAnnotationParser implements AnnotationParser, Annotatio
                     rawAttrs = trimmed.substring(open + 1, close).trim();
                 }
 
-                Class<? extends Annotation> clazz = getSupportedAnnotation(name);
+                Class<? extends Annotation> clazz = getAnnotation(name);
 
-                AnnotationType type = getAnnotationType(clazz);
-                AnnotationTypeHandler handler = handlerRegistry.get(type);
+                ArgumentType type = getArgumentType(clazz);
+                AnnotationCreator handler = handlerRegistry.get(type);
 
                 return handler.create(clazz, rawAttrs == null ? "" : rawAttrs.trim());
             }
@@ -100,17 +100,17 @@ public final class StringAnnotationParser implements AnnotationParser, Annotatio
     }
 
     @Override
-    public Class<? extends Annotation> getSupportedAnnotation(String name) throws AnnotationParseException {
+    public Class<? extends Annotation> getAnnotation(String name) throws AnnotationParseException {
         return byName.get(name);
     }
 
     @Override
-    public AnnotationType getAnnotationType(Class<? extends Annotation> annotationClazz) throws AnnotationParseException {
+    public ArgumentType getArgumentType(Class<? extends Annotation> annotationClazz) throws AnnotationParseException {
         return byType.get(annotationClazz.getSimpleName());
     }
 
     @SafeVarargs
-    private void register(AnnotationType type, Class<? extends Annotation>... classes) {
+    private void register(ArgumentType type, Class<? extends Annotation>... classes) {
         for (Class<? extends Annotation> c : classes) {
             byName.put(c.getSimpleName(), c);
             byType.put(c.getSimpleName(), type);

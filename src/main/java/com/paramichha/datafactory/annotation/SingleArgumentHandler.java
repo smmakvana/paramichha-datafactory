@@ -5,7 +5,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-class SingleArgumentHandler implements AnnotationTypeHandler {
+class SingleArgumentHandler implements AnnotationCreator {
 
     @Override
     public Annotation create(Class<? extends Annotation> clazz, String raw) throws AnnotationParseException {

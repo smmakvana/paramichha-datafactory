@@ -3,7 +3,7 @@ package com.paramichha.datafactory.annotation;
 import com.paramichha.datafactory.AnnotationParseException;
 import java.lang.annotation.Annotation;
 
-class NoArgHandler implements AnnotationTypeHandler {
+class NoArgHandler implements AnnotationCreator {
 
     @Override
     public Annotation create(Class<? extends Annotation> clazz, String rawAttributeString) throws AnnotationParseException{

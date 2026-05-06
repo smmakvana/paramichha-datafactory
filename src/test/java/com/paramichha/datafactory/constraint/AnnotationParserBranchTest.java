@@ -112,13 +112,13 @@ class AnnotationParserBranchTest {
 
             @Test @DisplayName("getSupportedAnnotation returns null for unknown")
             void getSupportedAnnotationUnknown() {
-                assertThat(StringAnnotationParser.INSTANCE.getSupportedAnnotation("Unknown"))
+                assertThat(StringAnnotationParser.INSTANCE.getAnnotation("Unknown"))
                         .isNull();
             }
 
             @Test @DisplayName("getAnnotationType returns null for unknown class")
             void getAnnotationTypeUnknown() {
-                assertThat(StringAnnotationParser.INSTANCE.getAnnotationType(Override.class))
+                assertThat(StringAnnotationParser.INSTANCE.getArgumentType(Override.class))
                         .isNull();
             }
         }
