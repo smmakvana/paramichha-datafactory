@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture;
+package com.paramichha.example;
 
 import lombok.Builder;
 import lombok.Value;

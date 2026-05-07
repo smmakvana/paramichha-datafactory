@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.annotation;
+package com.paramichha.example.annotation;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 public class StringSizePojo {

@@ -1,6 +1,6 @@
 package com.paramichha.datafactory.constraint;
 
-import com.paramichha.datafactory.fixture.*;
+import com.paramichha.example.*;
 
 import com.paramichha.datafactory.DataFactory;
 import jakarta.validation.Validation;

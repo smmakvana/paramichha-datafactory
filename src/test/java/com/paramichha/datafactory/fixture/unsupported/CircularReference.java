@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.unsupported;
+package com.paramichha.example.unsupported;
 /** Circular reference — cycle detection. b always null. Always stays here. */
 public class CircularReference {
     private String name; private Inner b;

@@ -93,7 +93,7 @@ class ConstraintCheckerTest {
         @DisplayName("@Valid without @NotNull → warns null skips cascade")
         void valid_missingNotNull() {
             String out = captureWarn("address",
-                    com.paramichha.datafactory.fixture.AnnotatedWrappersRequest.class,
+                    com.paramichha.example.AnnotatedWrappersRequest.class,
                     anns(AnnotationProxyFactory.create(Valid.class)));
             assertThat(out).contains("NotNull");
         }

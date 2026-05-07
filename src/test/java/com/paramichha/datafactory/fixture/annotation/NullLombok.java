@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.annotation;
+package com.paramichha.example.annotation;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Value;

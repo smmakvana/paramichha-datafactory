@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.annotation;
+package com.paramichha.example.annotation;
 import jakarta.validation.constraints.*;
 public class NumericPojo {
     @Min(1) @Max(127) byte tier;

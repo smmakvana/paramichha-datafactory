@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.type;
+package com.paramichha.example.type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.UUID;

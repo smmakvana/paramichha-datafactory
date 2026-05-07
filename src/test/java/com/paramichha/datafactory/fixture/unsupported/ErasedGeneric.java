@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.unsupported;
+package com.paramichha.example.unsupported;
 /** Erased generic — Object at runtime. All null. Always stays here. */
 public class ErasedGeneric {
     private Object value; private Object payload; private Object metadata;

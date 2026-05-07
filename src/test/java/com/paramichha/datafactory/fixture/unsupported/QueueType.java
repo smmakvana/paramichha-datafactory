@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.unsupported;
+package com.paramichha.example.unsupported;
 import java.util.*;
 /** NOT supported. Rare in REST layer. */
 public class QueueType {

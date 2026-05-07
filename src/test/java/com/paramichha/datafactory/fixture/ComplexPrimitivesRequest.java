@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture;
+package com.paramichha.example;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;

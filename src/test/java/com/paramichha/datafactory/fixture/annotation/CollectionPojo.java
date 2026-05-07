@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.annotation;
+package com.paramichha.example.annotation;
 import jakarta.validation.constraints.*;
 import java.util.*;
 public class CollectionPojo {

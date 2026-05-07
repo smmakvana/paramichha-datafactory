@@ -1,6 +1,6 @@
 package com.paramichha.datafactory;
 
-import com.paramichha.datafactory.fixture.*;
+import com.paramichha.example.*;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Value;

@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.partial;
+package com.paramichha.example.partial;
 import jakarta.validation.constraints.*;
 import java.util.List;
 import lombok.Builder;

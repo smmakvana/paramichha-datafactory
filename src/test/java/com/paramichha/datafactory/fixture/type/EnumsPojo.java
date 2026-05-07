@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.type;
+package com.paramichha.example.type;
 
 public class EnumsPojo {
      Status status;

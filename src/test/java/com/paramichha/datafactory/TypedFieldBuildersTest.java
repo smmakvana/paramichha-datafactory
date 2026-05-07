@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import com.paramichha.datafactory.fixture.*;
+import com.paramichha.example.*;
 
 /**
  * Tests all typed field builders — the fluent DSL on top of DataFactory.

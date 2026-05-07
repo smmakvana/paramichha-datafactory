@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.type;
+package com.paramichha.example.type;
 
 public record EnumsRecord(Status status, Priority priority, Day day) {
     public enum Status{ACTIVE,INACTIVE,PENDING}

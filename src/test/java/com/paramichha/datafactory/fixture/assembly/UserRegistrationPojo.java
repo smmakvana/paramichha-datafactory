@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.assembly;
+package com.paramichha.example.assembly;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 public class UserRegistrationPojo {

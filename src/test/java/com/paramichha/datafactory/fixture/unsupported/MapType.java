@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.unsupported;
+package com.paramichha.example.unsupported;
 import java.util.*;
 /** NOT supported. When MapTypeShaper added: move to type/. */
 public class MapType {

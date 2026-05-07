@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.unsupported;
+package com.paramichha.example.unsupported;
 /** NOT supported. When ArrayTypeShaper added: move to type/. */
 public class ArrayType {
     private String[] namess; private int[] scores; private byte[] data; private long[] ids;

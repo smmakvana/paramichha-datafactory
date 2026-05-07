@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.type;
+package com.paramichha.example.type;
 import java.time.*;
 import java.util.Date;
 import lombok.AllArgsConstructor;

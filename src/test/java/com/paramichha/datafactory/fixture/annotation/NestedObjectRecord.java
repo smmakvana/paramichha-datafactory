@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.annotation;
+package com.paramichha.example.annotation;
 import jakarta.validation.constraints.*;
 import jakarta.validation.Valid;
 public record NestedObjectRecord(@NotNull @Valid NestedObjectRecord.Address address, @NotNull @Valid NestedObjectRecord.ContactInfo contact) {

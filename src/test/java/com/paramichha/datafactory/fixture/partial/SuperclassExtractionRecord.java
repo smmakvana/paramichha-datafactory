@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.fixture.partial;
+package com.paramichha.example.partial;
 import jakarta.validation.constraints.*;
 /**
  * Gap: superclass fields (id, createdAt) not extracted.
