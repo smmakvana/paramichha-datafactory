@@ -3,6 +3,15 @@ package com.paramichha.datafactory.constraint;
 import com.paramichha.example.*;
 
 import com.paramichha.datafactory.DataFactory;
+import com.paramichha.example.AnnotatedPrimitivesRequest;
+import com.paramichha.example.AnnotatedTemporalRequest;
+import com.paramichha.example.AnnotatedWrappersRequest;
+import com.paramichha.example.CollectionsRequest;
+import com.paramichha.example.ComplexPrimitivesRequest;
+import com.paramichha.example.ComplexWrappersRequest;
+import com.paramichha.example.PrimitivesRequest;
+import com.paramichha.example.TemporalRequest;
+import com.paramichha.example.WrappersRequest;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.*;

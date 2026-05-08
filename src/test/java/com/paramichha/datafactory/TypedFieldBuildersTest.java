@@ -1,5 +1,6 @@
 package com.paramichha.datafactory;
 
+import com.paramichha.example.AnnotatedWrappersRequest;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
