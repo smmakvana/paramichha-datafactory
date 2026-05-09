@@ -71,6 +71,16 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
         }
     }
 
+    @Override
+    public Optional<T> invalid() {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<T> validList(int count) {
+        return List.of();
+    }
+
     private void surfaceProductionWarnings(List<FieldDescriptor> fields) {
         for (FieldDescriptor field : fields) {
             ConstraintChecker.warn(field.name(), field.rawType(), field.validations());
@@ -117,6 +127,11 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
             throw new DataFactoryException(
                     "Failed to build invalidFor('" + fieldName + "') on " + type.getSimpleName(), e);
         }
+    }
+
+    @Override
+    public Map<String, List<T>> validPerField() {
+        return Map.of();
     }
 
     @Override

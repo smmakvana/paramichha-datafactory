@@ -2,6 +2,7 @@ package com.paramichha.datafactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Fluent builder for generating valid and invalid instances of a Jakarta-annotated class.
@@ -28,10 +29,10 @@ import java.util.Map;
  * List&lt;UserRequest&gt; bad = DataFactory.of(UserRequest.class).invalidList();
  *
  * // 1000 valid objects for load testing
- * List&lt;UserRequest&gt; bulk = DataFactory.of(UserRequest.class).stream(1000);
+ * List&lt;UserRequest&gt; bulk = DataFactory.of(UserRequest.class).validList(1000);
  *
  * // Boundary-covering valid objects per field — used by TestKit
- * Map&lt;String, List&lt;UserRequest&gt;&gt; edges = DataFactory.of(UserRequest.class).validMap();
+ * Map&lt;String, List&lt;UserRequest&gt;&gt; edges = DataFactory.of(UserRequest.class).validPerField();
  * </pre>
  *
  * @param <T> the type being built
@@ -89,6 +90,8 @@ public interface DataBuilder<T> {
      */
     DataBuilder<T> seed(long seed);
 
+    // ── Single object ─────────────────────────────────────────────────────
+
     /**
      * Builds one valid instance satisfying all constraints.
      *
@@ -99,25 +102,58 @@ public interface DataBuilder<T> {
     T valid();
 
     /**
-     * Builds {@code n} valid instances.
-     * Each call to {@code valid()} is independent — values vary between instances.
+     * Builds one invalid instance — an object that violates at least one constraint.
+     * Returns {@link Optional#empty()} if the class has no constraints to violate.
      *
-     * <p>The primary tool for load test data and bulk fixtures:
      * <pre>
-     * List&lt;UserRequest&gt; users = DataFactory.of(UserRequest.class).stream(1000);
+     * Optional&lt;UserRequest&gt; bad = DataFactory.of(UserRequest.class).invalid();
+     * bad.ifPresent(req -&gt; assertThat(validator.validate(req)).isNotEmpty());
+     * </pre>
+     *
+     * @throws DataFactoryException if the class cannot be instantiated
+     */
+    Optional<T> invalid();
+
+    // ── Collections ───────────────────────────────────────────────────────
+
+    /**
+     * Builds {@code count} valid instances.
+     * Each instance is independent — values vary between them.
+     *
+     * <pre>
+     * List&lt;UserRequest&gt; users = DataFactory.of(UserRequest.class).validList(1000);
      * </pre>
      *
      * @throws DataFactoryException if any instance cannot be built
      */
-    List<T> stream(int n);
+    List<T> validList(int count);
+
+    /**
+     * Builds one invalid instance per constraint per field.
+     * Each object in the returned list violates exactly one constraint and passes all others.
+     *
+     * <pre>
+     * {@literal @}ParameterizedTest
+     * {@literal @}MethodSource("invalidRequests")
+     * void each_invalid_request_fails_validation(UserRequest req) {
+     *     assertThat(validator.validate(req)).isNotEmpty();
+     * }
+     * static List&lt;UserRequest&gt; invalidRequests() {
+     *     return DataFactory.of(UserRequest.class).invalidList();
+     * }
+     * </pre>
+     *
+     * @throws DataFactoryException if the class cannot be instantiated
+     */
+    List<T> invalidList();
+
+    // ── Per-field ─────────────────────────────────────────────────────────
 
     /**
      * Builds one invalid instance for the named field.
      * All other fields hold valid values — only the named field is intentionally wrong.
      *
-     * <p>Useful when you want to test how your system handles a specific invalid input:
      * <pre>
-     * // Submit a request with an invalid email, everything else fine
      * UserRequest badEmail = DataFactory.of(UserRequest.class).invalidFor("email");
      * assertThat(validator.validate(badEmail))
      *     .anyMatch(v -&gt; v.getPropertyPath().toString().equals("email"));
@@ -128,37 +164,34 @@ public interface DataBuilder<T> {
     T invalidFor(String fieldName);
 
     /**
-     * Builds one invalid instance per constraint per field.
-     * Each object in the returned list violates exactly one constraint and passes all others.
+     * Returns boundary-covering valid instances keyed by field name.
+     * Replaces {@link #validMap()}.
      *
-     * <p>This is the basis of constraint-by-constraint validation testing:
-     * <pre>
-     * {@literal @}ParameterizedTest
-     * {@literal @}MethodSource("invalidRequests")
-     * void each_invalid_request_fails_validation(UserRequest req) {
-     *     assertThat(validator.validate(req)).isNotEmpty();
-     * }
+     * <p>For each field the map contains valid objects where that field covers its
+     * boundary values — minimum, midpoint, maximum, and a semantically realistic value.
+     * All other fields hold their canonical valid value.
      *
-     * static List&lt;UserRequest&gt; invalidRequests() {
-     *     return DataFactory.of(UserRequest.class).invalidList();
-     * }
-     * </pre>
+     * <p>Primarily used by TestKit to generate parameterized boundary tests.
      *
      * @throws DataFactoryException if the class cannot be instantiated
      */
-    List<T> invalidList();
+    Map<String, List<T>> validPerField();
+
+    // ── Deprecated ────────────────────────────────────────────────────────
 
     /**
-     * Returns boundary-covering valid instances, keyed by field name.
+     * Builds {@code n} valid instances.
      *
-     * <p>For each field, the map contains a list of valid objects where that field
-     * covers its boundary values — minimum, midpoint, maximum, and a semantically
-     * realistic value. All other fields hold their canonical valid value.
-     *
-     * <p>This is primarily used by TestKit to generate parameterized boundary tests.
-     * In application code, {@link #valid()} and {@link #stream(int)} cover most needs.
-     *
-     * @throws DataFactoryException if the class cannot be instantiated
+     * @deprecated Use {@link #validList(int)} instead.
      */
+    @Deprecated(forRemoval = true)
+    List<T> stream(int n);
+
+    /**
+     * Returns boundary-covering valid instances keyed by field name.
+     *
+     * @deprecated Use {@link #validPerField()} instead.
+     */
+    @Deprecated(forRemoval = true)
     Map<String, List<T>> validMap();
 }
