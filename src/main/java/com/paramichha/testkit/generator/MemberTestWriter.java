@@ -39,16 +39,29 @@ final class MemberTestWriter {
         this.template      = template;
     }
 
+    /** Called by split mode — writes one field directly without @Nested wrapper. */
+    void writeFlat(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
+                   com.paramichha.testkit.model.FieldMeta field, int fieldIndex) {
+        write(sb, type, validInstanceParts, java.util.Map.of(), field, fieldIndex, false);
+    }
+
     void write(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
                Map<String, List<?>> validAllPerField) {
+        List<com.paramichha.testkit.model.FieldMeta> fields = meta.fields();
+        for (int i = 0; i < fields.size(); i++) {
+            write(sb, type, validInstanceParts, validAllPerField, fields.get(i), i, true);
+        }
+    }
+
+    private void write(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
+                       Map<String, List<?>> validAllPerField,
+                       com.paramichha.testkit.model.FieldMeta field, int fi, boolean nested) {
 
         boolean isRecord  = meta.constructorStyle() == ClassMeta.ConstructorStyle.RECORD;
         String  className = meta.simpleName();
         String  fieldName = TemplateResolver.instanceFieldName(className);
-        List<FieldMeta> fields = meta.fields();
 
-        for (int i = 0; i < fields.size(); i++) {
-            FieldMeta field    = fields.get(i);
+        {
             boolean hasJakarta = !field.validations().isEmpty();
             String  memberName = field.name();
             String  boxedType  = boxed(field.rawType());
@@ -61,7 +74,7 @@ final class MemberTestWriter {
                     .collect(Collectors.toList());
 
             // Skip if nothing to test at all
-            if (validValues.isEmpty() && invalidValues.isEmpty()) continue;
+            if (validValues.isEmpty() && invalidValues.isEmpty()) return;
 
             String nestedClass   = template.resolve(template.memberClassName, className, memberName);
             String nestedDisplay = template.resolve(template.memberDisplay,   className, memberName);
@@ -72,7 +85,7 @@ final class MemberTestWriter {
             String validSrc      = template.resolve(template.validDataSource,   className, memberName);
             String invalidSrc    = template.resolve(template.invalidDataSource, className, memberName);
 
-            int fi = i;
+            String ind = nested ? "        " : "    ";
 
             sb.append("    // ").append("=".repeat(73)).append("\n");
             sb.append("    // ").append(nestedDisplay).append("\n");
@@ -88,31 +101,31 @@ final class MemberTestWriter {
                 sb.append("        @MethodSource(\"").append(validSrc).append("\")\n");
                 sb.append("        @DisplayName(\"").append(acceptsDisplay).append("\")\n");
                 sb.append("        void ").append(acceptsMethod)
-                  .append("(String description, ").append(boxedType).append(" ").append(memberName).append(") {\n");
-                sb.append("            ").append(className).append(" obj = ")
-                  .append(instantiation.constructorCallWithVar(validInstanceParts, fi, memberName)).append(";\n");
+                        .append("(String description, ").append(boxedType).append(" ").append(memberName).append(") {\n");
+                sb.append(ind).append("    ").append(className).append(" obj = ")
+                        .append(instantiation.constructorCallWithVar(validInstanceParts, fi, memberName)).append(";\n");
                 if (hasJakarta) {
-                    sb.append("            assertThat(").append(template.validatorField)
-                      .append(".validate(obj)).isEmpty();\n");
+                    sb.append(ind).append("    assertThat(").append(template.validatorField)
+                            .append(".validate(obj)).isEmpty();\n");
                 } else {
-                    sb.append("            assertThat(obj.").append(accessorFor(field, isRecord))
-                      .append(").isEqualTo(").append(memberName).append(");\n");
+                    sb.append(ind).append("    assertThat(obj.").append(accessorFor(field, isRecord))
+                            .append(").isEqualTo(").append(memberName).append(");\n");
                 }
-                sb.append("        }\n\n");
+                sb.append(ind).append("}\n\n");
 
                 // valid data source
                 boolean hasNull = validValues.stream().anyMatch(v -> v == null);
-                sb.append("        static Stream<Arguments> ").append(validSrc).append("() {\n");
-                sb.append("            return Stream.of(\n");
+                sb.append(ind).append("static Stream<Arguments> ").append(validSrc).append("() {\n");
+                sb.append(ind).append("    return Stream.of(\n");
                 for (int j = 0; j < validValues.size(); j++) {
                     Object v = validValues.get(j);
                     String label = labelFor(v, memberName, "valid", j);
                     String literal = v == null ? "(" + boxedType + ") null" : LiteralConverter.toLiteral(v);
-                    sb.append("                Arguments.of(\"").append(label).append("\", ").append(literal).append(")");
+                    sb.append(ind).append("        Arguments.of(\"").append(label).append("\", ").append(literal).append(")");
                     sb.append(j < validValues.size() - 1 ? ",\n" : "\n");
                 }
-                sb.append("            );\n");
-                sb.append("        }\n\n");
+                sb.append(ind).append("    );\n");
+                sb.append(ind).append("}\n\n");
             }
 
             // ── rejects — live if annotations, commented if none ──────────
@@ -121,36 +134,36 @@ final class MemberTestWriter {
                 sb.append("        @MethodSource(\"").append(invalidSrc).append("\")\n");
                 sb.append("        @DisplayName(\"").append(rejectsDisplay).append("\")\n");
                 sb.append("        void ").append(rejectsMethod)
-                  .append("(String description, ").append(boxedType).append(" ").append(memberName).append(") {\n");
-                sb.append("            ").append(className).append(" obj = ")
-                  .append(instantiation.constructorCallWithVar(validInstanceParts, fi, memberName)).append(";\n");
+                        .append("(String description, ").append(boxedType).append(" ").append(memberName).append(") {\n");
+                sb.append(ind).append("    ").append(className).append(" obj = ")
+                        .append(instantiation.constructorCallWithVar(validInstanceParts, fi, memberName)).append(";\n");
                 sb.append("            assertThat(").append(template.validatorField)
-                  .append(".validate(obj)).isNotEmpty();\n");
+                        .append(".validate(obj)).isNotEmpty();\n");
                 sb.append("        }\n\n");
 
-                sb.append("        static Stream<Arguments> ").append(invalidSrc).append("() {\n");
-                sb.append("            return Stream.of(\n");
+                sb.append(ind).append("static Stream<Arguments> ").append(invalidSrc).append("() {\n");
+                sb.append(ind).append("    return Stream.of(\n");
                 for (int j = 0; j < invalidValues.size(); j++) {
                     Object v = invalidValues.get(j);
                     String label = labelFor(v, memberName, "invalid", j);
                     String literal = v == null ? "(" + boxedType + ") null" : LiteralConverter.toLiteral(v);
-                    sb.append("                Arguments.of(\"").append(label).append("\", ").append(literal).append(")");
+                    sb.append(ind).append("        Arguments.of(\"").append(label).append("\", ").append(literal).append(")");
                     sb.append(j < invalidValues.size() - 1 ? ",\n" : "\n");
                 }
-                sb.append("            );\n");
-                sb.append("        }\n\n");
+                sb.append(ind).append("    );\n");
+                sb.append(ind).append("}\n\n");
 
             } else if (!hasJakarta) {
                 // Commented out template — ready to fill when constraints are added
                 sb.append("        // TODO: add constraints to ").append(memberName)
-                  .append(" then uncomment\n");
+                        .append(" then uncomment\n");
                 sb.append("        // @ParameterizedTest(name = \"{0}\")\n");
                 sb.append("        // @MethodSource(\"").append(invalidSrc).append("\")\n");
                 sb.append("        // @DisplayName(\"").append(rejectsDisplay).append("\")\n");
                 sb.append("        // void ").append(rejectsMethod)
-                  .append("(String description, ").append(boxedType).append(" ").append(memberName).append(") {\n");
+                        .append("(String description, ").append(boxedType).append(" ").append(memberName).append(") {\n");
                 sb.append("        //     ").append(className).append(" obj = ")
-                  .append(instantiation.constructorCallWithVar(validInstanceParts, fi, memberName)).append(";\n");
+                        .append(instantiation.constructorCallWithVar(validInstanceParts, fi, memberName)).append(";\n");
                 sb.append("        //     assertThat(validator.validate(obj)).isNotEmpty();\n");
                 sb.append("        // }\n\n");
 
@@ -161,7 +174,7 @@ final class MemberTestWriter {
                 sb.append("        // }\n\n");
             }
 
-            sb.append("    }\n\n");
+            if (nested) sb.append("    }\n\n");
         }
     }
 
@@ -169,8 +182,8 @@ final class MemberTestWriter {
 
     private static String accessorFor(FieldMeta field, boolean isRecord) {
         return isRecord
-            ? field.name() + "()"
-            : "get" + TemplateResolver.capitalize(field.name()) + "()";
+                ? field.name() + "()"
+                : "get" + TemplateResolver.capitalize(field.name()) + "()";
     }
 
     private static String labelFor(Object value, String memberName, String kind, int index) {

@@ -1,5 +1,7 @@
 package com.paramichha.testkit;
 
+import java.util.List;
+
 import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.TestData;
 
@@ -14,5 +16,14 @@ public interface TestGenerator {
     default GeneratedTestClass generate(ClassMeta meta, TestData data,
                                         String targetPackage, TestKitTemplate template) {
         return generate(meta, data, targetPackage);
+    }
+
+    /**
+     * Generates multiple files — base + one per concern.
+     * Default wraps single output in a list.
+     */
+    default List<GeneratedTestClass> generateAll(ClassMeta meta, TestData data,
+                                                  String targetPackage, TestKitTemplate template) {
+        return List.of(generate(meta, data, targetPackage, template));
     }
 }

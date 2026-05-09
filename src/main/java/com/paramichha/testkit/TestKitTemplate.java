@@ -55,7 +55,7 @@ public final class TestKitTemplate {
 
     // ── Level 3 — Member ──────────────────────────────────────────────────
     /** Nested class name. Token: {MemberName} */
-    public String memberClassName        = "{MemberName}Test";
+    public String memberClassName        = "{ClassName}{MemberName}Test";
     /** @DisplayName. Tokens: {memberName}, {ClassName} */
     public String memberDisplay          = "{memberName} in {ClassName}";
 
@@ -76,7 +76,7 @@ public final class TestKitTemplate {
 
     // ── Level 4 — Method (future) ─────────────────────────────────────────
     /** Nested class name. Token: {MethodName} */
-    public String methodClassName        = "{MethodName}Test";
+    public String methodClassName        = "{ClassName}{MethodName}Test";
     /** @DisplayName. Tokens: {methodName}, {ClassName} */
     public String methodDisplay          = "{methodName} in {ClassName}";
 
@@ -92,7 +92,7 @@ public final class TestKitTemplate {
 
     // ── Level 5 — Chain (future) ──────────────────────────────────────────
     /** Nested class name. Tokens: {MethodA}, {MethodB} */
-    public String chainClassName         = "{MethodA}Then{MethodB}Test";
+    public String chainClassName         = "{ClassName}ScenarioTest";
     /** @DisplayName. Tokens: {methodA}, {methodB}, {ClassName} */
     public String chainDisplay           = "{methodA} then {methodB} in {ClassName}";
 

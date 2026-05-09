@@ -1,5 +1,7 @@
 package com.paramichha.testkit;
 
+import java.util.List;
+
 import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.data.DataFactoryTestDataProvider;
 import com.paramichha.testkit.generator.DefaultTestGenerator;
@@ -27,6 +29,7 @@ public final class TestKit {
     private Long seed = null;
     private GenerationMode mode = GenerationMode.PRODUCTION;
     private TestKitTemplate template = TestKitTemplate.DEFAULT;
+    private boolean split = false;
 
     private TestKit(Class<?> type, ClassReader reader,
                     TestDataProvider dataProvider, TestGenerator generator) {
@@ -76,6 +79,15 @@ public final class TestKit {
     public TestKit withTemplate(TestKitTemplate template) {
         if (template == null) throw new TestKitException("template must not be null");
         this.template = template;
+        return this;
+    }
+
+    /**
+     * Opt-in to split mode — generates one file per concern.
+     * Use {@link #generateAll()} as the terminal method.
+     */
+    public TestKit split() {
+        this.split = true;
         return this;
     }
 

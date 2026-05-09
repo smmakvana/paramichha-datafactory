@@ -10,13 +10,7 @@ import java.util.List;
 
 /**
  * Writes the {ClassName}CreationTest nested class.
- *
- * <p>Always generated. Contains:
- * <ul>
- *   <li>{@code canBeCreated()} — proves the object can be instantiated
- *   <li>{@code holdsExpectedValues()} — one assert per serializable primitive field
- *   <li>{@code isValid()} — only if class has Jakarta annotations
- * </ul>
+ * In split mode ({@link #writeFlat}), writes content without the @Nested wrapper.
  */
 final class CreationTestWriter {
 
@@ -31,40 +25,54 @@ final class CreationTestWriter {
         this.template      = template;
     }
 
+    /** Standard mode — writes @Nested block inside the outer test class. */
     void write(StringBuilder sb, TestData data, List<Object> validInstanceParts,
                ValueExtractor valueExtractor) {
+        writeContent(sb, data, validInstanceParts, true);
+    }
 
-        boolean hasJakarta  = data.hasJakarta(meta);
-        boolean isRecord    = meta.constructorStyle() == ClassMeta.ConstructorStyle.RECORD;
-        String  className   = meta.simpleName();
-        String  fieldName   = TemplateResolver.instanceFieldName(className);
+    /** Split mode — writes content directly without the @Nested wrapper. */
+    void writeFlat(StringBuilder sb, TestData data, List<Object> validInstanceParts,
+                   ValueExtractor valueExtractor) {
+        writeContent(sb, data, validInstanceParts, false);
+    }
 
-        String nestedClass  = template.resolve(template.creationClassName, className, "");
-        String nestedDisplay = template.resolve(template.creationDisplay, className, "");
+    private void writeContent(StringBuilder sb, TestData data,
+                              List<Object> validInstanceParts, boolean nested) {
 
-        sb.append("    // ").append("=".repeat(73)).append("\n");
-        sb.append("    // ").append(nestedDisplay).append("\n");
-        sb.append("    // ").append("=".repeat(73)).append("\n\n");
+        boolean hasJakarta   = data.hasJakarta(meta);
+        boolean isRecord     = meta.constructorStyle() == ClassMeta.ConstructorStyle.RECORD;
+        String  className    = meta.simpleName();
+        String  fieldName    = TemplateResolver.instanceFieldName(className);
+        String  ind          = nested ? "        " : "    ";
+        String  indBody      = nested ? "            " : "        ";
+        String  nestedClass  = template.resolve(template.creationClassName, className, "");
+        String  nestedDisplay = template.resolve(template.creationDisplay, className, "");
 
-        sb.append("    @Nested\n");
-        sb.append("    @DisplayName(\"").append(nestedDisplay).append("\")\n");
-        sb.append("    class ").append(nestedClass).append(" {\n\n");
+        if (nested) {
+            sb.append("    // ").append("=".repeat(73)).append("\n");
+            sb.append("    // ").append(nestedDisplay).append("\n");
+            sb.append("    // ").append("=".repeat(73)).append("\n\n");
+            sb.append("    @Nested\n");
+            sb.append("    @DisplayName(\"").append(nestedDisplay).append("\"\n");
+            sb.append("    class ").append(nestedClass).append(" {\n\n");
+        }
 
-        // canBeCreated — always
+        // canBeCreated
         String canBeCreatedMethod  = template.resolve(template.canBeCreated, className, "");
         String canBeCreatedDisplay = template.resolve(template.canBeCreatedDisplay, className, "");
-        sb.append("        @Test\n");
-        sb.append("        @DisplayName(\"").append(canBeCreatedDisplay).append("\")\n");
-        sb.append("        void ").append(canBeCreatedMethod).append("() {\n");
-        sb.append("            assertThat(").append(fieldName).append(").isNotNull();\n");
-        sb.append("        }\n\n");
+        sb.append(ind).append("@Test\n");
+        sb.append(ind).append("@DisplayName(\"").append(canBeCreatedDisplay).append("\"\n");
+        sb.append(ind).append("void ").append(canBeCreatedMethod).append("() {\n");
+        sb.append(indBody).append("assertThat(").append(fieldName).append(").isNotNull();\n");
+        sb.append(ind).append("}\n\n");
 
-        // holdsExpectedValues — always, one assert per serializable primitive field
+        // holdsExpectedValues
         String holdsMethod  = template.resolve(template.holdsExpectedValues, className, "");
         String holdsDisplay = template.resolve(template.holdsExpectedDisplay, className, "");
-        sb.append("        @Test\n");
-        sb.append("        @DisplayName(\"").append(holdsDisplay).append("\")\n");
-        sb.append("        void ").append(holdsMethod).append("() {\n");
+        sb.append(ind).append("@Test\n");
+        sb.append(ind).append("@DisplayName(\"").append(holdsDisplay).append("\"\n");
+        sb.append(ind).append("void ").append(holdsMethod).append("() {\n");
         for (int i = 0; i < meta.fields().size(); i++) {
             FieldMeta field = meta.fields().get(i);
             Object value = i < validInstanceParts.size() ? validInstanceParts.get(i) : null;
@@ -74,30 +82,30 @@ final class CreationTestWriter {
                     ? fieldName + "." + field.name() + "()"
                     : fieldName + ".get" + TemplateResolver.capitalize(field.name()) + "()";
             String expected = LiteralConverter.toLiteral(value);
-            sb.append("            assertThat(").append(accessor)
-              .append(").isEqualTo(").append(expected).append(");\n");
+            sb.append(indBody).append("assertThat(").append(accessor)
+                    .append(").isEqualTo(").append(expected).append(");\n");
         }
-        sb.append("        }\n");
+        sb.append(ind).append("}\n");
 
-        // isValid — only if has Jakarta annotations
+        // isValid — only if class has Jakarta annotations
         if (hasJakarta) {
             String isValidMethod  = template.resolve(template.isValid, className, "");
             String isValidDisplay = template.resolve(template.isValidDisplay, className, "");
-            sb.append("\n        @Test\n");
-            sb.append("        @DisplayName(\"").append(isValidDisplay).append("\")\n");
-            sb.append("        void ").append(isValidMethod).append("() {\n");
-            sb.append("            assertThat(").append(template.validatorField)
-              .append(".validate(").append(fieldName).append(")).isEmpty();\n");
-            sb.append("        }\n");
+            sb.append("\n").append(ind).append("@Test\n");
+            sb.append(ind).append("@DisplayName(\"").append(isValidDisplay).append("\"\n");
+            sb.append(ind).append("void ").append(isValidMethod).append("() {\n");
+            sb.append(indBody).append("assertThat(").append(template.validatorField)
+                    .append(".validate(").append(fieldName).append(")).isEmpty();\n");
+            sb.append(ind).append("}\n");
         }
 
-        sb.append("    }\n\n");
+        if (nested) sb.append("    }\n\n");
     }
 
     private static boolean isComplexType(Class<?> type) {
         if (type.isPrimitive()) return false;
         String pkg = type.getPackageName();
         return !pkg.startsWith("java.") && !pkg.startsWith("jakarta.")
-               && !type.isEnum() && type != String.class;
+                && !type.isEnum() && type != String.class;
     }
 }
