@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class DefaultDataBuilder<T> implements DataBuilder<T> {
@@ -22,9 +21,15 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
     private GenerationMode mode = GenerationMode.PRODUCTION;
     private Long seed = null;
 
+    // One machine per builder — created once, reused across all build calls.
+    // Advances internal state with each call so successive objects vary naturally.
+    private DataMachine machine;
+
     public DefaultDataBuilder(Class<T> type) {
         this.type = type;
     }
+
+    // ── Configuration ─────────────────────────────────────────────────────
 
     @Override
     public DefaultDataBuilder<T> with(String fieldName, Object value) {
@@ -46,19 +51,20 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
     @Override
     public DefaultDataBuilder<T> seed(long seed) {
         this.seed = seed;
+        this.machine = null; // reset so machine() recreates with new seed
         return this;
     }
 
+    // ── Machine ───────────────────────────────────────────────────────────
+
     private DataMachine machine() {
-        return seed != null ? DataMachines.seeded(seed) : DataMachines.random();
+        if (machine == null) {
+            machine = seed != null ? DataMachines.seeded(seed) : DataMachines.random();
+        }
+        return machine;
     }
 
-    @Override
-    public List<T> stream(int n) {
-        return IntStream.range(0, n)
-                .mapToObj(i -> valid())
-                .collect(Collectors.toList());
-    }
+    // ── Public API ────────────────────────────────────────────────────────
 
     @Override
     public T valid() {
@@ -73,29 +79,32 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
 
     @Override
     public Optional<T> invalid() {
-        return Optional.empty();
+        List<T> all = invalidList();
+        return all.isEmpty() ? Optional.empty() : Optional.of(all.get(0));
     }
 
     @Override
     public List<T> validList(int count) {
-        return List.of();
+        return IntStream.range(0, count)
+                .mapToObj(i -> valid())
+                .toList();
     }
 
-    private void surfaceProductionWarnings(List<FieldDescriptor> fields) {
-        for (FieldDescriptor field : fields) {
-            ConstraintChecker.warn(field.name(), field.rawType(), field.validations());
-        }
+    @Override
+    @Deprecated(forRemoval = true)
+    public List<T> stream(int n) {
+        return validList(n);
     }
 
     @Override
     public List<T> invalidList() {
         try {
+            DataMachine m = machine();
             List<FieldDescriptor> fields = FieldDescriptor.extract(type);
-            DataMachine f = machine();
-            Map<String, Object> validValues = resolveAllValid(fields, f);
+            Map<String, Object> validValues = resolveAllValid(fields, m);
             List<T> result = new ArrayList<>();
             for (FieldDescriptor field : fields) {
-                for (Object invalidValue : ValueBuilderFactory.create(field, f).invalidList()) {
+                for (Object invalidValue : ValueBuilderFactory.create(field, m).invalidList()) {
                     Map<String, Object> values = new LinkedHashMap<>(validValues);
                     values.put(field.name(), invalidValue);
                     result.add(ObjectAssembler.instantiate(type, fields, values));
@@ -110,17 +119,15 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
     @Override
     public T invalidFor(String fieldName) {
         try {
+            DataMachine m = machine();
             List<FieldDescriptor> fields = FieldDescriptor.extract(type);
-            DataMachine fkr = machine();
-            Map<String, Object> values = resolveAllValid(fields, fkr);
+            Map<String, Object> values = resolveAllValid(fields, m);
             fields.stream()
                     .filter(f -> f.name().equals(fieldName))
                     .findFirst()
                     .ifPresent(f -> {
-                        FieldValueBuilder<?> fb =
-                                (FieldValueBuilder<?>) ValueBuilderFactory.create(f, fkr);
-                        fb.firstInvalidValue().ifPresent(holder ->
-                                values.put(fieldName, ((Object[]) holder)[0]));
+                        List<Object> inv = ValueBuilderFactory.create(f, m).invalidList();
+                        if (!inv.isEmpty()) values.put(fieldName, inv.get(0));
                     });
             return ObjectAssembler.instantiate(type, fields, values);
         } catch (Exception e) {
@@ -131,20 +138,15 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
 
     @Override
     public Map<String, List<T>> validPerField() {
-        return Map.of();
-    }
-
-    @Override
-    public Map<String, List<T>> validMap() {
         try {
+            DataMachine m = machine();
             List<FieldDescriptor> fields = FieldDescriptor.extract(type);
-            DataMachine f = machine();
-            Map<String, Object> semanticValues = resolveAllValid(fields, f);
+            Map<String, Object> semanticValues = resolveAllValid(fields, m);
             Map<String, List<T>> result = new LinkedHashMap<>();
             for (FieldDescriptor field : fields) {
                 if (overrides.containsKey(field.name())) continue;
                 if (field.rawType() == Boolean.class || field.rawType() == boolean.class) continue;
-                List<Object> allValidValues = ValueBuilderFactory.create(field, f).validList();
+                List<Object> allValidValues = ValueBuilderFactory.create(field, m).validList();
                 if (allValidValues.size() <= 1) continue;
                 List<T> variants = new ArrayList<>();
                 for (Object value : allValidValues) {
@@ -156,14 +158,28 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
             }
             return Collections.unmodifiableMap(result);
         } catch (Exception e) {
-            throw new DataFactoryException("Failed to build validMap for " + type.getSimpleName(), e);
+            throw new DataFactoryException("Failed to build validPerField for " + type.getSimpleName(), e);
+        }
+    }
+
+    @Override
+    @Deprecated(forRemoval = true)
+    public Map<String, List<T>> validMap() {
+        return validPerField();
+    }
+
+    // ── Internal resolution ───────────────────────────────────────────────
+
+    private void surfaceProductionWarnings(List<FieldDescriptor> fields) {
+        for (FieldDescriptor field : fields) {
+            ConstraintChecker.warn(field.name(), field.rawType(), field.validations());
         }
     }
 
     private static final ThreadLocal<Set<Class<?>>> BUILDING =
             ThreadLocal.withInitial(HashSet::new);
 
-    private Map<String, Object> resolveAllValid(List<FieldDescriptor> fields, DataMachine f) throws Exception {
+    private Map<String, Object> resolveAllValid(List<FieldDescriptor> fields, DataMachine m) throws Exception {
         Map<String, Object> values = new LinkedHashMap<>();
         for (FieldDescriptor field : fields) {
             if (overrides.containsKey(field.name())) {
@@ -171,7 +187,7 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
                 continue;
             }
             if (field.rawType() == java.util.Optional.class) {
-                values.put(field.name(), resolveOptional(field));
+                values.put(field.name(), resolveOptional(field, m));
                 continue;
             }
             if (field.isNested() && field.hasAnnotation(Valid.class)) {
@@ -187,26 +203,10 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
                 continue;
             }
             if (field.isList()) {
-                values.put(field.name(), resolveList(field));
+                values.put(field.name(), resolveList(field, m));
                 continue;
             }
-            if (field.isSet()) {
-                values.put(field.name(), resolveSet(field));
-                continue;
-            }
-            if (field.isMap()) {
-                values.put(field.name(), resolveMap(field));
-                continue;
-            }
-            if (field.isArray()) {
-                values.put(field.name(), resolveArray(field));
-                continue;
-            }
-            if (field.isQueue()) {
-                values.put(field.name(), resolveQueue(field));
-                continue;
-            }
-            List<Object> validList = ValueBuilderFactory.create(field, f).validList();
+            List<Object> validList = ValueBuilderFactory.create(field, m).validList();
             values.put(field.name(), validList.isEmpty() ? null : validList.get(0));
         }
         return values;
@@ -227,7 +227,7 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
         return null;
     }
 
-    private Object resolveOptional(FieldDescriptor field) {
+    private Object resolveOptional(FieldDescriptor field, DataMachine m) {
         try {
             Class<?> elemType = field.listElementType();
             if (!elemType.getPackageName().startsWith("java.")) {
@@ -236,7 +236,7 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
                 if (seed != null) ob.seed(seed);
                 return Optional.of(ob.valid());
             }
-            List<?> elemValid = ValueBuilderFactory.create(elemType, machine()).validList();
+            List<?> elemValid = ValueBuilderFactory.create(elemType, m).validList();
             Object elem = elemValid.isEmpty() ? null : elemValid.get(0);
             return elem != null ? Optional.of(elem) : Optional.empty();
         } catch (Exception e) {
@@ -244,126 +244,19 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
         }
     }
 
-    private Object resolveSet(FieldDescriptor field) {
+    private Object resolveList(FieldDescriptor field, DataMachine m) {
         try {
             Class<?> elemType = field.listElementType();
-            Object elem = null;
-            if (elemType.isEnum()) {
-                Object[] constants = elemType.getEnumConstants();
-                elem = constants.length > 0 ? constants[0] : null;
-            } else if (!elemType.getPackageName().startsWith("java.")) {
-                DefaultDataBuilder<?> lb = new DefaultDataBuilder<>(elemType).mode(mode);
-                if (seed != null) lb.seed(seed);
-                elem = lb.valid();
-            } else {
-                List<?> elemValid = ValueBuilderFactory.create(elemType, machine()).validList();
-                elem = elemValid.isEmpty() ? null : elemValid.get(0);
-            }
-            // Return the correct concrete Set type matching the field declaration
-            Class<?> rawType = field.rawType();
-            if (elem == null) return new java.util.HashSet<>();
-            if (rawType == java.util.TreeSet.class || rawType == java.util.SortedSet.class
-                    || rawType == java.util.NavigableSet.class) {
-                java.util.TreeSet<Object> s = new java.util.TreeSet<>(); s.add(elem); return s;
-            }
-            if (rawType == java.util.LinkedHashSet.class) {
-                java.util.LinkedHashSet<Object> s = new java.util.LinkedHashSet<>(); s.add(elem); return s;
-            }
-            java.util.HashSet<Object> s = new java.util.HashSet<>(); s.add(elem); return s;
-        } catch (Exception e) {
-            return new java.util.HashSet<>();
-        }
-    }
-
-    private Object resolveMap(FieldDescriptor field) {
-        try {
-            Class<?> keyType = field.mapKeyType();
-            Class<?> valType = field.mapValueType();
-            List<?> keys = ValueBuilderFactory.create(keyType, machine()).validList();
-            Object key = keys.isEmpty() ? "key" : keys.get(0);
-            Object val;
-            if (valType.isEnum()) {
-                Object[] constants = valType.getEnumConstants();
-                val = constants.length > 0 ? constants[0] : null;
-            } else if (!valType.getPackageName().startsWith("java.")) {
-                DefaultDataBuilder<?> vb = new DefaultDataBuilder<>(valType).mode(mode);
-                if (seed != null) vb.seed(seed);
-                val = vb.valid();
-            } else {
-                List<?> vals = ValueBuilderFactory.create(valType, machine()).validList();
-                val = vals.isEmpty() ? null : vals.get(0);
-            }
-            if (key == null || val == null) return new java.util.HashMap<>();
-            Class<?> rawType = field.rawType();
-            if (rawType == java.util.TreeMap.class || rawType == java.util.SortedMap.class
-                    || rawType == java.util.NavigableMap.class) {
-                java.util.TreeMap<Object,Object> m = new java.util.TreeMap<>(); m.put(key, val); return m;
-            }
-            if (rawType == java.util.LinkedHashMap.class) {
-                java.util.LinkedHashMap<Object,Object> m = new java.util.LinkedHashMap<>(); m.put(key, val); return m;
-            }
-            java.util.HashMap<Object,Object> m = new java.util.HashMap<>(); m.put(key, val); return m;
-        } catch (Exception e) {
-            return new java.util.HashMap<>();
-        }
-    }
-
-    private Object resolveArray(FieldDescriptor field) {
-        try {
-            Class<?> compType = field.rawType().getComponentType();
-            List<?> elemValid = ValueBuilderFactory.create(compType, machine()).validList();
-            Object elem = elemValid.isEmpty() ? null : elemValid.get(0);
-            if (elem == null) return java.lang.reflect.Array.newInstance(compType, 0);
-            Object arr = java.lang.reflect.Array.newInstance(compType, 1);
-            java.lang.reflect.Array.set(arr, 0, elem);
-            return arr;
-        } catch (Exception e) {
-            return java.lang.reflect.Array.newInstance(field.rawType().getComponentType(), 0);
-        }
-    }
-
-    private Object resolveQueue(FieldDescriptor field) {
-        try {
-            Class<?> elemType = field.listElementType();
-            List<?> elemValid = ValueBuilderFactory.create(elemType, machine()).validList();
-            Object elem = elemValid.isEmpty() ? null : elemValid.get(0);
-            Class<?> rawType = field.rawType();
-            if (rawType == java.util.LinkedList.class) {
-                java.util.LinkedList<Object> q = new java.util.LinkedList<>(); if (elem != null) q.add(elem); return q;
-            }
-            if (rawType == java.util.PriorityQueue.class) {
-                java.util.PriorityQueue<Object> q = new java.util.PriorityQueue<>(); if (elem != null) q.add(elem); return q;
-            }
-            java.util.ArrayDeque<Object> q = new java.util.ArrayDeque<>();
-            if (elem != null) q.add(elem);
-            return q;
-        } catch (Exception e) {
-            return new java.util.ArrayDeque<>();
-        }
-    }
-
-    private Object resolveList(FieldDescriptor field) {
-        try {
-            Class<?> elemType = field.listElementType();
-            // Enum elements — use EnumTypeShaper directly
-            if (elemType.isEnum()) {
-                Object[] constants = elemType.getEnumConstants();
-                if (constants.length == 0) return new java.util.ArrayList<>();
-                java.util.ArrayList<Object> l = new java.util.ArrayList<>(); l.add(constants[0]); return l;
-            }
-            // Nested POJO elements
             if (!elemType.getPackageName().startsWith("java.")) {
                 DefaultDataBuilder<?> lb = new DefaultDataBuilder<>(elemType).mode(mode);
                 if (seed != null) lb.seed(seed);
-                java.util.ArrayList<Object> ll = new java.util.ArrayList<>(); ll.add(lb.valid()); return ll;
+                return List.of(lb.valid());
             }
-            // Scalar elements
-            List<?> elemValid = ValueBuilderFactory.create(elemType, machine()).validList();
+            List<?> elemValid = ValueBuilderFactory.create(elemType, m).validList();
             Object elem = elemValid.isEmpty() ? null : elemValid.get(0);
-            if (elem == null) return new java.util.ArrayList<>();
-            java.util.ArrayList<Object> lr = new java.util.ArrayList<>(); lr.add(elem); return lr;
+            return elem != null ? List.of(elem) : List.of();
         } catch (Exception e) {
-            return new java.util.ArrayList<>();
+            return List.of();
         }
     }
 }

@@ -21,7 +21,7 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     private final Long seed;
 
     FieldValueBuilder(FieldConstraints constraints) {
-        this(constraints, List.of(), null, null);
+        this(constraints, List.of(), DataMachines.random(), null);
     }
 
     FieldValueBuilder(FieldConstraints constraints, DataMachine machine) {
@@ -81,21 +81,15 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     @SuppressWarnings("unchecked")
     public T valid() {
         FieldConstraints rc = resolvedConstraints();
-        try {
-            List<Object> values = DataGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), machine());
-            return (T) (values.isEmpty() ? null : values.getFirst());
-        } finally {
-        }
+        List<Object> values = DataGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), machine());
+        return (T) (values.isEmpty() ? null : values.getFirst());
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<T> validList() {
         FieldConstraints rc = resolvedConstraints();
-        try {
-            return (List<T>) DataGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), machine());
-        } finally {
-        }
+        return (List<T>) DataGenerator.shapeAll(rc, BoundaryPlanner.plan(rc), machine());
     }
 
     @Override
