@@ -1,6 +1,7 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.GeneratedTestClass;
+import com.paramichha.testkit.TestKitTemplate;
 import com.paramichha.testkit.TestGenerator;
 import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.FieldMeta;
@@ -25,7 +26,18 @@ public final class DefaultTestGenerator implements TestGenerator {
     }
 
     @Override
+    public GeneratedTestClass generate(ClassMeta meta, TestData data,
+                                        String targetPackage, TestKitTemplate template) {
+        return generateWithTemplate(meta, data, targetPackage, template);
+    }
+
+    @Override
     public GeneratedTestClass generate(ClassMeta meta, TestData data, String targetPackage) {
+        return generateWithTemplate(meta, data, targetPackage, TestKitTemplate.DEFAULT);
+    }
+
+    private GeneratedTestClass generateWithTemplate(ClassMeta meta, TestData data,
+                                                     String targetPackage, TestKitTemplate template) {
         // DEV mode gets a distinct class name so both files coexist
         boolean isDev = data.mode() == com.paramichha.datafactory.GenerationMode.DEV;
         String className = isDev
@@ -38,7 +50,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         }
 
         try {
-            return buildFull(meta, data, targetPackage, className, isDev);
+            return buildFull(meta, data, targetPackage, className, isDev, template);
         } catch (Exception e) {
             return new GeneratedTestClass(className, targetPackage,
                     buildPlaceholder(meta, targetPackage, e.getMessage(), className));
@@ -49,13 +61,13 @@ public final class DefaultTestGenerator implements TestGenerator {
 
     private GeneratedTestClass buildFull(ClassMeta meta, TestData data,
                                           String targetPackage, String className,
-                                          boolean isDev) {
+                                          boolean isDev, TestKitTemplate template) {
         Class<?> type = data.type();
         List<Object> validInstanceParts = valueExtractor.extract(data.base(), type, meta.fields());
 
         InstantiationWriter instantiation = new InstantiationWriter(meta);
-        SmokeTestWriter     smokeWriter   = new SmokeTestWriter(meta, instantiation);
-        FieldTestWriter     fieldWriter   = new FieldTestWriter(meta, instantiation, valueExtractor);
+        CreationTestWriter  creationWriter = new CreationTestWriter(meta, instantiation, template);
+        MemberTestWriter    memberWriter   = new MemberTestWriter(meta, instantiation, valueExtractor, template);
         ImportCollector imports       = buildImports(meta, type, data, validInstanceParts);
 
         StringBuilder sb = new StringBuilder();
@@ -63,11 +75,11 @@ public final class DefaultTestGenerator implements TestGenerator {
         writePackage(sb, targetPackage);
         writeImports(sb, imports);
         writeClassOpen(sb, meta, className);
-        writeValidatorSetup(sb);
-        writeValidInstance(sb, meta, validInstanceParts, instantiation);
+        if (data.hasJakarta(meta)) writeValidatorSetup(sb, template);
+        writeValidInstance(sb, meta, validInstanceParts, instantiation, template);
         if (meta.constructorStyle() == ClassMeta.ConstructorStyle.SETTER) writeSetterHelper(sb, meta);
-        smokeWriter.write(sb, data, validInstanceParts, valueExtractor);
-        fieldWriter.write(sb, type, validInstanceParts, data.validAllPerField());
+        creationWriter.write(sb, data, validInstanceParts, valueExtractor);
+        memberWriter.write(sb, type, validInstanceParts, data.validAllPerField());
         sb.append("}\n");
 
         return new GeneratedTestClass(className, targetPackage, sb.toString());
@@ -127,18 +139,20 @@ public final class DefaultTestGenerator implements TestGenerator {
         sb.append("class ").append(className).append(" {\n\n");
     }
 
-    private void writeValidatorSetup(StringBuilder sb) {
-        sb.append("    private static Validator validator;\n\n");
+    private void writeValidatorSetup(StringBuilder sb, TestKitTemplate template) {
+        sb.append("    private static Validator ").append(template.validatorField).append(";\n\n");
         sb.append("    @BeforeAll\n");
-        sb.append("    static void setUpValidator() {\n");
-        sb.append("        validator = Validation.buildDefaultValidatorFactory().getValidator();\n");
+        sb.append("    static void ").append(template.validatorSetup).append("() {\n");
+        sb.append("        ").append(template.validatorField)
+          .append(" = Validation.buildDefaultValidatorFactory().getValidator();\n");
         sb.append("    }\n\n");
     }
 
     private void writeValidInstance(StringBuilder sb, ClassMeta meta,
                                      List<Object> validInstanceParts,
-                                     InstantiationWriter instantiation) {
-        sb.append("    private final ").append(meta.simpleName()).append(" validInstance =\n");
+                                     InstantiationWriter instantiation, TestKitTemplate template) {
+        String fieldName = com.paramichha.testkit.template.TemplateResolver.instanceFieldName(meta.simpleName());
+        sb.append("    ").append(meta.simpleName()).append(" ").append(fieldName).append(" =\n");
         sb.append("            ").append(instantiation.constructorCall(validInstanceParts))
           .append(";\n\n");
     }

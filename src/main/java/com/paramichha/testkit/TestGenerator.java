@@ -9,4 +9,10 @@ import com.paramichha.testkit.model.TestData;
  */
 public interface TestGenerator {
     GeneratedTestClass generate(ClassMeta meta, TestData data, String targetPackage);
+
+    /** Generate with custom template. Default implementation delegates to the 3-arg version. */
+    default GeneratedTestClass generate(ClassMeta meta, TestData data,
+                                        String targetPackage, TestKitTemplate template) {
+        return generate(meta, data, targetPackage);
+    }
 }

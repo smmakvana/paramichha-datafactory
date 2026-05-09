@@ -26,6 +26,7 @@ public final class TestKit {
     private String targetPackage;
     private Long seed = null;
     private GenerationMode mode = GenerationMode.PRODUCTION;
+    private TestKitTemplate template = TestKitTemplate.DEFAULT;
 
     private TestKit(Class<?> type, ClassReader reader,
                     TestDataProvider dataProvider, TestGenerator generator) {
@@ -71,15 +72,21 @@ public final class TestKit {
         return this;
     }
 
+    /** Sets a custom template for generated names and display strings. */
+    public TestKit withTemplate(TestKitTemplate template) {
+        if (template == null) throw new TestKitException("template must not be null");
+        this.template = template;
+        return this;
+    }
+
     public GeneratedTestClass generate() {
         try {
             ClassMeta meta = reader.read(type);
             TestData data = (dataProvider instanceof DataFactoryTestDataProvider dfp)
                     ? dfp.provide(type, mode, seed)
                     : dataProvider.provide(type);
-            return generator.generate(meta, data, targetPackage);
+            return generator.generate(meta, data, targetPackage, template);
         } catch (Exception e) {
-            // Never fail — return a placeholder so the file is always written
             String className = type.getSimpleName() + "Test";
             String source = "package " + targetPackage + ";\n\n"
                 + "// TODO: " + className + "\n"

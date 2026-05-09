@@ -22,9 +22,11 @@ final class ImportCollector {
             "org.junit.jupiter.api.Nested",
             "org.junit.jupiter.api.Test",
             "org.junit.jupiter.params.ParameterizedTest",
+            "org.junit.jupiter.params.provider.Arguments",
             "org.junit.jupiter.params.provider.MethodSource",
             "java.util.List",
             "java.util.Collection",
+            "java.util.stream.Stream",
             "static org.assertj.core.api.Assertions.assertThat"
     );
 
