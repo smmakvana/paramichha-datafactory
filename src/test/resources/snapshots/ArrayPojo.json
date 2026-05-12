@@ -1,0 +1,33 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "names" : null,
+      "scores" : [ 17 ],
+      "tags" : [ "dolorem" ]
+    },
+    "violations" : [ "names" ]
+  }, {
+    "object" : {
+      "names" : [ "eum" ],
+      "scores" : null,
+      "tags" : [ "dolorem" ]
+    },
+    "violations" : [ "scores" ]
+  }, {
+    "object" : {
+      "names" : [ "eum" ],
+      "scores" : [ 17 ],
+      "tags" : null
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "names" : [ "eum" ],
+      "scores" : [ 17 ],
+      "tags" : [ "dolorem" ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

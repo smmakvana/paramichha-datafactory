@@ -1,0 +1,45 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "headers" : null,
+      "metadata" : { },
+      "scores" : {
+        "modi" : 200
+      }
+    },
+    "violations" : [ "headers" ]
+  }, {
+    "object" : {
+      "headers" : {
+        "eum" : "qui"
+      },
+      "metadata" : { },
+      "scores" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "headers" : {
+        "eum" : "qui"
+      },
+      "metadata" : null,
+      "scores" : {
+        "modi" : 200
+      }
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "headers" : {
+        "eum" : "qui"
+      },
+      "metadata" : { },
+      "scores" : {
+        "modi" : 200
+      }
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

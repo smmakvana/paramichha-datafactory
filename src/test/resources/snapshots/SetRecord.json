@@ -1,0 +1,12 @@
+{
+  "invalidList" : [ ],
+  "valid" : {
+    "object" : {
+      "roles" : [ "eum" ],
+      "scores" : [ 346 ],
+      "tags" : [ "qui" ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

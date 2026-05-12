@@ -1,0 +1,12 @@
+{
+  "invalidList" : [ ],
+  "valid" : {
+    "object" : {
+      "history" : [ "qui" ],
+      "priorities" : [ 346 ],
+      "tasks" : [ "eum" ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}
