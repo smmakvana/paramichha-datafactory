@@ -83,7 +83,7 @@ public class ObjectGeneration {
 
     static void boundaryVariants() {
         section("Boundary variants per field");
-        var map = DataFactory.of(CustomerRequest.class).validMap();
+        var map = DataFactory.of(CustomerRequest.class).validPerField();
         map.forEach((field, variants) -> {
             if (field.equals("age")) {
                 System.out.println("  age boundaries: "

@@ -163,12 +163,6 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
         }
     }
 
-    @Override
-    @Deprecated(forRemoval = true)
-    public Map<String, List<T>> validMap() {
-        return validPerField();
-    }
-
     // ── Internal resolution ───────────────────────────────────────────────
 
     private void surfaceProductionWarnings(List<FieldDescriptor> fields) {

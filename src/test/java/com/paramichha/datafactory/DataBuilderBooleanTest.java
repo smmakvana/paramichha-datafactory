@@ -34,7 +34,7 @@ class DataBuilderBooleanTest {
     @MethodSource("booleanFieldCases")
     @DisplayName("boolean field excluded, numeric field included")
     void boolean_excluded_numeric_included(String label, Class<?> type, String boolField, String numericField) {
-        Map<String, ?> all = DataFactory.of(type).validMap();
+        Map<String, ?> all = DataFactory.of(type).validPerField();
         assertThat(all).containsKey(numericField);
         assertThat(all).doesNotContainKey(boolField);
     }

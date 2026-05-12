@@ -107,7 +107,7 @@ public class HelloDataFactory {
         System.out.println("  invalidFor(email) — email: " + badEmail.getEmail()
                 + "  (everything else valid)");
 
-        var edges = DataFactory.of(CustomerRequest.class).validMap();
+        var edges = DataFactory.of(CustomerRequest.class).validPerField();
         System.out.println();
         System.out.println("  age boundary values: "
                 + edges.get("age").stream().map(CustomerRequest::getAge).toList());

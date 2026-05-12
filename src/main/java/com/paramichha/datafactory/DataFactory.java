@@ -423,7 +423,7 @@ public final class DataFactory {
      * All other fields hold their canonical valid value.
      */
     public static <T> Map<String, List<T>> validMap(Class<T> type) {
-        return of(type).validMap();
+        return of(type).validPerField();
     }
 
     /**

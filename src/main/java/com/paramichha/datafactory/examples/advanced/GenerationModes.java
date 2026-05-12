@@ -45,7 +45,7 @@ public class GenerationModes {
 
     static void devBoundaries() {
         section("DEV mode — validMap() exposes type extremes for unannotated Integer");
-        var map = DataFactory.of(PartialRequest.class).mode(GenerationMode.DEV).validMap();
+        var map = DataFactory.of(PartialRequest.class).mode(GenerationMode.DEV).validPerField();
         if (map.containsKey("count")) {
             var counts = map.get("count").stream().map(PartialRequest::getCount).toList();
             System.out.println("  count boundaries: " + counts);

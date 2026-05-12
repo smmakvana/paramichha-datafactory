@@ -207,30 +207,30 @@ class DataFactoryIntegrationTest {
     class ValidAllMethod {
 
         @Test void returns_map_keyed_by_field_name() {
-            assertThat(DataFactory.of(RegisterRequest.class).validMap())
+            assertThat(DataFactory.of(RegisterRequest.class).validPerField())
                     .containsKey("email").containsKey("age");
         }
 
         @Test void single_value_fields_omitted() {
-            assertThat(DataFactory.of(RegisterRequest.class).validMap())
+            assertThat(DataFactory.of(RegisterRequest.class).validPerField())
                     .doesNotContainKey("dateOfBirth")
                     .doesNotContainKey("acceptedTerms");
         }
 
         @Test void overridden_field_skipped() {
-            var all = DataFactory.of(RegisterRequest.class).with("age", 30).validMap();
+            var all = DataFactory.of(RegisterRequest.class).with("age", 30).validPerField();
             assertThat(all).doesNotContainKey("age");
             assertThat(all).containsKey("email");
         }
 
         @Test void age_includes_boundary_values() {
-            var ages = DataFactory.of(RegisterRequest.class).validMap()
+            var ages = DataFactory.of(RegisterRequest.class).validPerField()
                     .get("age").stream().map(RegisterRequest::getAge).toList();
             assertThat(ages).contains(18, 120);
         }
 
         @Test void all_variants_pass_validation() {
-            DataFactory.of(RegisterRequest.class).validMap()
+            DataFactory.of(RegisterRequest.class).validPerField()
                     .forEach((field, variants) ->
                             variants.forEach(req ->
                                     assertThat(validator.validate(req))
@@ -238,12 +238,12 @@ class DataFactoryIntegrationTest {
         }
 
         @Test void email_variants_only_email_varies() {
-            var variants = DataFactory.of(RegisterRequest.class).validMap().get("email");
+            var variants = DataFactory.of(RegisterRequest.class).validPerField().get("email");
             assertThat(variants.stream().map(RegisterRequest::getAge).distinct().count()).isEqualTo(1);
         }
 
         @Test void wraps_exception() {
-            assertThatThrownBy(() -> DataFactory.of(Broken.class).validMap())
+            assertThatThrownBy(() -> DataFactory.of(Broken.class).validPerField())
                     .isInstanceOf(DataFactoryException.class)
                     .hasMessageContaining("Broken");
         }

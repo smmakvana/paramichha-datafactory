@@ -163,22 +163,8 @@ public interface DataBuilder<T> {
      */
     T invalidFor(String fieldName);
 
-    /**
-     * Returns boundary-covering valid instances keyed by field name.
-     * Replaces {@link #validMap()}.
-     *
-     * <p>For each field the map contains valid objects where that field covers its
-     * boundary values — minimum, midpoint, maximum, and a semantically realistic value.
-     * All other fields hold their canonical valid value.
-     *
-     * <p>Primarily used by TestKit to generate parameterized boundary tests.
-     *
-     * @throws DataFactoryException if the class cannot be instantiated
-     */
-    Map<String, List<T>> validPerField();
 
     // ── Deprecated ────────────────────────────────────────────────────────
-
     /**
      * Builds {@code n} valid instances.
      *
@@ -189,9 +175,15 @@ public interface DataBuilder<T> {
 
     /**
      * Returns boundary-covering valid instances keyed by field name.
+     * Replaces {@link #validPerField()}.
      *
-     * @deprecated Use {@link #validPerField()} instead.
+     * <p>For each field the map contains valid objects where that field covers its
+     * boundary values — minimum, midpoint, maximum, and a semantically realistic value.
+     * All other fields hold their canonical valid value.
+     *
+     * <p>Primarily used by TestKit to generate parameterized boundary tests.
+     *
+     * @throws DataFactoryException if the class cannot be instantiated
      */
-    @Deprecated(forRemoval = true)
-    Map<String, List<T>> validMap();
+    Map<String, List<T>> validPerField();
 }

@@ -129,7 +129,7 @@ class GenerationModeTest {
             // DEV injects @Min(Integer.MIN_VALUE) @Max(Integer.MAX_VALUE)
             // so validList() returns [MIN, 0, MAX, semantic]
             var all = DataFactory.of(NumericOnly.class)
-                    .mode(GenerationMode.DEV).validMap();
+                    .mode(GenerationMode.DEV).validPerField();
 
             // Extract the Integer values from the variants
             List<Integer> values = all.get("value")
@@ -167,7 +167,7 @@ class GenerationModeTest {
             // PRODUCTION injects @Positive → always positive
             // DEV injects full range → validList() includes negative
             var devAll = DataFactory.of(NumericOnly.class)
-                    .mode(GenerationMode.DEV).validMap();
+                    .mode(GenerationMode.DEV).validPerField();
             List<Integer> devValues = devAll.get("value")
                     .stream().map(n -> (Integer) ((NumericOnly) n).value()).toList();
 

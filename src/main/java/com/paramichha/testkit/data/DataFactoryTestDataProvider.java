@@ -64,7 +64,7 @@ public final class DataFactoryTestDataProvider implements TestDataProvider {
 
         try {
             validAllPerField = (Map<String, List<?>>) (Map)
-                    DataFactory.of(type).mode(mode).seed(effectiveSeed).validMap();
+                    DataFactory.of(type).mode(mode).seed(effectiveSeed).validPerField();
         } catch (Exception ignored) {}
 
         List<Object> validObjects = buildValidObjects(base, validAllPerField);
