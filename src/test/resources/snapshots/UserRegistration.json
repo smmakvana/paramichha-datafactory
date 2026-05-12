@@ -1,0 +1,315 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : null,
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "not-an-email",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : null,
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "fullName" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "fullName", "fullName" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "x",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "fullName" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "fullName" ]
+  }, {
+    "object" : {
+      "age" : 17,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "age" ]
+  }, {
+    "object" : {
+      "age" : 121,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "age" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : null,
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "dateOfBirth" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2099-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "dateOfBirth" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : null
+    },
+    "violations" : [ "password" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : ""
+    },
+    "violations" : [ "password", "password" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "xxxxxxx"
+    },
+    "violations" : [ "password" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "violations" : [ "password" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "age" : [ {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 18,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 19,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 69,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 119,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 120,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    } ],
+    "fullName" : [ {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Miquel Emmerich",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Re",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Dav",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Kermit Ernserxxxxxxxxxxxxx",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Alfredo Schuppexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Billy Gulgowskixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "password" : "3bJmXXap1S#"
+      },
+      "violations" : [ ]
+    } ],
+    "password" : [ {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "z@Z9ezP01rt6@*"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "*#jjr*u&"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "8Q&^7Si#@"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "I!%L^89Gxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "%59c^$aA37gGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "fullName" : "Mr. Nanci Stokes",
+        "password" : "u*uoPGS1%jIPxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

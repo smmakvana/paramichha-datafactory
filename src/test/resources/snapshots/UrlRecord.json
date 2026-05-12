@@ -1,0 +1,35 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "apiEndpoint" : "https://www.graig-tillman.biz:29573/natus?quam=reiciendis&perspiciatis=quidem#optio",
+      "website" : null
+    },
+    "violations" : [ "website" ]
+  }, {
+    "object" : {
+      "apiEndpoint" : "https://www.graig-tillman.biz:29573/natus?quam=reiciendis&perspiciatis=quidem#optio",
+      "website" : ""
+    },
+    "violations" : [ "website" ]
+  }, {
+    "object" : {
+      "apiEndpoint" : "https://www.graig-tillman.biz:29573/natus?quam=reiciendis&perspiciatis=quidem#optio",
+      "website" : "not-a-url"
+    },
+    "violations" : [ "website" ]
+  }, {
+    "object" : {
+      "apiEndpoint" : "not-a-url",
+      "website" : "https://www.clemencia-mcdermott.org/modi#dolorem"
+    },
+    "violations" : [ "apiEndpoint" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "apiEndpoint" : "https://www.graig-tillman.biz:29573/natus?quam=reiciendis&perspiciatis=quidem#optio",
+      "website" : "https://www.clemencia-mcdermott.org/modi#dolorem"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

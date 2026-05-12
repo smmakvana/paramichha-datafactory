@@ -1,0 +1,136 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "amount" : 1.50,
+      "fromIban" : null,
+      "reference" : "REF-953375",
+      "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+    },
+    "violations" : [ "fromIban" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "fromIban" : "",
+      "reference" : "REF-953375",
+      "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+    },
+    "violations" : [ "fromIban" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "fromIban" : "VA98384055893226262603",
+      "reference" : "REF-953375",
+      "toIban" : null
+    },
+    "violations" : [ "toIban" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "fromIban" : "VA98384055893226262603",
+      "reference" : "REF-953375",
+      "toIban" : ""
+    },
+    "violations" : [ "toIban" ]
+  }, {
+    "object" : {
+      "amount" : null,
+      "fromIban" : "VA98384055893226262603",
+      "reference" : "REF-953375",
+      "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+    },
+    "violations" : [ "amount" ]
+  }, {
+    "object" : {
+      "amount" : 0,
+      "fromIban" : "VA98384055893226262603",
+      "reference" : "REF-953375",
+      "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+    },
+    "violations" : [ "amount" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "fromIban" : "VA98384055893226262603",
+      "reference" : null,
+      "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+    },
+    "violations" : [ "reference" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "fromIban" : "VA98384055893226262603",
+      "reference" : "",
+      "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+    },
+    "violations" : [ "reference" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "fromIban" : "VA98384055893226262603",
+      "reference" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+    },
+    "violations" : [ "reference" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "amount" : 1.50,
+      "fromIban" : "VA98384055893226262603",
+      "reference" : "REF-953375",
+      "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "amount" : [ {
+      "object" : {
+        "amount" : 1.50,
+        "fromIban" : "VA98384055893226262603",
+        "reference" : "REF-953375",
+        "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : 1.00,
+        "fromIban" : "VA98384055893226262603",
+        "reference" : "REF-953375",
+        "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : 2.00,
+        "fromIban" : "VA98384055893226262603",
+        "reference" : "REF-953375",
+        "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+      },
+      "violations" : [ ]
+    } ],
+    "reference" : [ {
+      "object" : {
+        "amount" : 1.50,
+        "fromIban" : "VA98384055893226262603",
+        "reference" : "REF-864585",
+        "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : 1.50,
+        "fromIban" : "VA98384055893226262603",
+        "reference" : "REF-040845xxxxxxxxxxxxxxxxxxxxxxxx",
+        "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : 1.50,
+        "fromIban" : "VA98384055893226262603",
+        "reference" : "REF-681050xxxxxxxxxxxxxxxxxxxxxxxxx",
+        "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

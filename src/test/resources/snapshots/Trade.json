@@ -1,0 +1,240 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "instrument" : "fugit",
+      "price" : 1.50,
+      "quantity" : 1.50,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : null
+    },
+    "violations" : [ "tradeId" ]
+  }, {
+    "object" : {
+      "instrument" : "fugit",
+      "price" : 1.50,
+      "quantity" : 1.50,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : ""
+    },
+    "violations" : [ "tradeId" ]
+  }, {
+    "object" : {
+      "instrument" : "fugit",
+      "price" : 1.50,
+      "quantity" : 1.50,
+      "side" : null,
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "side" ]
+  }, {
+    "object" : {
+      "instrument" : null,
+      "price" : 1.50,
+      "quantity" : 1.50,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "instrument" ]
+  }, {
+    "object" : {
+      "instrument" : "",
+      "price" : 1.50,
+      "quantity" : 1.50,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "instrument" ]
+  }, {
+    "object" : {
+      "instrument" : "fugit",
+      "price" : 1.50,
+      "quantity" : null,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "quantity" ]
+  }, {
+    "object" : {
+      "instrument" : "fugit",
+      "price" : 1.50,
+      "quantity" : 0,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "quantity" ]
+  }, {
+    "object" : {
+      "instrument" : "fugit",
+      "price" : null,
+      "quantity" : 1.50,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "price" ]
+  }, {
+    "object" : {
+      "instrument" : "fugit",
+      "price" : 0,
+      "quantity" : 1.50,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "price" ]
+  }, {
+    "object" : {
+      "instrument" : "fugit",
+      "price" : 1.50,
+      "quantity" : 1.50,
+      "side" : "BUY",
+      "status" : null,
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "status" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "instrument" : "fugit",
+      "price" : 1.50,
+      "quantity" : 1.50,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "price" : [ {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY",
+        "status" : "PENDING",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.00,
+        "quantity" : 1.50,
+        "side" : "BUY",
+        "status" : "PENDING",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 2.00,
+        "quantity" : 1.50,
+        "side" : "BUY",
+        "status" : "PENDING",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ],
+    "quantity" : [ {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY",
+        "status" : "PENDING",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.50,
+        "quantity" : 1.00,
+        "side" : "BUY",
+        "status" : "PENDING",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.50,
+        "quantity" : 2.00,
+        "side" : "BUY",
+        "status" : "PENDING",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ],
+    "side" : [ {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY",
+        "status" : "PENDING",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "SELL",
+        "status" : "PENDING",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ],
+    "status" : [ {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY",
+        "status" : "PENDING",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY",
+        "status" : "EXECUTED",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY",
+        "status" : "SETTLED",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "instrument" : "fugit",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY",
+        "status" : "CANCELLED",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

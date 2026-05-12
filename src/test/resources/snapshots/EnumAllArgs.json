@@ -1,0 +1,86 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "previousStatus" : "PENDING",
+      "status" : null
+    },
+    "violations" : [ "status" ]
+  }, {
+    "object" : {
+      "previousStatus" : null,
+      "status" : "PENDING"
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "previousStatus" : "PENDING",
+      "status" : "PENDING"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "previousStatus" : [ {
+      "object" : {
+        "previousStatus" : "PENDING",
+        "status" : "PENDING"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "previousStatus" : "CONFIRMED",
+        "status" : "PENDING"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "previousStatus" : "SHIPPED",
+        "status" : "PENDING"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "previousStatus" : "DELIVERED",
+        "status" : "PENDING"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "previousStatus" : "CANCELLED",
+        "status" : "PENDING"
+      },
+      "violations" : [ ]
+    } ],
+    "status" : [ {
+      "object" : {
+        "previousStatus" : "PENDING",
+        "status" : "PENDING"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "previousStatus" : "PENDING",
+        "status" : "CONFIRMED"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "previousStatus" : "PENDING",
+        "status" : "SHIPPED"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "previousStatus" : "PENDING",
+        "status" : "DELIVERED"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "previousStatus" : "PENDING",
+        "status" : "CANCELLED"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

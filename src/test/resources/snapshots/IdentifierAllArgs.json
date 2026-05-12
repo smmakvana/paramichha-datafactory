@@ -1,0 +1,33 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "correlationId" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+      "id" : null,
+      "parentId" : "aa616abe-1761-0c9a-e743-67bd738597dc"
+    },
+    "violations" : [ "id" ]
+  }, {
+    "object" : {
+      "correlationId" : null,
+      "id" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
+      "parentId" : "aa616abe-1761-0c9a-e743-67bd738597dc"
+    },
+    "violations" : [ "correlationId" ]
+  }, {
+    "object" : {
+      "correlationId" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+      "id" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
+      "parentId" : null
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "correlationId" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+      "id" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
+      "parentId" : "aa616abe-1761-0c9a-e743-67bd738597dc"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

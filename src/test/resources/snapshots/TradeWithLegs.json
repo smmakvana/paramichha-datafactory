@@ -1,0 +1,110 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "legs" : [ {
+        "instrument" : "eum",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY"
+      } ],
+      "status" : "PENDING",
+      "tradeId" : null
+    },
+    "violations" : [ "tradeId" ]
+  }, {
+    "object" : {
+      "legs" : [ {
+        "instrument" : "eum",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY"
+      } ],
+      "status" : "PENDING",
+      "tradeId" : ""
+    },
+    "violations" : [ "tradeId" ]
+  }, {
+    "object" : {
+      "legs" : null,
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "legs" ]
+  }, {
+    "object" : {
+      "legs" : [ {
+        "instrument" : "eum",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY"
+      } ],
+      "status" : null,
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "status" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "legs" : [ {
+        "instrument" : "eum",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY"
+      } ],
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "status" : [ {
+      "object" : {
+        "legs" : [ {
+          "instrument" : "eum",
+          "price" : 1.50,
+          "quantity" : 1.50,
+          "side" : "BUY"
+        } ],
+        "status" : "PENDING",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "legs" : [ {
+          "instrument" : "eum",
+          "price" : 1.50,
+          "quantity" : 1.50,
+          "side" : "BUY"
+        } ],
+        "status" : "EXECUTED",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "legs" : [ {
+          "instrument" : "eum",
+          "price" : 1.50,
+          "quantity" : 1.50,
+          "side" : "BUY"
+        } ],
+        "status" : "SETTLED",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "legs" : [ {
+          "instrument" : "eum",
+          "price" : 1.50,
+          "quantity" : 1.50,
+          "side" : "BUY"
+        } ],
+        "status" : "CANCELLED",
+        "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "age" : 30,
+      "dob" : "2024-01-15",
+      "id" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+      "name" : null
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "age" : null,
+      "dob" : "2024-01-15",
+      "id" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ "age" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dob" : "2024-01-15",
+      "id" : null,
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ "id" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dob" : null,
+      "id" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ "dob" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "age" : 30,
+      "dob" : "2024-01-15",
+      "id" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "age" : [ {
+      "object" : {
+        "age" : 30,
+        "dob" : "2024-01-15",
+        "id" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+        "name" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : -2147483648,
+        "dob" : "2024-01-15",
+        "id" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+        "name" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : -2147483647,
+        "dob" : "2024-01-15",
+        "id" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+        "name" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 0,
+        "dob" : "2024-01-15",
+        "id" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+        "name" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 2147483646,
+        "dob" : "2024-01-15",
+        "id" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+        "name" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 2147483647,
+        "dob" : "2024-01-15",
+        "id" : "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+        "name" : "Garnet VonRueden"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

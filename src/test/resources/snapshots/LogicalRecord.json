@@ -1,0 +1,45 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "active" : false,
+      "archived" : false,
+      "deleted" : false,
+      "verified" : true
+    },
+    "violations" : [ "active" ]
+  }, {
+    "object" : {
+      "active" : true,
+      "archived" : false,
+      "deleted" : false,
+      "verified" : false
+    },
+    "violations" : [ "verified" ]
+  }, {
+    "object" : {
+      "active" : true,
+      "archived" : false,
+      "deleted" : true,
+      "verified" : true
+    },
+    "violations" : [ "deleted" ]
+  }, {
+    "object" : {
+      "active" : true,
+      "archived" : true,
+      "deleted" : false,
+      "verified" : true
+    },
+    "violations" : [ "archived" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "active" : true,
+      "archived" : false,
+      "deleted" : false,
+      "verified" : true
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

@@ -1,0 +1,103 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "accountNumber" : "80895935",
+      "amount" : 1.50,
+      "reference" : "REF-598093",
+      "sortCode" : null
+    },
+    "violations" : [ "sortCode" ]
+  }, {
+    "object" : {
+      "accountNumber" : "80895935",
+      "amount" : 1.50,
+      "reference" : "REF-598093",
+      "sortCode" : ""
+    },
+    "violations" : [ "sortCode" ]
+  }, {
+    "object" : {
+      "accountNumber" : null,
+      "amount" : 1.50,
+      "reference" : "REF-598093",
+      "sortCode" : "1754104924"
+    },
+    "violations" : [ "accountNumber" ]
+  }, {
+    "object" : {
+      "accountNumber" : "",
+      "amount" : 1.50,
+      "reference" : "REF-598093",
+      "sortCode" : "1754104924"
+    },
+    "violations" : [ "accountNumber" ]
+  }, {
+    "object" : {
+      "accountNumber" : "80895935",
+      "amount" : null,
+      "reference" : "REF-598093",
+      "sortCode" : "1754104924"
+    },
+    "violations" : [ "amount" ]
+  }, {
+    "object" : {
+      "accountNumber" : "80895935",
+      "amount" : 0,
+      "reference" : "REF-598093",
+      "sortCode" : "1754104924"
+    },
+    "violations" : [ "amount" ]
+  }, {
+    "object" : {
+      "accountNumber" : "80895935",
+      "amount" : 1.50,
+      "reference" : null,
+      "sortCode" : "1754104924"
+    },
+    "violations" : [ "reference" ]
+  }, {
+    "object" : {
+      "accountNumber" : "80895935",
+      "amount" : 1.50,
+      "reference" : "",
+      "sortCode" : "1754104924"
+    },
+    "violations" : [ "reference" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "accountNumber" : "80895935",
+      "amount" : 1.50,
+      "reference" : "REF-598093",
+      "sortCode" : "1754104924"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "amount" : [ {
+      "object" : {
+        "accountNumber" : "80895935",
+        "amount" : 1.50,
+        "reference" : "REF-598093",
+        "sortCode" : "1754104924"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountNumber" : "80895935",
+        "amount" : 1.00,
+        "reference" : "REF-598093",
+        "sortCode" : "1754104924"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "accountNumber" : "80895935",
+        "amount" : 2.00,
+        "reference" : "REF-598093",
+        "sortCode" : "1754104924"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "name" : "x",
+      "password" : "L^*M!q9i3bJm",
+      "tags" : [ "nobis" ]
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "name" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "password" : "L^*M!q9i3bJm",
+      "tags" : [ "nobis" ]
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "password" : "xxxxxxx",
+      "tags" : [ "nobis" ]
+    },
+    "violations" : [ "password" ]
+  }, {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "password" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "tags" : [ "nobis" ]
+    },
+    "violations" : [ "password" ]
+  }, {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "password" : "L^*M!q9i3bJm",
+      "tags" : null
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "password" : "L^*M!q9i3bJm",
+      "tags" : [ "nobis" ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "name" : [ {
+      "object" : {
+        "name" : "Dionna Schumm",
+        "password" : "L^*M!q9i3bJm",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Jo",
+        "password" : "L^*M!q9i3bJm",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Elo",
+        "password" : "L^*M!q9i3bJm",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Shelly Walshxxxxxxxxxxxxxx",
+        "password" : "L^*M!q9i3bJm",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Miss Toney Bauchxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "password" : "L^*M!q9i3bJm",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Mardell Walkerxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "password" : "L^*M!q9i3bJm",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    } ],
+    "password" : [ {
+      "object" : {
+        "name" : "Garnet VonRueden",
+        "password" : "9$24#%5$3C3",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Garnet VonRueden",
+        "password" : "Z9ezP01r",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Garnet VonRueden",
+        "password" : "@Q*#jjr*u",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Garnet VonRueden",
+        "password" : "&^Tu3RUD8Q&xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Garnet VonRueden",
+        "password" : "i#@Y&35Tz2xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "name" : "Garnet VonRueden",
+        "password" : "%L^89G*A%59c^$axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "tags" : [ "nobis" ]
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

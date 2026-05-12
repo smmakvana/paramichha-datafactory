@@ -1,0 +1,47 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "dateOfBirth" : null,
+      "expiryDate" : "2099-06-15",
+      "optionalDate" : "2024-01-15"
+    },
+    "violations" : [ "dateOfBirth" ]
+  }, {
+    "object" : {
+      "dateOfBirth" : "2099-06-15",
+      "expiryDate" : "2099-06-15",
+      "optionalDate" : "2024-01-15"
+    },
+    "violations" : [ "dateOfBirth" ]
+  }, {
+    "object" : {
+      "dateOfBirth" : "2020-06-15",
+      "expiryDate" : null,
+      "optionalDate" : "2024-01-15"
+    },
+    "violations" : [ "expiryDate" ]
+  }, {
+    "object" : {
+      "dateOfBirth" : "2020-06-15",
+      "expiryDate" : "2020-06-15",
+      "optionalDate" : "2024-01-15"
+    },
+    "violations" : [ "expiryDate" ]
+  }, {
+    "object" : {
+      "dateOfBirth" : "2020-06-15",
+      "expiryDate" : "2099-06-15",
+      "optionalDate" : null
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "dateOfBirth" : "2020-06-15",
+      "expiryDate" : "2099-06-15",
+      "optionalDate" : "2024-01-15"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

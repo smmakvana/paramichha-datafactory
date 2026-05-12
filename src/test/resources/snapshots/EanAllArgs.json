@@ -1,0 +1,41 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "barcode" : null,
+      "productName" : "Ms. Shakira McLaughlin"
+    },
+    "violations" : [ "barcode" ]
+  }, {
+    "object" : {
+      "barcode" : "",
+      "productName" : "Ms. Shakira McLaughlin"
+    },
+    "violations" : [ "barcode", "barcode" ]
+  }, {
+    "object" : {
+      "barcode" : "000-bad-ean",
+      "productName" : "Ms. Shakira McLaughlin"
+    },
+    "violations" : [ "barcode" ]
+  }, {
+    "object" : {
+      "barcode" : "0384055893221",
+      "productName" : null
+    },
+    "violations" : [ "productName" ]
+  }, {
+    "object" : {
+      "barcode" : "0384055893221",
+      "productName" : ""
+    },
+    "violations" : [ "productName" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "barcode" : "0384055893221",
+      "productName" : "Ms. Shakira McLaughlin"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

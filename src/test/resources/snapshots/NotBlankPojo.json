@@ -1,0 +1,54 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "firstName" : "Clemencia",
+      "lastName" : "McDermott",
+      "username" : null
+    },
+    "violations" : [ "username" ]
+  }, {
+    "object" : {
+      "firstName" : "Clemencia",
+      "lastName" : "McDermott",
+      "username" : ""
+    },
+    "violations" : [ "username" ]
+  }, {
+    "object" : {
+      "firstName" : null,
+      "lastName" : "McDermott",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "firstName" ]
+  }, {
+    "object" : {
+      "firstName" : "",
+      "lastName" : "McDermott",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "firstName" ]
+  }, {
+    "object" : {
+      "firstName" : "Clemencia",
+      "lastName" : null,
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "lastName" ]
+  }, {
+    "object" : {
+      "firstName" : "Clemencia",
+      "lastName" : "",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ "lastName" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "firstName" : "Clemencia",
+      "lastName" : "McDermott",
+      "username" : "Garnet VonRueden"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

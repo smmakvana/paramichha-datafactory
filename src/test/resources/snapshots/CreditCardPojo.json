@@ -1,0 +1,41 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "cardHolder" : "reiciendis",
+      "cardNumber" : null
+    },
+    "violations" : [ "cardNumber" ]
+  }, {
+    "object" : {
+      "cardHolder" : "reiciendis",
+      "cardNumber" : ""
+    },
+    "violations" : [ "cardNumber", "cardNumber" ]
+  }, {
+    "object" : {
+      "cardHolder" : "reiciendis",
+      "cardNumber" : "1234-bad"
+    },
+    "violations" : [ "cardNumber" ]
+  }, {
+    "object" : {
+      "cardHolder" : null,
+      "cardNumber" : "4038405589322626"
+    },
+    "violations" : [ "cardHolder" ]
+  }, {
+    "object" : {
+      "cardHolder" : "",
+      "cardNumber" : "4038405589322626"
+    },
+    "violations" : [ "cardHolder" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "cardHolder" : "reiciendis",
+      "cardNumber" : "4038405589322626"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

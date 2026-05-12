@@ -1,0 +1,72 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "address" : {
+        "city" : "Kunzeview",
+        "country" : "Burundi",
+        "line1" : "dolores",
+        "postcode" : "53351"
+      },
+      "email" : "clemencia.mcdermott@hotmail.com",
+      "name" : null
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "address" : {
+        "city" : "Kunzeview",
+        "country" : "Burundi",
+        "line1" : "dolores",
+        "postcode" : "53351"
+      },
+      "email" : "clemencia.mcdermott@hotmail.com",
+      "name" : ""
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "address" : null,
+      "email" : "clemencia.mcdermott@hotmail.com",
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ "address" ]
+  }, {
+    "object" : {
+      "address" : {
+        "city" : "Kunzeview",
+        "country" : "Burundi",
+        "line1" : "dolores",
+        "postcode" : "53351"
+      },
+      "email" : null,
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "address" : {
+        "city" : "Kunzeview",
+        "country" : "Burundi",
+        "line1" : "dolores",
+        "postcode" : "53351"
+      },
+      "email" : "",
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ "email" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "address" : {
+        "city" : "Kunzeview",
+        "country" : "Burundi",
+        "line1" : "dolores",
+        "postcode" : "53351"
+      },
+      "email" : "clemencia.mcdermott@hotmail.com",
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

@@ -1,0 +1,270 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : null,
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "",
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "not-an-email",
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : null
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : ""
+    },
+    "violations" : [ "name", "name" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : "x"
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "age" : 17,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ "age" ]
+  }, {
+    "object" : {
+      "age" : 121,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ "age" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : null,
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ "dateOfBirth" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2099-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ "dateOfBirth" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : null,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ "balance" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 0,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ "balance" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "age" : [ {
+      "object" : {
+        "age" : 30,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Mr. Nanci Stokes"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 18,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Mr. Nanci Stokes"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 19,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Mr. Nanci Stokes"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 69,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Mr. Nanci Stokes"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 119,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Mr. Nanci Stokes"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 120,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Mr. Nanci Stokes"
+      },
+      "violations" : [ ]
+    } ],
+    "balance" : [ {
+      "object" : {
+        "age" : 30,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Mr. Nanci Stokes"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "balance" : 1.00,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Mr. Nanci Stokes"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "balance" : 2.00,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Mr. Nanci Stokes"
+      },
+      "violations" : [ ]
+    } ],
+    "name" : [ {
+      "object" : {
+        "age" : 30,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Randa Huels"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Dr"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Sac"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Billy Cummings DDSxxxxxxxx"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Dinorah Botsfordxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "age" : 30,
+        "balance" : 1.50,
+        "dateOfBirth" : "2020-06-15",
+        "email" : "lamar.lehner@hotmail.com",
+        "name" : "Amos Watsica IIxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

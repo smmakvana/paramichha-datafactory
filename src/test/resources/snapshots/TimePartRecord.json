@@ -1,0 +1,45 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "closeTime" : "12:00:00",
+      "expiryMonth" : "2024-01",
+      "graduationYear" : null,
+      "openTime" : "12:00:00"
+    },
+    "violations" : [ "graduationYear" ]
+  }, {
+    "object" : {
+      "closeTime" : "12:00:00",
+      "expiryMonth" : null,
+      "graduationYear" : "2024",
+      "openTime" : "12:00:00"
+    },
+    "violations" : [ "expiryMonth" ]
+  }, {
+    "object" : {
+      "closeTime" : "12:00:00",
+      "expiryMonth" : "2024-01",
+      "graduationYear" : "2024",
+      "openTime" : null
+    },
+    "violations" : [ "openTime" ]
+  }, {
+    "object" : {
+      "closeTime" : null,
+      "expiryMonth" : "2024-01",
+      "graduationYear" : "2024",
+      "openTime" : "12:00:00"
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "closeTime" : "12:00:00",
+      "expiryMonth" : "2024-01",
+      "graduationYear" : "2024",
+      "openTime" : "12:00:00"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

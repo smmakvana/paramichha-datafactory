@@ -1,0 +1,236 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "quantity" : 0,
+      "score" : 5
+    },
+    "violations" : [ "quantity" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "quantity" : 101,
+      "score" : 5
+    },
+    "violations" : [ "quantity" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 0,
+      "quantity" : 1,
+      "score" : 5
+    },
+    "violations" : [ "id" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "quantity" : 1,
+      "score" : -1
+    },
+    "violations" : [ "score" ]
+  }, {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : 0,
+      "id" : 2,
+      "quantity" : 1,
+      "score" : 5
+    },
+    "violations" : [ "debt" ]
+  }, {
+    "object" : {
+      "adjustment" : 1,
+      "debt" : -2,
+      "id" : 2,
+      "quantity" : 1,
+      "score" : 5
+    },
+    "violations" : [ "adjustment" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "adjustment" : -1,
+      "debt" : -2,
+      "id" : 2,
+      "quantity" : 1,
+      "score" : 5
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "adjustment" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : 0,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    } ],
+    "debt" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -1,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    } ],
+    "id" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 1,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    } ],
+    "quantity" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 2,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 50,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 99,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 100,
+        "score" : 5
+      },
+      "violations" : [ ]
+    } ],
+    "score" : [ {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 5
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 0
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "adjustment" : -1,
+        "debt" : -2,
+        "id" : 2,
+        "quantity" : 1,
+        "score" : 1
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

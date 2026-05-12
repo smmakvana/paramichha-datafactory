@@ -1,0 +1,35 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "backupEmail" : "clemencia.mcdermott@hotmail.com",
+      "email" : null
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "backupEmail" : "clemencia.mcdermott@hotmail.com",
+      "email" : ""
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "backupEmail" : "clemencia.mcdermott@hotmail.com",
+      "email" : "not-an-email"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "backupEmail" : "not-an-email",
+      "email" : "lamar.lehner@hotmail.com"
+    },
+    "violations" : [ "backupEmail" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "backupEmail" : "clemencia.mcdermott@hotmail.com",
+      "email" : "lamar.lehner@hotmail.com"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

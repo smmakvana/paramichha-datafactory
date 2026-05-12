@@ -1,0 +1,61 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "labels" : [ "fugit" ],
+      "roles" : null,
+      "scores" : [ 346 ],
+      "tags" : [ "qui" ]
+    },
+    "violations" : [ "roles" ]
+  }, {
+    "object" : {
+      "labels" : [ "fugit" ],
+      "roles" : [ "eum" ],
+      "scores" : [ 346 ],
+      "tags" : null
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "labels" : [ "fugit" ],
+      "roles" : [ "eum" ],
+      "scores" : null,
+      "tags" : [ "qui" ]
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "labels" : [ "fugit" ],
+      "roles" : [ "eum" ],
+      "scores" : [ ],
+      "tags" : [ "qui" ]
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "labels" : null,
+      "roles" : [ "eum" ],
+      "scores" : [ 346 ],
+      "tags" : [ "qui" ]
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "labels" : [ ],
+      "roles" : [ "eum" ],
+      "scores" : [ 346 ],
+      "tags" : [ "qui" ]
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "labels" : [ "fugit" ],
+      "roles" : [ "eum" ],
+      "scores" : [ 346 ],
+      "tags" : [ "qui" ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

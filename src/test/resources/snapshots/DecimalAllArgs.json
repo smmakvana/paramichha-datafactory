@@ -1,0 +1,412 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : null,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "price" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : -1,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "price" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : 1000000,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "price" ]
+  }, {
+    "object" : {
+      "amount" : null,
+      "minAmount" : "1.01",
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "amount" ]
+  }, {
+    "object" : {
+      "amount" : 1000000000,
+      "minAmount" : "1.01",
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "amount" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : null
+    },
+    "violations" : [ "tax" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 0
+    },
+    "violations" : [ "tax" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : null,
+      "tax" : 1.50
+    },
+    "violations" : [ "rating" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : -1.0,
+      "tax" : 1.50
+    },
+    "violations" : [ "rating" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : 499999.50,
+      "probability" : null,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "probability" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : 499999.50,
+      "probability" : -1.0,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "probability" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : 499999.50,
+      "probability" : 2.0,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "probability" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : null,
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "minAmount" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "",
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "minAmount", "minAmount" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "-9.99",
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "minAmount" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "amount" : -1.00,
+      "minAmount" : "1.01",
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "amount" : [ {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : 0.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : 683.54,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    } ],
+    "minAmount" : [ {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    } ],
+    "price" : [ {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 0.00,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 0.01,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 500000.00,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 999999.98,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 999999.99,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    } ],
+    "probability" : [ {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.0,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.1,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.9,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 1.0,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    } ],
+    "rating" : [ {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.0,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 1.0,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    } ],
+    "tax" : [ {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 1.00
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "minAmount" : "1.01",
+        "price" : 499999.50,
+        "probability" : 0.5,
+        "rating" : 0.5,
+        "tax" : 2.00
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "age" : 346,
+      "nickname" : "qui",
+      "required" : null
+    },
+    "violations" : [ "required" ]
+  }, {
+    "object" : {
+      "age" : 346,
+      "nickname" : "qui",
+      "required" : ""
+    },
+    "violations" : [ "required" ]
+  }, {
+    "object" : {
+      "age" : 346,
+      "nickname" : null,
+      "required" : "eum"
+    },
+    "violations" : [ ]
+  }, {
+    "object" : {
+      "age" : null,
+      "nickname" : "qui",
+      "required" : "eum"
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "age" : 346,
+      "nickname" : "qui",
+      "required" : "eum"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

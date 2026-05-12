@@ -1,0 +1,67 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "email" : null,
+      "password" : "zbvS3^C0"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "email" : "",
+      "password" : "zbvS3^C0"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "email" : "not-an-email",
+      "password" : "zbvS3^C0"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : null
+    },
+    "violations" : [ "password" ]
+  }, {
+    "object" : {
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : ""
+    },
+    "violations" : [ "password", "password" ]
+  }, {
+    "object" : {
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "xxxxxxx"
+    },
+    "violations" : [ "password" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "zbvS3^C0"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "password" : [ {
+      "object" : {
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "L^*M!q9i3bJm"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "ap1SN0C0"
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "email" : "lamar.lehner@hotmail.com",
+        "password" : "E%RkW0U%1"
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

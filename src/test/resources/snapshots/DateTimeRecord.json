@@ -1,0 +1,61 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "createdAt" : null,
+      "occurredAt" : "2024-01-15T00:00:00Z",
+      "scheduledAt" : "2099-06-15T12:00:00Z",
+      "updatedAt" : "2024-01-15T12:00:00Z"
+    },
+    "violations" : [ "createdAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2099-06-15T12:00:00",
+      "occurredAt" : "2024-01-15T00:00:00Z",
+      "scheduledAt" : "2099-06-15T12:00:00Z",
+      "updatedAt" : "2024-01-15T12:00:00Z"
+    },
+    "violations" : [ "createdAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T12:00:00",
+      "occurredAt" : "2024-01-15T00:00:00Z",
+      "scheduledAt" : null,
+      "updatedAt" : "2024-01-15T12:00:00Z"
+    },
+    "violations" : [ "scheduledAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T12:00:00",
+      "occurredAt" : "2024-01-15T00:00:00Z",
+      "scheduledAt" : "2020-06-15T12:00:00Z",
+      "updatedAt" : "2024-01-15T12:00:00Z"
+    },
+    "violations" : [ "scheduledAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T12:00:00",
+      "occurredAt" : null,
+      "scheduledAt" : "2099-06-15T12:00:00Z",
+      "updatedAt" : "2024-01-15T12:00:00Z"
+    },
+    "violations" : [ "occurredAt" ]
+  }, {
+    "object" : {
+      "createdAt" : "2020-06-15T12:00:00",
+      "occurredAt" : "2024-01-15T00:00:00Z",
+      "scheduledAt" : "2099-06-15T12:00:00Z",
+      "updatedAt" : null
+    },
+    "violations" : [ ]
+  } ],
+  "valid" : {
+    "object" : {
+      "createdAt" : "2020-06-15T12:00:00",
+      "occurredAt" : "2024-01-15T00:00:00Z",
+      "scheduledAt" : "2099-06-15T12:00:00Z",
+      "updatedAt" : "2024-01-15T12:00:00Z"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

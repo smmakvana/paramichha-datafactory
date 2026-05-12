@@ -1,0 +1,41 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "isbn" : null,
+      "title" : "Customer Accounting Consultant"
+    },
+    "violations" : [ "isbn" ]
+  }, {
+    "object" : {
+      "isbn" : "",
+      "title" : "Customer Accounting Consultant"
+    },
+    "violations" : [ "isbn", "isbn" ]
+  }, {
+    "object" : {
+      "isbn" : "000-bad-isbn",
+      "title" : "Customer Accounting Consultant"
+    },
+    "violations" : [ "isbn" ]
+  }, {
+    "object" : {
+      "isbn" : "9790994908987",
+      "title" : null
+    },
+    "violations" : [ "title" ]
+  }, {
+    "object" : {
+      "isbn" : "9790994908987",
+      "title" : ""
+    },
+    "violations" : [ "title" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "isbn" : "9790994908987",
+      "title" : "Customer Accounting Consultant"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

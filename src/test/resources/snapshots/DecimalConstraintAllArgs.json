@@ -1,0 +1,86 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "amount" : -1.00,
+      "price" : -1
+    },
+    "violations" : [ "price" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
+      "price" : 1000
+    },
+    "violations" : [ "price" ]
+  }, {
+    "object" : {
+      "amount" : 10000000,
+      "price" : 499.50
+    },
+    "violations" : [ "amount" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "amount" : -1.00,
+      "price" : 499.50
+    },
+    "violations" : [ ]
+  },
+  "validMap" : {
+    "amount" : [ {
+      "object" : {
+        "amount" : -1.00,
+        "price" : 499.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : 0.00,
+        "price" : 499.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : 683.54,
+        "price" : 499.50
+      },
+      "violations" : [ ]
+    } ],
+    "price" : [ {
+      "object" : {
+        "amount" : -1.00,
+        "price" : 499.50
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "price" : 0.00
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "price" : 0.01
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "price" : 500.00
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "price" : 999.98
+      },
+      "violations" : [ ]
+    }, {
+      "object" : {
+        "amount" : -1.00,
+        "price" : 999.99
+      },
+      "violations" : [ ]
+    } ]
+  }
+}

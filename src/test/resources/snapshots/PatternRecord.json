@@ -1,0 +1,23 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "expiryDate" : "55/55",
+      "reference" : "!!!INVALID!!!"
+    },
+    "violations" : [ "reference" ]
+  }, {
+    "object" : {
+      "expiryDate" : "!!!INVALID!!!",
+      "reference" : "AA5555"
+    },
+    "violations" : [ "expiryDate" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "expiryDate" : "55/55",
+      "reference" : "AA5555"
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

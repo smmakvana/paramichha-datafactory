@@ -1,0 +1,33 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "name" : null,
+      "roles" : [ "fugit" ],
+      "scores" : [ 433 ]
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "roles" : null,
+      "scores" : [ 433 ]
+    },
+    "violations" : [ "roles" ]
+  }, {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "roles" : [ "fugit" ],
+      "scores" : null
+    },
+    "violations" : [ "scores" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "roles" : [ "fugit" ],
+      "scores" : [ 433 ]
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}

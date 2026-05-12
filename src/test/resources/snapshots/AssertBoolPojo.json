@@ -1,0 +1,23 @@
+{
+  "invalidList" : [ {
+    "object" : {
+      "active" : false,
+      "deleted" : false
+    },
+    "violations" : [ "active" ]
+  }, {
+    "object" : {
+      "active" : true,
+      "deleted" : true
+    },
+    "violations" : [ "deleted" ]
+  } ],
+  "valid" : {
+    "object" : {
+      "active" : true,
+      "deleted" : false
+    },
+    "violations" : [ ]
+  },
+  "validMap" : { }
+}
