@@ -164,14 +164,6 @@ public interface DataBuilder<T> {
     T invalidFor(String fieldName);
 
 
-    // ── Deprecated ────────────────────────────────────────────────────────
-    /**
-     * Builds {@code n} valid instances.
-     *
-     * @deprecated Use {@link #validList(int)} instead.
-     */
-    @Deprecated(forRemoval = true)
-    List<T> stream(int n);
 
     /**
      * Returns boundary-covering valid instances keyed by field name.

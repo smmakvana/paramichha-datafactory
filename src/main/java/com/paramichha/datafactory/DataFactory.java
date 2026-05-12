@@ -434,6 +434,6 @@ public final class DataFactory {
      * </pre>
      */
     public static <T> List<T> stream(Class<T> type, int n) {
-        return of(type).stream(n);
+        return of(type).validList(n);
     }
 }

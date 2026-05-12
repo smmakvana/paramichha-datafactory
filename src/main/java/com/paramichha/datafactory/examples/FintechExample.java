@@ -77,7 +77,7 @@ public class FintechExample {
 
     static void bulk() {
         section("100 payments for load testing");
-        List<PaymentRequest> payments = DataFactory.of(PaymentRequest.class).stream(100);
+        List<PaymentRequest> payments = DataFactory.of(PaymentRequest.class).validList(100);
         long unique = payments.stream().map(PaymentRequest::getFromIban).distinct().count();
         System.out.println("  generated:    " + payments.size());
         System.out.println("  unique ibans: " + unique);

@@ -92,12 +92,6 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
     }
 
     @Override
-    @Deprecated(forRemoval = true)
-    public List<T> stream(int n) {
-        return validList(n);
-    }
-
-    @Override
     public List<T> invalidList() {
         try {
             DataMachine m = machine();

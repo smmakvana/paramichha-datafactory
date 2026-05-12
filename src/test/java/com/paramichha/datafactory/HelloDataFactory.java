@@ -112,7 +112,7 @@ public class HelloDataFactory {
         System.out.println("  age boundary values: "
                 + edges.get("age").stream().map(CustomerRequest::getAge).toList());
 
-        List<CustomerRequest> bulk = DataFactory.of(CustomerRequest.class).stream(1000);
+        List<CustomerRequest> bulk = DataFactory.of(CustomerRequest.class).validList(1000);
         System.out.println();
         System.out.println("  generated " + bulk.size() + " customers");
 

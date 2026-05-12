@@ -94,7 +94,7 @@ public class ObjectGeneration {
 
     static void bulkGeneration() {
         section("1000 customers in one line");
-        List<CustomerRequest> bulk = DataFactory.of(CustomerRequest.class).stream(1000);
+        List<CustomerRequest> bulk = DataFactory.of(CustomerRequest.class).validList(1000);
         long unique = bulk.stream().map(CustomerRequest::getEmail).distinct().count();
         System.out.println("  generated:    " + bulk.size());
         System.out.println("  unique emails: " + unique);
