@@ -17,11 +17,9 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * Snapshot contract test for DataFactory.
- * <p>
- * Each class is run through DataFactory, serialised to JSON and either:
+ * Each class is run through DataFactory, serialized to JSON and either:
  * GENERATE mode  (-Dsnapshot.generate=true)  — writes file, always passes
  * COMPARE  mode  (default)                   — compares, fails on mismatch
- * <p>
  * To add a new class: add it to allFixtures() below.
  * To regenerate all: mvn test -Dsnapshot.generate=true -Dtest=DataFactorySnapshotTest
  */
@@ -193,11 +191,35 @@ class DataFactorySnapshotTest {
                 row(com.paramichha.example.annotation.combined.CombinedLombok.class),
                 row(com.paramichha.example.annotation.combined.CombinedAllArgs.class),
 
-                // ── collection ────────────────────────────────────────────
+                // ── collection/list ───────────────────────────────────────
                 row(com.paramichha.example.collection.list.ListRecord.class),
                 row(com.paramichha.example.collection.list.ListPojo.class),
                 row(com.paramichha.example.collection.list.ListLombok.class),
                 row(com.paramichha.example.collection.list.ListAllArgs.class),
+
+                // ── collection/set ────────────────────────────────────────
+                row(com.paramichha.example.collection.set.SetRecord.class),
+                row(com.paramichha.example.collection.set.SetPojo.class),
+                row(com.paramichha.example.collection.set.SetLombok.class),
+                row(com.paramichha.example.collection.set.SetAllArgs.class),
+
+                // ── collection/map ────────────────────────────────────────
+                row(com.paramichha.example.collection.map.MapRecord.class),
+                row(com.paramichha.example.collection.map.MapPojo.class),
+                row(com.paramichha.example.collection.map.MapLombok.class),
+                row(com.paramichha.example.collection.map.MapAllArgs.class),
+
+                // ── collection/array ──────────────────────────────────────
+                row(com.paramichha.example.collection.array.ArrayRecord.class),
+                row(com.paramichha.example.collection.array.ArrayPojo.class),
+                row(com.paramichha.example.collection.array.ArrayLombok.class),
+                row(com.paramichha.example.collection.array.ArrayAllArgs.class),
+
+                // ── collection/queue ──────────────────────────────────────
+                row(com.paramichha.example.collection.queue.QueueRecord.class),
+                row(com.paramichha.example.collection.queue.QueuePojo.class),
+                row(com.paramichha.example.collection.queue.QueueLombok.class),
+                row(com.paramichha.example.collection.queue.QueueAllArgs.class),
 
                 // ── realworld ─────────────────────────────────────────────
                 row(com.paramichha.example.realworld.registration.UserRegistration.class),
