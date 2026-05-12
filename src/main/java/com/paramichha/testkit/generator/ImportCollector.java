@@ -27,7 +27,9 @@ final class ImportCollector {
             "java.util.List",
             "java.util.Collection",
             "java.util.stream.Stream",
-            "static org.assertj.core.api.Assertions.assertThat"
+            "static org.assertj.core.api.Assertions.assertThat",
+            "static org.assertj.core.api.Assertions.assertThatCode",
+            "static org.assertj.core.api.Assertions.assertThatThrownBy"
     );
 
     private final TreeSet<String> imports = new TreeSet<>(FIXED);
