@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.*;
+import java.lang.reflect.Array;
 import java.util.stream.IntStream;
 
 public class DefaultDataBuilder<T> implements DataBuilder<T> {
@@ -206,6 +207,22 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
                 values.put(field.name(), resolveList(field, m));
                 continue;
             }
+            if (field.isSet()) {
+                values.put(field.name(), resolveSet(field, m));
+                continue;
+            }
+            if (field.isMap()) {
+                values.put(field.name(), resolveMap(field, m));
+                continue;
+            }
+            if (field.isArray()) {
+                values.put(field.name(), resolveArray(field, m));
+                continue;
+            }
+            if (field.isQueue()) {
+                values.put(field.name(), resolveQueue(field, m));
+                continue;
+            }
             List<Object> validList = ValueBuilderFactory.create(field, m).validList();
             values.put(field.name(), validList.isEmpty() ? null : validList.get(0));
         }
@@ -244,16 +261,76 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
         }
     }
 
-    private Object resolveList(FieldDescriptor field, DataMachine m) {
+
+    private Object resolveSet(FieldDescriptor field, DataMachine m) {
         try {
             Class<?> elemType = field.listElementType();
-            if (!elemType.getPackageName().startsWith("java.")) {
-                DefaultDataBuilder<?> lb = new DefaultDataBuilder<>(elemType).mode(mode);
-                if (seed != null) lb.seed(seed);
-                return List.of(lb.valid());
+            Object elem = resolveElement(elemType, m);
+            return elem != null ? new LinkedHashSet<>(List.of(elem)) : new LinkedHashSet<>();
+        } catch (Exception e) {
+            return new LinkedHashSet<>();
+        }
+    }
+
+    private Object resolveMap(FieldDescriptor field, DataMachine m) {
+        try {
+            Class<?> keyType   = field.mapKeyType();
+            Class<?> valueType = field.mapValueType();
+            Object key   = resolveElement(keyType, m);
+            Object value = resolveElement(valueType, m);
+            if (key == null || value == null) return new LinkedHashMap<>();
+            LinkedHashMap<Object, Object> map = new LinkedHashMap<>();
+            map.put(key, value);
+            return map;
+        } catch (Exception e) {
+            return new LinkedHashMap<>();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object resolveArray(FieldDescriptor field, DataMachine m) {
+        try {
+            Class<?> elemType = field.rawType().getComponentType();
+            Object elem = resolveElement(elemType, m);
+            Object arr = Array.newInstance(elemType, 1);
+            if (elem != null) Array.set(arr, 0, elem);
+            return arr;
+        } catch (Exception e) {
+            return Array.newInstance(field.rawType().getComponentType(), 0);
+        }
+    }
+
+    private Object resolveQueue(FieldDescriptor field, DataMachine m) {
+        try {
+            Class<?> elemType = field.listElementType();
+            Object elem = resolveElement(elemType, m);
+            ArrayDeque<Object> queue = new ArrayDeque<>();
+            if (elem != null) queue.add(elem);
+            return queue;
+        } catch (Exception e) {
+            return new ArrayDeque<>();
+        }
+    }
+
+    /** Resolves a single element — handles domain types, java types, and enums. */
+    private Object resolveElement(Class<?> elemType, DataMachine m) {
+        try {
+            if (!elemType.getPackageName().startsWith("java.") && !elemType.isEnum()) {
+                if (BUILDING.get().contains(elemType)) return null;
+                DefaultDataBuilder<?> eb = new DefaultDataBuilder<>(elemType).mode(mode);
+                if (seed != null) eb.seed(seed);
+                return eb.valid();
             }
-            List<?> elemValid = ValueBuilderFactory.create(elemType, m).validList();
-            Object elem = elemValid.isEmpty() ? null : elemValid.get(0);
+            List<?> values = ValueBuilderFactory.create(elemType, m).validList();
+            return values.isEmpty() ? null : values.get(0);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Object resolveList(FieldDescriptor field, DataMachine m) {
+        try {
+            Object elem = resolveElement(field.listElementType(), m);
             return elem != null ? List.of(elem) : List.of();
         } catch (Exception e) {
             return List.of();
