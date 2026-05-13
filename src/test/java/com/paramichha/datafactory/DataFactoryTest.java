@@ -1,6 +1,6 @@
 //package com.paramichha.datafactory;
 //
-//import com.paramichha.example.*;
+//import com.paramichha.datafactory.catalog.*;
 //import jakarta.validation.Valid;
 //import jakarta.validation.Validator;
 //import jakarta.validation.ValidatorFactory;

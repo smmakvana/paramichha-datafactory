@@ -93,7 +93,7 @@
 //        @DisplayName("@Valid without @NotNull → warns null skips cascade")
 //        void valid_missingNotNull() {
 //            String out = captureWarn("address",
-//                    com.paramichha.example.AnnotatedWrappersRequest.class,
+//                    com.paramichha.datafactory.catalog.AnnotatedWrappersRequest.class,
 //                    anns(AnnotationProxyFactory.create(Valid.class)));
 //            assertThat(out).contains("NotNull");
 //        }

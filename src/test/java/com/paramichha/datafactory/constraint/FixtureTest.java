@@ -1,17 +1,17 @@
 //package com.paramichha.datafactory.constraint;
 //
-//import com.paramichha.example.*;
+//import com.paramichha.datafactory.catalog.*;
 //
 //import com.paramichha.datafactory.DataFactory;
-//import com.paramichha.example.AnnotatedPrimitivesRequest;
-//import com.paramichha.example.AnnotatedTemporalRequest;
-//import com.paramichha.example.AnnotatedWrappersRequest;
-//import com.paramichha.example.CollectionsRequest;
-//import com.paramichha.example.ComplexPrimitivesRequest;
-//import com.paramichha.example.ComplexWrappersRequest;
-//import com.paramichha.example.PrimitivesRequest;
-//import com.paramichha.example.TemporalRequest;
-//import com.paramichha.example.WrappersRequest;
+//import com.paramichha.datafactory.catalog.AnnotatedPrimitivesRequest;
+//import com.paramichha.datafactory.catalog.AnnotatedTemporalRequest;
+//import com.paramichha.datafactory.catalog.AnnotatedWrappersRequest;
+//import com.paramichha.datafactory.catalog.CollectionsRequest;
+//import com.paramichha.datafactory.catalog.ComplexPrimitivesRequest;
+//import com.paramichha.datafactory.catalog.ComplexWrappersRequest;
+//import com.paramichha.datafactory.catalog.PrimitivesRequest;
+//import com.paramichha.datafactory.catalog.TemporalRequest;
+//import com.paramichha.datafactory.catalog.WrappersRequest;
 //import jakarta.validation.Validation;
 //import jakarta.validation.Validator;
 //import org.junit.jupiter.api.*;

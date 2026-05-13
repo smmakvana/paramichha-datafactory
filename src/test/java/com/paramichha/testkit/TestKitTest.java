@@ -1,13 +1,13 @@
 package com.paramichha.testkit;
 
-import com.paramichha.example.annotation.combined.CombinedRecord;
-import com.paramichha.example.annotation.combined.CombinedAllArgs;
-import com.paramichha.example.annotation.email.EmailRecord;
-import com.paramichha.example.annotation.numeric.NumericConstraintRecord;
-import com.paramichha.example.annotation.numeric.NumericConstraintAllArgs;
-import com.paramichha.example.number.NumberRecord;
-import com.paramichha.example.nested.NestedRecord;
-import com.paramichha.example.realworld.registration.UserRegistration;
+import com.paramichha.datafactory.catalog.annotation.combined.CombinedRecord;
+import com.paramichha.datafactory.catalog.annotation.combined.CombinedAllArgs;
+import com.paramichha.datafactory.catalog.annotation.email.EmailRecord;
+import com.paramichha.datafactory.catalog.annotation.numeric.NumericConstraintRecord;
+import com.paramichha.datafactory.catalog.annotation.numeric.NumericConstraintAllArgs;
+import com.paramichha.datafactory.catalog.number.NumberRecord;
+import com.paramichha.datafactory.catalog.nested.NestedRecord;
+import com.paramichha.datafactory.catalog.realworld.registration.UserRegistration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

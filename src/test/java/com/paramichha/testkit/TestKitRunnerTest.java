@@ -1,18 +1,18 @@
 package com.paramichha.testkit;
 
-import com.paramichha.example.annotation.combined.CombinedRecord;
-import com.paramichha.example.annotation.combined.CombinedAllArgs;
-import com.paramichha.example.annotation.email.EmailRecord;
-import com.paramichha.example.annotation.numeric.NumericConstraintRecord;
-import com.paramichha.example.annotation.notnull.NotNullRecord;
-import com.paramichha.example.annotation.notnull.NotNullAllArgs;
-import com.paramichha.example.date.DateRecord;
-import com.paramichha.example.decimal.DecimalRecord;
-import com.paramichha.example.nested.NestedRecord;
-import com.paramichha.example.number.NumberRecord;
-import com.paramichha.example.realworld.payment.Payment;
-import com.paramichha.example.realworld.registration.UserRegistration;
-import com.paramichha.example.realworld.trading.Trade;
+import com.paramichha.datafactory.catalog.annotation.combined.CombinedRecord;
+import com.paramichha.datafactory.catalog.annotation.combined.CombinedAllArgs;
+import com.paramichha.datafactory.catalog.annotation.email.EmailRecord;
+import com.paramichha.datafactory.catalog.annotation.numeric.NumericConstraintRecord;
+import com.paramichha.datafactory.catalog.annotation.notnull.NotNullRecord;
+import com.paramichha.datafactory.catalog.annotation.notnull.NotNullAllArgs;
+import com.paramichha.datafactory.catalog.date.DateRecord;
+import com.paramichha.datafactory.catalog.decimal.DecimalRecord;
+import com.paramichha.datafactory.catalog.nested.NestedRecord;
+import com.paramichha.datafactory.catalog.number.NumberRecord;
+import com.paramichha.datafactory.catalog.realworld.payment.Payment;
+import com.paramichha.datafactory.catalog.realworld.registration.UserRegistration;
+import com.paramichha.datafactory.catalog.realworld.trading.Trade;
 import com.paramichha.testkit.runner.TestKitRunner;
 import com.paramichha.testkit.utils.JavaNames;
 import org.junit.jupiter.api.DisplayName;
@@ -194,7 +194,7 @@ class TestKitRunnerTest {
         @Test
         void scanPackageFindsTestableClasses() {
             List<GeneratedTestClass> results = TestKitRunner
-                    .scanPackage("com.paramichha.example.realworld")
+                    .scanPackage("com.paramichha.datafactory.catalog.realworld")
                     .generate();
             assertThat(results).isNotEmpty();
             results.forEach(g -> assertThat(g.className()).endsWith("Test"));

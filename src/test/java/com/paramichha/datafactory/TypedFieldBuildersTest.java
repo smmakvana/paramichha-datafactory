@@ -1,6 +1,6 @@
 //package com.paramichha.datafactory;
 //
-//import com.paramichha.example.AnnotatedWrappersRequest;
+//import com.paramichha.datafactory.catalog.AnnotatedWrappersRequest;
 //import jakarta.validation.Validation;
 //import jakarta.validation.Validator;
 //import jakarta.validation.ValidatorFactory;
@@ -13,7 +13,7 @@
 //import java.time.LocalDateTime;
 //
 //import static org.assertj.core.api.Assertions.assertThat;
-//import com.paramichha.example.*;
+//import com.paramichha.datafactory.catalog.*;
 //
 ///**
 // * Tests all typed field builders — the fluent DSL on top of DataFactory.
