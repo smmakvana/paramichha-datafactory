@@ -4,7 +4,8 @@ import com.paramichha.testkit.TestKitTemplate;
 import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.FieldMeta;
 import com.paramichha.testkit.model.TestData;
-import com.paramichha.testkit.template.TemplateResolver;
+import com.paramichha.testkit.utils.TestNames;
+import com.paramichha.testkit.utils.JavaNames;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ final class CreationTestWriter {
         boolean hasJakarta   = data.hasJakarta(meta);
         boolean isRecord     = meta.constructorStyle() == ClassMeta.ConstructorStyle.RECORD;
         String  className    = meta.simpleName();
-        String  fieldName    = TemplateResolver.instanceFieldName(className);
+        String  fieldName    = TestNames.toVariable(className);
         String  ind          = nested ? "        " : "    ";
         String  indBody      = nested ? "            " : "        ";
         String  nestedClass  = template.resolve(template.creationClassName, className, "");
@@ -80,7 +81,7 @@ final class CreationTestWriter {
             if (isComplexType(field.rawType())) continue;
             String accessor = isRecord
                     ? fieldName + "." + field.name() + "()"
-                    : fieldName + ".get" + TemplateResolver.capitalize(field.name()) + "()";
+                    : fieldName + "." + JavaNames.getterName(field.name(), field.rawType()) + "()";
             String expected = LiteralConverter.toLiteral(value);
             sb.append(indBody).append("assertThat(").append(accessor)
                     .append(").isEqualTo(").append(expected).append(");\n");

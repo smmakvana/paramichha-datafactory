@@ -3,7 +3,8 @@ package com.paramichha.testkit.generator;
 import com.paramichha.testkit.TestKitTemplate;
 import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.FieldMeta;
-import com.paramichha.testkit.template.TemplateResolver;
+import com.paramichha.testkit.utils.TestNames;
+import com.paramichha.testkit.utils.JavaNames;
 
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ final class MemberTestWriter {
 
         boolean isRecord  = meta.constructorStyle() == ClassMeta.ConstructorStyle.RECORD;
         String  className = meta.simpleName();
-        String  fieldName = TemplateResolver.instanceFieldName(className);
+        String  fieldName = TestNames.toVariable(className);
 
         {
             boolean hasJakarta = !field.validations().isEmpty();
@@ -183,7 +184,7 @@ final class MemberTestWriter {
     private static String accessorFor(FieldMeta field, boolean isRecord) {
         return isRecord
                 ? field.name() + "()"
-                : "get" + TemplateResolver.capitalize(field.name()) + "()";
+                : JavaNames.getterName(field.name(), field.rawType()) + "()";
     }
 
     private static String labelFor(Object value, String memberName, String kind, int index) {

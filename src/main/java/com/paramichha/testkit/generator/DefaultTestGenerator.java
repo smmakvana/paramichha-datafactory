@@ -7,6 +7,8 @@ import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.FieldMeta;
 import com.paramichha.testkit.model.TestData;
 
+import com.paramichha.testkit.utils.TestNames;
+import com.paramichha.testkit.utils.JavaNames;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +43,7 @@ public final class DefaultTestGenerator implements TestGenerator {
                                                 String targetPackage, TestKitTemplate template) {
         Class<?> type = data.type();
         String className = meta.simpleName();
-        String fieldName = com.paramichha.testkit.template.TemplateResolver.instanceFieldName(className);
+        String fieldName = TestNames.toVariable(className);
         List<Object> parts = valueExtractor.extract(data.base(), type, meta.fields());
         InstantiationWriter inst = new InstantiationWriter(meta);
         boolean hasJakarta = data.hasJakarta(meta);
@@ -269,7 +271,7 @@ public final class DefaultTestGenerator implements TestGenerator {
     private void writeValidInstance(StringBuilder sb, ClassMeta meta,
                                     List<Object> validInstanceParts,
                                     InstantiationWriter instantiation, TestKitTemplate template) {
-        String fieldName = com.paramichha.testkit.template.TemplateResolver.instanceFieldName(meta.simpleName());
+        String fieldName = TestNames.toVariable(meta.simpleName());
         sb.append("    ").append(meta.simpleName()).append(" ").append(fieldName).append(" =\n");
         sb.append("            ").append(instantiation.constructorCall(validInstanceParts))
                 .append(";\n\n");
@@ -287,7 +289,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         sb.append(") {\n");
         sb.append("        ").append(name).append(" obj = new ").append(name).append("();\n");
         for (FieldMeta f : fields) {
-            String setter = "set" + Character.toUpperCase(f.name().charAt(0)) + f.name().substring(1);
+            String setter = JavaNames.setterName(f.name());
             sb.append("        obj.").append(setter).append("(").append(f.name()).append(");\n");
         }
         sb.append("        return obj;\n");

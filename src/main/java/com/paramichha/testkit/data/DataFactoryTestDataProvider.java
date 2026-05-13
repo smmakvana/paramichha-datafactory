@@ -5,6 +5,7 @@ import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.TestDataProvider;
 import com.paramichha.testkit.model.TestData;
 
+import com.paramichha.utils.Seeds;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public final class DataFactoryTestDataProvider implements TestDataProvider {
     public TestData provide(Class<?> type) {
         // Seed from class name — deterministic output so generated files
         // are identical on every run. Same class = same test data = no diff.
-        long classSeed = type.getName().hashCode();
+        long classSeed = Seeds.stableHash(type);
         return provide(type, GenerationMode.PRODUCTION, classSeed);
     }
 
@@ -43,7 +44,7 @@ public final class DataFactoryTestDataProvider implements TestDataProvider {
     @SuppressWarnings("unchecked")
     public TestData provide(Class<?> type, GenerationMode mode, Long seed) {
         // Always seed from class name when no explicit seed given — deterministic output.
-        long effectiveSeed = seed != null ? seed : type.getName().hashCode();
+        long effectiveSeed = seed != null ? seed : Seeds.stableHash(type);
         Object base = null;
         String baseError = null;
         List<?> violations = List.of();

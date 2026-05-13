@@ -1,5 +1,8 @@
 package com.paramichha.testkit;
 
+import com.paramichha.utils.Texts;
+import com.paramichha.utils.Tokens;
+
 /**
  * Controls all generated names and display strings.
  * All strings support tokens replaced at generation time.
@@ -52,28 +55,19 @@ public final class TestKitTemplate {
     // ── Token resolution ──────────────────────────────────────────────────
 
     public String resolve(String template, String className, String memberName) {
-        return template
-                .replace("{ClassName}",  className)
-                .replace("{className}",  lower(className))
-                .replace("{MemberName}", upper(memberName))
-                .replace("{memberName}", memberName);
+        return Tokens.resolve(template,
+                "ClassName",  className,
+                "className",  Texts.decapitalize(className),
+                "MemberName", Texts.capitalize(memberName),
+                "memberName", memberName);
     }
 
     public String resolveMethod(String template, String className, String methodName) {
-        return template
-                .replace("{ClassName}",  className)
-                .replace("{className}",  lower(className))
-                .replace("{MethodName}", upper(methodName))
-                .replace("{methodName}", methodName);
+        return Tokens.resolve(template,
+                "ClassName",  className,
+                "className",  Texts.decapitalize(className),
+                "MethodName", Texts.capitalize(methodName),
+                "methodName", methodName);
     }
 
-    private static String upper(String s) {
-        if (s == null || s.isEmpty()) return s == null ? "" : s;
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
-    }
-
-    private static String lower(String s) {
-        if (s == null || s.isEmpty()) return s == null ? "" : s;
-        return Character.toLowerCase(s.charAt(0)) + s.substring(1);
-    }
 }

@@ -2,6 +2,7 @@ package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.FieldMeta;
+import com.paramichha.utils.Texts;
 
 import java.util.List;
 import java.util.Map;
@@ -179,6 +180,6 @@ final class FieldTestWriter {
     }
 
     private static String capitalize(String s) {
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+        return Texts.capitalize(s);
     }
 }

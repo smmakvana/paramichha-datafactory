@@ -4,6 +4,7 @@ import com.paramichha.datafactory.DataFactory;
 import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.FieldMeta;
 
+import com.paramichha.utils.Texts;
 import java.lang.annotation.Annotation;
 
 import java.util.List;
@@ -175,6 +176,6 @@ final class InstantiationWriter {
     }
 
     private String capitalize(String s) {
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+        return Texts.capitalize(s);
     }
 }

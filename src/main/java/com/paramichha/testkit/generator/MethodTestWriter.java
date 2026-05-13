@@ -6,7 +6,7 @@ import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.MethodKind;
 import com.paramichha.testkit.model.MethodMeta;
 import com.paramichha.testkit.model.ParameterMeta;
-import com.paramichha.testkit.template.TemplateResolver;
+import com.paramichha.testkit.utils.TestNames;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ final class MethodTestWriter {
                                    boolean hasJakarta, boolean nested) {
 
         String className   = meta.simpleName();
-        String fieldName   = TemplateResolver.instanceFieldName(className);
+        String fieldName   = TestNames.toVariable(className);
         String methodName  = method.name();
         String ind         = nested ? "        " : "    ";
         String indBody     = nested ? "            " : "        ";
