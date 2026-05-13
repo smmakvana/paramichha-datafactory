@@ -8,6 +8,7 @@ import com.paramichha.datafactory.generation.DataMachine;
 import com.paramichha.datafactory.generation.DataMachines;
 import com.paramichha.datafactory.instantiation.ObjectAssembler;
 import com.paramichha.datafactory.constraint.ConstraintChecker;
+import com.paramichha.utils.Seeds;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -221,7 +222,7 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
         if (BUILDING.get().add(field.rawType())) {
             try {
                 DefaultDataBuilder<?> nested = new DefaultDataBuilder<>(field.rawType()).mode(mode);
-                if (seed != null) nested.seed(seed + field.name().hashCode());
+                if (seed != null) nested.seed(seed + Seeds.stableHash(field.name()));
                 return nested.valid();
             } catch (Exception e) {
                 return null;

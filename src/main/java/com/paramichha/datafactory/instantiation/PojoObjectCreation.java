@@ -1,6 +1,7 @@
 package com.paramichha.datafactory.instantiation;
 
 import com.paramichha.datafactory.constraint.FieldDescriptor;
+import com.paramichha.testkit.utils.JavaNames;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -49,7 +50,7 @@ public final class PojoObjectCreation implements ObjectCreation {
             Object value = values.get(f.name());
             if (value == null && f.rawType().isPrimitive()) continue;
 
-            String setter = "set" + Character.toUpperCase(f.name().charAt(0)) + f.name().substring(1);
+            String setter = JavaNames.setterName(f.name());
             try {
                 var m = type.getMethod(setter, f.rawType());
                 m.setAccessible(true);
