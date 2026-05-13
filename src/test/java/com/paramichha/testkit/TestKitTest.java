@@ -1,10 +1,13 @@
 package com.paramichha.testkit;
 
-import com.paramichha.testkit.fixture.annotation.combined.AnnotationFullMixed;
-import com.paramichha.testkit.fixture.annotation.combined.AnnotationFullString;
-import com.paramichha.testkit.fixture.annotation.combined.AnnotationNotNullMinMax;
-import com.paramichha.testkit.fixture.realworld.registration.RealWorldRegistration;
-import com.paramichha.testkit.fixture.strategy.lombok.StrategyLombokBuilderAnnotated;
+import com.paramichha.example.annotation.combined.CombinedRecord;
+import com.paramichha.example.annotation.combined.CombinedAllArgs;
+import com.paramichha.example.annotation.email.EmailRecord;
+import com.paramichha.example.annotation.numeric.NumericConstraintRecord;
+import com.paramichha.example.annotation.numeric.NumericConstraintAllArgs;
+import com.paramichha.example.number.NumberRecord;
+import com.paramichha.example.nested.NestedRecord;
+import com.paramichha.example.realworld.registration.UserRegistration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,122 +21,213 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @DisplayName("TestKit")
 class TestKitTest {
 
-    @Nested @DisplayName("of()")
+    @Nested
+    @DisplayName("of()")
     class OfMethod {
 
         @Test
-        void null_type_throws() {
+        void nullTypeThrows() {
             assertThatThrownBy(() -> TestKit.of(null))
                     .isInstanceOf(TestKitException.class);
         }
 
         @Test
-        void returns_testkit_instance() {
-            assertThat(TestKit.of(RealWorldRegistration.class)).isNotNull();
+        void returnsTestKitInstance() {
+            assertThat(TestKit.of(UserRegistration.class)).isNotNull();
         }
     }
 
-    @Nested @DisplayName("generate()")
+    @Nested
+    @DisplayName("generate()")
     class GenerateMethod {
 
         @Test
-        void generates_source_for_record() {
-            String src = TestKit.of(RealWorldRegistration.class)
+        void generatesSourceForRecord() {
+            String src = TestKit.of(UserRegistration.class)
                     .withPackage("com.example.test").generate().asString();
             assertThat(src).contains("package com.example.test");
-            assertThat(src).contains("class RealWorldRegistrationTest");
-            assertThat(src).contains("private final RealWorldRegistration validInstance");
-            assertThat(src).contains("class SmokeTest");
+            assertThat(src).contains("class UserRegistrationTest");
+            assertThat(src).contains("UserRegistration userRegistration");
+            assertThat(src).contains("UserRegistrationCreationTest");
         }
 
         @Test
-        void generates_source_for_lombok_builder() {
-            String src = TestKit.of(StrategyLombokBuilderAnnotated.class)
+        void generatesSourceForAllArgs() {
+            String src = TestKit.of(CombinedAllArgs.class)
                     .withPackage("com.example.test").generate().asString();
-            assertThat(src).contains("StrategyLombokBuilderAnnotated.builder()");
-            assertThat(src).contains(".build()");
+            assertThat(src).contains("CombinedAllArgs combinedAllArgs");
+            assertThat(src).contains("CombinedAllArgsCreationTest");
         }
 
         @Test
-        void default_package_is_class_package() {
-            GeneratedTestClass result = TestKit.of(RealWorldRegistration.class).generate();
+        void defaultPackageIsClassPackage() {
+            GeneratedTestClass result = TestKit.of(UserRegistration.class).generate();
             assertThat(result.packageName())
-                    .isEqualTo(RealWorldRegistration.class.getPackageName());
+                    .isEqualTo(UserRegistration.class.getPackageName());
         }
 
         @Test
-        void class_name_is_type_name_plus_suffix() {
-            GeneratedTestClass result = TestKit.of(RealWorldRegistration.class).generate();
-            assertThat(result.className()).isEqualTo("RealWorldRegistrationTest");
+        void classNameIsTypeNamePlusSuffix() {
+            GeneratedTestClass result = TestKit.of(UserRegistration.class).generate();
+            assertThat(result.className()).isEqualTo("UserRegistrationTest");
         }
 
         @Test
-        void source_contains_field_nested_classes() {
-            String src = TestKit.of(AnnotationNotNullMinMax.class)
+        void annotatedClassHasMemberNestedClasses() {
+            String src = TestKit.of(NumericConstraintRecord.class)
                     .withPackage("com.example").generate().asString();
             assertThat(src).contains("@Nested");
+            assertThat(src).contains("in NumericConstraintRecord");
         }
 
         @Test
-        void source_contains_valid_boundary_values() {
-            String src = TestKit.of(AnnotationNotNullMinMax.class)
+        void annotatedClassHasValidator() {
+            String src = TestKit.of(UserRegistration.class)
                     .withPackage("com.example").generate().asString();
-            assertThat(src).containsAnyOf("18", "19", "20");
-            assertThat(src).containsAnyOf("120", "119");
+            assertThat(src).contains("Validator validator");
+            assertThat(src).contains("setUpValidator");
         }
 
         @Test
-        void source_contains_invalid_values() {
-            String src = TestKit.of(AnnotationFullString.class)
+        void unannotatedClassHasNoValidator() {
+            String src = TestKit.of(NumberRecord.class)
                     .withPackage("com.example").generate().asString();
-            assertThat(src).contains("null");
-            assertThat(src).contains("notanemail");
+            assertThat(src).doesNotContain("setUpValidator");
+            assertThat(src).doesNotContain("Validation.buildDefaultValidatorFactory");
         }
 
         @Test
-        void source_compiles_as_valid_java_structure() {
-            String src = TestKit.of(AnnotationFullMixed.class)
+        void annotatedFieldHasRejectTest() {
+            String src = TestKit.of(EmailRecord.class)
+                    .withPackage("com.example").generate().asString();
+            assertThat(src).contains("rejectsEmail");
+        }
+
+        @Test
+        void unannotatedFieldRejectIsCommentedOut() {
+            String src = TestKit.of(NumberRecord.class)
+                    .withPackage("com.example").generate().asString();
+            assertThat(src).contains("// TODO");
+        }
+
+        @Test
+        void bracesAreBalanced() {
+            String src = TestKit.of(CombinedRecord.class)
                     .withPackage("com.example").generate().asString();
             long opens  = src.chars().filter(c -> c == '{').count();
             long closes = src.chars().filter(c -> c == '}').count();
             assertThat(opens).isEqualTo(closes);
         }
+
+        @Test
+        void nestedObjectClassGenerates() {
+            String src = TestKit.of(NestedRecord.class)
+                    .withPackage("com.example").generate().asString();
+            assertThat(src).contains("NestedRecordTest");
+        }
+
+        @Test
+        void numericBoundaryValuesPresent() {
+            String src = TestKit.of(NumericConstraintAllArgs.class)
+                    .withPackage("com.example").generate().asString();
+            assertThat(src).containsAnyOf("18", "19", "20");
+        }
     }
 
-    @Nested @DisplayName("withPackage()")
+    @Nested
+    @DisplayName("withPackage()")
     class WithPackage {
 
         @Test
-        void blank_package_throws() {
-            assertThatThrownBy(() -> TestKit.of(RealWorldRegistration.class).withPackage(""))
+        void blankPackageThrows() {
+            assertThatThrownBy(() -> TestKit.of(UserRegistration.class).withPackage(""))
                     .isInstanceOf(TestKitException.class);
         }
 
         @Test
-        void package_appears_in_output() {
-            String src = TestKit.of(RealWorldRegistration.class)
+        void packageAppearsInOutput() {
+            String src = TestKit.of(UserRegistration.class)
                     .withPackage("com.custom.pkg").generate().asString();
             assertThat(src).contains("package com.custom.pkg;");
         }
     }
 
-    @Nested @DisplayName("GeneratedTestClass")
+    @Nested
+    @DisplayName("GeneratedTestClass")
     class GeneratedTestClassTests {
 
         @Test
-        void asString_returns_source() {
-            GeneratedTestClass result = TestKit.of(RealWorldRegistration.class).generate();
+        void asStringReturnsSource() {
+            GeneratedTestClass result = TestKit.of(UserRegistration.class).generate();
             assertThat(result.asString()).isEqualTo(result.source());
         }
 
         @Test
-        void writeTo_creates_file(@TempDir Path tmp) {
-            GeneratedTestClass result = TestKit.of(RealWorldRegistration.class)
+        void writeToCreatesFile(@TempDir Path tmp) {
+            GeneratedTestClass result = TestKit.of(UserRegistration.class)
                     .withPackage("com.example.out").generate();
             Path written = result.writeTo(tmp);
             assertThat(written).exists();
             assertThat(written.getFileName().toString())
-                    .isEqualTo("RealWorldRegistrationTest.java");
+                    .isEqualTo("UserRegistrationTest.java");
+        }
+    }
+
+    @Nested
+    @DisplayName("split() — generateAll()")
+    class SplitTests {
+
+        @Test
+        void generateAllProducesMultipleFiles() {
+            var files = TestKit.of(UserRegistration.class)
+                    .withPackage("com.example.split")
+                    .split()
+                    .generateAll();
+            assertThat(files).hasSizeGreaterThan(1);
+        }
+
+        @Test
+        void baseClassIsFirst() {
+            var files = TestKit.of(UserRegistration.class)
+                    .withPackage("com.example.split")
+                    .split()
+                    .generateAll();
+            assertThat(files.get(0).className()).isEqualTo("UserRegistrationTest");
+        }
+
+        @Test
+        void creationFileIsSecond() {
+            var files = TestKit.of(UserRegistration.class)
+                    .withPackage("com.example.split")
+                    .split()
+                    .generateAll();
+            assertThat(files.get(1).className()).isEqualTo("UserRegistrationCreationTest");
+        }
+
+        @Test
+        void allFilesHaveCorrectPackage() {
+            var files = TestKit.of(UserRegistration.class)
+                    .withPackage("com.example.split")
+                    .split()
+                    .generateAll();
+            files.forEach(f ->
+                    assertThat(f.packageName()).isEqualTo("com.example.split"));
+        }
+
+        @Test
+        void bracesBalancedInAllFiles() {
+            var files = TestKit.of(CombinedRecord.class)
+                    .withPackage("com.example.split")
+                    .split()
+                    .generateAll();
+            files.forEach(f -> {
+                String src = f.asString();
+                long opens  = src.chars().filter(c -> c == '{').count();
+                long closes = src.chars().filter(c -> c == '}').count();
+                assertThat(opens)
+                        .as("unbalanced braces in %s", f.className())
+                        .isEqualTo(closes);
+            });
         }
     }
 }

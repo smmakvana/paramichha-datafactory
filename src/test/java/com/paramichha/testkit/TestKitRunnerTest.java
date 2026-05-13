@@ -1,22 +1,20 @@
 package com.paramichha.testkit;
 
-import com.paramichha.testkit.fixture.annotation.combined.AnnotationFullMixed;
-import com.paramichha.testkit.fixture.annotation.combined.AnnotationFullString;
-import com.paramichha.testkit.fixture.annotation.combined.AnnotationNotNullMinMax;
-import com.paramichha.testkit.fixture.annotation.notnull.AnnotationNotNullString;
-import com.paramichha.testkit.fixture.mixed.MixedAllAnnotated;
-import com.paramichha.testkit.fixture.nested.onelevel.NestedOneLevel;
-import com.paramichha.testkit.fixture.primitive.intp.PrimitiveInt;
-import com.paramichha.testkit.fixture.primitive.intp.PrimitiveIntMany;
-import com.paramichha.testkit.fixture.realworld.payment.RealWorldPayment;
-import com.paramichha.testkit.fixture.realworld.registration.RealWorldRegistration;
-import com.paramichha.testkit.fixture.realworld.trading.RealWorldTrade;
-import com.paramichha.testkit.fixture.strategy.lombok.StrategyLombokBuilderAnnotated;
-import com.paramichha.testkit.fixture.strategy.record.StrategyRecordAnnotated;
-import com.paramichha.testkit.fixture.temporal.localdate.TemporalLocalDate;
-import com.paramichha.testkit.fixture.wrapper.bigdecimalw.WrapperBigDecimal;
-import com.paramichha.testkit.fixture.wrapper.integerw.WrapperInteger;
+import com.paramichha.example.annotation.combined.CombinedRecord;
+import com.paramichha.example.annotation.combined.CombinedAllArgs;
+import com.paramichha.example.annotation.email.EmailRecord;
+import com.paramichha.example.annotation.numeric.NumericConstraintRecord;
+import com.paramichha.example.annotation.notnull.NotNullRecord;
+import com.paramichha.example.annotation.notnull.NotNullAllArgs;
+import com.paramichha.example.date.DateRecord;
+import com.paramichha.example.decimal.DecimalRecord;
+import com.paramichha.example.nested.NestedRecord;
+import com.paramichha.example.number.NumberRecord;
+import com.paramichha.example.realworld.payment.Payment;
+import com.paramichha.example.realworld.registration.UserRegistration;
+import com.paramichha.example.realworld.trading.Trade;
 import com.paramichha.testkit.runner.TestKitRunner;
+import com.paramichha.testkit.utils.JavaNames;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,120 +36,107 @@ class TestKitRunnerTest {
     class SingleClass {
 
         @Test
-        void null_type_throws() {
+        void nullTypeThrows() {
             assertThatThrownBy(() -> TestKit.of(null))
                     .isInstanceOf(TestKitException.class);
         }
 
         @Test
-        void blank_package_throws() {
-            assertThatThrownBy(() -> TestKit.of(RealWorldRegistration.class).withPackage(""))
+        void blankPackageThrows() {
+            assertThatThrownBy(() -> TestKit.of(UserRegistration.class).withPackage(""))
                     .isInstanceOf(TestKitException.class);
         }
 
         @Test
-        void generates_record() {
-            String src = TestKit.of(RealWorldRegistration.class).generate().asString();
-            assertStructure(src, "RealWorldRegistration");
-            assertHasValidator(src); // RealWorldRegistration has Jakarta annotations
-            assertThat(src).contains("\"notanemail\"");
+        void generatesRecord() {
+            String src = TestKit.of(UserRegistration.class).generate().asString();
+            assertStructure(src, "UserRegistration");
+            assertHasValidator(src);
         }
 
         @Test
-        void generates_lombok_builder() {
-            String src = TestKit.of(StrategyLombokBuilderAnnotated.class).generate().asString();
-            assertStructure(src, "StrategyLombokBuilderAnnotated");
-            assertThat(src).contains("StrategyLombokBuilderAnnotated.builder()");
-            assertThat(src).contains(".build()");
+        void generatesAllArgs() {
+            String src = TestKit.of(NotNullAllArgs.class).generate().asString();
+            assertStructure(src, "NotNullAllArgs");
+            assertHasValidator(src);
         }
 
         @Test
-        void generates_temporal() {
-            String src = TestKit.of(TemporalLocalDate.class).generate().asString();
-            assertStructure(src, "TemporalLocalDate");
-            assertNoValidator(src); // TemporalLocalDate has no Jakarta annotations
+        void generatesTemporal() {
+            String src = TestKit.of(DateRecord.class).generate().asString();
+            assertStructure(src, "DateRecord");
+            assertHasValidator(src);
         }
 
         @Test
-        void generates_nested() {
-            String src = TestKit.of(NestedOneLevel.class).generate().asString();
-            assertStructure(src, "NestedOneLevel");
+        void generatesNested() {
+            String src = TestKit.of(NestedRecord.class).generate().asString();
+            assertStructure(src, "NestedRecord");
         }
 
         @Test
-        void generates_primitive() {
-            String src = TestKit.of(PrimitiveInt.class).generate().asString();
-            assertStructure(src, "PrimitiveInt");
-            assertNoValidator(src); // PrimitiveInt has no Jakarta annotations
+        void generatesUnannotated() {
+            String src = TestKit.of(NumberRecord.class).generate().asString();
+            assertStructure(src, "NumberRecord");
+            assertNoValidator(src);
         }
 
         @Test
-        void generates_primitive_many() {
-            String src = TestKit.of(PrimitiveIntMany.class).generate().asString();
-            assertStructure(src, "PrimitiveIntMany");
-            assertNoValidator(src); // PrimitiveIntMany has no Jakarta annotations
+        void generatesSingleAnnotation() {
+            String src = TestKit.of(NotNullRecord.class).generate().asString();
+            assertStructure(src, "NotNullRecord");
+            assertHasValidator(src);
         }
 
         @Test
-        void generates_wrapper() {
-            String src = TestKit.of(WrapperInteger.class).generate().asString();
-            assertStructure(src, "WrapperInteger");
-            assertNoValidator(src); // WrapperInteger has no Jakarta annotations
+        void generatesCombinedAnnotation() {
+            String src = TestKit.of(NumericConstraintRecord.class).generate().asString();
+            assertStructure(src, "NumericConstraintRecord");
+            assertHasValidator(src);
         }
 
         @Test
-        void generates_single_annotation() {
-            String src = TestKit.of(AnnotationNotNullString.class).generate().asString();
-            assertStructure(src, "AnnotationNotNullString");
+        void generatesEmail() {
+            String src = TestKit.of(EmailRecord.class).generate().asString();
+            assertStructure(src, "EmailRecord");
+            assertThat(src).contains("notanemail");
         }
 
         @Test
-        void generates_combined_annotation() {
-            String src = TestKit.of(AnnotationNotNullMinMax.class).generate().asString();
-            assertStructure(src, "AnnotationNotNullMinMax");
+        void generatesCombined() {
+            String src = TestKit.of(CombinedRecord.class).generate().asString();
+            assertStructure(src, "CombinedRecord");
+            assertHasValidator(src);
         }
 
         @Test
-        void generates_full_string_annotation() {
-            String src = TestKit.of(AnnotationFullString.class).generate().asString();
-            assertStructure(src, "AnnotationFullString");
-            assertThat(src).contains("\"notanemail\"");
+        void generatesPayment() {
+            String src = TestKit.of(Payment.class).generate().asString();
+            assertStructure(src, "Payment");
+            assertThat(src).contains("new Payment(");
         }
 
         @Test
-        void generates_mixed_all_annotated() {
-            String src = TestKit.of(MixedAllAnnotated.class).generate().asString();
-            assertStructure(src, "MixedAllAnnotated");
+        void generatesTrade() {
+            String src = TestKit.of(Trade.class).generate().asString();
+            assertStructure(src, "Trade");
         }
 
         @Test
-        void generates_payment() {
-            String src = TestKit.of(RealWorldPayment.class).generate().asString();
-            assertStructure(src, "RealWorldPayment");
-            assertThat(src).contains("new RealWorldPayment(");
-        }
-
-        @Test
-        void generates_trade() {
-            String src = TestKit.of(RealWorldTrade.class).generate().asString();
-            assertStructure(src, "RealWorldTrade");
-        }
-
-        @Test
-        void default_package_matches_class() {
-            GeneratedTestClass result = TestKit.of(RealWorldRegistration.class).generate();
+        void defaultPackageMatchesClass() {
+            GeneratedTestClass result = TestKit.of(UserRegistration.class).generate();
             assertThat(result.packageName())
-                    .isEqualTo(RealWorldRegistration.class.getPackageName());
+                    .isEqualTo(UserRegistration.class.getPackageName());
         }
 
         @Test
-        void class_name_has_validation_test_suffix() {
-            GeneratedTestClass result = TestKit.of(RealWorldRegistration.class).generate();
-            assertThat(result.className()).isEqualTo("RealWorldRegistrationTest");
+        void classNameHasTestSuffix() {
+            GeneratedTestClass result = TestKit.of(UserRegistration.class).generate();
+            assertThat(result.className()).isEqualTo("UserRegistrationTest");
         }
 
         @Test
-        void braces_balanced() {
+        void bracesBalanced() {
             for (Class<?> c : coreFixtures()) {
                 String src = TestKit.of(c).generate().asString();
                 long opens  = src.chars().filter(ch -> ch == '{').count();
@@ -163,14 +148,14 @@ class TestKitRunnerTest {
         }
 
         @Test
-        void writes_file_to_correct_path(@TempDir Path tmp) {
-            Path written = TestKit.of(RealWorldRegistration.class)
+        void writesFileToCorrectPath(@TempDir Path tmp) {
+            Path written = TestKit.of(UserRegistration.class)
                     .withPackage("com.example.out")
                     .generate()
                     .writeTo(tmp);
             assertThat(written).exists();
             assertThat(written.getFileName().toString())
-                    .isEqualTo("RealWorldRegistrationTest.java");
+                    .isEqualTo("UserRegistrationTest.java");
             assertThat(written.getParent().toString()).endsWith("out");
         }
     }
@@ -182,17 +167,16 @@ class TestKitRunnerTest {
     class Runner {
 
         @Test
-        void forClasses_generates_all(@TempDir Path tmp) {
+        void forClassesGeneratesAll(@TempDir Path tmp) {
             List<Path> written = TestKitRunner
-                    .forClasses(RealWorldRegistration.class, RealWorldPayment.class,
-                            StrategyLombokBuilderAnnotated.class)
+                    .forClasses(UserRegistration.class, Payment.class, CombinedAllArgs.class)
                     .writeTo(tmp);
             assertThat(written).hasSize(3);
             written.forEach(p -> assertThat(p).exists());
         }
 
         @Test
-        void forClasses_each_file_ends_with_suffix(@TempDir Path tmp) {
+        void eachFileEndsWithTestSuffix(@TempDir Path tmp) {
             TestKitRunner.forClasses(coreFixtures().toArray(Class[]::new))
                     .writeTo(tmp)
                     .forEach(p -> assertThat(p.getFileName().toString())
@@ -200,7 +184,7 @@ class TestKitRunnerTest {
         }
 
         @Test
-        void targetCount_matches_input() {
+        void targetCountMatchesInput() {
             assertThat(TestKitRunner
                     .forClasses(coreFixtures().toArray(Class[]::new))
                     .targetCount())
@@ -208,67 +192,49 @@ class TestKitRunnerTest {
         }
 
         @Test
-        void scanPackage_finds_testable_classes() {
+        void scanPackageFindsTestableClasses() {
             List<GeneratedTestClass> results = TestKitRunner
-                    .scanPackage("com.paramichha.testkit.fixture.realworld")
+                    .scanPackage("com.paramichha.example.realworld")
                     .generate();
             assertThat(results).isNotEmpty();
-            results.forEach(g ->
-                    assertThat(g.className()).endsWith("Test"));
+            results.forEach(g -> assertThat(g.className()).endsWith("Test"));
         }
     }
 
     // ── helpers ───────────────────────────────────────────────────────────
 
-    /**
-     * Asserts the structural skeleton every generated test must have,
-     * regardless of whether the class has Jakarta validation annotations.
-     */
     private static void assertStructure(String src, String className) {
         assertThat(src).contains("class " + className + "Test");
-        assertThat(src).contains("private final " + className + " validInstance");
-        assertThat(src).contains("class Construction");
-        assertThat(src).contains("class Validation");
-        assertThat(src).contains("validInstanceIsCreated");
-        assertThat(src).contains("validInstanceFieldsAreCorrect");
-        assertThat(src).contains("validInstancePassesValidation");
-        assertThat(src).contains("List.of(");
+        assertThat(src).contains(className + "CreationTest");
+        assertThat(src).contains(JavaNames.variableName(className));
+        assertThat(src).contains("testCanBeCreated");
+        assertThat(src).contains("testHoldsExpectedValues");
     }
 
-    /**
-     * Asserts that the generated test includes the Jakarta validator setup.
-     * Only call this for classes that actually have Jakarta validation annotations.
-     */
     private static void assertHasValidator(String src) {
-        assertThat(src).contains("private static Validator validator");
-        assertThat(src).contains("Validation.buildDefaultValidatorFactory()");
+        assertThat(src).contains("Validator validator");
+        assertThat(src).contains("setUpValidator");
+        assertThat(src).contains("testIsValid");
     }
 
-    /**
-     * Asserts that no validator setup is generated for plain POJOs
-     * (classes with no Jakarta validation annotations).
-     */
     private static void assertNoValidator(String src) {
-        assertThat(src).doesNotContain("private static Validator validator");
-        assertThat(src).doesNotContain("jakarta.validation.Validation");
+        assertThat(src).doesNotContain("setUpValidator");
+        assertThat(src).doesNotContain("Validation.buildDefaultValidatorFactory");
     }
 
     private static List<Class<?>> coreFixtures() {
         return List.of(
-                PrimitiveInt.class,
-                PrimitiveIntMany.class,
-                WrapperInteger.class,
-                WrapperBigDecimal.class,
-                TemporalLocalDate.class,
-                AnnotationNotNullString.class,
-                AnnotationNotNullMinMax.class,
-                AnnotationFullMixed.class,
-                MixedAllAnnotated.class,
-                StrategyRecordAnnotated.class,
-                StrategyLombokBuilderAnnotated.class,
-                RealWorldRegistration.class,
-                RealWorldPayment.class,
-                RealWorldTrade.class
+                NumberRecord.class,
+                DecimalRecord.class,
+                DateRecord.class,
+                NotNullRecord.class,
+                NumericConstraintRecord.class,
+                CombinedRecord.class,
+                CombinedAllArgs.class,
+                NestedRecord.class,
+                UserRegistration.class,
+                Payment.class,
+                Trade.class
         );
     }
 }

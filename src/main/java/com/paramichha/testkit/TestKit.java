@@ -91,6 +91,31 @@ public final class TestKit {
         return this;
     }
 
+    /**
+     * Generates multiple files — base class plus one per concern.
+     * Call after {@link #split()}.
+     *
+     * <pre>
+     * TestKit.of(UserRegistration.class)
+     *        .split()
+     *        .generateAll()
+     *        .forEach(f -> f.writeTo(outputPath));
+     * </pre>
+     */
+    public List<GeneratedTestClass> generateAll() {
+        try {
+            ClassMeta meta = reader.read(type);
+            TestData data = (dataProvider instanceof DataFactoryTestDataProvider dfp)
+                    ? dfp.provide(type, mode, seed)
+                    : dataProvider.provide(type);
+            return generator.generateAll(meta, data, targetPackage, template);
+        } catch (Exception e) {
+            String className = type.getSimpleName() + "Test";
+            String src = "package " + targetPackage + ";\n\n// Generation failed: " + e.getMessage() + "\n";
+            return List.of(new GeneratedTestClass(className, targetPackage, src));
+        }
+    }
+
     public GeneratedTestClass generate() {
         try {
             ClassMeta meta = reader.read(type);
