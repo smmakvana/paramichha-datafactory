@@ -13,7 +13,7 @@
     </parent>
 
     <artifactId>datafactory</artifactId>
-    <version>${paramichha-example.version}</version>
+    <version>${datafactory-catalog.version}</version>
     <packaging>jar</packaging>
 
     <name>Paramichha DataFactory</name>
@@ -27,7 +27,7 @@
         <tag>HEAD</tag>
     </scm>
     <properties>
-        <paramichha-example.version>0.2.0-SNAPSHOT</paramichha-example.version>
+        <datafactory-catalog.version>0.2.0-SNAPSHOT</datafactory-catalog.version>
     </properties>
 
     <dependencies>
@@ -85,8 +85,8 @@
         </dependency>
         <dependency>
             <groupId>com.paramichha</groupId>
-            <artifactId>paramichha-example</artifactId>
-            <version>${paramichha-example.version}</version>
+            <artifactId>datafactory-catalog</artifactId>
+            <version>${datafactory-catalog.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
