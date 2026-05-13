@@ -6,6 +6,7 @@ import com.paramichha.utils.Texts;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -98,7 +99,7 @@ final class FieldTestWriter {
             sb.append("        }\n\n");
 
             // valid{Token}s() — use Arrays.asList in case value is null (@Null constraint)
-            boolean validHasNull = validValues.stream().anyMatch(v -> v == null);
+            boolean validHasNull = validValues.stream().anyMatch(Objects::isNull);
             sb.append("        static List<").append(boxedTypeName).append("> ")
                     .append(validDataMethod).append("() {\n");
             if (validHasNull) {
