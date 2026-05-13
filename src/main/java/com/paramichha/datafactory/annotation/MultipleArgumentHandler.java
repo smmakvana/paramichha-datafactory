@@ -19,6 +19,10 @@ class MultipleArgumentHandler implements AnnotationCreator {
     private static final Set<Class<? extends Annotation>> DIGITS_ANNOTATIONS = Set.of(
             Digits.class
     );
+    public static final String MIN = "min";
+    public static final String MAX = "max";
+    public static final String INTEGER = "integer";
+    public static final String FRACTION = "fraction";
 
     @Override
     public Annotation create(Class<? extends Annotation> clazz, String raw) {
@@ -42,12 +46,12 @@ class MultipleArgumentHandler implements AnnotationCreator {
             String[] kv = part.split("=");
             String key = kv[0].trim();
             String value = kv[1].trim();
-            if ("min".equals(key)) min = Integer.parseInt(value);
-            if ("max".equals(key)) max = Integer.parseInt(value);
+            if (MIN.equals(key)) min = Integer.parseInt(value);
+            if (MAX.equals(key)) max = Integer.parseInt(value);
         }
 
-        attrs.put("min", min);
-        attrs.put("max", max);
+        attrs.put(MIN, min);
+        attrs.put(MAX, max);
     }
 
     private void parseDigitsAttributes(String raw, Map<String, Object> attrs) {
@@ -57,11 +61,11 @@ class MultipleArgumentHandler implements AnnotationCreator {
             String[] kv = part.split("=");
             String key = kv[0].trim();
             String value = kv[1].trim();
-            if ("integer".equals(key)) integer = Integer.parseInt(value);
-            if ("fraction".equals(key)) fraction = Integer.parseInt(value);
+            if (INTEGER.equals(key)) integer = Integer.parseInt(value);
+            if (FRACTION.equals(key)) fraction = Integer.parseInt(value);
         }
 
-        attrs.put("integer", integer);
-        attrs.put("fraction", fraction);
+        attrs.put(INTEGER, integer);
+        attrs.put(FRACTION, fraction);
     }
 }

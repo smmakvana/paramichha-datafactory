@@ -5,6 +5,7 @@ import com.paramichha.datafactory.builder.StringAnnotationParser;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +31,7 @@ public final class AnnotationUtils {
     private AnnotationUtils() {}
 
     /**
-     * Returns {@code true} if the string is a recognised Jakarta validation
+     * Returns {@code true} if the string is a recognized Jakarta validation
      * annotation that DataFactory can parse.
      *
      * @param annotationString the annotation string, e.g. {@code "@NotBlank"}
@@ -66,7 +67,7 @@ public final class AnnotationUtils {
     public static List<Annotation> parseAll(List<String> annotationStrings) {
         return annotationStrings.stream()
                 .map(StringAnnotationParser.INSTANCE::parse)
-                .filter(a -> a != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 }

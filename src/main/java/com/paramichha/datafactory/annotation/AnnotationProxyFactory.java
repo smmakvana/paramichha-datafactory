@@ -26,10 +26,20 @@ public final class AnnotationProxyFactory {
                 new Class[]{type},
                 (proxy, method, args) -> {
                     String name = method.getName();
-                    if (name.equals("annotationType")) return type;
-                    if (name.equals("toString")) return "@" + type.getSimpleName() + attrs;
-                    if (name.equals("hashCode")) return attrs.hashCode();
-                    if (name.equals("equals")) return proxy == args[0];
+                    switch (name) {
+                        case "annotationType" -> {
+                            return type;
+                        }
+                        case "toString" -> {
+                            return "@" + type.getSimpleName() + attrs;
+                        }
+                        case "hashCode" -> {
+                            return attrs.hashCode();
+                        }
+                        case "equals" -> {
+                            return proxy == args[0];
+                        }
+                    }
                     if (attrs.containsKey(name)) return attrs.get(name);
                     return method.getDefaultValue();
                 }
