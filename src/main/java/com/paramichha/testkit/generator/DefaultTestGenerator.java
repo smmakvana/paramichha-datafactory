@@ -197,8 +197,10 @@ public final class DefaultTestGenerator implements TestGenerator {
         if (data.hasJakarta(meta)) writeValidatorSetup(sb, template);
         writeValidInstance(sb, meta, validInstanceParts, instantiation, template);
         if (meta.constructorStyle() == ClassMeta.ConstructorStyle.SETTER) writeSetterHelper(sb, meta);
+        if (!meta.utilityClass()) {
         creationWriter.write(sb, data, validInstanceParts, valueExtractor);
         memberWriter.write(sb, type, validInstanceParts, data.validAllPerField());
+        }
         methodWriter.write(sb, validInstanceParts, data.hasJakarta(meta));
         sb.append("}\n");
 
@@ -271,6 +273,7 @@ public final class DefaultTestGenerator implements TestGenerator {
     private void writeValidInstance(StringBuilder sb, ClassMeta meta,
                                     List<Object> validInstanceParts,
                                     InstantiationWriter instantiation, TestKitTemplate template) {
+        if (meta.fields().isEmpty()) return;
         String fieldName = TestNames.toVariable(meta.simpleName());
         sb.append("    ").append(meta.simpleName()).append(" ").append(fieldName).append(" =\n");
         sb.append("            ").append(instantiation.constructorCall(validInstanceParts))

@@ -22,6 +22,17 @@ public final class DefaultClassReader implements ClassReader {
 
     @Override
     public ClassMeta read(Class<?> type) {
+        if (isUtilityClass(type)) {
+            List<MethodMeta> methods = extractMethods(type);
+            return new ClassMeta(
+                    type.getSimpleName(),
+                    type.getPackageName(),
+                    ClassMeta.ConstructorStyle.ALL_ARGS,
+                    List.of(),
+                    methods,
+                    true
+            );
+        }
         List<FieldMeta> fields = extractFields(type);
         List<MethodMeta> methods = extractMethods(type);
         return new ClassMeta(
@@ -29,7 +40,8 @@ public final class DefaultClassReader implements ClassReader {
                 type.getPackageName(),
                 detectStyle(type, fields),
                 fields,
-                methods
+                methods,
+                false
         );
     }
 
@@ -91,13 +103,17 @@ public final class DefaultClassReader implements ClassReader {
 
     private List<MethodMeta> extractMethods(Class<?> type) {
         // Skip records, enums, interfaces — only concrete classes have behaviour methods
-        if (type.isRecord() || type.isEnum() || type.isInterface()) return List.of();
+        if (type.isEnum() || type.isInterface()) return List.of();
+        if (type.isRecord()) return List.of(); // records handled via fields
 
         Set<String> objectMethods = objectMethodNames();
         List<MethodMeta> result = new ArrayList<>();
+        boolean utility = isUtilityClass(type);
 
         for (Method m : type.getMethods()) {
-            if (Modifier.isStatic(m.getModifiers())) continue;
+            // For utility classes include static methods; skip for normal classes
+            if (!utility && Modifier.isStatic(m.getModifiers())) continue;
+            if (utility && !Modifier.isStatic(m.getModifiers())) continue;
             if (objectMethods.contains(m.getName())) continue;
             if (isGetterOrSetter(m)) continue;
             if (m.isSynthetic() || m.isBridge()) continue;
@@ -158,6 +174,18 @@ public final class DefaultClassReader implements ClassReader {
                 result.add(a);
         }
         return Collections.unmodifiableList(result);
+    }
+
+    private static boolean isUtilityClass(Class<?> type) {
+        if (type.isEnum() || type.isInterface() || type.isRecord() || type.isAnonymousClass()) return false;
+        Constructor<?>[] ctors = type.getDeclaredConstructors();
+        boolean allPrivate = Arrays.stream(ctors)
+                .allMatch(ct -> Modifier.isPrivate(ct.getModifiers()));
+        if (!allPrivate) return false;
+        return Arrays.stream(type.getDeclaredMethods())
+                .noneMatch(m -> Modifier.isStatic(m.getModifiers())
+                        && Modifier.isPublic(m.getModifiers())
+                        && m.getReturnType() == type);
     }
 
     private boolean isRequired(List<Annotation> v) {

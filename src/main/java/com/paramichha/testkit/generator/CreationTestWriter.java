@@ -55,7 +55,7 @@ final class CreationTestWriter {
             sb.append("    // ").append(nestedDisplay).append("\n");
             sb.append("    // ").append("=".repeat(73)).append("\n\n");
             sb.append("    @Nested\n");
-            sb.append("    @DisplayName(\"").append(nestedDisplay).append("\"\n");
+            sb.append("    @DisplayName(\"").append(nestedDisplay).append("\")\n");
             sb.append("    class ").append(nestedClass).append(" {\n\n");
         }
 
@@ -63,7 +63,7 @@ final class CreationTestWriter {
         String canBeCreatedMethod  = template.resolve(template.canBeCreated, className, "");
         String canBeCreatedDisplay = template.resolve(template.canBeCreatedDisplay, className, "");
         sb.append(ind).append("@Test\n");
-        sb.append(ind).append("@DisplayName(\"").append(canBeCreatedDisplay).append("\"\n");
+        sb.append(ind).append("@DisplayName(\"").append(canBeCreatedDisplay).append("\")\n");
         sb.append(ind).append("void ").append(canBeCreatedMethod).append("() {\n");
         sb.append(indBody).append("assertThat(").append(fieldName).append(").isNotNull();\n");
         sb.append(ind).append("}\n\n");
@@ -72,7 +72,7 @@ final class CreationTestWriter {
         String holdsMethod  = template.resolve(template.holdsExpectedValues, className, "");
         String holdsDisplay = template.resolve(template.holdsExpectedDisplay, className, "");
         sb.append(ind).append("@Test\n");
-        sb.append(ind).append("@DisplayName(\"").append(holdsDisplay).append("\"\n");
+        sb.append(ind).append("@DisplayName(\"").append(holdsDisplay).append("\")\n");
         sb.append(ind).append("void ").append(holdsMethod).append("() {\n");
         for (int i = 0; i < meta.fields().size(); i++) {
             FieldMeta field = meta.fields().get(i);
@@ -93,7 +93,7 @@ final class CreationTestWriter {
             String isValidMethod  = template.resolve(template.isValid, className, "");
             String isValidDisplay = template.resolve(template.isValidDisplay, className, "");
             sb.append("\n").append(ind).append("@Test\n");
-            sb.append(ind).append("@DisplayName(\"").append(isValidDisplay).append("\"\n");
+            sb.append(ind).append("@DisplayName(\"").append(isValidDisplay).append("\")\n");
             sb.append(ind).append("void ").append(isValidMethod).append("() {\n");
             sb.append(indBody).append("assertThat(").append(template.validatorField)
                     .append(".validate(").append(fieldName).append(")).isEmpty();\n");

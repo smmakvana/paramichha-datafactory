@@ -52,7 +52,7 @@ final class MethodTestWriter {
                                    boolean hasJakarta, boolean nested) {
 
         String className   = meta.simpleName();
-        String fieldName   = TestNames.toVariable(className);
+        String fieldName   = meta.utilityClass() ? className : TestNames.toVariable(className);
         String methodName  = method.name();
         String ind         = nested ? "        " : "    ";
         String indBody     = nested ? "            " : "        ";
