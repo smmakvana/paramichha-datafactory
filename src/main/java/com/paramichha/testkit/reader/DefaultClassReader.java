@@ -23,7 +23,7 @@ public final class DefaultClassReader implements ClassReader {
     @Override
     public ClassMeta read(Class<?> type) {
         if (isUtilityClass(type)) {
-            List<MethodMeta> methods = extractMethods(type);
+            List<MethodMeta> methods = extractMethods(type, true);
             return new ClassMeta(
                     type.getSimpleName(),
                     type.getPackageName(),
@@ -34,7 +34,7 @@ public final class DefaultClassReader implements ClassReader {
             );
         }
         List<FieldMeta> fields = extractFields(type);
-        List<MethodMeta> methods = extractMethods(type);
+        List<MethodMeta> methods = extractMethods(type, false);
         return new ClassMeta(
                 type.getSimpleName(),
                 type.getPackageName(),
@@ -79,8 +79,9 @@ public final class DefaultClassReader implements ClassReader {
             catch (Exception ignored) {}
             if (i < params.length) all.addAll(Arrays.asList(params[i].getAnnotations()));
             List<Annotation> validations = filterValidation(all);
+            boolean indirect = typeHasConstraints(rc.getType());
             result.add(new FieldMeta(rc.getName(), rc.getType(), rc.getGenericType(),
-                    validations, isRequired(validations)));
+                    validations, isRequired(validations), indirect));
         }
         return result;
     }
@@ -93,27 +94,25 @@ public final class DefaultClassReader implements ClassReader {
         for (Field f : allFields) {
             if (Modifier.isStatic(f.getModifiers()) || f.isSynthetic()) continue;
             List<Annotation> validations = filterValidation(Arrays.asList(f.getAnnotations()));
+            boolean indirect = typeHasConstraints(f.getType());
             result.add(new FieldMeta(f.getName(), f.getType(), f.getGenericType(),
-                    validations, isRequired(validations)));
+                    validations, isRequired(validations), indirect));
         }
         return result;
     }
 
     // ── Methods ───────────────────────────────────────────────────────────
 
-    private List<MethodMeta> extractMethods(Class<?> type) {
-        // Skip records, enums, interfaces — only concrete classes have behaviour methods
-        if (type.isEnum() || type.isInterface()) return List.of();
-        if (type.isRecord()) return List.of(); // records handled via fields
+    private List<MethodMeta> extractMethods(Class<?> type, boolean utility) {
+        if (!utility && (type.isRecord() || type.isEnum() || type.isInterface())) return List.of();
 
         Set<String> objectMethods = objectMethodNames();
         List<MethodMeta> result = new ArrayList<>();
-        boolean utility = isUtilityClass(type);
 
         for (Method m : type.getMethods()) {
-            // For utility classes include static methods; skip for normal classes
-            if (!utility && Modifier.isStatic(m.getModifiers())) continue;
-            if (utility && !Modifier.isStatic(m.getModifiers())) continue;
+            boolean isStatic = Modifier.isStatic(m.getModifiers());
+            if (utility  && !isStatic) continue;
+            if (!utility && isStatic)  continue;
             if (objectMethods.contains(m.getName())) continue;
             if (isGetterOrSetter(m)) continue;
             if (m.isSynthetic() || m.isBridge()) continue;
@@ -130,7 +129,8 @@ public final class DefaultClassReader implements ClassReader {
         List<ParameterMeta> result = new ArrayList<>();
         for (Parameter p : m.getParameters()) {
             List<Annotation> validations = filterValidation(Arrays.asList(p.getAnnotations()));
-            result.add(new ParameterMeta(p.getName(), p.getType(), validations));
+            boolean indirect = typeHasConstraints(p.getType());
+            result.add(new ParameterMeta(p.getName(), p.getType(), validations, indirect));
         }
         return Collections.unmodifiableList(result);
     }
@@ -139,8 +139,7 @@ public final class DefaultClassReader implements ClassReader {
         boolean isVoid = returnType == void.class || returnType == Void.class;
         int paramCount = params.size();
         if (isVoid && paramCount == 0) return MethodKind.COMMAND;
-        if (isVoid && paramCount == 1) return MethodKind.MUTATOR;
-        if (isVoid)                    return MethodKind.MUTATOR;   // void + multi-param = mutator
+        if (isVoid)                    return MethodKind.MUTATOR;
         if (paramCount == 0)           return MethodKind.QUERY;
         if (paramCount == 1)           return MethodKind.TRANSFORMER;
         return MethodKind.OPERATION;
@@ -161,6 +160,40 @@ public final class DefaultClassReader implements ClassReader {
         return names;
     }
 
+    // ── Constraint detection ─────────────────────────────────────────────
+
+    /**
+     * Returns true if the type has any fields with Jakarta constraint annotations.
+     * Skips primitives, Java built-in types, enums.
+     */
+    private boolean typeHasConstraints(Class<?> type) {
+        if (type == null || type.isPrimitive()) return false;
+        if (type.getPackageName().startsWith("java.")) return false;
+        if (type.isEnum()) return false;
+        for (Field f : type.getDeclaredFields()) {
+            for (Annotation a : f.getAnnotations()) {
+                String pkg = a.annotationType().getPackageName();
+                if (pkg.startsWith("jakarta.validation") || pkg.startsWith("javax.validation")
+                        || pkg.startsWith("org.hibernate.validator")) {
+                    return true;
+                }
+            }
+        }
+        // Also check record components
+        if (type.isRecord()) {
+            for (RecordComponent rc : type.getRecordComponents()) {
+                for (Annotation a : rc.getAnnotations()) {
+                    String pkg = a.annotationType().getPackageName();
+                    if (pkg.startsWith("jakarta.validation") || pkg.startsWith("javax.validation")
+                            || pkg.startsWith("org.hibernate.validator")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     // ── Shared ────────────────────────────────────────────────────────────
 
     private List<Annotation> filterValidation(List<Annotation> annotations) {
@@ -176,20 +209,20 @@ public final class DefaultClassReader implements ClassReader {
         return Collections.unmodifiableList(result);
     }
 
+    private boolean isRequired(List<Annotation> v) {
+        return v.stream().anyMatch(a -> a instanceof NotNull || a instanceof NotBlank
+                || a instanceof NotEmpty);
+    }
+
     private static boolean isUtilityClass(Class<?> type) {
         if (type.isEnum() || type.isInterface() || type.isRecord() || type.isAnonymousClass()) return false;
         Constructor<?>[] ctors = type.getDeclaredConstructors();
         boolean allPrivate = Arrays.stream(ctors)
-                .allMatch(ct -> Modifier.isPrivate(ct.getModifiers()));
+                .allMatch(c -> Modifier.isPrivate(c.getModifiers()));
         if (!allPrivate) return false;
         return Arrays.stream(type.getDeclaredMethods())
                 .noneMatch(m -> Modifier.isStatic(m.getModifiers())
                         && Modifier.isPublic(m.getModifiers())
                         && m.getReturnType() == type);
-    }
-
-    private boolean isRequired(List<Annotation> v) {
-        return v.stream().anyMatch(a -> a instanceof NotNull || a instanceof NotBlank
-                || a instanceof NotEmpty);
     }
 }

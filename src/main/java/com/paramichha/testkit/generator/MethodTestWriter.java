@@ -8,14 +8,15 @@ import com.paramichha.testkit.model.MethodMeta;
 import com.paramichha.testkit.model.ParameterMeta;
 import com.paramichha.testkit.utils.TestNames;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Writes one {ClassName}Method{MethodName}Test nested class per public method.
  *
  * <p>Generated tests are self-contained — no DataFactory dependency in output.
  * DataFactory is called here at generation time to produce hardcoded literals.
+ * Uses the same field-level API as MemberTestWriter for consistent value generation.
  *
  * <p>All test method names start with "test" per Java convention.
  */
@@ -32,14 +33,12 @@ final class MethodTestWriter {
         this.template      = template;
     }
 
-    /** Writes all method nested classes into sb. */
     void write(StringBuilder sb, List<Object> validInstanceParts, boolean hasJakarta) {
         for (MethodMeta method : meta.methods()) {
             writeMethodClass(sb, method, validInstanceParts, hasJakarta, true);
         }
     }
 
-    /** Split mode — writes one method class without @Nested wrapper. */
     void writeFlat(StringBuilder sb, MethodMeta method,
                    List<Object> validInstanceParts, boolean hasJakarta) {
         writeMethodClass(sb, method, validInstanceParts, hasJakarta, false);
@@ -48,8 +47,8 @@ final class MethodTestWriter {
     // ── Core ──────────────────────────────────────────────────────────────
 
     private void writeMethodClass(StringBuilder sb, MethodMeta method,
-                                   List<Object> validInstanceParts,
-                                   boolean hasJakarta, boolean nested) {
+                                  List<Object> validInstanceParts,
+                                  boolean hasJakarta, boolean nested) {
 
         String className   = meta.simpleName();
         String fieldName   = meta.utilityClass() ? className : TestNames.toVariable(className);
@@ -62,7 +61,6 @@ final class MethodTestWriter {
         String validSrc      = template.resolveMethod(template.validInputsSource,  className, methodName);
         String invalidSrc    = template.resolveMethod(template.invalidInputsSource, className, methodName);
 
-        // ── Section header ─────────────────────────────────────────────
         sb.append("    // ").append("=".repeat(73)).append("\n");
         sb.append("    // ").append(nestedDisplay).append("\n");
         sb.append("    // ").append("=".repeat(73)).append("\n\n");
@@ -74,14 +72,13 @@ final class MethodTestWriter {
         }
 
         switch (method.kind()) {
-            case COMMAND    -> writeCommand(sb, method, fieldName, hasJakarta, ind, indBody);
-            case QUERY      -> writeQuery(sb, method, fieldName, ind, indBody);
-            case MUTATOR    -> writeMutatorOrTransformer(sb, method, fieldName,
-                    validInstanceParts, validSrc, invalidSrc, ind, indBody);
-            case TRANSFORMER -> writeMutatorOrTransformer(sb, method, fieldName,
-                    validInstanceParts, validSrc, invalidSrc, ind, indBody);
-            case OPERATION  -> writeOperation(sb, method, fieldName,
-                    validInstanceParts, validSrc, invalidSrc, ind, indBody);
+            case COMMAND     -> writeCommand(sb, method, fieldName, hasJakarta, ind, indBody);
+            case QUERY       -> writeQuery(sb, method, fieldName, ind, indBody);
+            case MUTATOR,
+                 TRANSFORMER -> writeMutatorOrTransformer(sb, method, fieldName,
+                    validSrc, invalidSrc, ind, indBody);
+            case OPERATION   -> writeOperation(sb, method, fieldName,
+                    validSrc, invalidSrc, ind, indBody);
         }
 
         if (nested) sb.append("    }\n\n");
@@ -90,25 +87,23 @@ final class MethodTestWriter {
     // ── COMMAND ───────────────────────────────────────────────────────────
 
     private void writeCommand(StringBuilder sb, MethodMeta method, String fieldName,
-                               boolean hasJakarta, String ind, String indBody) {
+                              boolean hasJakarta, String ind, String indBody) {
         String methodName = method.name();
 
-        // testExecutesWithoutException
         sb.append(ind).append("@Test\n");
         sb.append(ind).append("@DisplayName(\"executes without exception\")\n");
         sb.append(ind).append("void ").append(template.testExecutesWithoutException).append("() {\n");
         sb.append(indBody).append("assertThatCode(() -> ")
-          .append(fieldName).append(".").append(methodName).append("()).doesNotThrow();\n");
+                .append(fieldName).append(".").append(methodName).append("()).doesNotThrow();\n");
         sb.append(ind).append("}\n\n");
 
-        // testObjectRemainsValidAfterExecution — only if class has Jakarta annotations
         if (hasJakarta) {
             sb.append(ind).append("@Test\n");
             sb.append(ind).append("@DisplayName(\"object remains valid after execution\")\n");
             sb.append(ind).append("void ").append(template.testObjectRemainsValid).append("() {\n");
             sb.append(indBody).append(fieldName).append(".").append(methodName).append("();\n");
             sb.append(indBody).append("assertThat(").append(template.validatorField)
-              .append(".validate(").append(fieldName).append(")).isEmpty();\n");
+                    .append(".validate(").append(fieldName).append(")).isEmpty();\n");
             sb.append(ind).append("}\n\n");
         }
     }
@@ -116,11 +111,10 @@ final class MethodTestWriter {
     // ── QUERY ─────────────────────────────────────────────────────────────
 
     private void writeQuery(StringBuilder sb, MethodMeta method, String fieldName,
-                             String ind, String indBody) {
+                            String ind, String indBody) {
         String methodName = method.name();
         String call = fieldName + "." + methodName + "()";
 
-        // testReturnsResult
         sb.append(ind).append("@Test\n");
         sb.append(ind).append("@DisplayName(\"").append(methodName).append(" returns a result\")\n");
         sb.append(ind).append("void ").append(template.testReturnsResult).append("() {\n");
@@ -135,13 +129,12 @@ final class MethodTestWriter {
         }
         sb.append(ind).append("}\n\n");
 
-        // testReturnsConsistentResult — skip for primitives with side effects
         if (!method.returnsVoid()) {
             sb.append(ind).append("@Test\n");
             sb.append(ind).append("@DisplayName(\"").append(methodName).append(" returns consistent result\")\n");
             sb.append(ind).append("void ").append(template.testReturnsConsistentResult).append("() {\n");
             sb.append(indBody).append("assertThat(").append(call).append(")")
-              .append(".isEqualTo(").append(call).append(");\n");
+                    .append(".isEqualTo(").append(call).append(");\n");
             sb.append(ind).append("}\n\n");
         }
     }
@@ -149,196 +142,230 @@ final class MethodTestWriter {
     // ── MUTATOR / TRANSFORMER ─────────────────────────────────────────────
 
     private void writeMutatorOrTransformer(StringBuilder sb, MethodMeta method,
-                                            String fieldName, List<Object> validParts,
-                                            String validSrc, String invalidSrc,
-                                            String ind, String indBody) {
+                                           String fieldName,
+                                           String validSrc, String invalidSrc,
+                                           String ind, String indBody) {
         String methodName = method.name();
         List<ParameterMeta> params = method.parameters();
         String paramSignature = buildParamSignature(params);
         String paramCall      = buildParamCall(params);
 
-        // testAcceptsValidInput
+        // testAcceptsValidInput — always
         sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
         sb.append(ind).append("@MethodSource(\"").append(validSrc).append("\")\n");
         sb.append(ind).append("@DisplayName(\"").append(methodName).append(" accepts valid input\")\n");
         sb.append(ind).append("void ").append(template.testAcceptsValidInput)
-          .append("(String description, ").append(paramSignature).append(") {\n");
+                .append("(String description, ").append(paramSignature).append(") {\n");
 
         if (method.returnsVoid()) {
             sb.append(indBody).append("assertThatCode(() -> ")
-              .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
-              .append(")).doesNotThrow();\n");
+                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
+                    .append(")).doesNotThrow();\n");
         } else {
             String returnTypeName = FieldTestWriter.sourceTypeName(method.returnType());
             sb.append(indBody).append(returnTypeName).append(" result = ")
-              .append(fieldName).append(".").append(methodName).append("(").append(paramCall).append(");\n");
+                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall).append(");\n");
             sb.append(indBody).append("assertThat(result).isNotNull();\n");
         }
         sb.append(ind).append("}\n\n");
 
-        // testRejectsInvalidInput
-        sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
-        sb.append(ind).append("@MethodSource(\"").append(invalidSrc).append("\")\n");
-        sb.append(ind).append("@DisplayName(\"").append(methodName).append(" rejects invalid input\")\n");
-        sb.append(ind).append("void ").append(template.testRejectsInvalidInput)
-          .append("(String description, ").append(paramSignature).append(") {\n");
-        sb.append(indBody).append("assertThatThrownBy(() -> ")
-          .append(fieldName).append(".").append(methodName).append("(").append(paramCall).append("))\n");
-        sb.append(indBody).append("        .isInstanceOf(Exception.class);\n");
-        sb.append(ind).append("}\n\n");
+        // testRejectsInvalidInput — only if any parameter is constrained
+        boolean anyConstrained = params.stream().anyMatch(ParameterMeta::isConstrained);
+        if (anyConstrained) {
+            sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
+            sb.append(ind).append("@MethodSource(\"").append(invalidSrc).append("\")\n");
+            sb.append(ind).append("@DisplayName(\"").append(methodName).append(" rejects invalid input\")\n");
+            sb.append(ind).append("void ").append(template.testRejectsInvalidInput)
+                    .append("(String description, ").append(paramSignature).append(") {\n");
+            sb.append(indBody).append("assertThatThrownBy(() -> ")
+                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall).append("))\n");
+            sb.append(indBody).append("        .isInstanceOf(Exception.class);\n");
+            sb.append(ind).append("}\n\n");
+        }
 
-        // Data sources
-        writeValidDataSource(sb, method, params, validParts, validSrc, ind);
-        writeInvalidDataSource(sb, method, params, validParts, invalidSrc, ind);
+        writeValidDataSource(sb, method, params, validSrc, ind);
+        if (anyConstrained) {
+            writeInvalidDataSource(sb, params, invalidSrc, ind);
+        }
     }
 
     // ── OPERATION ─────────────────────────────────────────────────────────
 
     private void writeOperation(StringBuilder sb, MethodMeta method,
-                                 String fieldName, List<Object> validParts,
-                                 String validSrc, String invalidSrc,
-                                 String ind, String indBody) {
+                                String fieldName,
+                                String validSrc, String invalidSrc,
+                                String ind, String indBody) {
         String methodName = method.name();
         List<ParameterMeta> params = method.parameters();
         String paramSignature = buildParamSignature(params);
         String paramCall      = buildParamCall(params);
 
-        // testAcceptsValidInput
+        // testAcceptsValidInput — always
         sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
         sb.append(ind).append("@MethodSource(\"").append(validSrc).append("\")\n");
         sb.append(ind).append("@DisplayName(\"").append(methodName).append(" accepts valid input\")\n");
         sb.append(ind).append("void ").append(template.testAcceptsValidInput)
-          .append("(String description, ").append(paramSignature).append(") {\n");
+                .append("(String description, ").append(paramSignature).append(") {\n");
 
         if (method.returnsVoid()) {
             sb.append(indBody).append("assertThatCode(() -> ")
-              .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
-              .append(")).doesNotThrow();\n");
+                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
+                    .append(")).doesNotThrow();\n");
         } else {
             sb.append(indBody).append("assertThat(")
-              .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
-              .append(")).isNotNull();\n");
+                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
+                    .append(")).isNotNull();\n");
         }
         sb.append(ind).append("}\n\n");
 
-        // testRejectsInvalidInput — one row per parameter (null each one in turn)
-        sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
-        sb.append(ind).append("@MethodSource(\"").append(invalidSrc).append("\")\n");
-        sb.append(ind).append("@DisplayName(\"").append(methodName).append(" rejects invalid input\")\n");
-        sb.append(ind).append("void ").append(template.testRejectsInvalidInput)
-          .append("(String description, ").append(paramSignature).append(") {\n");
-        sb.append(indBody).append("assertThatThrownBy(() -> ")
-          .append(fieldName).append(".").append(methodName).append("(").append(paramCall).append("))\n");
-        sb.append(indBody).append("        .isInstanceOf(Exception.class);\n");
-        sb.append(ind).append("}\n\n");
+        // testRejectsInvalidInput — only if any parameter is constrained
+        boolean anyConstrained = params.stream().anyMatch(ParameterMeta::isConstrained);
+        if (anyConstrained) {
+            sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
+            sb.append(ind).append("@MethodSource(\"").append(invalidSrc).append("\")\n");
+            sb.append(ind).append("@DisplayName(\"").append(methodName).append(" rejects invalid input\")\n");
+            sb.append(ind).append("void ").append(template.testRejectsInvalidInput)
+                    .append("(String description, ").append(paramSignature).append(") {\n");
+            sb.append(indBody).append("assertThatThrownBy(() -> ")
+                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall).append("))\n");
+            sb.append(indBody).append("        .isInstanceOf(Exception.class);\n");
+            sb.append(ind).append("}\n\n");
+        }
 
-        writeValidDataSource(sb, method, params, validParts, validSrc, ind);
-        writeInvalidDataSourceOperation(sb, method, params, validParts, invalidSrc, ind);
+        writeValidDataSource(sb, method, params, validSrc, ind);
+        if (anyConstrained) {
+            writeInvalidDataSourceOperation(sb, params, invalidSrc, ind);
+        }
     }
 
-    // ── Data sources ──────────────────────────────────────────────────────
+    // ── Data sources — DataFactory field-level API ────────────────────────
 
     private void writeValidDataSource(StringBuilder sb, MethodMeta method,
-                                       List<ParameterMeta> params, List<Object> validParts,
-                                       String validSrc, String ind) {
+                                      List<ParameterMeta> params,
+                                      String validSrc, String ind) {
         sb.append(ind).append("static Stream<Arguments> ").append(validSrc).append("() {\n");
         sb.append(ind).append("    return Stream.of(\n");
         sb.append(ind).append("        Arguments.of(\"valid ").append(method.name()).append("\",\n");
         for (int i = 0; i < params.size(); i++) {
             sb.append(ind).append("            ")
-              .append(generateValidLiteral(params.get(i)));
+                    .append(validLiteralFor(params.get(i)));
             sb.append(i < params.size() - 1 ? ",\n" : ")\n");
         }
         sb.append(ind).append("    );\n");
         sb.append(ind).append("}\n\n");
     }
 
-    private void writeInvalidDataSource(StringBuilder sb, MethodMeta method,
-                                         List<ParameterMeta> params, List<Object> validParts,
-                                         String invalidSrc, String ind) {
+    /**
+     * Single-parameter invalid source.
+     * Uses DataFactory.of(type).invalidList() — same as MemberTestWriter.
+     */
+    private void writeInvalidDataSource(StringBuilder sb,
+                                        List<ParameterMeta> params,
+                                        String invalidSrc, String ind) {
+        ParameterMeta p = params.get(0);
         sb.append(ind).append("static Stream<Arguments> ").append(invalidSrc).append("() {\n");
         sb.append(ind).append("    return Stream.of(\n");
-        // For single param: null + boundary invalids
-        ParameterMeta p = params.get(0);
-        sb.append(ind).append("        Arguments.of(\"null ").append(p.name()).append("\", ")
-          .append(nullCast(p.type())).append(")");
-        List<String> extraInvalids = generateInvalidLiterals(p);
-        for (String inv : extraInvalids) {
-            sb.append(",\n");
+
+        List<String> invalids = invalidLiteralsFor(p);
+        for (int i = 0; i < invalids.size(); i++) {
             sb.append(ind).append("        Arguments.of(\"invalid ").append(p.name())
-              .append("\", ").append(inv).append(")");
+                    .append(" ").append(i + 1).append("\", ").append(invalids.get(i)).append(")");
+            sb.append(i < invalids.size() - 1 ? ",\n" : "\n");
         }
-        sb.append("\n");
         sb.append(ind).append("    );\n");
         sb.append(ind).append("}\n\n");
     }
 
-    private void writeInvalidDataSourceOperation(StringBuilder sb, MethodMeta method,
-                                                   List<ParameterMeta> params,
-                                                   List<Object> validParts,
-                                                   String invalidSrc, String ind) {
+    /**
+     * Multi-parameter invalid source — one row per parameter, null that one, valid for rest.
+     * Only rows where the parameter isConstrained() are included.
+     */
+    private void writeInvalidDataSourceOperation(StringBuilder sb,
+                                                 List<ParameterMeta> params,
+                                                 String invalidSrc, String ind) {
         sb.append(ind).append("static Stream<Arguments> ").append(invalidSrc).append("() {\n");
         sb.append(ind).append("    return Stream.of(\n");
-        // One row per parameter — null that parameter, valid for rest
+
+        List<String> rows = new java.util.ArrayList<>();
         for (int nullIdx = 0; nullIdx < params.size(); nullIdx++) {
             ParameterMeta nullParam = params.get(nullIdx);
-            sb.append(ind).append("        Arguments.of(\"null ").append(nullParam.name()).append("\",\n");
+            if (!nullParam.isConstrained()) continue;
+
+            StringBuilder row = new StringBuilder();
+            row.append(ind).append("        Arguments.of(\"null ").append(nullParam.name()).append("\",\n");
             for (int i = 0; i < params.size(); i++) {
                 String val = i == nullIdx
                         ? nullCast(params.get(i).type())
-                        : generateValidLiteral(params.get(i));
-                sb.append(ind).append("            ").append(val);
-                sb.append(i < params.size() - 1 ? ",\n" : ")");
+                        : validLiteralFor(params.get(i));
+                row.append(ind).append("            ").append(val);
+                row.append(i < params.size() - 1 ? ",\n" : ")");
             }
-            sb.append(nullIdx < params.size() - 1 ? ",\n" : "\n");
+            rows.add(row.toString());
+        }
+
+        for (int i = 0; i < rows.size(); i++) {
+            sb.append(rows.get(i));
+            sb.append(i < rows.size() - 1 ? ",\n" : "\n");
         }
         sb.append(ind).append("    );\n");
         sb.append(ind).append("}\n\n");
     }
 
-    // ── Value generation ──────────────────────────────────────────────────
+    // ── Value generation — DataFactory field-level API ────────────────────
 
-    private String generateValidLiteral(ParameterMeta param) {
+    /**
+     * Valid literal for a parameter.
+     * Uses DataFactory.of(type).valid() — same approach as MemberTestWriter valid values.
+     */
+    private String validLiteralFor(ParameterMeta param) {
         Class<?> type = param.type();
-        if (type.isPrimitive()) return primitiveDefault(type);
+        if (type.isPrimitive()) return primitiveValid(type);
         try {
-            long seed = (long) param.name().hashCode();
-            Object value = DataFactory.of(type).seed(seed).valid();
+            Object value = DataFactory.of(type).seed(param.name().hashCode()).valid();
             String literal = LiteralConverter.toLiteralOrNull(value);
             if (literal != null) return literal;
         } catch (Exception ignored) {}
-        // Fallback for types DataFactory can't generate
         return nullCast(type);
     }
 
-    private List<String> generateInvalidLiterals(ParameterMeta param) {
+    /**
+     * Invalid literals for a parameter.
+     * For constrained object types: uses DataFactory.of(type).invalidList()
+     * — same as MemberTestWriter invalid values.
+     * For directly annotated params: uses validPerField() on the type.
+     * For primitives/String: boundary values.
+     */
+    private List<String> invalidLiteralsFor(ParameterMeta param) {
         Class<?> type = param.type();
-        List<String> result = new ArrayList<>();
-        // Primitives — add boundary invalids
-        if (type == double.class || type == Double.class) {
-            result.add("0.0d");
-            result.add("-1.0d");
-        } else if (type == float.class || type == Float.class) {
-            result.add("0.0f");
-            result.add("-1.0f");
-        } else if (type == int.class || type == Integer.class
-                || type == long.class || type == Long.class) {
-            result.add("-1");
-            result.add("0");
-        } else if (type == String.class) {
-            result.add("\"\"");
-            result.add("\"   \"");
+        List<String> result = new java.util.ArrayList<>();
+
+        // Direct annotations on param — treat as if it were a field
+        if (!param.validations().isEmpty()) {
+            if (type == String.class) {
+                result.add("(String) null");
+                result.add("\"\"");
+                result.add("\"   \"");
+                return result;
+            }
         }
-        // Domain objects: try DataFactory invalidList
-        if (!type.isPrimitive()) {
+
+        // Indirect — object type has constrained fields — use DataFactory.invalidList()
+        if (param.hasIndirectConstraints() && !type.isPrimitive()) {
             try {
                 List<?> invalids = DataFactory.of(type).invalidList();
                 for (Object inv : invalids) {
                     String lit = LiteralConverter.toLiteralOrNull(inv);
-                    if (lit != null && result.size() < 3) result.add(lit);
+                    if (lit != null) result.add(lit);
+                    if (result.size() >= 3) break;
                 }
             } catch (Exception ignored) {}
         }
+
+        // Fallback — null is always invalid for object types
+        if (result.isEmpty() && !type.isPrimitive()) {
+            result.add(nullCast(type));
+        }
+
         return result;
     }
 
@@ -349,7 +376,7 @@ final class MethodTestWriter {
         for (int i = 0; i < params.size(); i++) {
             if (i > 0) sb.append(", ");
             sb.append(FieldTestWriter.sourceTypeName(params.get(i).type()))
-              .append(" ").append(params.get(i).name());
+                    .append(" ").append(params.get(i).name());
         }
         return sb.toString();
     }
@@ -364,20 +391,20 @@ final class MethodTestWriter {
     }
 
     private String nullCast(Class<?> type) {
-        if (type.isPrimitive()) return primitiveDefault(type);
+        if (type.isPrimitive()) return primitiveValid(type);
         return "(" + FieldTestWriter.sourceTypeName(type) + ") null";
     }
 
-    private String primitiveDefault(Class<?> type) {
+    private String primitiveValid(Class<?> type) {
         return switch (type.getName()) {
-            case "boolean" -> "false";
-            case "byte"    -> "(byte) 0";
-            case "short"   -> "(short) 0";
-            case "int"     -> "0";
-            case "long"    -> "0L";
-            case "float"   -> "0.0f";
-            case "double"  -> "0.0d";
-            case "char"    -> "'\\0'";
+            case "boolean" -> "true";
+            case "byte"    -> "(byte) 1";
+            case "short"   -> "(short) 1";
+            case "int"     -> "1";
+            case "long"    -> "1L";
+            case "float"   -> "1.0f";
+            case "double"  -> "1.0d";
+            case "char"    -> "'a'";
             default        -> "0";
         };
     }
