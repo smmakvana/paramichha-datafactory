@@ -211,7 +211,7 @@ final class MethodTestWriter {
         sb.append(ind).append("@DisplayName(\"executes without exception\")\n");
         sb.append(ind).append("void ").append(template.testExecutesWithoutException).append("() {\n");
         sb.append(indBody).append("assertThatCode(() -> ")
-                .append(fieldName).append(".").append(methodName).append("()).doesNotThrow();\n");
+                .append(fieldName).append(".").append(methodName).append("()).doesNotThrowAnyException();\n");
         sb.append(ind).append("}\n\n");
 
         if (hasJakarta) {
@@ -237,7 +237,7 @@ final class MethodTestWriter {
         sb.append(ind).append("void ").append(template.testReturnsResult).append("() {\n");
 
         if (method.returnsVoid()) {
-            sb.append(indBody).append("assertThatCode(() -> ").append(call).append(").doesNotThrow();\n");
+            sb.append(indBody).append("assertThatCode(() -> ").append(call).append(").doesNotThrowAnyException();\n");
         } else {
             String typeName = FieldTestWriter.sourceTypeName(method.returnType());
             sb.append(indBody).append(typeName).append(" result = ").append(call).append(";\n");
@@ -340,7 +340,7 @@ final class MethodTestWriter {
         if (method.returnsVoid()) {
             sb.append(indBody).append("assertThatCode(() -> ")
                     .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
-                    .append(")).doesNotThrow();\n");
+                    .append(")).doesNotThrowAnyException();\n");
         } else {
             String typeName = FieldTestWriter.sourceTypeName(method.returnType());
             sb.append(indBody).append(typeName).append(" result = ")
@@ -357,7 +357,7 @@ final class MethodTestWriter {
      * primitive/String with annotations → wrapper record + validator.validate()
      * Object with constrained fields    → validator.validate(result)
      * Object no constraints             → assertThat(result).isNotNull()
-     * primitive no annotations          → doesNotThrow (already handled at call site)
+     * primitive no annotations          → .doesNotThrowAnyException() (already handled at call site)
      */
     private void writeReturnAssertion(StringBuilder sb, MethodMeta method,
                                       String resultExpr, String indBody) {
@@ -387,7 +387,7 @@ final class MethodTestWriter {
             return;
         }
 
-        // Plain primitive — doesNotThrow was already written at call site
+        // Plain primitive — .doesNotThrowAnyException() was already written at call site
         if (returnType.isPrimitive()) return;
 
         // Plain object — at minimum not null
