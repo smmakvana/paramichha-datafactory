@@ -3,22 +3,29 @@ package com.paramichha.testkit.generator;
 import com.paramichha.datafactory.DataFactory;
 import com.paramichha.testkit.TestKitTemplate;
 import com.paramichha.testkit.model.ClassMeta;
-import com.paramichha.testkit.model.MethodKind;
 import com.paramichha.testkit.model.MethodMeta;
 import com.paramichha.testkit.model.ParameterMeta;
 import com.paramichha.testkit.utils.TestNames;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Writes one {ClassName}Method{MethodName}Test nested class per public method.
  *
- * <p>Generated tests are self-contained — no DataFactory dependency in output.
- * DataFactory is called here at generation time to produce hardcoded literals.
- * Uses the same field-level API as MemberTestWriter for consistent value generation.
+ * <p>Value generation rules:
+ * - Valid input  → DataFactory.of(T).valid()       → method must not throw
+ * - Invalid input → DataFactory.of(T).invalidList() → method must throw
  *
- * <p>All test method names start with "test" per Java convention.
+ * <p>Return assertion rules — single unified path via wrapper + validator:
+ * - void                              → doesNotThrow only
+ * - primitive/String with annotations → inline wrapper record + validator.validate()
+ * - Object with constrained fields    → validator.validate(result)
+ * - Object/primitive — no annotations → isNotNull / doesNotThrow
+ *
+ * <p>All test method names start with "test".
  */
 final class MethodTestWriter {
 
@@ -35,30 +42,28 @@ final class MethodTestWriter {
 
     void write(StringBuilder sb, List<Object> validInstanceParts, boolean hasJakarta) {
         for (MethodMeta method : meta.methods()) {
-            writeMethodClass(sb, method, validInstanceParts, hasJakarta, true);
+            writeMethodClass(sb, method, hasJakarta, true);
         }
     }
 
     void writeFlat(StringBuilder sb, MethodMeta method,
                    List<Object> validInstanceParts, boolean hasJakarta) {
-        writeMethodClass(sb, method, validInstanceParts, hasJakarta, false);
+        writeMethodClass(sb, method, hasJakarta, false);
     }
 
     // ── Core ──────────────────────────────────────────────────────────────
 
     private void writeMethodClass(StringBuilder sb, MethodMeta method,
-                                  List<Object> validInstanceParts,
                                   boolean hasJakarta, boolean nested) {
-
         String className   = meta.simpleName();
         String fieldName   = meta.utilityClass() ? className : TestNames.toVariable(className);
         String methodName  = method.name();
         String ind         = nested ? "        " : "    ";
         String indBody     = nested ? "            " : "        ";
 
-        String nestedClass   = template.resolveMethod(template.methodClassName,   className, methodName);
-        String nestedDisplay = template.resolveMethod(template.methodDisplay,      className, methodName);
-        String validSrc      = template.resolveMethod(template.validInputsSource,  className, methodName);
+        String nestedClass   = template.resolveMethod(template.methodClassName,    className, methodName);
+        String nestedDisplay = template.resolveMethod(template.methodDisplay,       className, methodName);
+        String validSrc      = template.resolveMethod(template.validInputsSource,   className, methodName);
         String invalidSrc    = template.resolveMethod(template.invalidInputsSource, className, methodName);
 
         sb.append("    // ").append("=".repeat(73)).append("\n");
@@ -69,6 +74,11 @@ final class MethodTestWriter {
             sb.append("    @Nested\n");
             sb.append("    @DisplayName(\"").append(nestedDisplay).append("\")\n");
             sb.append("    class ").append(nestedClass).append(" {\n\n");
+        }
+
+        // Write wrapper record inside nested class if needed
+        if (needsWrapperRecord(method)) {
+            writeWrapperRecord(sb, method, ind);
         }
 
         switch (method.kind()) {
@@ -82,6 +92,113 @@ final class MethodTestWriter {
         }
 
         if (nested) sb.append("    }\n\n");
+    }
+
+    // ── Wrapper record — boxes primitive/String for validation ────────────
+
+    /**
+     * Returns true when the return type needs a wrapper record:
+     * primitive or String with Jakarta return annotations.
+     */
+    private boolean needsWrapperRecord(MethodMeta method) {
+        if (method.returnsVoid()) return false;
+        if (!method.hasReturnConstraints()) return false;
+        Class<?> rt = method.returnType();
+        return rt.isPrimitive() || rt == String.class || rt == Character.class;
+    }
+
+    /**
+     * Writes a private inline record that boxes the primitive/String
+     * with the same annotations as the method return — allowing
+     * standard validator.validate() to work.
+     *
+     * Example:
+     *   private record GetQuantityResult(@Min(1) @Max(100) Integer value) {}
+     */
+    private void writeWrapperRecord(StringBuilder sb, MethodMeta method, String ind) {
+        String wrapperName  = wrapperName(method.name());
+        String boxedType    = boxedTypeName(method.returnType());
+        String annotations  = buildAnnotationSource(method.returnAnnotations());
+
+        sb.append(ind).append("private record ").append(wrapperName).append("(")
+                .append(annotations).append(boxedType).append(" value) {}\n\n");
+    }
+
+    private String wrapperName(String methodName) {
+        return Character.toUpperCase(methodName.charAt(0)) + methodName.substring(1) + "Result";
+    }
+
+    private String boxedTypeName(Class<?> type) {
+        if (!type.isPrimitive()) return FieldTestWriter.sourceTypeName(type);
+        return switch (type.getName()) {
+            case "boolean" -> "Boolean";
+            case "byte"    -> "Byte";
+            case "short"   -> "Short";
+            case "int"     -> "Integer";
+            case "long"    -> "Long";
+            case "float"   -> "Float";
+            case "double"  -> "Double";
+            case "char"    -> "Character";
+            default        -> "Object";
+        };
+    }
+
+    /**
+     * Converts a list of annotation instances to their source representation.
+     * e.g. [@Min(value=1), @Max(value=100)] → "@Min(1) @Max(100) "
+     */
+    private String buildAnnotationSource(List<Annotation> annotations) {
+        if (annotations.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        for (Annotation a : annotations) {
+            sb.append(annotationToSource(a)).append(" ");
+        }
+        return sb.toString();
+    }
+
+    private String annotationToSource(Annotation a) {
+        String simpleName = a.annotationType().getSimpleName();
+        Method[] methods  = a.annotationType().getDeclaredMethods();
+
+        if (methods.length == 0) return "@" + simpleName;
+
+        // Single attribute named "value" — use shorthand: @Min(1)
+        if (methods.length == 1 && methods[0].getName().equals("value")) {
+            try {
+                Object val = methods[0].invoke(a);
+                return "@" + simpleName + "(" + attributeValueToSource(val) + ")";
+            } catch (Exception ignored) {}
+        }
+
+        // Multiple attributes or non-"value" name — use named form: @Size(min=2, max=50)
+        StringBuilder sb = new StringBuilder("@").append(simpleName).append("(");
+        boolean first = true;
+        for (Method m : methods) {
+            try {
+                Object val = m.invoke(a);
+                Object def = m.getDefaultValue();
+                // Skip default values to keep annotations clean
+                if (def != null && def.equals(val)) continue;
+                if (!first) sb.append(", ");
+                sb.append(m.getName()).append("=").append(attributeValueToSource(val));
+                first = false;
+            } catch (Exception ignored) {}
+        }
+        sb.append(")");
+        // If all were defaults, use no-arg form
+        return sb.toString().equals("@" + simpleName + "()") ? "@" + simpleName : sb.toString();
+    }
+
+    private String attributeValueToSource(Object val) {
+        if (val instanceof String s) return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
+        if (val instanceof Long l)   return l + "L";
+        if (val instanceof Class<?> c) return c.getSimpleName() + ".class";
+        if (val instanceof Annotation ann) return annotationToSource(ann);
+        if (val != null && val.getClass().isArray()) {
+            // e.g. groups() = {} — skip
+            return "{}";
+        }
+        return String.valueOf(val);
     }
 
     // ── COMMAND ───────────────────────────────────────────────────────────
@@ -113,7 +230,7 @@ final class MethodTestWriter {
     private void writeQuery(StringBuilder sb, MethodMeta method, String fieldName,
                             String ind, String indBody) {
         String methodName = method.name();
-        String call = fieldName + "." + methodName + "()";
+        String call       = fieldName + "." + methodName + "()";
 
         sb.append(ind).append("@Test\n");
         sb.append(ind).append("@DisplayName(\"").append(methodName).append(" returns a result\")\n");
@@ -121,11 +238,10 @@ final class MethodTestWriter {
 
         if (method.returnsVoid()) {
             sb.append(indBody).append("assertThatCode(() -> ").append(call).append(").doesNotThrow();\n");
-        } else if (method.returnsPrimitive()) {
-            sb.append(indBody).append("var result = ").append(call).append(";\n");
-            sb.append(indBody).append("// TODO: assertThat(result).isEqualTo(expectedValue);\n");
         } else {
-            sb.append(indBody).append("assertThat(").append(call).append(").isNotNull();\n");
+            String typeName = FieldTestWriter.sourceTypeName(method.returnType());
+            sb.append(indBody).append(typeName).append(" result = ").append(call).append(";\n");
+            writeReturnAssertion(sb, method, "result", indBody);
         }
         sb.append(ind).append("}\n\n");
 
@@ -145,10 +261,11 @@ final class MethodTestWriter {
                                            String fieldName,
                                            String validSrc, String invalidSrc,
                                            String ind, String indBody) {
-        String methodName = method.name();
+        String methodName      = method.name();
         List<ParameterMeta> params = method.parameters();
-        String paramSignature = buildParamSignature(params);
-        String paramCall      = buildParamCall(params);
+        String paramSignature  = buildParamSignature(params);
+        String paramCall       = buildParamCall(params);
+        boolean anyConstrained = params.stream().anyMatch(ParameterMeta::isConstrained);
 
         // testAcceptsValidInput — always
         sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
@@ -156,21 +273,10 @@ final class MethodTestWriter {
         sb.append(ind).append("@DisplayName(\"").append(methodName).append(" accepts valid input\")\n");
         sb.append(ind).append("void ").append(template.testAcceptsValidInput)
                 .append("(String description, ").append(paramSignature).append(") {\n");
-
-        if (method.returnsVoid()) {
-            sb.append(indBody).append("assertThatCode(() -> ")
-                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
-                    .append(")).doesNotThrow();\n");
-        } else {
-            String returnTypeName = FieldTestWriter.sourceTypeName(method.returnType());
-            sb.append(indBody).append(returnTypeName).append(" result = ")
-                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall).append(");\n");
-            sb.append(indBody).append("assertThat(result).isNotNull();\n");
-        }
+        writeAcceptBody(sb, method, fieldName, paramCall, indBody);
         sb.append(ind).append("}\n\n");
 
-        // testRejectsInvalidInput — only if any parameter is constrained
-        boolean anyConstrained = params.stream().anyMatch(ParameterMeta::isConstrained);
+        // testRejectsInvalidInput — only if any param constrained
         if (anyConstrained) {
             sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
             sb.append(ind).append("@MethodSource(\"").append(invalidSrc).append("\")\n");
@@ -184,9 +290,7 @@ final class MethodTestWriter {
         }
 
         writeValidDataSource(sb, method, params, validSrc, ind);
-        if (anyConstrained) {
-            writeInvalidDataSource(sb, params, invalidSrc, ind);
-        }
+        if (anyConstrained) writeInvalidDataSource(sb, params, invalidSrc, ind);
     }
 
     // ── OPERATION ─────────────────────────────────────────────────────────
@@ -195,10 +299,11 @@ final class MethodTestWriter {
                                 String fieldName,
                                 String validSrc, String invalidSrc,
                                 String ind, String indBody) {
-        String methodName = method.name();
+        String methodName      = method.name();
         List<ParameterMeta> params = method.parameters();
-        String paramSignature = buildParamSignature(params);
-        String paramCall      = buildParamCall(params);
+        String paramSignature  = buildParamSignature(params);
+        String paramCall       = buildParamCall(params);
+        boolean anyConstrained = params.stream().anyMatch(ParameterMeta::isConstrained);
 
         // testAcceptsValidInput — always
         sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
@@ -206,20 +311,10 @@ final class MethodTestWriter {
         sb.append(ind).append("@DisplayName(\"").append(methodName).append(" accepts valid input\")\n");
         sb.append(ind).append("void ").append(template.testAcceptsValidInput)
                 .append("(String description, ").append(paramSignature).append(") {\n");
-
-        if (method.returnsVoid()) {
-            sb.append(indBody).append("assertThatCode(() -> ")
-                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
-                    .append(")).doesNotThrow();\n");
-        } else {
-            sb.append(indBody).append("assertThat(")
-                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
-                    .append(")).isNotNull();\n");
-        }
+        writeAcceptBody(sb, method, fieldName, paramCall, indBody);
         sb.append(ind).append("}\n\n");
 
-        // testRejectsInvalidInput — only if any parameter is constrained
-        boolean anyConstrained = params.stream().anyMatch(ParameterMeta::isConstrained);
+        // testRejectsInvalidInput — only if any param constrained
         if (anyConstrained) {
             sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
             sb.append(ind).append("@MethodSource(\"").append(invalidSrc).append("\")\n");
@@ -233,12 +328,73 @@ final class MethodTestWriter {
         }
 
         writeValidDataSource(sb, method, params, validSrc, ind);
-        if (anyConstrained) {
-            writeInvalidDataSourceOperation(sb, params, invalidSrc, ind);
+        if (anyConstrained) writeInvalidDataSourceOperation(sb, params, invalidSrc, ind);
+    }
+
+    // ── Accept body — shared by MUTATOR/TRANSFORMER/OPERATION ────────────
+
+    private void writeAcceptBody(StringBuilder sb, MethodMeta method,
+                                 String fieldName, String paramCall, String indBody) {
+        String methodName = method.name();
+
+        if (method.returnsVoid()) {
+            sb.append(indBody).append("assertThatCode(() -> ")
+                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall)
+                    .append(")).doesNotThrow();\n");
+        } else {
+            String typeName = FieldTestWriter.sourceTypeName(method.returnType());
+            sb.append(indBody).append(typeName).append(" result = ")
+                    .append(fieldName).append(".").append(methodName).append("(").append(paramCall).append(");\n");
+            writeReturnAssertion(sb, method, "result", indBody);
         }
     }
 
-    // ── Data sources — DataFactory field-level API ────────────────────────
+    // ── Return assertion — single unified path ────────────────────────────
+
+    /**
+     * Single method that handles all return type + annotation permutations.
+     *
+     * primitive/String with annotations → wrapper record + validator.validate()
+     * Object with constrained fields    → validator.validate(result)
+     * Object no constraints             → assertThat(result).isNotNull()
+     * primitive no annotations          → doesNotThrow (already handled at call site)
+     */
+    private void writeReturnAssertion(StringBuilder sb, MethodMeta method,
+                                      String resultExpr, String indBody) {
+        Class<?> returnType = method.returnType();
+
+        if (returnType == void.class) return;
+
+        // Annotated primitive or String — use wrapper record + validator
+        if (needsWrapperRecord(method)) {
+            sb.append(indBody).append("assertThat(").append(template.validatorField)
+                    .append(".validate(new ").append(wrapperName(method.name()))
+                    .append("(").append(resultExpr).append("))).isEmpty();\n");
+            return;
+        }
+
+        // Object return with Jakarta return annotation (e.g. @Valid, @NotNull)
+        if (!returnType.isPrimitive() && method.hasReturnConstraints()) {
+            sb.append(indBody).append("assertThat(").append(template.validatorField)
+                    .append(".validate(").append(resultExpr).append(")).isEmpty();\n");
+            return;
+        }
+
+        // Object whose fields have constraints
+        if (!returnType.isPrimitive() && typeHasConstraints(returnType)) {
+            sb.append(indBody).append("assertThat(").append(template.validatorField)
+                    .append(".validate(").append(resultExpr).append(")).isEmpty();\n");
+            return;
+        }
+
+        // Plain primitive — doesNotThrow was already written at call site
+        if (returnType.isPrimitive()) return;
+
+        // Plain object — at minimum not null
+        sb.append(indBody).append("assertThat(").append(resultExpr).append(").isNotNull();\n");
+    }
+
+    // ── Data sources ──────────────────────────────────────────────────────
 
     private void writeValidDataSource(StringBuilder sb, MethodMeta method,
                                       List<ParameterMeta> params,
@@ -247,26 +403,21 @@ final class MethodTestWriter {
         sb.append(ind).append("    return Stream.of(\n");
         sb.append(ind).append("        Arguments.of(\"valid ").append(method.name()).append("\",\n");
         for (int i = 0; i < params.size(); i++) {
-            sb.append(ind).append("            ")
-                    .append(validLiteralFor(params.get(i)));
+            sb.append(ind).append("            ").append(validLiteralFor(params.get(i)));
             sb.append(i < params.size() - 1 ? ",\n" : ")\n");
         }
         sb.append(ind).append("    );\n");
         sb.append(ind).append("}\n\n");
     }
 
-    /**
-     * Single-parameter invalid source.
-     * Uses DataFactory.of(type).invalidList() — same as MemberTestWriter.
-     */
     private void writeInvalidDataSource(StringBuilder sb,
                                         List<ParameterMeta> params,
                                         String invalidSrc, String ind) {
         ParameterMeta p = params.get(0);
+        List<String> invalids = invalidLiteralsFor(p);
+
         sb.append(ind).append("static Stream<Arguments> ").append(invalidSrc).append("() {\n");
         sb.append(ind).append("    return Stream.of(\n");
-
-        List<String> invalids = invalidLiteralsFor(p);
         for (int i = 0; i < invalids.size(); i++) {
             sb.append(ind).append("        Arguments.of(\"invalid ").append(p.name())
                     .append(" ").append(i + 1).append("\", ").append(invalids.get(i)).append(")");
@@ -276,17 +427,13 @@ final class MethodTestWriter {
         sb.append(ind).append("}\n\n");
     }
 
-    /**
-     * Multi-parameter invalid source — one row per parameter, null that one, valid for rest.
-     * Only rows where the parameter isConstrained() are included.
-     */
     private void writeInvalidDataSourceOperation(StringBuilder sb,
                                                  List<ParameterMeta> params,
                                                  String invalidSrc, String ind) {
         sb.append(ind).append("static Stream<Arguments> ").append(invalidSrc).append("() {\n");
         sb.append(ind).append("    return Stream.of(\n");
 
-        List<String> rows = new java.util.ArrayList<>();
+        List<String> rows = new ArrayList<>();
         for (int nullIdx = 0; nullIdx < params.size(); nullIdx++) {
             ParameterMeta nullParam = params.get(nullIdx);
             if (!nullParam.isConstrained()) continue;
@@ -294,15 +441,13 @@ final class MethodTestWriter {
             StringBuilder row = new StringBuilder();
             row.append(ind).append("        Arguments.of(\"null ").append(nullParam.name()).append("\",\n");
             for (int i = 0; i < params.size(); i++) {
-                String val = i == nullIdx
-                        ? nullCast(params.get(i).type())
+                String val = i == nullIdx ? nullCast(params.get(i).type())
                         : validLiteralFor(params.get(i));
                 row.append(ind).append("            ").append(val);
                 row.append(i < params.size() - 1 ? ",\n" : ")");
             }
             rows.add(row.toString());
         }
-
         for (int i = 0; i < rows.size(); i++) {
             sb.append(rows.get(i));
             sb.append(i < rows.size() - 1 ? ",\n" : "\n");
@@ -311,12 +456,8 @@ final class MethodTestWriter {
         sb.append(ind).append("}\n\n");
     }
 
-    // ── Value generation — DataFactory field-level API ────────────────────
+    // ── Value generation ──────────────────────────────────────────────────
 
-    /**
-     * Valid literal for a parameter.
-     * Uses DataFactory.of(type).valid() — same approach as MemberTestWriter valid values.
-     */
     private String validLiteralFor(ParameterMeta param) {
         Class<?> type = param.type();
         if (type.isPrimitive()) return primitiveValid(type);
@@ -328,29 +469,33 @@ final class MethodTestWriter {
         return nullCast(type);
     }
 
-    /**
-     * Invalid literals for a parameter.
-     * For constrained object types: uses DataFactory.of(type).invalidList()
-     * — same as MemberTestWriter invalid values.
-     * For directly annotated params: uses validPerField() on the type.
-     * For primitives/String: boundary values.
-     */
     private List<String> invalidLiteralsFor(ParameterMeta param) {
         Class<?> type = param.type();
-        List<String> result = new java.util.ArrayList<>();
+        List<String> result = new ArrayList<>();
 
-        // Direct annotations on param — treat as if it were a field
-        if (!param.validations().isEmpty()) {
-            if (type == String.class) {
-                result.add("(String) null");
-                result.add("\"\"");
-                result.add("\"   \"");
-                return result;
-            }
+        if (type == String.class) {
+            result.add("(String) null");
+            result.add("\"\"");
+            result.add("\"   \"");
+            return result;
         }
 
-        // Indirect — object type has constrained fields — use DataFactory.invalidList()
-        if (param.hasIndirectConstraints() && !type.isPrimitive()) {
+        // Primitive — boundary values from DataFactory invalidList on wrapper
+        if (type.isPrimitive()) {
+            try {
+                Class<?> boxed = boxedClass(type);
+                List<?> invalids = DataFactory.of(boxed).invalidList();
+                for (Object inv : invalids) {
+                    String lit = LiteralConverter.toLiteralOrNull(inv);
+                    if (lit != null) result.add(lit);
+                    if (result.size() >= 3) break;
+                }
+            } catch (Exception ignored) {}
+            return result;
+        }
+
+        // Object with indirect constraints — DataFactory.invalidList()
+        if (param.hasIndirectConstraints()) {
             try {
                 List<?> invalids = DataFactory.of(type).invalidList();
                 for (Object inv : invalids) {
@@ -361,15 +506,50 @@ final class MethodTestWriter {
             } catch (Exception ignored) {}
         }
 
-        // Fallback — null is always invalid for object types
-        if (result.isEmpty() && !type.isPrimitive()) {
-            result.add(nullCast(type));
-        }
-
+        if (result.isEmpty()) result.add(nullCast(type));
         return result;
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────
+    // ── Type helpers ──────────────────────────────────────────────────────
+
+    private boolean typeHasConstraints(Class<?> type) {
+        if (type == null || type.isPrimitive()) return false;
+        if (type.getPackageName().startsWith("java.")) return false;
+        if (type.isEnum()) return false;
+        for (java.lang.reflect.Field f : type.getDeclaredFields()) {
+            for (Annotation a : f.getAnnotations()) {
+                String pkg = a.annotationType().getPackageName();
+                if (pkg.startsWith("jakarta.validation") || pkg.startsWith("javax.validation")
+                        || pkg.startsWith("org.hibernate.validator")) return true;
+            }
+        }
+        if (type.isRecord()) {
+            for (java.lang.reflect.RecordComponent rc : type.getRecordComponents()) {
+                for (Annotation a : rc.getAnnotations()) {
+                    String pkg = a.annotationType().getPackageName();
+                    if (pkg.startsWith("jakarta.validation") || pkg.startsWith("javax.validation")
+                            || pkg.startsWith("org.hibernate.validator")) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Class<?> boxedClass(Class<?> primitive) {
+        return switch (primitive.getName()) {
+            case "boolean" -> Boolean.class;
+            case "byte"    -> Byte.class;
+            case "short"   -> Short.class;
+            case "int"     -> Integer.class;
+            case "long"    -> Long.class;
+            case "float"   -> Float.class;
+            case "double"  -> Double.class;
+            case "char"    -> Character.class;
+            default        -> primitive;
+        };
+    }
+
+    // ── String helpers ────────────────────────────────────────────────────
 
     private String buildParamSignature(List<ParameterMeta> params) {
         StringBuilder sb = new StringBuilder();

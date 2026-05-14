@@ -24,25 +24,13 @@ public final class DefaultClassReader implements ClassReader {
     public ClassMeta read(Class<?> type) {
         if (isUtilityClass(type)) {
             List<MethodMeta> methods = extractMethods(type, true);
-            return new ClassMeta(
-                    type.getSimpleName(),
-                    type.getPackageName(),
-                    ClassMeta.ConstructorStyle.ALL_ARGS,
-                    List.of(),
-                    methods,
-                    true
-            );
+            return new ClassMeta(type.getSimpleName(), type.getPackageName(),
+                    ClassMeta.ConstructorStyle.ALL_ARGS, List.of(), methods, true);
         }
-        List<FieldMeta> fields = extractFields(type);
+        List<FieldMeta> fields  = extractFields(type);
         List<MethodMeta> methods = extractMethods(type, false);
-        return new ClassMeta(
-                type.getSimpleName(),
-                type.getPackageName(),
-                detectStyle(type, fields),
-                fields,
-                methods,
-                false
-        );
+        return new ClassMeta(type.getSimpleName(), type.getPackageName(),
+                detectStyle(type, fields), fields, methods, false);
     }
 
     // ── Fields ────────────────────────────────────────────────────────────
@@ -118,8 +106,11 @@ public final class DefaultClassReader implements ClassReader {
             if (m.isSynthetic() || m.isBridge()) continue;
 
             List<ParameterMeta> params = extractParameters(m);
+            List<Annotation> returnAnns = filterValidation(
+                    Arrays.asList(m.getAnnotatedReturnType().getAnnotations()));
             MethodKind kind = classify(m.getReturnType(), params);
-            result.add(new MethodMeta(m.getName(), m.getReturnType(), params, kind));
+            result.add(new MethodMeta(m.getName(), m.getReturnType(),
+                    returnAnns, params, kind));
         }
 
         return Collections.unmodifiableList(result);
@@ -139,7 +130,8 @@ public final class DefaultClassReader implements ClassReader {
         boolean isVoid = returnType == void.class || returnType == Void.class;
         int paramCount = params.size();
         if (isVoid && paramCount == 0) return MethodKind.COMMAND;
-        if (isVoid)                    return MethodKind.MUTATOR;
+        if (isVoid && paramCount == 1) return MethodKind.MUTATOR;
+        if (isVoid)                    return MethodKind.MUTATOR;   // void + multi-param = mutator
         if (paramCount == 0)           return MethodKind.QUERY;
         if (paramCount == 1)           return MethodKind.TRANSFORMER;
         return MethodKind.OPERATION;
@@ -160,40 +152,6 @@ public final class DefaultClassReader implements ClassReader {
         return names;
     }
 
-    // ── Constraint detection ─────────────────────────────────────────────
-
-    /**
-     * Returns true if the type has any fields with Jakarta constraint annotations.
-     * Skips primitives, Java built-in types, enums.
-     */
-    private boolean typeHasConstraints(Class<?> type) {
-        if (type == null || type.isPrimitive()) return false;
-        if (type.getPackageName().startsWith("java.")) return false;
-        if (type.isEnum()) return false;
-        for (Field f : type.getDeclaredFields()) {
-            for (Annotation a : f.getAnnotations()) {
-                String pkg = a.annotationType().getPackageName();
-                if (pkg.startsWith("jakarta.validation") || pkg.startsWith("javax.validation")
-                        || pkg.startsWith("org.hibernate.validator")) {
-                    return true;
-                }
-            }
-        }
-        // Also check record components
-        if (type.isRecord()) {
-            for (RecordComponent rc : type.getRecordComponents()) {
-                for (Annotation a : rc.getAnnotations()) {
-                    String pkg = a.annotationType().getPackageName();
-                    if (pkg.startsWith("jakarta.validation") || pkg.startsWith("javax.validation")
-                            || pkg.startsWith("org.hibernate.validator")) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     // ── Shared ────────────────────────────────────────────────────────────
 
     private List<Annotation> filterValidation(List<Annotation> annotations) {
@@ -209,20 +167,42 @@ public final class DefaultClassReader implements ClassReader {
         return Collections.unmodifiableList(result);
     }
 
-    private boolean isRequired(List<Annotation> v) {
-        return v.stream().anyMatch(a -> a instanceof NotNull || a instanceof NotBlank
-                || a instanceof NotEmpty);
+    private boolean typeHasConstraints(Class<?> type) {
+        if (type == null || type.isPrimitive()) return false;
+        if (type.getPackageName().startsWith("java.")) return false;
+        if (type.isEnum()) return false;
+        for (Field f : type.getDeclaredFields()) {
+            for (Annotation a : f.getAnnotations()) {
+                String pkg = a.annotationType().getPackageName();
+                if (pkg.startsWith("jakarta.validation") || pkg.startsWith("javax.validation")
+                        || pkg.startsWith("org.hibernate.validator")) return true;
+            }
+        }
+        if (type.isRecord()) {
+            for (RecordComponent rc : type.getRecordComponents()) {
+                for (Annotation a : rc.getAnnotations()) {
+                    String pkg = a.annotationType().getPackageName();
+                    if (pkg.startsWith("jakarta.validation") || pkg.startsWith("javax.validation")
+                            || pkg.startsWith("org.hibernate.validator")) return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static boolean isUtilityClass(Class<?> type) {
         if (type.isEnum() || type.isInterface() || type.isRecord() || type.isAnonymousClass()) return false;
-        Constructor<?>[] ctors = type.getDeclaredConstructors();
-        boolean allPrivate = Arrays.stream(ctors)
+        boolean allPrivate = Arrays.stream(type.getDeclaredConstructors())
                 .allMatch(c -> Modifier.isPrivate(c.getModifiers()));
         if (!allPrivate) return false;
         return Arrays.stream(type.getDeclaredMethods())
                 .noneMatch(m -> Modifier.isStatic(m.getModifiers())
                         && Modifier.isPublic(m.getModifiers())
                         && m.getReturnType() == type);
+    }
+
+    private boolean isRequired(List<Annotation> v) {
+        return v.stream().anyMatch(a -> a instanceof NotNull || a instanceof NotBlank
+                || a instanceof NotEmpty);
     }
 }
