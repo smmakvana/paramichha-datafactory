@@ -17,8 +17,7 @@ public class TestKitApp {
 
     public static void main(String[] args) {
         generate(
-                Texts.class,
-                SampleService.class
+                Circle.class
         );
     }
 
