@@ -113,10 +113,10 @@ public final class DefaultTestGenerator implements TestGenerator {
             mm.append("package ").append(targetPackage).append(";\n\n");
             addImports(mm, meta, type, parts);
             mm.append("\n@DisplayName(\"")
-              .append(template.resolveMethod(template.methodDisplay, className, method.name()))
-              .append("\"\n");
+                    .append(template.resolveMethod(template.methodDisplay, className, method.name()))
+                    .append("\"\n");
             mm.append("class ").append(methodClassName)
-              .append(" extends ").append(baseName).append(" {\n\n");
+                    .append(" extends ").append(baseName).append(" {\n\n");
             methodWriter2.writeFlat(mm, method, parts, hasJakarta);
             mm.append("}\n");
             files.add(new GeneratedTestClass(methodClassName, targetPackage, mm.toString()));
@@ -131,6 +131,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         ic.addTypeImport(type);
         ic.addFieldTypeImports(meta.fields());
         ic.addValueImports(parts);
+        meta.methods().forEach(m -> ic.addAnnotationImports(m.returnAnnotations()));
         for (String imp : ic.collect()) {
             sb.append("import ").append(imp).append(";\n");
         }
@@ -198,8 +199,8 @@ public final class DefaultTestGenerator implements TestGenerator {
         writeValidInstance(sb, meta, validInstanceParts, instantiation, template);
         if (meta.constructorStyle() == ClassMeta.ConstructorStyle.SETTER) writeSetterHelper(sb, meta);
         if (!meta.utilityClass()) {
-        creationWriter.write(sb, data, validInstanceParts, valueExtractor);
-        memberWriter.write(sb, type, validInstanceParts, data.validAllPerField());
+            creationWriter.write(sb, data, validInstanceParts, valueExtractor);
+            memberWriter.write(sb, type, validInstanceParts, data.validAllPerField());
         }
         methodWriter.write(sb, validInstanceParts, data.hasJakarta(meta));
         sb.append("}\n");
@@ -232,6 +233,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         ic.addValueImports(validInstanceParts);
         data.violations().forEach(v ->
                 ic.addValueImports(valueExtractor.extract(v, type, meta.fields())));
+        meta.methods().forEach(m -> ic.addAnnotationImports(m.returnAnnotations()));
         return ic;
     }
 

@@ -462,9 +462,22 @@ final class MethodTestWriter {
         Class<?> type = param.type();
         if (type.isPrimitive()) return primitiveValid(type);
         try {
-            Object value = DataFactory.of(type).seed(param.name().hashCode()).valid();
+            long seed = com.paramichha.utils.Seeds.stableHash(param.name());
+            Object value = DataFactory.of(type).seed(seed).valid();
+            if (value == null) return nullCast(type);
+
+            // Direct literal — String, BigDecimal, LocalDate etc
             String literal = LiteralConverter.toLiteralOrNull(value);
             if (literal != null) return literal;
+
+            // Domain object fallback — build constructor call via InstantiationWriter
+            com.paramichha.testkit.model.ClassMeta paramMeta =
+                    com.paramichha.testkit.reader.DefaultClassReader.INSTANCE.read(type);
+            java.util.List<Object> parts =
+                    DefaultValueExtractor.INSTANCE.extract(value, type, paramMeta.fields());
+            String call = new InstantiationWriter(paramMeta).constructorCall(parts);
+            if (call != null && !call.contains("TODO")) return call;
+
         } catch (Exception ignored) {}
         return nullCast(type);
     }

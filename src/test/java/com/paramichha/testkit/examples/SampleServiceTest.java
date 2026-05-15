@@ -3,14 +3,16 @@
 package com.paramichha.testkit.examples;
 
 import com.paramichha.testkit.examples.SampleService;
+import jakarta.validation.Valid;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
-
-import jakarta.validation.constraints.NotBlank;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -82,7 +84,7 @@ class SampleServiceTest {
 
         static Stream<Arguments> validNames() {
             return Stream.of(
-                Arguments.of("name 0", "Yong Hills PhD")
+                Arguments.of("name 0", "Dustin Sipes")
             );
         }
 
@@ -199,16 +201,16 @@ class SampleServiceTest {
         @ParameterizedTest(name = "{0}")
         @MethodSource("validApplyDiscountInputs")
         @DisplayName("applyDiscount accepts valid input")
-        void testAcceptsValidInput(String description, BigDecimal arg0) {
-            BigDecimal result = sampleService.applyDiscount(arg0);
+        void testAcceptsValidInput(String description, BigDecimal rate) {
+            BigDecimal result = sampleService.applyDiscount(rate);
             assertThat(validator.validate(result)).isEmpty();
         }
 
         @ParameterizedTest(name = "{0}")
         @MethodSource("invalidApplyDiscountInputs")
         @DisplayName("applyDiscount rejects invalid input")
-        void testRejectsInvalidInput(String description, BigDecimal arg0) {
-            assertThatThrownBy(() -> sampleService.applyDiscount(arg0))
+        void testRejectsInvalidInput(String description, BigDecimal rate) {
+            assertThatThrownBy(() -> sampleService.applyDiscount(rate))
                     .isInstanceOf(Exception.class);
         }
 
@@ -221,7 +223,7 @@ class SampleServiceTest {
 
         static Stream<Arguments> invalidApplyDiscountInputs() {
             return Stream.of(
-                Arguments.of("invalid arg0 1", (BigDecimal) null)
+                Arguments.of("invalid rate 1", (BigDecimal) null)
             );
         }
 
@@ -238,16 +240,16 @@ class SampleServiceTest {
         @ParameterizedTest(name = "{0}")
         @MethodSource("validFormatNameInputs")
         @DisplayName("formatName accepts valid input")
-        void testAcceptsValidInput(String description, String arg0) {
-            String result = sampleService.formatName(arg0);
+        void testAcceptsValidInput(String description, String prefix) {
+            String result = sampleService.formatName(prefix);
             assertThat(result).isNotNull();
         }
 
         @ParameterizedTest(name = "{0}")
         @MethodSource("invalidFormatNameInputs")
         @DisplayName("formatName rejects invalid input")
-        void testRejectsInvalidInput(String description, String arg0) {
-            assertThatThrownBy(() -> sampleService.formatName(arg0))
+        void testRejectsInvalidInput(String description, String prefix) {
+            assertThatThrownBy(() -> sampleService.formatName(prefix))
                     .isInstanceOf(Exception.class);
         }
 
@@ -260,9 +262,9 @@ class SampleServiceTest {
 
         static Stream<Arguments> invalidFormatNameInputs() {
             return Stream.of(
-                Arguments.of("invalid arg0 1", (String) null),
-                Arguments.of("invalid arg0 2", ""),
-                Arguments.of("invalid arg0 3", "   ")
+                Arguments.of("invalid prefix 1", (String) null),
+                Arguments.of("invalid prefix 2", ""),
+                Arguments.of("invalid prefix 3", "   ")
             );
         }
 
@@ -281,8 +283,8 @@ class SampleServiceTest {
         @ParameterizedTest(name = "{0}")
         @MethodSource("validDescribeInputs")
         @DisplayName("describe accepts valid input")
-        void testAcceptsValidInput(String description, String arg0) {
-            String result = sampleService.describe(arg0);
+        void testAcceptsValidInput(String description, String separator) {
+            String result = sampleService.describe(separator);
             assertThat(validator.validate(new DescribeResult(result))).isEmpty();
         }
 
@@ -329,8 +331,8 @@ class SampleServiceTest {
         @ParameterizedTest(name = "{0}")
         @MethodSource("validEncodeInputs")
         @DisplayName("encode accepts valid input")
-        void testAcceptsValidInput(String description, String arg0) {
-            String result = sampleService.encode(arg0);
+        void testAcceptsValidInput(String description, String format) {
+            String result = sampleService.encode(format);
             assertThat(result).isNotNull();
         }
 
@@ -354,34 +356,34 @@ class SampleServiceTest {
         @ParameterizedTest(name = "{0}")
         @MethodSource("validMergeInputs")
         @DisplayName("merge accepts valid input")
-        void testAcceptsValidInput(String description, SampleService arg0, String arg1) {
-            SampleService result = sampleService.merge(arg0, arg1);
+        void testAcceptsValidInput(String description, SampleService other, String newName) {
+            SampleService result = sampleService.merge(other, newName);
             assertThat(validator.validate(result)).isEmpty();
         }
 
         @ParameterizedTest(name = "{0}")
         @MethodSource("invalidMergeInputs")
         @DisplayName("merge rejects invalid input")
-        void testRejectsInvalidInput(String description, SampleService arg0, String arg1) {
-            assertThatThrownBy(() -> sampleService.merge(arg0, arg1))
+        void testRejectsInvalidInput(String description, SampleService other, String newName) {
+            assertThatThrownBy(() -> sampleService.merge(other, newName))
                     .isInstanceOf(Exception.class);
         }
 
         static Stream<Arguments> validMergeInputs() {
             return Stream.of(
                 Arguments.of("valid merge",
-                    (SampleService) null,
+                    new SampleService("Dr. Sunni Jenkins", 1, new BigDecimal("1.50")),
                     (String) null)
             );
         }
 
         static Stream<Arguments> invalidMergeInputs() {
             return Stream.of(
-                Arguments.of("null arg0",
+                Arguments.of("null other",
                     (SampleService) null,
                     (String) null),
-                Arguments.of("null arg1",
-                    (SampleService) null,
+                Arguments.of("null newName",
+                    new SampleService("Dr. Sunni Jenkins", 1, new BigDecimal("1.50")),
                     (String) null)
             );
         }
@@ -399,8 +401,8 @@ class SampleServiceTest {
         @ParameterizedTest(name = "{0}")
         @MethodSource("validCombineInputs")
         @DisplayName("combine accepts valid input")
-        void testAcceptsValidInput(String description, int arg0, int arg1) {
-            int result = sampleService.combine(arg0, arg1);
+        void testAcceptsValidInput(String description, int a, int b) {
+            int result = sampleService.combine(a, b);
         }
 
         static Stream<Arguments> validCombineInputs() {
@@ -424,29 +426,29 @@ class SampleServiceTest {
         @ParameterizedTest(name = "{0}")
         @MethodSource("validTransferToInputs")
         @DisplayName("transferTo accepts valid input")
-        void testAcceptsValidInput(String description, SampleService arg0, int arg1) {
-            assertThatCode(() -> sampleService.transferTo(arg0, arg1)).doesNotThrowAnyException();
+        void testAcceptsValidInput(String description, SampleService target, int amount) {
+            assertThatCode(() -> sampleService.transferTo(target, amount)).doesNotThrowAnyException();
         }
 
         @ParameterizedTest(name = "{0}")
         @MethodSource("invalidTransferToInputs")
         @DisplayName("transferTo rejects invalid input")
-        void testRejectsInvalidInput(String description, SampleService arg0, int arg1) {
-            assertThatThrownBy(() -> sampleService.transferTo(arg0, arg1))
+        void testRejectsInvalidInput(String description, SampleService target, int amount) {
+            assertThatThrownBy(() -> sampleService.transferTo(target, amount))
                     .isInstanceOf(Exception.class);
         }
 
         static Stream<Arguments> validTransferToInputs() {
             return Stream.of(
                 Arguments.of("valid transferTo",
-                    (SampleService) null,
+                    new SampleService("Lolita Zboncak", 1, new BigDecimal("1.50")),
                     1)
             );
         }
 
         static Stream<Arguments> invalidTransferToInputs() {
             return Stream.of(
-                Arguments.of("invalid arg0 1", (SampleService) null)
+                Arguments.of("invalid target 1", (SampleService) null)
             );
         }
 
@@ -463,8 +465,8 @@ class SampleServiceTest {
         @ParameterizedTest(name = "{0}")
         @MethodSource("validMultiplyInputs")
         @DisplayName("multiply accepts valid input")
-        void testAcceptsValidInput(String description, int arg0) {
-            int result = sampleService.multiply(arg0);
+        void testAcceptsValidInput(String description, int factor) {
+            int result = sampleService.multiply(factor);
         }
 
         static Stream<Arguments> validMultiplyInputs() {
@@ -487,8 +489,8 @@ class SampleServiceTest {
         @ParameterizedTest(name = "{0}")
         @MethodSource("validSwapInputs")
         @DisplayName("swap accepts valid input")
-        void testAcceptsValidInput(String description, String arg0, String arg1) {
-            assertThatCode(() -> sampleService.swap(arg0, arg1)).doesNotThrowAnyException();
+        void testAcceptsValidInput(String description, String a, String b) {
+            assertThatCode(() -> sampleService.swap(a, b)).doesNotThrowAnyException();
         }
 
         static Stream<Arguments> validSwapInputs() {
