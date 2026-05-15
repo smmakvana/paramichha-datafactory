@@ -494,50 +494,17 @@ final class MethodTestWriter {
         Class<?> type = param.type();
         if (type.isPrimitive()) return primitiveValid(type);
 
-        // Step 1: If param has annotations — use DataFactory field-level API first
-        // This works for ALL types: String, BigDecimal, LocalDate, domain objects
-        if (!param.validations().isEmpty()) {
-            try {
-                @SuppressWarnings("unchecked")
-                Object val = DataFactory.field(
-                        param.name(), (Class<Object>) type, param.validations()).valid();
-                if (val != null) {
-                    String lit = LiteralConverter.toLiteralOrNull(val);
-                    if (lit != null && !lit.equals("null")) return lit;
-                }
-            } catch (Exception ignored) {}
-        }
-
-        // Step 2: Plain String — safe default
-        if (type == String.class) return "\"value\"";
-
-        // Step 3: Domain object — build from fields via InstantiationWriter
-        String pkg = type.getPackageName();
-        boolean isDomain = !type.isPrimitive() && !type.isEnum()
-                && !pkg.startsWith("java.") && !pkg.startsWith("jakarta.");
-        if (isDomain) {
-            try {
-                com.paramichha.testkit.model.ClassMeta paramMeta =
-                        com.paramichha.testkit.reader.DefaultClassReader.INSTANCE.read(type);
-                InstantiationWriter iw = new InstantiationWriter(paramMeta);
-                java.util.List<Object> parts = new java.util.ArrayList<>();
-                for (com.paramichha.testkit.model.FieldMeta f : paramMeta.fields()) {
-                    java.util.List<?> vals = iw.validValuesFor(type, f);
-                    parts.add(vals.isEmpty() ? null : vals.get(0));
-                }
-                String call = iw.constructorCall(parts);
-                if (call != null && !call.contains("TODO")) return call;
-            } catch (Exception ignored) {}
-            return nullCast(type);
-        }
-
-        // Step 4: Java types without annotations — DataFactory direct
+        long seed = com.paramichha.utils.Seeds.stableHash(param.name());
         try {
-            long seed = com.paramichha.utils.Seeds.stableHash(param.name());
-            Object value = DataFactory.of(type).seed(seed).valid();
-            if (value != null) {
-                String literal = LiteralConverter.toLiteralOrNull(value);
-                if (literal != null && !literal.equals("null")) return literal;
+            // Always use DataFactory — field-level when annotations present, type-level otherwise
+            @SuppressWarnings("unchecked")
+            Object val = param.validations().isEmpty()
+                    ? DataFactory.of(type).seed(seed).valid()
+                    : DataFactory.field(param.name(), (Class<Object>) type, param.validations()).valid();
+
+            if (val != null) {
+                String lit = LiteralConverter.toLiteralOrNull(val);
+                if (lit != null && !lit.equals("null")) return lit;
             }
         } catch (Exception ignored) {}
         return nullCast(type);
