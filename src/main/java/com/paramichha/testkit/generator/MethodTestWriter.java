@@ -490,24 +490,18 @@ final class MethodTestWriter {
 
     // ── Value generation ──────────────────────────────────────────────────
 
+    @SuppressWarnings("unchecked")
     private String validLiteralFor(ParameterMeta param) {
-        Class<?> type = param.type();
-        if (type.isPrimitive()) return primitiveValid(type);
-
         long seed = com.paramichha.utils.Seeds.stableHash(param.name());
         try {
-            // Always use DataFactory — field-level when annotations present, type-level otherwise
-            @SuppressWarnings("unchecked")
             Object val = param.validations().isEmpty()
-                    ? DataFactory.of(type).seed(seed).valid()
-                    : DataFactory.field(param.name(), (Class<Object>) type, param.validations()).valid();
-
-            if (val != null) {
-                String lit = LiteralConverter.toLiteralOrNull(val);
-                if (lit != null && !lit.equals("null")) return lit;
-            }
+                    ? DataFactory.of(param.type()).seed(seed).valid()
+                    : DataFactory.field(param.name(), (Class<Object>) param.type(),
+                    param.validations()).valid();
+            String lit = LiteralConverter.toLiteralOrNull(val);
+            if (lit != null) return lit;
         } catch (Exception ignored) {}
-        return nullCast(type);
+        return nullCast(param.type());
     }
     private List<String> invalidLiteralsFor(ParameterMeta param) {
         Class<?> type = param.type();
