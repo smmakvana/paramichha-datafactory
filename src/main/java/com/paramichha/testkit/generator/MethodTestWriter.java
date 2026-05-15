@@ -104,7 +104,12 @@ final class MethodTestWriter {
         if (method.returnsVoid()) return false;
         if (!method.hasReturnConstraints()) return false;
         Class<?> rt = method.returnType();
-        return rt.isPrimitive() || rt == String.class || rt == Character.class;
+        // Primitives and String need boxing for validator
+        if (rt.isPrimitive() || rt == String.class || rt == Character.class) return true;
+        // java.* types (BigDecimal, Integer etc) need wrapper — validator won't find constraints
+        // on them directly since their fields have no Jakarta annotations
+        String pkg = rt.getPackageName();
+        return pkg.startsWith("java.") || pkg.startsWith("javax.");
     }
 
     /**

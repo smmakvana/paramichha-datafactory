@@ -106,8 +106,13 @@ public final class DefaultClassReader implements ClassReader {
             if (m.isSynthetic() || m.isBridge()) continue;
 
             List<ParameterMeta> params = extractParameters(m);
-            List<Annotation> returnAnns = filterValidation(
-                    Arrays.asList(m.getAnnotatedReturnType().getAnnotations()));
+            // Return annotations come from two places:
+            // 1. Method-level: public @NotNull BigDecimal method() → m.getAnnotations()
+            // 2. Type-use:     public BigDecimal @NotNull method() → m.getAnnotatedReturnType()
+            List<Annotation> returnAnnsRaw = new ArrayList<>();
+            returnAnnsRaw.addAll(Arrays.asList(m.getAnnotations()));
+            returnAnnsRaw.addAll(Arrays.asList(m.getAnnotatedReturnType().getAnnotations()));
+            List<Annotation> returnAnns = filterValidation(returnAnnsRaw);
             MethodKind kind = classify(m.getReturnType(), params);
             result.add(new MethodMeta(m.getName(), m.getReturnType(),
                     returnAnns, params, kind));

@@ -34,8 +34,7 @@ class SampleServiceTest {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
-    SampleService sampleService =
-            new SampleService("Daina Goodwin", 1, new BigDecimal("1.50"));
+    SampleService sampleService = new SampleService("Daina Goodwin", 1, new BigDecimal("1.50"));
 
     // =========================================================================
     // SampleService object creation
@@ -84,7 +83,7 @@ class SampleServiceTest {
 
         static Stream<Arguments> validNames() {
             return Stream.of(
-                Arguments.of("name 0", "Joseph Lindgren III")
+                Arguments.of("name 0", "Dr. Willy Howell")
             );
         }
 
@@ -198,12 +197,14 @@ class SampleServiceTest {
     @DisplayName("applyDiscount in SampleService")
     class SampleServiceMethodApplyDiscountTest {
 
+        private record ApplyDiscountResult(@NotNull @Positive BigDecimal value) {}
+
         @ParameterizedTest(name = "{0}")
         @MethodSource("validApplyDiscountInputs")
         @DisplayName("applyDiscount accepts valid input")
         void testAcceptsValidInput(String description, BigDecimal arg0) {
             BigDecimal result = sampleService.applyDiscount(arg0);
-            assertThat(validator.validate(result)).isEmpty();
+            assertThat(validator.validate(new ApplyDiscountResult(result))).isEmpty();
         }
 
         @ParameterizedTest(name = "{0}")
@@ -256,7 +257,7 @@ class SampleServiceTest {
         static Stream<Arguments> validFormatNameInputs() {
             return Stream.of(
                 Arguments.of("valid formatName",
-                    "asperiores")
+                    "facilis")
             );
         }
 
@@ -372,8 +373,8 @@ class SampleServiceTest {
         static Stream<Arguments> validMergeInputs() {
             return Stream.of(
                 Arguments.of("valid merge",
-                    new SampleService("Rosella Osinski", 1, new BigDecimal("1.50")),
-                    "quasi")
+                    new SampleService("Hollis Labadie", 1, new BigDecimal("1.50")),
+                    "neque")
             );
         }
 
@@ -381,9 +382,9 @@ class SampleServiceTest {
             return Stream.of(
                 Arguments.of("null arg0",
                     (SampleService) null,
-                    "ratione"),
+                    "distinctio"),
                 Arguments.of("null arg1",
-                    new SampleService("Ayanna Dooley", 1, new BigDecimal("1.50")),
+                    new SampleService("Rolando Gerhold", 1, new BigDecimal("1.50")),
                     (String) null)
             );
         }
@@ -441,7 +442,7 @@ class SampleServiceTest {
         static Stream<Arguments> validTransferToInputs() {
             return Stream.of(
                 Arguments.of("valid transferTo",
-                    new SampleService("Pasquale Crist", 1, new BigDecimal("1.50")),
+                    new SampleService("Norris Krajcik", 1, new BigDecimal("1.50")),
                     1)
             );
         }
