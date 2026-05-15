@@ -89,6 +89,7 @@ public class SampleService {
     /** TRANSFORMER — annotated param, annotated Object return */
     @NotNull @Positive
     public BigDecimal applyDiscount(@DecimalMin("0.0") @DecimalMax("1.0") BigDecimal rate) {
+        Objects.requireNonNull(rate, "rate must not be null");
         return price.multiply(BigDecimal.ONE.subtract(rate));
     }
 
@@ -122,6 +123,8 @@ public class SampleService {
     @Valid
     public SampleService merge(@NotNull SampleService other,
                                @NotBlank String newName) {
+        Objects.requireNonNull(other, "other must not be null");
+        if (newName == null || newName.isBlank()) throw new IllegalArgumentException("newName must not be blank");
         return new SampleService(newName,
                 this.quantity + other.quantity,
                 this.price.add(other.price));
@@ -129,6 +132,7 @@ public class SampleService {
 
     /** OPERATION — some params constrained, void return */
     public void transferTo(@NotNull SampleService target, int amount) {
+        Objects.requireNonNull(target, "target must not be null");
         target.setQuantity(target.getQuantity() + amount);
     }
 

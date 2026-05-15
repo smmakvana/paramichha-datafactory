@@ -166,7 +166,11 @@ final class MethodTestWriter {
         if (methods.length == 1 && methods[0].getName().equals("value")) {
             try {
                 Object val = methods[0].invoke(a);
-                return "@" + simpleName + "(" + attributeValueToSource(val) + ")";
+                String src = attributeValueToSource(val);
+                if (src == null) return "@" + simpleName;
+                // Drop L suffix for long values — @Min(1) cleaner than @Min(1L)
+                if (src.endsWith("L")) src = src.substring(0, src.length() - 1);
+                return "@" + simpleName + "(" + src + ")";
             } catch (Exception ignored) {}
         }
 
@@ -179,13 +183,16 @@ final class MethodTestWriter {
                 Object def = m.getDefaultValue();
                 // Skip default values to keep annotations clean
                 if (def != null && def.equals(val)) continue;
+                // Skip array attributes (payload, groups) — not needed in generated code
+                String attrSrc = attributeValueToSource(val);
+                if (attrSrc == null) continue;
                 if (!first) sb.append(", ");
-                sb.append(m.getName()).append("=").append(attributeValueToSource(val));
+                sb.append(m.getName()).append("=").append(attrSrc);
                 first = false;
             } catch (Exception ignored) {}
         }
         sb.append(")");
-        // If all were defaults, use no-arg form
+        // If all were defaults or skipped, use no-arg form
         return sb.toString().equals("@" + simpleName + "()") ? "@" + simpleName : sb.toString();
     }
 
@@ -195,8 +202,7 @@ final class MethodTestWriter {
         if (val instanceof Class<?> c) return c.getSimpleName() + ".class";
         if (val instanceof Annotation ann) return annotationToSource(ann);
         if (val != null && val.getClass().isArray()) {
-            // e.g. groups() = {} — skip
-            return "{}";
+            return null; // signal: skip this attribute entirely
         }
         return String.valueOf(val);
     }
@@ -413,15 +419,35 @@ final class MethodTestWriter {
     private void writeInvalidDataSource(StringBuilder sb,
                                         List<ParameterMeta> params,
                                         String invalidSrc, String ind) {
-        ParameterMeta p = params.get(0);
-        List<String> invalids = invalidLiteralsFor(p);
+        // Find first constrained param to generate invalids for
+        ParameterMeta constrained = params.stream()
+                .filter(ParameterMeta::isConstrained).findFirst().orElse(params.get(0));
+        int constrainedIdx = params.indexOf(constrained);
+        List<String> invalids = invalidLiteralsFor(constrained);
 
         sb.append(ind).append("static Stream<Arguments> ").append(invalidSrc).append("() {\n");
         sb.append(ind).append("    return Stream.of(\n");
-        for (int i = 0; i < invalids.size(); i++) {
-            sb.append(ind).append("        Arguments.of(\"invalid ").append(p.name())
-                    .append(" ").append(i + 1).append("\", ").append(invalids.get(i)).append(")");
-            sb.append(i < invalids.size() - 1 ? ",\n" : "\n");
+
+        // Single param — simple rows
+        if (params.size() == 1) {
+            for (int i = 0; i < invalids.size(); i++) {
+                sb.append(ind).append("        Arguments.of(\"invalid ").append(constrained.name())
+                        .append(" ").append(i + 1).append("\", ").append(invalids.get(i)).append(")");
+                sb.append(i < invalids.size() - 1 ? ",\n" : "\n");
+            }
+        } else {
+            // Multiple params — each row must include ALL params
+            // null the constrained one, valid values for the rest
+            for (int i = 0; i < invalids.size(); i++) {
+                sb.append(ind).append("        Arguments.of(\"invalid ").append(constrained.name())
+                        .append(" ").append(i + 1).append("\",\n");
+                for (int p = 0; p < params.size(); p++) {
+                    String val = p == constrainedIdx ? invalids.get(i) : validLiteralFor(params.get(p));
+                    sb.append(ind).append("            ").append(val);
+                    sb.append(p < params.size() - 1 ? ",\n" : ")");
+                }
+                sb.append(i < invalids.size() - 1 ? ",\n" : "\n");
+            }
         }
         sb.append(ind).append("    );\n");
         sb.append(ind).append("}\n\n");
@@ -441,6 +467,7 @@ final class MethodTestWriter {
             StringBuilder row = new StringBuilder();
             row.append(ind).append("        Arguments.of(\"null ").append(nullParam.name()).append("\",\n");
             for (int i = 0; i < params.size(); i++) {
+                // Null the constrained param, valid values for ALL others (including non-constrained)
                 String val = i == nullIdx ? nullCast(params.get(i).type())
                         : validLiteralFor(params.get(i));
                 row.append(ind).append("            ").append(val);
@@ -461,27 +488,55 @@ final class MethodTestWriter {
     private String validLiteralFor(ParameterMeta param) {
         Class<?> type = param.type();
         if (type.isPrimitive()) return primitiveValid(type);
+
+        // Step 1: If param has annotations — use DataFactory field-level API first
+        // This works for ALL types: String, BigDecimal, LocalDate, domain objects
+        if (!param.validations().isEmpty()) {
+            try {
+                @SuppressWarnings("unchecked")
+                Object val = DataFactory.field(
+                        param.name(), (Class<Object>) type, param.validations()).valid();
+                if (val != null) {
+                    String lit = LiteralConverter.toLiteralOrNull(val);
+                    if (lit != null && !lit.equals("null")) return lit;
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // Step 2: Plain String — safe default
+        if (type == String.class) return "\"value\"";
+
+        // Step 3: Domain object — build from fields via InstantiationWriter
+        String pkg = type.getPackageName();
+        boolean isDomain = !type.isPrimitive() && !type.isEnum()
+                && !pkg.startsWith("java.") && !pkg.startsWith("jakarta.");
+        if (isDomain) {
+            try {
+                com.paramichha.testkit.model.ClassMeta paramMeta =
+                        com.paramichha.testkit.reader.DefaultClassReader.INSTANCE.read(type);
+                InstantiationWriter iw = new InstantiationWriter(paramMeta);
+                java.util.List<Object> parts = new java.util.ArrayList<>();
+                for (com.paramichha.testkit.model.FieldMeta f : paramMeta.fields()) {
+                    java.util.List<?> vals = iw.validValuesFor(type, f);
+                    parts.add(vals.isEmpty() ? null : vals.get(0));
+                }
+                String call = iw.constructorCall(parts);
+                if (call != null && !call.contains("TODO")) return call;
+            } catch (Exception ignored) {}
+            return nullCast(type);
+        }
+
+        // Step 4: Java types without annotations — DataFactory direct
         try {
             long seed = com.paramichha.utils.Seeds.stableHash(param.name());
             Object value = DataFactory.of(type).seed(seed).valid();
-            if (value == null) return nullCast(type);
-
-            // Direct literal — String, BigDecimal, LocalDate etc
-            String literal = LiteralConverter.toLiteralOrNull(value);
-            if (literal != null) return literal;
-
-            // Domain object fallback — build constructor call via InstantiationWriter
-            com.paramichha.testkit.model.ClassMeta paramMeta =
-                    com.paramichha.testkit.reader.DefaultClassReader.INSTANCE.read(type);
-            java.util.List<Object> parts =
-                    DefaultValueExtractor.INSTANCE.extract(value, type, paramMeta.fields());
-            String call = new InstantiationWriter(paramMeta).constructorCall(parts);
-            if (call != null && !call.contains("TODO")) return call;
-
+            if (value != null) {
+                String literal = LiteralConverter.toLiteralOrNull(value);
+                if (literal != null && !literal.equals("null")) return literal;
+            }
         } catch (Exception ignored) {}
         return nullCast(type);
     }
-
     private List<String> invalidLiteralsFor(ParameterMeta param) {
         Class<?> type = param.type();
         List<String> result = new ArrayList<>();
