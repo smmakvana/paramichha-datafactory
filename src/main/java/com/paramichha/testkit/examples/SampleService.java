@@ -1,6 +1,7 @@
 package com.paramichha.testkit.examples;
 
 import jakarta.validation.Valid;
+import java.util.Objects;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
@@ -70,7 +71,10 @@ public class SampleService {
     // =========================================================================
 
     /** MUTATOR — constrained String param */
-    public void setName(@NotBlank String name) { this.name = name; }
+    public void setName(@NotBlank String name) {
+        if (name == null || name.isBlank()) throw new IllegalArgumentException("name must not be blank");
+        this.name = name;
+    }
 
     /** MUTATOR — constrained primitive param */
     public void setQuantity(@Min(1) @Max(100) int quantity) { this.quantity = quantity; }
@@ -90,6 +94,7 @@ public class SampleService {
 
     /** TRANSFORMER — annotated param, unannotated String return */
     public String formatName(@NotBlank String prefix) {
+        if (prefix == null || prefix.isBlank()) throw new IllegalArgumentException("prefix must not be blank");
         return prefix + " " + name;
     }
 
