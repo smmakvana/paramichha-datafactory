@@ -3,26 +3,25 @@ package com.paramichha.testkit.model;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-/**
- * Metadata for one public method — name, return type, parameters, kind.
- * returnAnnotations captures Jakarta constraints declared on the return type.
- */
 public record MethodMeta(
         String name,
-        Class<?> returnType,
-        List<Annotation> returnAnnotations,
+        ReturnTypeMeta returnType,
         List<ParameterMeta> parameters,
         MethodKind kind
 ) {
-    /** Backward-compatible — no return annotations. */
-    public MethodMeta(String name, Class<?> returnType,
+    /** Backward-compatible — wraps raw type + annotations into ReturnTypeMeta. */
+    public MethodMeta(String name, Class<?> rawReturnType,
+                      List<Annotation> returnAnnotations,
                       List<ParameterMeta> parameters, MethodKind kind) {
-        this(name, returnType, List.of(), parameters, kind);
+        this(name, new ReturnTypeMeta(rawReturnType, returnAnnotations), parameters, kind);
+    }
+
+    /** Backward-compatible — no return annotations. */
+    public MethodMeta(String name, Class<?> rawReturnType,
+                      List<ParameterMeta> parameters, MethodKind kind) {
+        this(name, new ReturnTypeMeta(rawReturnType, List.of()), parameters, kind);
     }
 
     public boolean hasParameters()    { return !parameters.isEmpty(); }
-    public boolean returnsVoid()      { return returnType == void.class || returnType == Void.class; }
-    public boolean returnsPrimitive() { return returnType.isPrimitive() && returnType != void.class; }
-    public boolean returnsObject()    { return !returnsVoid() && !returnsPrimitive(); }
-    public boolean hasReturnConstraints() { return !returnAnnotations.isEmpty(); }
+    public boolean hasReturnConstraints() { return returnType.isConstrained(); }
 }

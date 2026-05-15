@@ -131,7 +131,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         ic.addTypeImport(type);
         ic.addFieldTypeImports(meta.fields());
         ic.addValueImports(parts);
-        meta.methods().forEach(m -> ic.addAnnotationImports(m.returnAnnotations()));
+        meta.methods().forEach(m -> ic.addAnnotationImports(m.returnType().annotations()));
         for (String imp : ic.collect()) {
             sb.append("import ").append(imp).append(";\n");
         }
@@ -233,7 +233,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         ic.addValueImports(validInstanceParts);
         data.violations().forEach(v ->
                 ic.addValueImports(valueExtractor.extract(v, type, meta.fields())));
-        meta.methods().forEach(m -> ic.addAnnotationImports(m.returnAnnotations()));
+        meta.methods().forEach(m -> ic.addAnnotationImports(m.returnType().annotations()));
         return ic;
     }
 

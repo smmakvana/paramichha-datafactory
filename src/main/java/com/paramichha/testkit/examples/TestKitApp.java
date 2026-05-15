@@ -1,7 +1,6 @@
 package com.paramichha.testkit.examples;
 
 import com.paramichha.testkit.TestKit;
-import com.paramichha.utils.Texts;
 
 import java.nio.file.Path;
 
@@ -17,7 +16,8 @@ public class TestKitApp {
 
     public static void main(String[] args) {
         generate(
-                Circle.class
+                Circle.class,
+                SampleService.class
         );
     }
 
