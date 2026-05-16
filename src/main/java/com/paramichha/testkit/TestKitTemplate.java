@@ -15,27 +15,27 @@ public final class TestKitTemplate {
 
     // ── Level 2 — Creation ────────────────────────────────────────────────
     public String creationClassName      = "{ClassName}CreationTest";
-    public String creationDisplay        = "{ClassName} object creation";
+    public String creationDisplay        = "Creation";
     public String canBeCreated           = "testCanBeCreated";
-    public String canBeCreatedDisplay    = "{className} can be created";
+    public String canBeCreatedDisplay    = "can be created";
     public String holdsExpectedValues    = "testHoldsExpectedValues";
-    public String holdsExpectedDisplay   = "{className} holds expected values";
+    public String holdsExpectedDisplay   = "holds expected values";
     public String isValid                = "testIsValid";
-    public String isValidDisplay         = "{className} is valid";
+    public String isValidDisplay         = "is valid (no constraint violations)";
 
     // ── Level 3 — Member ──────────────────────────────────────────────────
     public String memberClassName        = "{ClassName}{MemberName}Test";
-    public String memberDisplay          = "{memberName} in {ClassName}";
+    public String memberDisplay          = "{memberName}";
     public String acceptsMethod          = "testAccepts{MemberName}";
-    public String acceptsDisplay         = "{memberName} accepts valid value";
+    public String acceptsDisplay         = "accepts valid value";
     public String rejectsMethod          = "testRejects{MemberName}";
-    public String rejectsDisplay         = "{memberName} rejects invalid value";
+    public String rejectsDisplay         = "rejects invalid value";
     public String validDataSource        = "valid{MemberName}s";
     public String invalidDataSource      = "invalid{MemberName}s";
 
     // ── Level 4 — Method ──────────────────────────────────────────────────
     public String methodClassName              = "{ClassName}Method{MethodName}Test";
-    public String methodDisplay                = "{methodName} in {ClassName}";
+    public String methodDisplay                = "{methodName}()";
     public String testExecutesWithoutException = "testExecutesWithoutException";
     public String testObjectRemainsValid       = "testObjectRemainsValidAfterExecution";
     public String testReturnsResult            = "testReturnsResult";
