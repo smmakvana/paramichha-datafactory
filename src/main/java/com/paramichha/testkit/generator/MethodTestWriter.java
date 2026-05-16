@@ -444,32 +444,43 @@ final class MethodTestWriter {
 
     @SuppressWarnings("unchecked")
     private String validLiteral(ParameterMeta param) {
+        Class<?> type = param.type();
+
+        // Domain object — build field by field using InstantiationWriter
+        // Do this FIRST because DataFactory.of(DomainType) may fail if constructor
+        // validates inputs and the generated seed produces an invalid combination
+        String pkg = type.isPrimitive() ? "" : type.getPackageName();
+        boolean isDomain = !type.isPrimitive() && !type.isEnum()
+                && !pkg.startsWith("java.") && !pkg.startsWith("jakarta.")
+                && !pkg.startsWith("javax.");
+        if (isDomain) {
+            try {
+                com.paramichha.testkit.model.ClassMeta paramMeta =
+                        com.paramichha.testkit.reader.DefaultClassReader.INSTANCE.read(type);
+                InstantiationWriter iw = new InstantiationWriter(paramMeta);
+                java.util.List<Object> parts = new java.util.ArrayList<>();
+                for (com.paramichha.testkit.model.FieldMeta f : paramMeta.fields()) {
+                    java.util.List<?> vals = iw.validValuesFor(type, f);
+                    parts.add(vals.isEmpty() ? null : vals.get(0));
+                }
+                String call = iw.constructorCall(parts);
+                if (call != null && !call.startsWith("/* TODO")) return call;
+            } catch (Exception ignored) {}
+            return nullCast(type);
+        }
+
+        // All other types — DataFactory direct (primitives, String, BigDecimal etc)
         long seed = com.paramichha.utils.Seeds.stableHash(param.name());
         try {
             Object val = param.validations().isEmpty()
-                    ? DataFactory.of(param.type()).seed(seed).valid()
-                    : DataFactory.field(param.name(), (Class<Object>) param.type(),
+                    ? DataFactory.of(type).seed(seed).valid()
+                    : DataFactory.field(param.name(), (Class<Object>) type,
                     param.validations()).valid();
-
-            if (val == null) return nullCast(param.type());
-
-            // Try direct literal first — handles String, BigDecimal, LocalDate, primitives etc
+            if (val == null) return nullCast(type);
             String lit = LiteralConverter.toLiteralOrNull(val);
             if (lit != null && !lit.startsWith("/* TODO")) return lit;
-
-            // Domain object fallback — build constructor call via InstantiationWriter
-            try {
-                com.paramichha.testkit.model.ClassMeta paramMeta =
-                        com.paramichha.testkit.reader.DefaultClassReader.INSTANCE.read(param.type());
-                InstantiationWriter iw = new InstantiationWriter(paramMeta);
-                java.util.List<Object> parts = DefaultValueExtractor.INSTANCE
-                        .extract(val, param.type(), paramMeta.fields());
-                String call = iw.constructorCall(parts);
-                if (call != null && !call.startsWith("/* TODO")) return call;
-            } catch (Exception ignored2) {}
-
         } catch (Exception ignored) {}
-        return nullCast(param.type());
+        return nullCast(type);
     }
 
     @SuppressWarnings("unchecked")
