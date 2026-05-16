@@ -80,6 +80,10 @@ final class ImportCollector {
         }
     }
 
+    void addRawImport(String fullyQualified) {
+        imports.add(fullyQualified);
+    }
+
     Set<String> collect() {
         return Collections.unmodifiableSet(imports);
     }
