@@ -156,7 +156,7 @@ final class MethodTestWriter {
         writeAcceptsTest(sb, method, fieldName, validSrc, sig, call, ind, indBody);
 
         if (anyConstrained) {
-            writeRejectsTest(sb, methodName, fieldName, invalidSrc, sig, call, ind, indBody);
+            writeRejectsTest(sb, methodName, fieldName, invalidSrc, sig, call, params, ind, indBody);
         }
 
         writeValidDataSource(sb, methodName, params, validSrc, ind);
@@ -178,7 +178,7 @@ final class MethodTestWriter {
         writeAcceptsTest(sb, method, fieldName, validSrc, sig, call, ind, indBody);
 
         if (anyConstrained) {
-            writeRejectsTest(sb, methodName, fieldName, invalidSrc, sig, call, ind, indBody);
+            writeRejectsTest(sb, methodName, fieldName, invalidSrc, sig, call, params, ind, indBody);
         }
 
         writeValidDataSource(sb, methodName, params, validSrc, ind);
@@ -212,61 +212,115 @@ final class MethodTestWriter {
 
     private void writeRejectsTest(StringBuilder sb, String methodName, String fieldName,
                                   String invalidSrc, String sig, String call,
-                                  String ind, String indBody) {
+                                  List<ParameterMeta> params, String ind, String indBody) {
         sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
         sb.append(ind).append("@MethodSource(\"").append(invalidSrc).append("\")\n");
         sb.append(ind).append("@DisplayName(\"").append(methodName).append(" rejects invalid input\")\n");
         sb.append(ind).append("void ").append(template.testRejectsInvalidInput)
                 .append("(String description, ").append(sig).append(") {\n");
+        writeEnforcementHints(sb, params, indBody);
         sb.append(indBody).append("assertThatThrownBy(() -> ")
                 .append(fieldName).append(".").append(methodName).append("(").append(call).append("))\n");
-        sb.append(indBody).append("        .isInstanceOf(Exception.class);\n");
+        sb.append(indBody).append("        .isInstanceOf(IllegalArgumentException.class);\n");
         sb.append(ind).append("}\n\n");
+    }
+
+    /**
+     * Writes a comment per constrained param showing the DataValidation call
+     * that enforces the contract — teaches dev exactly what to add to make test pass.
+     */
+    private void writeEnforcementHints(StringBuilder sb, List<ParameterMeta> params, String indBody) {
+        for (ParameterMeta param : params) {
+            for (java.lang.annotation.Annotation a : param.validations()) {
+                String hint = dataValidationCall(a, param.name());
+                if (hint != null) {
+                    sb.append(indBody).append("// Enforce @")
+                            .append(a.annotationType().getSimpleName())
+                            .append(": DataValidation.").append(hint).append(";\n");
+                }
+            }
+        }
     }
 
     // ── Return assertion ──────────────────────────────────────────────────
 
     /**
      * Writes the return assertion — driven entirely by ReturnTypeMeta.
-     * DataFactory gives us the valid value shape via type + annotations.
      *
-     * void                  → skip (already covered by doesNotThrow)
-     * annotated primitive/
-     *   String/java.* type  → wrapper record + validator.validate()
-     * annotated Object      → validator.validate(result)
-     * constrained fields    → validator.validate(result)
-     * plain primitive       → skip (any value is valid)
-     * plain object          → isNotNull
+     * Rules (universal — Spring or not):
+     * - void / no annotations → doesNotThrow already covers it — nothing added
+     * - @Valid                → validator.validate(result).isEmpty() — deep field validation
+     * - other annotations    → DataValidation.xxx(result) — one call per annotation
+     *                          works for all types: primitive, String, BigDecimal, Object
+     * - no annotations       → skip for primitive, isNotNull for object
      */
     private void writeReturnAssertion(StringBuilder sb, ReturnTypeMeta ret,
                                       String methodName, String resultExpr, String indBody) {
         if (ret.isVoid()) return;
 
-        if (needsWrapperRecord(ret)) {
-            // Wrapper boxes primitive/String/java.* with annotations → validator can run
-            sb.append(indBody).append("assertThat(").append(template.validatorField)
-                    .append(".validate(new ").append(wrapperName(methodName))
-                    .append("(").append(resultExpr).append("))).isEmpty();\n");
-            return;
-        }
-
         if (ret.isConstrained()) {
-            // Annotated domain object — validator runs constraints on its fields
-            sb.append(indBody).append("assertThat(").append(template.validatorField)
-                    .append(".validate(").append(resultExpr).append(")).isEmpty();\n");
+            for (java.lang.annotation.Annotation a : ret.annotations()) {
+                String ann = a.annotationType().getSimpleName();
+                if (ann.equals("Valid")) {
+                    // @Valid — deep field validation via Jakarta validator
+                    sb.append(indBody).append("assertThat(").append(template.validatorField)
+                            .append(".validate(").append(resultExpr).append(")).isEmpty();\n");
+                } else {
+                    // All other annotations — DataValidation mirrors the contract
+                    String call = dataValidationCall(a, resultExpr);
+                    if (call != null) {
+                        sb.append(indBody).append("DataValidation.").append(call).append(";\n");
+                    }
+                }
+            }
             return;
         }
 
         if (typeHasConstraints(ret.type())) {
-            // Unannotated on method but fields inside carry constraints
             sb.append(indBody).append("assertThat(").append(template.validatorField)
                     .append(".validate(").append(resultExpr).append(")).isEmpty();\n");
             return;
         }
 
-        if (ret.isPrimitive()) return;  // any value is valid — doesNotThrow covers it
+        if (ret.isPrimitive()) return; // any primitive value is valid — doesNotThrow covers it
 
         sb.append(indBody).append("assertThat(").append(resultExpr).append(").isNotNull();\n");
+    }
+
+    /**
+     * Maps a Jakarta annotation to its DataValidation equivalent.
+     * Returns null if no direct mapping (annotation is documentation only).
+     */
+    private String dataValidationCall(java.lang.annotation.Annotation a, String expr) {
+        String name = a.annotationType().getSimpleName();
+        try {
+            return switch (name) {
+                case "NotNull"        -> "notNull(" + expr + ")";
+                case "NotBlank"       -> "notBlank(" + expr + ")";
+                case "NotEmpty"       -> "notEmpty(" + expr + ")";
+                case "Positive"       -> "positive(" + expr + ")";
+                case "PositiveOrZero" -> "positiveOrZero(" + expr + ")";
+                case "Negative"       -> "negative(" + expr + ")";
+                case "NegativeOrZero" -> "negativeOrZero(" + expr + ")";
+                case "Min"            -> "min(" + longAttr(a, "value") + ", " + expr + ")";
+                case "Max"            -> "max(" + longAttr(a, "value") + ", " + expr + ")";
+                case "DecimalMin"     -> "decimalMin(\"" + stringAttr(a, "value") + "\", " + expr + ")";
+                case "DecimalMax"     -> "decimalMax(\"" + stringAttr(a, "value") + "\", " + expr + ")";
+                case "Size"           -> "size(" + intAttr(a,"min") + ", " + intAttr(a,"max") + ", " + expr + ")";
+                case "Pattern"        -> "pattern(\"" + stringAttr(a,"regexp") + "\", " + expr + ")";
+                default               -> null;
+            };
+        } catch (Exception ignored) { return null; }
+    }
+
+    private long longAttr(java.lang.annotation.Annotation a, String attr) throws Exception {
+        return (long) a.annotationType().getMethod(attr).invoke(a);
+    }
+    private String stringAttr(java.lang.annotation.Annotation a, String attr) throws Exception {
+        return (String) a.annotationType().getMethod(attr).invoke(a);
+    }
+    private int intAttr(java.lang.annotation.Annotation a, String attr) throws Exception {
+        return (int) a.annotationType().getMethod(attr).invoke(a);
     }
 
     // ── Wrapper record ────────────────────────────────────────────────────

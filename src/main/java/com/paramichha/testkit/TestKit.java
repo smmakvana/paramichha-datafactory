@@ -30,6 +30,7 @@ public final class TestKit {
     private GenerationMode mode = GenerationMode.PRODUCTION;
     private TestKitTemplate template = TestKitTemplate.DEFAULT;
     private boolean split = false;
+    private ProjectType projectType = ProjectType.detect();
 
     private TestKit(Class<?> type, ClassReader reader,
                     TestDataProvider dataProvider, TestGenerator generator) {
@@ -50,7 +51,7 @@ public final class TestKit {
 
     /** Inject custom implementations — for testing or extension. */
     public static TestKit of(Class<?> type, ClassReader reader,
-                              TestDataProvider dataProvider, TestGenerator generator) {
+                             TestDataProvider dataProvider, TestGenerator generator) {
         if (type == null) throw new TestKitException("type must not be null");
         return new TestKit(type, reader, dataProvider, generator);
     }
@@ -82,6 +83,13 @@ public final class TestKit {
         return this;
     }
 
+    /** Sets the project type for test generation. Auto-detected by default. */
+    public TestKit withProjectType(ProjectType projectType) {
+        if (projectType == null) throw new TestKitException("projectType must not be null");
+        this.projectType = projectType;
+        return this;
+    }
+
     /**
      * Opt-in to split mode — generates one file per concern.
      * Use {@link #generateAll()} as the terminal method.
@@ -108,7 +116,7 @@ public final class TestKit {
             TestData data = (dataProvider instanceof DataFactoryTestDataProvider dfp)
                     ? dfp.provide(type, mode, seed)
                     : dataProvider.provide(type);
-            return generator.generateAll(meta, data, targetPackage, template);
+            return generator.generateAll(meta, data, targetPackage, template, projectType);
         } catch (Exception e) {
             String className = type.getSimpleName() + "Test";
             String src = "package " + targetPackage + ";\n\n// Generation failed: " + e.getMessage() + "\n";
@@ -122,14 +130,14 @@ public final class TestKit {
             TestData data = (dataProvider instanceof DataFactoryTestDataProvider dfp)
                     ? dfp.provide(type, mode, seed)
                     : dataProvider.provide(type);
-            return generator.generate(meta, data, targetPackage, template);
+            return generator.generate(meta, data, targetPackage, template, projectType);
         } catch (Exception e) {
             String className = type.getSimpleName() + "Test";
             String source = "package " + targetPackage + ";\n\n"
-                + "// TODO: " + className + "\n"
-                + "// Generation failed for " + type.getSimpleName() + "\n"
-                + "// Reason: " + e.getMessage() + "\n"
-                + "// Fix the issue and regenerate.\n";
+                    + "// TODO: " + className + "\n"
+                    + "// Generation failed for " + type.getSimpleName() + "\n"
+                    + "// Reason: " + e.getMessage() + "\n"
+                    + "// Fix the issue and regenerate.\n";
             return new GeneratedTestClass(className, targetPackage, source);
         }
     }

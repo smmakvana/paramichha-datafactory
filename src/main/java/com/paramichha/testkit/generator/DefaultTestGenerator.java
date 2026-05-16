@@ -1,6 +1,7 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.GeneratedTestClass;
+import com.paramichha.testkit.ProjectType;
 import com.paramichha.testkit.TestGenerator;
 import com.paramichha.testkit.TestKitTemplate;
 import com.paramichha.testkit.model.ClassMeta;
@@ -21,6 +22,16 @@ public final class DefaultTestGenerator implements TestGenerator {
 
     public static final DefaultTestGenerator INSTANCE = new DefaultTestGenerator(
             DefaultValueExtractor.INSTANCE);
+
+    private ProjectType projectType = ProjectType.detect();
+
+    @Override
+    public List<GeneratedTestClass> generateAll(ClassMeta meta, TestData data,
+                                                String targetPackage, TestKitTemplate template,
+                                                ProjectType projectType) {
+        this.projectType = projectType;
+        return generateAll(meta, data, targetPackage, template);
+    }
 
     @Override
     public List<GeneratedTestClass> generateAll(ClassMeta meta, TestData data,
@@ -46,7 +57,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         String fieldName = TestNames.toVariable(className);
         List<Object> parts = valueExtractor.extract(data.base(), type, meta.fields());
         InstantiationWriter inst = new InstantiationWriter(meta);
-        boolean hasJakarta = data.hasJakarta(meta);
+        boolean hasJakarta = projectType.hasValidator();
         String baseName = className + "Test";
         List<GeneratedTestClass> files = new ArrayList<>();
 
@@ -132,6 +143,12 @@ public final class DefaultTestGenerator implements TestGenerator {
         ic.addFieldTypeImports(meta.fields());
         ic.addValueImports(parts);
         meta.methods().forEach(m -> ic.addAnnotationImports(m.returnType().annotations()));
+        boolean needsDataValidation = meta.methods().stream().anyMatch(m ->
+                m.returnType().isConstrained() ||
+                        m.parameters().stream().anyMatch(p -> !p.validations().isEmpty()));
+        if (needsDataValidation) {
+            ic.addRawImport("com.paramichha.utils.DataValidation");
+        }
         for (String imp : ic.collect()) {
             sb.append("import ").append(imp).append(";\n");
         }
@@ -142,6 +159,14 @@ public final class DefaultTestGenerator implements TestGenerator {
 
     DefaultTestGenerator(ValueExtractor valueExtractor) {
         this.valueExtractor = valueExtractor;
+    }
+
+    @Override
+    public GeneratedTestClass generate(ClassMeta meta, TestData data,
+                                       String targetPackage, TestKitTemplate template,
+                                       ProjectType projectType) {
+        this.projectType = projectType;
+        return generateWithTemplate(meta, data, targetPackage, template);
     }
 
     @Override
@@ -195,14 +220,14 @@ public final class DefaultTestGenerator implements TestGenerator {
         writePackage(sb, targetPackage);
         writeImports(sb, imports);
         writeClassOpen(sb, meta, className);
-        if (data.hasJakarta(meta)) writeValidatorSetup(sb, template);
+        if (projectType.hasValidator()) writeValidatorSetup(sb, template);
         writeValidInstance(sb, meta, validInstanceParts, instantiation, template);
         if (meta.constructorStyle() == ClassMeta.ConstructorStyle.SETTER) writeSetterHelper(sb, meta);
         if (!meta.utilityClass()) {
             creationWriter.write(sb, data, validInstanceParts, valueExtractor);
             memberWriter.write(sb, type, validInstanceParts, data.validAllPerField());
         }
-        methodWriter.write(sb, validInstanceParts, data.hasJakarta(meta));
+        methodWriter.write(sb, validInstanceParts, projectType.hasValidator());
         sb.append("}\n");
 
         return new GeneratedTestClass(className, targetPackage, sb.toString());
@@ -234,6 +259,13 @@ public final class DefaultTestGenerator implements TestGenerator {
         data.violations().forEach(v ->
                 ic.addValueImports(valueExtractor.extract(v, type, meta.fields())));
         meta.methods().forEach(m -> ic.addAnnotationImports(m.returnType().annotations()));
+        // Add DataValidation import when there are method constraints
+        boolean needsDataValidation = meta.methods().stream().anyMatch(m ->
+                m.returnType().isConstrained() ||
+                        m.parameters().stream().anyMatch(p -> !p.validations().isEmpty()));
+        if (needsDataValidation) {
+            ic.addRawImport("com.paramichha.utils.DataValidation");
+        }
         return ic;
     }
 
