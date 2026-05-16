@@ -16,7 +16,16 @@ public class TestKitApp {
 
     public static void main(String[] args) {
         generate(
-                Circle.class,
+                PrimitiveAnnotatedService.class,  // primitives with annotations
+                PrimitivePlainService.class,       // primitives without annotations
+                PrimitiveMixedService.class,       // primitives mixed
+
+                // Object services
+                ObjectAnnotatedService.class,      // objects with annotations
+                ObjectPlainService.class,          // objects without annotations
+                ObjectMixedService.class,          // objects mixed
+
+                // Original sample
                 SampleService.class
         );
     }
