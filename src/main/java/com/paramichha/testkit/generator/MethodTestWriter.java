@@ -221,7 +221,7 @@ final class MethodTestWriter {
         writeEnforcementHints(sb, params, indBody);
         sb.append(indBody).append("assertThatThrownBy(() -> ")
                 .append(fieldName).append(".").append(methodName).append("(").append(call).append("))\n");
-        sb.append(indBody).append("        .isInstanceOf(IllegalArgumentException.class);\n");
+        sb.append(indBody).append("        .isInstanceOf(Exception.class);\n");
         sb.append(ind).append("}\n\n");
     }
 
@@ -450,8 +450,24 @@ final class MethodTestWriter {
                     ? DataFactory.of(param.type()).seed(seed).valid()
                     : DataFactory.field(param.name(), (Class<Object>) param.type(),
                     param.validations()).valid();
+
+            if (val == null) return nullCast(param.type());
+
+            // Try direct literal first — handles String, BigDecimal, LocalDate, primitives etc
             String lit = LiteralConverter.toLiteralOrNull(val);
-            if (lit != null) return lit;
+            if (lit != null && !lit.startsWith("/* TODO")) return lit;
+
+            // Domain object fallback — build constructor call via InstantiationWriter
+            try {
+                com.paramichha.testkit.model.ClassMeta paramMeta =
+                        com.paramichha.testkit.reader.DefaultClassReader.INSTANCE.read(param.type());
+                InstantiationWriter iw = new InstantiationWriter(paramMeta);
+                java.util.List<Object> parts = DefaultValueExtractor.INSTANCE
+                        .extract(val, param.type(), paramMeta.fields());
+                String call = iw.constructorCall(parts);
+                if (call != null && !call.startsWith("/* TODO")) return call;
+            } catch (Exception ignored2) {}
+
         } catch (Exception ignored) {}
         return nullCast(param.type());
     }
