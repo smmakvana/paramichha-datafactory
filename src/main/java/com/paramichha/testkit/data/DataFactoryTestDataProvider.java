@@ -70,9 +70,10 @@ public final class DataFactoryTestDataProvider implements TestDataProvider {
 
         List<Object> validObjects = buildValidObjects(base, validAllPerField);
 
-        String error = baseError != null ? "valid() failed: " + baseError
-                     : violationsError != null ? "invalidList() failed: " + violationsError
-                     : null;
+        // Only fail generation if valid() failed — we cannot build even one valid instance.
+        // invalidList() failure is non-fatal — member reject tests are skipped but
+        // creation tests and method tests are still generated.
+        String error = baseError != null ? "valid() failed: " + baseError : null;
 
         return new TestData(type, base, mode, violations, validAllPerField, validObjects, error);
     }
