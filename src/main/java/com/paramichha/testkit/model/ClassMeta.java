@@ -8,18 +8,25 @@ public record ClassMeta(
         ConstructorStyle constructorStyle,
         List<FieldMeta> fields,
         List<MethodMeta> methods,
-        boolean utilityClass
-) {
+        boolean utilityClass,
+        Class<?> type) {
     public enum ConstructorStyle { LOMBOK_BUILDER, RECORD, ALL_ARGS, SETTER }
 
-    public ClassMeta(String simpleName, String packageName,
-                     ConstructorStyle constructorStyle, List<FieldMeta> fields) {
-        this(simpleName, packageName, constructorStyle, fields, List.of(), false);
+    public ClassMeta(String simpleName, String packageName, ConstructorStyle constructorStyle, List<FieldMeta> fields,Class<?> type) {
+        this(simpleName, packageName, constructorStyle, fields, List.of(), false, type);
     }
 
-    public ClassMeta(String simpleName, String packageName,
-                     ConstructorStyle constructorStyle, List<FieldMeta> fields,
-                     List<MethodMeta> methods) {
-        this(simpleName, packageName, constructorStyle, fields, methods, false);
+    public ClassMeta(String simpleName, String packageName, ConstructorStyle constructorStyle, List<FieldMeta> fields, List<MethodMeta> methods, Class<?> type) {
+        this(simpleName, packageName, constructorStyle, fields, methods, false, type);
+    }
+
+    @Override
+    public String simpleName() {
+        return type.getSimpleName();
+    }
+
+    @Override
+    public String packageName() {
+        return type.getPackageName();
     }
 }
