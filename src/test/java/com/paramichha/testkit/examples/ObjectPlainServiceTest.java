@@ -77,7 +77,7 @@ class ObjectPlainServiceTest {
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Hunter Barton DVM"));
+      return Stream.of(Arguments.of("name 0", "Ileen Schumm"));
     }
 
     // TODO: add constraints to name then uncomment
@@ -120,7 +120,7 @@ class ObjectPlainServiceTest {
       return Stream.of(
           Arguments.of("valid price 1", new BigDecimal("-1.00")),
           Arguments.of("valid price 2", new BigDecimal("0.00")),
-          Arguments.of("valid price 3", new BigDecimal("918.28")));
+          Arguments.of("valid price 3", new BigDecimal("38.26")));
     }
 
     // TODO: add constraints to price then uncomment
@@ -200,7 +200,7 @@ class ObjectPlainServiceTest {
     }
 
     static Stream<Arguments> validEmails() {
-      return Stream.of(Arguments.of("email 0", "darnell.jast@hotmail.com"));
+      return Stream.of(Arguments.of("email 0", "leopoldo.reinger@gmail.com"));
     }
 
     // TODO: add constraints to email then uncomment
@@ -219,6 +219,48 @@ class ObjectPlainServiceTest {
     //     );
     // }
 
+  }
+
+  // =========================================================================
+  // formatDisplay()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("formatDisplay()")
+  class ObjectPlainServiceMethodFormatDisplayTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validFormatDisplayInputs")
+    @DisplayName("formatDisplay accepts valid input")
+    void testAcceptsValidInput(String description, String prefix) {
+      String result = objectPlainService.formatDisplay(prefix);
+      assertThat(result).isNotNull();
+    }
+
+    static Stream<Arguments> validFormatDisplayInputs() {
+      return Stream.of(Arguments.of("valid formatDisplay", (String) null));
+    }
+  }
+
+  // =========================================================================
+  // applyTax()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("applyTax()")
+  class ObjectPlainServiceMethodApplyTaxTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validApplyTaxInputs")
+    @DisplayName("applyTax accepts valid input")
+    void testAcceptsValidInput(String description, BigDecimal rate) {
+      BigDecimal result = objectPlainService.applyTax(rate);
+      assertThat(result).isNotNull();
+    }
+
+    static Stream<Arguments> validApplyTaxInputs() {
+      return Stream.of(Arguments.of("valid applyTax", (BigDecimal) null));
+    }
   }
 
   // =========================================================================
@@ -264,10 +306,10 @@ class ObjectPlainServiceTest {
           Arguments.of(
               "valid merge",
               new ObjectPlainService(
-                  "Shanna Ortiz",
+                  "Mikaela Labadie",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "jerrod.jones@hotmail.com"),
+                  "cruz.marvin@yahoo.com"),
               (String) null));
     }
   }
@@ -292,53 +334,11 @@ class ObjectPlainServiceTest {
           Arguments.of(
               "valid copyFrom",
               new ObjectPlainService(
-                  "Vella Windler",
+                  "Mr. Tasia Cummerata",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "lue.windler@yahoo.com"),
+                  "carmina.davis@hotmail.com"),
               (String) null));
-    }
-  }
-
-  // =========================================================================
-  // formatDisplay()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("formatDisplay()")
-  class ObjectPlainServiceMethodFormatDisplayTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validFormatDisplayInputs")
-    @DisplayName("formatDisplay accepts valid input")
-    void testAcceptsValidInput(String description, String prefix) {
-      String result = objectPlainService.formatDisplay(prefix);
-      assertThat(result).isNotNull();
-    }
-
-    static Stream<Arguments> validFormatDisplayInputs() {
-      return Stream.of(Arguments.of("valid formatDisplay", (String) null));
-    }
-  }
-
-  // =========================================================================
-  // applyTax()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("applyTax()")
-  class ObjectPlainServiceMethodApplyTaxTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyTaxInputs")
-    @DisplayName("applyTax accepts valid input")
-    void testAcceptsValidInput(String description, BigDecimal rate) {
-      BigDecimal result = objectPlainService.applyTax(rate);
-      assertThat(result).isNotNull();
-    }
-
-    static Stream<Arguments> validApplyTaxInputs() {
-      return Stream.of(Arguments.of("valid applyTax", (BigDecimal) null));
     }
   }
 }
