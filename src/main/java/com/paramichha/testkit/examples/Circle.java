@@ -14,7 +14,7 @@ public class Circle {
         this.r = r;
     }
 
-    float area() {
+    public float area() {
         return (float) (Math.PI * r * r);
     }
 
