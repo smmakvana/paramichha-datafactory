@@ -1,13 +1,13 @@
 package com.paramichha.testkit;
 
-import java.util.List;
-
 import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.data.DataFactoryTestDataProvider;
 import com.paramichha.testkit.generator.DefaultTestGenerator;
 import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.TestData;
 import com.paramichha.testkit.reader.DefaultClassReader;
+
+import java.util.List;
 
 /**
  * Entry point for single-class test generation.
@@ -22,9 +22,9 @@ import com.paramichha.testkit.reader.DefaultClassReader;
 public final class TestKit implements TestKitGenerator {
 
     private final Class<?> type;
-    private final ClassReader reader;
-    private final TestDataProvider dataProvider;
-    private final TestGenerator generator;
+    private final ClassReader reader = DefaultClassReader.INSTANCE;
+    private final TestDataProvider dataProvider = DataFactoryTestDataProvider.INSTANCE;
+    private final TestGenerator generator = DefaultTestGenerator.INSTANCE;
     private String targetPackage;
     private Long seed = null;
     private GenerationMode mode = GenerationMode.PRODUCTION;
@@ -32,28 +32,14 @@ public final class TestKit implements TestKitGenerator {
     private boolean split = false;
     private ProjectType projectType = ProjectType.detect();
 
-    private TestKit(Class<?> type, ClassReader reader,
-                    TestDataProvider dataProvider, TestGenerator generator) {
-        this.type         = type;
-        this.reader       = reader;
-        this.dataProvider = dataProvider;
-        this.generator    = generator;
+    private TestKit(Class<?> type) {
+        this.type = type;
         this.targetPackage = type.getPackageName();
     }
 
     public static TestKit of(Class<?> type) {
         if (type == null) throw new TestKitException("type must not be null");
-        return new TestKit(type,
-                DefaultClassReader.INSTANCE,
-                DataFactoryTestDataProvider.INSTANCE,
-                DefaultTestGenerator.INSTANCE);
-    }
-
-    /** Inject custom implementations — for testing or extension. */
-    public static TestKit of(Class<?> type, ClassReader reader,
-                             TestDataProvider dataProvider, TestGenerator generator) {
-        if (type == null) throw new TestKitException("type must not be null");
-        return new TestKit(type, reader, dataProvider, generator);
+        return new TestKit(type);
     }
 
     public TestKit withPackage(String packageName) {
@@ -63,27 +49,35 @@ public final class TestKit implements TestKitGenerator {
         return this;
     }
 
-    /** Seeds the DataFactory random generator for deterministic test data. */
+    /**
+     * Seeds the DataFactory random generator for deterministic test data.
+     */
     public TestKit withSeed(long seed) {
         this.seed = seed;
         return this;
     }
 
-    /** Sets the DataFactory generation mode. Defaults to PRODUCTION. */
+    /**
+     * Sets the DataFactory generation mode. Defaults to PRODUCTION.
+     */
     public TestKit withMode(GenerationMode mode) {
         if (mode == null) throw new TestKitException("mode must not be null");
         this.mode = mode;
         return this;
     }
 
-    /** Sets a custom template for generated names and display strings. */
+    /**
+     * Sets a custom template for generated names and display strings.
+     */
     public TestKit withTemplate(TestKitTemplate template) {
         if (template == null) throw new TestKitException("template must not be null");
         this.template = template;
         return this;
     }
 
-    /** Sets the project type for test generation. Auto-detected by default. */
+    /**
+     * Sets the project type for test generation. Auto-detected by default.
+     */
     public TestKit withProjectType(ProjectType projectType) {
         if (projectType == null) throw new TestKitException("projectType must not be null");
         this.projectType = projectType;

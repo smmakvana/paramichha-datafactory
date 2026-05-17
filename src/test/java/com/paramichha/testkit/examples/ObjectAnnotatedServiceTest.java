@@ -91,7 +91,7 @@ class ObjectAnnotatedServiceTest {
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Colleen Wiegand"));
+      return Stream.of(Arguments.of("name 0", "Shalanda Ortiz"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -227,7 +227,7 @@ class ObjectAnnotatedServiceTest {
     }
 
     static Stream<Arguments> validEmails() {
-      return Stream.of(Arguments.of("email 0", "jonnie.prosacco@yahoo.com"));
+      return Stream.of(Arguments.of("email 0", "eric.hansen@hotmail.com"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -246,6 +246,135 @@ class ObjectAnnotatedServiceTest {
 
     static Stream<Arguments> invalidEmails() {
       return Stream.of(Arguments.of("email 0", "not-an-email"));
+    }
+  }
+
+  // =========================================================================
+  // reset()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("reset()")
+  class ObjectAnnotatedServiceMethodResetTest {
+
+    @Test
+    @DisplayName("executes without exception")
+    void testExecutesWithoutException() {
+      assertThatCode(() -> objectAnnotatedService.reset()).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("object remains valid after execution")
+    void testObjectRemainsValidAfterExecution() {
+      objectAnnotatedService.reset();
+      assertThat(validator.validate(objectAnnotatedService)).isEmpty();
+    }
+  }
+
+  // =========================================================================
+  // merge()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("merge()")
+  class ObjectAnnotatedServiceMethodMergeTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validMergeInputs")
+    @DisplayName("merge accepts valid input")
+    void testAcceptsValidInput(String description, ObjectAnnotatedService other, String newName) {
+      ObjectAnnotatedService result = objectAnnotatedService.merge(other, newName);
+      assertThat(validator.validate(result)).isEmpty();
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidMergeInputs")
+    @DisplayName("merge rejects invalid input")
+    void testRejectsInvalidInput(String description, ObjectAnnotatedService other, String newName) {
+      // Enforce @NotNull: DataValidation.notNull(other);
+      // Enforce @NotBlank: DataValidation.notBlank(newName);
+      assertThatThrownBy(() -> objectAnnotatedService.merge(other, newName))
+          .isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validMergeInputs() {
+      return Stream.of(
+          Arguments.of(
+              "valid merge",
+              new ObjectAnnotatedService(
+                  "Shirley Fritsch MD",
+                  new BigDecimal("1.50"),
+                  LocalDate.of(2020, 6, 15),
+                  "wm.luettgen@gmail.com"),
+              "Lakenya Purdy"));
+    }
+
+    static Stream<Arguments> invalidMergeInputs() {
+      return Stream.of(
+          Arguments.of("invalid other", null, "Lamont Nader"),
+          Arguments.of(
+              "invalid newName",
+              new ObjectAnnotatedService(
+                  "Zelma Boyer",
+                  new BigDecimal("1.50"),
+                  LocalDate.of(2020, 6, 15),
+                  "evita.grady@yahoo.com"),
+              null),
+          Arguments.of(
+              "invalid newName",
+              new ObjectAnnotatedService(
+                  "Truman Stanton Sr.",
+                  new BigDecimal("1.50"),
+                  LocalDate.of(2020, 6, 15),
+                  "lamar.hirthe@gmail.com"),
+              ""));
+    }
+  }
+
+  // =========================================================================
+  // copyFrom()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("copyFrom()")
+  class ObjectAnnotatedServiceMethodCopyFromTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validCopyFromInputs")
+    @DisplayName("copyFrom accepts valid input")
+    void testAcceptsValidInput(String description, ObjectAnnotatedService source, String reason) {
+      assertThatCode(() -> objectAnnotatedService.copyFrom(source, reason))
+          .doesNotThrowAnyException();
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidCopyFromInputs")
+    @DisplayName("copyFrom rejects invalid input")
+    void testRejectsInvalidInput(String description, ObjectAnnotatedService source, String reason) {
+      // Enforce @NotNull: DataValidation.notNull(source);
+      // Enforce @NotBlank: DataValidation.notBlank(reason);
+      assertThatThrownBy(() -> objectAnnotatedService.copyFrom(source, reason))
+          .isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validCopyFromInputs() {
+      return Stream.of(
+          Arguments.of(
+              "valid copyFrom",
+              new ObjectAnnotatedService(
+                  "Margrett Harber Jr.",
+                  new BigDecimal("1.50"),
+                  LocalDate.of(2020, 6, 15),
+                  "stefan.rutherford@yahoo.com"),
+              "Officia impedit tenetur placeat qui minima ducimus."));
+    }
+
+    static Stream<Arguments> invalidCopyFromInputs() {
+      return Stream.of(
+          Arguments.of(
+              "invalid source 1",
+              null,
+              "Odit maxime distinctio id deleniti aspernatur repudiandae."));
     }
   }
 
@@ -323,135 +452,6 @@ class ObjectAnnotatedServiceTest {
       return Stream.of(
           Arguments.of("invalid taxRate 1", new BigDecimal("-1")),
           Arguments.of("invalid taxRate 2", new BigDecimal("2")));
-    }
-  }
-
-  // =========================================================================
-  // reset()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("reset()")
-  class ObjectAnnotatedServiceMethodResetTest {
-
-    @Test
-    @DisplayName("executes without exception")
-    void testExecutesWithoutException() {
-      assertThatCode(() -> objectAnnotatedService.reset()).doesNotThrowAnyException();
-    }
-
-    @Test
-    @DisplayName("object remains valid after execution")
-    void testObjectRemainsValidAfterExecution() {
-      objectAnnotatedService.reset();
-      assertThat(validator.validate(objectAnnotatedService)).isEmpty();
-    }
-  }
-
-  // =========================================================================
-  // merge()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("merge()")
-  class ObjectAnnotatedServiceMethodMergeTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validMergeInputs")
-    @DisplayName("merge accepts valid input")
-    void testAcceptsValidInput(String description, ObjectAnnotatedService other, String newName) {
-      ObjectAnnotatedService result = objectAnnotatedService.merge(other, newName);
-      assertThat(validator.validate(result)).isEmpty();
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidMergeInputs")
-    @DisplayName("merge rejects invalid input")
-    void testRejectsInvalidInput(String description, ObjectAnnotatedService other, String newName) {
-      // Enforce @NotNull: DataValidation.notNull(other);
-      // Enforce @NotBlank: DataValidation.notBlank(newName);
-      assertThatThrownBy(() -> objectAnnotatedService.merge(other, newName))
-          .isInstanceOf(Exception.class);
-    }
-
-    static Stream<Arguments> validMergeInputs() {
-      return Stream.of(
-          Arguments.of(
-              "valid merge",
-              new ObjectAnnotatedService(
-                  "Dion Walker",
-                  new BigDecimal("1.50"),
-                  LocalDate.of(2020, 6, 15),
-                  "felisha.franecki@gmail.com"),
-              "Mr. Yvonne Fisher"));
-    }
-
-    static Stream<Arguments> invalidMergeInputs() {
-      return Stream.of(
-          Arguments.of("invalid other", null, "Jaime Padberg"),
-          Arguments.of(
-              "invalid newName",
-              new ObjectAnnotatedService(
-                  "Hettie Reichel",
-                  new BigDecimal("1.50"),
-                  LocalDate.of(2020, 6, 15),
-                  "olen.johns@yahoo.com"),
-              null),
-          Arguments.of(
-              "invalid newName",
-              new ObjectAnnotatedService(
-                  "Simon Carter",
-                  new BigDecimal("1.50"),
-                  LocalDate.of(2020, 6, 15),
-                  "anibal.ullrich@yahoo.com"),
-              ""));
-    }
-  }
-
-  // =========================================================================
-  // copyFrom()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("copyFrom()")
-  class ObjectAnnotatedServiceMethodCopyFromTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validCopyFromInputs")
-    @DisplayName("copyFrom accepts valid input")
-    void testAcceptsValidInput(String description, ObjectAnnotatedService source, String reason) {
-      assertThatCode(() -> objectAnnotatedService.copyFrom(source, reason))
-          .doesNotThrowAnyException();
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidCopyFromInputs")
-    @DisplayName("copyFrom rejects invalid input")
-    void testRejectsInvalidInput(String description, ObjectAnnotatedService source, String reason) {
-      // Enforce @NotNull: DataValidation.notNull(source);
-      // Enforce @NotBlank: DataValidation.notBlank(reason);
-      assertThatThrownBy(() -> objectAnnotatedService.copyFrom(source, reason))
-          .isInstanceOf(Exception.class);
-    }
-
-    static Stream<Arguments> validCopyFromInputs() {
-      return Stream.of(
-          Arguments.of(
-              "valid copyFrom",
-              new ObjectAnnotatedService(
-                  "Rosendo Turner",
-                  new BigDecimal("1.50"),
-                  LocalDate.of(2020, 6, 15),
-                  "tanika.oberbrunner@yahoo.com"),
-              "Recusandae exercitationem non commodi odit."));
-    }
-
-    static Stream<Arguments> invalidCopyFromInputs() {
-      return Stream.of(
-          Arguments.of(
-              "invalid source 1",
-              null,
-              "Exercitationem corporis ullam adipisci in sequi commodi enim."));
     }
   }
 }
