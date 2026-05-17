@@ -19,7 +19,7 @@ import com.paramichha.testkit.reader.DefaultClassReader;
  *        .writeTo(Path.of("src/test/java"));
  * </pre>
  */
-public final class TestKit {
+public final class TestKit implements TestKitGenerator {
 
     private final Class<?> type;
     private final ClassReader reader;
@@ -110,6 +110,7 @@ public final class TestKit {
      *        .forEach(f -> f.writeTo(outputPath));
      * </pre>
      */
+    @Override
     public List<GeneratedTestClass> generateAll() {
         try {
             ClassMeta meta = reader.read(type);
@@ -124,6 +125,7 @@ public final class TestKit {
         }
     }
 
+    @Override
     public GeneratedTestClass generate() {
         try {
             ClassMeta meta = reader.read(type);

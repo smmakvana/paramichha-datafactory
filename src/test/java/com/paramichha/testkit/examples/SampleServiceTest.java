@@ -79,7 +79,7 @@ class SampleServiceTest {
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Diane Heller"));
+      return Stream.of(Arguments.of("name 0", "Missy Pfeffer"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -225,6 +225,29 @@ class SampleServiceTest {
   }
 
   // =========================================================================
+  // describe()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("describe()")
+  class SampleServiceMethodDescribeTest {
+
+    private record DescribeResult(@NotBlank String value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validDescribeInputs")
+    @DisplayName("describe accepts valid input")
+    void testAcceptsValidInput(String description, String separator) {
+      String result = sampleService.describe(separator);
+      DataValidation.notBlank(result);
+    }
+
+    static Stream<Arguments> validDescribeInputs() {
+      return Stream.of(Arguments.of("valid describe", (String) null));
+    }
+  }
+
+  // =========================================================================
   // formatName()
   // =========================================================================
 
@@ -249,35 +272,12 @@ class SampleServiceTest {
     }
 
     static Stream<Arguments> validFormatNameInputs() {
-      return Stream.of(Arguments.of("valid formatName", "Mr."));
+      return Stream.of(Arguments.of("valid formatName", "Mrs."));
     }
 
     static Stream<Arguments> invalidFormatNameInputs() {
       return Stream.of(
           Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
-    }
-  }
-
-  // =========================================================================
-  // describe()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("describe()")
-  class SampleServiceMethodDescribeTest {
-
-    private record DescribeResult(@NotBlank String value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validDescribeInputs")
-    @DisplayName("describe accepts valid input")
-    void testAcceptsValidInput(String description, String separator) {
-      String result = sampleService.describe(separator);
-      DataValidation.notBlank(result);
-    }
-
-    static Stream<Arguments> validDescribeInputs() {
-      return Stream.of(Arguments.of("valid describe", (String) null));
     }
   }
 
@@ -353,20 +353,20 @@ class SampleServiceTest {
       return Stream.of(
           Arguments.of(
               "valid merge",
-              new SampleService("Waylon Macejkovic V", 1, new BigDecimal("1.50")),
-              "Alia Heaney"));
+              new SampleService("Donita Jones", 1, new BigDecimal("1.50")),
+              "Damion Johnston"));
     }
 
     static Stream<Arguments> invalidMergeInputs() {
       return Stream.of(
-          Arguments.of("invalid other", null, "Seymour Parisian"),
+          Arguments.of("invalid other", null, "Hettie Boyle"),
           Arguments.of(
               "invalid newName",
-              new SampleService("Werner Ondricka", 1, new BigDecimal("1.50")),
+              new SampleService("Cathi Jast II", 1, new BigDecimal("1.50")),
               null),
           Arguments.of(
               "invalid newName",
-              new SampleService("Raymond Beier", 1, new BigDecimal("1.50")),
+              new SampleService("Justin Gerhold Jr.", 1, new BigDecimal("1.50")),
               ""));
     }
   }
@@ -419,7 +419,7 @@ class SampleServiceTest {
       return Stream.of(
           Arguments.of(
               "valid transferTo",
-              new SampleService("Willy Roberts", 1, new BigDecimal("1.50")),
+              new SampleService("Conception Funk DVM", 1, new BigDecimal("1.50")),
               0));
     }
 

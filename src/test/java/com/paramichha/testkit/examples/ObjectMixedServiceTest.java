@@ -89,7 +89,7 @@ class ObjectMixedServiceTest {
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Bobbie Wolff"));
+      return Stream.of(Arguments.of("name 0", "Clayton Breitenberg"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -136,7 +136,7 @@ class ObjectMixedServiceTest {
       return Stream.of(
           Arguments.of("valid price 1", new BigDecimal("-1.00")),
           Arguments.of("valid price 2", new BigDecimal("0.00")),
-          Arguments.of("valid price 3", new BigDecimal("371.46")));
+          Arguments.of("valid price 3", new BigDecimal("518.66")));
     }
 
     // TODO: add constraints to price then uncomment
@@ -217,7 +217,7 @@ class ObjectMixedServiceTest {
     }
 
     static Stream<Arguments> validEmails() {
-      return Stream.of(Arguments.of("email 0", "jefferey.klocko@yahoo.com"));
+      return Stream.of(Arguments.of("email 0", "delbert.ohara@gmail.com"));
     }
 
     // TODO: add constraints to email then uncomment
@@ -236,6 +236,29 @@ class ObjectMixedServiceTest {
     //     );
     // }
 
+  }
+
+  // =========================================================================
+  // resolvedPrice()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("resolvedPrice()")
+  class ObjectMixedServiceMethodResolvedPriceTest {
+
+    private record ResolvedPriceResult(@NotNull BigDecimal value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validResolvedPriceInputs")
+    @DisplayName("resolvedPrice accepts valid input")
+    void testAcceptsValidInput(String description, BigDecimal fallback) {
+      BigDecimal result = objectMixedService.resolvedPrice(fallback);
+      DataValidation.notNull(result);
+    }
+
+    static Stream<Arguments> validResolvedPriceInputs() {
+      return Stream.of(Arguments.of("valid resolvedPrice", (BigDecimal) null));
+    }
   }
 
   // =========================================================================
@@ -270,29 +293,6 @@ class ObjectMixedServiceTest {
     static Stream<Arguments> invalidFormatDisplayInputs() {
       return Stream.of(
           Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
-    }
-  }
-
-  // =========================================================================
-  // resolvedPrice()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("resolvedPrice()")
-  class ObjectMixedServiceMethodResolvedPriceTest {
-
-    private record ResolvedPriceResult(@NotNull BigDecimal value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validResolvedPriceInputs")
-    @DisplayName("resolvedPrice accepts valid input")
-    void testAcceptsValidInput(String description, BigDecimal fallback) {
-      BigDecimal result = objectMixedService.resolvedPrice(fallback);
-      DataValidation.notNull(result);
-    }
-
-    static Stream<Arguments> validResolvedPriceInputs() {
-      return Stream.of(Arguments.of("valid resolvedPrice", (BigDecimal) null));
     }
   }
 
@@ -349,10 +349,10 @@ class ObjectMixedServiceTest {
           Arguments.of(
               "valid merge",
               new ObjectMixedService(
-                  "Mr. Monty Weissnat",
+                  "German Will",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "tayna.davis@hotmail.com"),
+                  "tula.jacobi@yahoo.com"),
               (String) null));
     }
 
@@ -390,10 +390,10 @@ class ObjectMixedServiceTest {
           Arguments.of(
               "valid copyFrom",
               new ObjectMixedService(
-                  "Wendell Hickle",
+                  "Lauren Von",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "margherita.gutkowski@hotmail.com"),
+                  "shandi.koch@yahoo.com"),
               (String) null));
     }
 

@@ -91,7 +91,7 @@ class ObjectAnnotatedServiceTest {
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Asa Crist"));
+      return Stream.of(Arguments.of("name 0", "Colleen Wiegand"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -227,7 +227,7 @@ class ObjectAnnotatedServiceTest {
     }
 
     static Stream<Arguments> validEmails() {
-      return Stream.of(Arguments.of("email 0", "julio.ferry@hotmail.com"));
+      return Stream.of(Arguments.of("email 0", "jonnie.prosacco@yahoo.com"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -277,7 +277,7 @@ class ObjectAnnotatedServiceTest {
     }
 
     static Stream<Arguments> validFormatDisplayInputs() {
-      return Stream.of(Arguments.of("valid formatDisplay", "Miss"));
+      return Stream.of(Arguments.of("valid formatDisplay", "Mr."));
     }
 
     static Stream<Arguments> invalidFormatDisplayInputs() {
@@ -379,31 +379,31 @@ class ObjectAnnotatedServiceTest {
           Arguments.of(
               "valid merge",
               new ObjectAnnotatedService(
-                  "Alla DuBuque",
+                  "Dion Walker",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "lise.nikolaus@yahoo.com"),
-              "Elizabet Maggio"));
+                  "felisha.franecki@gmail.com"),
+              "Mr. Yvonne Fisher"));
     }
 
     static Stream<Arguments> invalidMergeInputs() {
       return Stream.of(
-          Arguments.of("invalid other", null, "Boyd Casper PhD"),
+          Arguments.of("invalid other", null, "Jaime Padberg"),
           Arguments.of(
               "invalid newName",
               new ObjectAnnotatedService(
-                  "Noel Kunde III",
+                  "Hettie Reichel",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "abdul.sawayn@hotmail.com"),
+                  "olen.johns@yahoo.com"),
               null),
           Arguments.of(
               "invalid newName",
               new ObjectAnnotatedService(
-                  "Alex Kutch",
+                  "Simon Carter",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "zack.orn@gmail.com"),
+                  "anibal.ullrich@yahoo.com"),
               ""));
     }
   }
@@ -439,15 +439,19 @@ class ObjectAnnotatedServiceTest {
           Arguments.of(
               "valid copyFrom",
               new ObjectAnnotatedService(
-                  "Jesica Shields",
+                  "Rosendo Turner",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "reena.stoltenberg@yahoo.com"),
-              "Quis ut culpa aspernatur vero sapiente tempore ratione."));
+                  "tanika.oberbrunner@yahoo.com"),
+              "Recusandae exercitationem non commodi odit."));
     }
 
     static Stream<Arguments> invalidCopyFromInputs() {
-      return Stream.of(Arguments.of("invalid source 1", null, "Vitae quia delectus pariatur."));
+      return Stream.of(
+          Arguments.of(
+              "invalid source 1",
+              null,
+              "Exercitationem corporis ullam adipisci in sequi commodi enim."));
     }
   }
 }
