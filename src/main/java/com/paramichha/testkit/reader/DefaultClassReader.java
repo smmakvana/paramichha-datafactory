@@ -24,12 +24,12 @@ public final class DefaultClassReader implements ClassReader {
     public ClassMeta read(Class<?> type) {
         if (isUtilityClass(type)) {
             List<MethodMeta> methods = extractMethods(type, true);
-            return new ClassMeta(type.getSimpleName(), type.getPackageName(),
+            return new ClassMeta(
                     ClassMeta.ConstructorStyle.ALL_ARGS, List.of(), methods, true, type);
         }
         List<FieldMeta> fields  = extractFields(type);
         List<MethodMeta> methods = extractMethods(type, false);
-        return new ClassMeta(type.getSimpleName(), type.getPackageName(),
+        return new ClassMeta(
                 detectStyle(type, fields), fields, methods, false, type);
     }
 
