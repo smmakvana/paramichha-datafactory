@@ -93,17 +93,7 @@ public final class TestKit implements TestKitGenerator {
         return this;
     }
 
-    /**
-     * Generates multiple files — base class plus one per concern.
-     * Call after {@link #split()}.
-     *
-     * <pre>
-     * TestKit.of(UserRegistration.class)
-     *        .split()
-     *        .generateAll()
-     *        .forEach(f -> f.writeTo(outputPath));
-     * </pre>
-     */
+
     @Override
     public List<GeneratedTestClass> generateAll() {
         try {
