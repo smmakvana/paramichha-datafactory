@@ -90,6 +90,8 @@ public class SampleService {
     @NotNull @Positive
     public BigDecimal applyDiscount(@DecimalMin("0.0") @DecimalMax("1.0") BigDecimal rate) {
         DataValidation.notNull(rate, "rate must not be null");
+        DataValidation.decimalMin("0.0", rate);
+        DataValidation.decimalMax("1.0", rate);
         return price.multiply(BigDecimal.ONE.subtract(rate));
     }
 

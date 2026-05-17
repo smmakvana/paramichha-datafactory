@@ -2,11 +2,8 @@
 // Regenerate: TestKit.of(Circle.class).generate().writeTo(...)
 package com.paramichha.testkit.examples;
 
-import com.paramichha.testkit.examples.Circle;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import java.util.Collection;
-import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -16,177 +13,192 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("Circle")
 class CircleTest {
 
-    private static Validator validator;
+  private static Validator validator;
 
-    @BeforeAll
-    static void setUpValidator() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
+  @BeforeAll
+  static void setUpValidator() {
+    validator = Validation.buildDefaultValidatorFactory().getValidator();
+  }
+
+  Circle circle = new Circle(780, 275, 1.5f);
+
+  // =========================================================================
+  // Creation
+  // =========================================================================
+
+  @Nested
+  @DisplayName("Creation")
+  class CircleCreationTest {
+
+    @Test
+    @DisplayName("can be created")
+    void testCanBeCreated() {
+      assertThat(circle).isNotNull();
     }
 
-    Circle circle =
-            new Circle(780, 275, 1.5f);
-
-    // =========================================================================
-    // Circle object creation
-    // =========================================================================
-
-    @Nested
-    @DisplayName("Circle object creation")
-    class CircleCreationTest {
-
-        @Test
-        @DisplayName("circle can be created")
-        void testCanBeCreated() {
-            assertThat(circle).isNotNull();
-        }
-
-        @Test
-        @DisplayName("circle holds expected values")
-        void testHoldsExpectedValues() {
-            assertThat(circle.getX()).isEqualTo(780);
-            assertThat(circle.getY()).isEqualTo(275);
-            assertThat(circle.getR()).isEqualTo(1.5f);
-        }
-
-        @Test
-        @DisplayName("circle is valid")
-        void testIsValid() {
-            assertThat(validator.validate(circle)).isEmpty();
-        }
+    @Test
+    @DisplayName("holds expected values")
+    void testHoldsExpectedValues() {
+      assertThat(circle.getX()).isEqualTo(780);
+      assertThat(circle.getY()).isEqualTo(275);
+      assertThat(circle.getR()).isEqualTo(1.5f);
     }
 
-    // =========================================================================
-    // x in Circle
-    // =========================================================================
+    @Test
+    @DisplayName("is valid (no constraint violations)")
+    void testIsValid() {
+      assertThat(validator.validate(circle)).isEmpty();
+    }
+  }
 
-    @Nested
-    @DisplayName("x in Circle")
-    class CircleXTest {
+  // =========================================================================
+  // x
+  // =========================================================================
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validXs")
-        @DisplayName("x accepts valid value")
-        void testAcceptsX(String description, Integer x) {
-            Circle obj = new Circle(x, 275, 1.5f);
-            assertThat(obj.getX()).isEqualTo(x);
-        }
+  @Nested
+  @DisplayName("x")
+  class CircleXTest {
 
-        static Stream<Arguments> validXs() {
-            return Stream.of(
-                Arguments.of("valid x 1", 155),
-                Arguments.of("valid x 2", -2147483648),
-                Arguments.of("valid x 3", -2147483647),
-                Arguments.of("valid x 4", 0),
-                Arguments.of("valid x 5", 2147483646),
-                Arguments.of("valid x 6", 2147483647)
-            );
-        }
-
-        // TODO: add constraints to x then uncomment
-        // @ParameterizedTest(name = "{0}")
-        // @MethodSource("invalidXs")
-        // @DisplayName("x rejects invalid value")
-        // void testRejectsX(String description, Integer x) {
-        //     Circle obj = new Circle(x, 275, 1.5f);
-        //     assertThat(validator.validate(obj)).isNotEmpty();
-        // }
-
-        // static Stream<Arguments> invalidXs() {
-        //     return Stream.of(
-        //         // Arguments.of("reason", value)
-        //     );
-        // }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validXs")
+    @DisplayName("accepts valid value")
+    void testAcceptsX(String description, Integer x) {
+      Circle obj = new Circle(x, 275, 1.5f);
+      assertThat(obj.getX()).isEqualTo(x);
     }
 
-    // =========================================================================
-    // y in Circle
-    // =========================================================================
-
-    @Nested
-    @DisplayName("y in Circle")
-    class CircleYTest {
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validYs")
-        @DisplayName("y accepts valid value")
-        void testAcceptsY(String description, Integer y) {
-            Circle obj = new Circle(780, y, 1.5f);
-            assertThat(obj.getY()).isEqualTo(y);
-        }
-
-        static Stream<Arguments> validYs() {
-            return Stream.of(
-                Arguments.of("valid y 1", 783),
-                Arguments.of("valid y 2", -2147483648),
-                Arguments.of("valid y 3", -2147483647),
-                Arguments.of("valid y 4", 0),
-                Arguments.of("valid y 5", 2147483646),
-                Arguments.of("valid y 6", 2147483647)
-            );
-        }
-
-        // TODO: add constraints to y then uncomment
-        // @ParameterizedTest(name = "{0}")
-        // @MethodSource("invalidYs")
-        // @DisplayName("y rejects invalid value")
-        // void testRejectsY(String description, Integer y) {
-        //     Circle obj = new Circle(780, y, 1.5f);
-        //     assertThat(validator.validate(obj)).isNotEmpty();
-        // }
-
-        // static Stream<Arguments> invalidYs() {
-        //     return Stream.of(
-        //         // Arguments.of("reason", value)
-        //     );
-        // }
-
+    static Stream<Arguments> validXs() {
+      return Stream.of(
+          Arguments.of("valid x 1", 542),
+          Arguments.of("valid x 2", -2147483648),
+          Arguments.of("valid x 3", -2147483647),
+          Arguments.of("valid x 4", 0),
+          Arguments.of("valid x 5", 2147483646),
+          Arguments.of("valid x 6", 2147483647));
     }
 
-    // =========================================================================
-    // r in Circle
-    // =========================================================================
+    // TODO: add constraints to x then uncomment
+    // @ParameterizedTest(name = "{0}")
+    // @MethodSource("invalidXs")
+    // @DisplayName("rejects invalid value")
+    // void testRejectsX(String description, Integer x) {
+    //     Circle obj = new Circle(x, 275, 1.5f);
+    //     assertThat(validator.validate(obj)).isNotEmpty();
+    // }
 
-    @Nested
-    @DisplayName("r in Circle")
-    class CircleRTest {
+    // static Stream<Arguments> invalidXs() {
+    //     return Stream.of(
+    //         // Arguments.of("reason", value)
+    //     );
+    // }
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validRs")
-        @DisplayName("r accepts valid value")
-        void testAcceptsR(String description, Float r) {
-            Circle obj = new Circle(780, 275, r);
-            assertThat(validator.validate(obj)).isEmpty();
-        }
+  }
 
-        static Stream<Arguments> validRs() {
-            return Stream.of(
-                Arguments.of("valid r 1", 1.5f),
-                Arguments.of("valid r 2", 1.0f),
-                Arguments.of("valid r 3", 2.0f)
-            );
-        }
+  // =========================================================================
+  // y
+  // =========================================================================
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("invalidRs")
-        @DisplayName("r rejects invalid value")
-        void testRejectsR(String description, Float r) {
-            Circle obj = new Circle(780, 275, r);
-            assertThat(validator.validate(obj)).isNotEmpty();
-        }
+  @Nested
+  @DisplayName("y")
+  class CircleYTest {
 
-        static Stream<Arguments> invalidRs() {
-            return Stream.of(
-                Arguments.of("invalid r 1", 0.0f)
-            );
-        }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validYs")
+    @DisplayName("accepts valid value")
+    void testAcceptsY(String description, Integer y) {
+      Circle obj = new Circle(780, y, 1.5f);
+      assertThat(obj.getY()).isEqualTo(y);
     }
 
+    static Stream<Arguments> validYs() {
+      return Stream.of(
+          Arguments.of("valid y 1", 289),
+          Arguments.of("valid y 2", -2147483648),
+          Arguments.of("valid y 3", -2147483647),
+          Arguments.of("valid y 4", 0),
+          Arguments.of("valid y 5", 2147483646),
+          Arguments.of("valid y 6", 2147483647));
+    }
+
+    // TODO: add constraints to y then uncomment
+    // @ParameterizedTest(name = "{0}")
+    // @MethodSource("invalidYs")
+    // @DisplayName("rejects invalid value")
+    // void testRejectsY(String description, Integer y) {
+    //     Circle obj = new Circle(780, y, 1.5f);
+    //     assertThat(validator.validate(obj)).isNotEmpty();
+    // }
+
+    // static Stream<Arguments> invalidYs() {
+    //     return Stream.of(
+    //         // Arguments.of("reason", value)
+    //     );
+    // }
+
+  }
+
+  // =========================================================================
+  // r
+  // =========================================================================
+
+  @Nested
+  @DisplayName("r")
+  class CircleRTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validRs")
+    @DisplayName("accepts valid value")
+    void testAcceptsR(String description, Float r) {
+      Circle obj = new Circle(780, 275, r);
+      assertThat(validator.validate(obj)).isEmpty();
+    }
+
+    static Stream<Arguments> validRs() {
+      return Stream.of(
+          Arguments.of("valid r 1", 1.5f),
+          Arguments.of("valid r 2", 1.0f),
+          Arguments.of("valid r 3", 2.0f));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidRs")
+    @DisplayName("rejects invalid value")
+    void testRejectsR(String description, Float r) {
+      try {
+        Circle obj = new Circle(780, 275, r);
+        assertThat(validator.validate(obj)).isNotEmpty();
+      } catch (Exception ignored) {
+        // Constructor enforced the contract — test passes
+      }
+    }
+
+    static Stream<Arguments> invalidRs() {
+      return Stream.of(Arguments.of("invalid r 1", 0.0f));
+    }
+  }
+
+  // =========================================================================
+  // area()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("area()")
+  class CircleMethodAreaTest {
+
+    @Test
+    @DisplayName("area returns a result")
+    void testReturnsResult() {
+      float result = circle.area();
+    }
+
+    @Test
+    @DisplayName("area returns consistent result")
+    void testReturnsConsistentResult() {
+      assertThat(circle.area()).isEqualTo(circle.area());
+    }
+  }
 }

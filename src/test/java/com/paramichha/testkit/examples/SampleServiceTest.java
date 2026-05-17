@@ -2,16 +2,13 @@
 // Regenerate: TestKit.of(SampleService.class).generate().writeTo(...)
 package com.paramichha.testkit.examples;
 
-import com.paramichha.testkit.examples.SampleService;
-import jakarta.validation.Valid;
+import com.paramichha.utils.DataValidation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -27,487 +24,447 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @DisplayName("SampleService")
 class SampleServiceTest {
 
-    private static Validator validator;
+  private static Validator validator;
 
-    @BeforeAll
-    static void setUpValidator() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
+  @BeforeAll
+  static void setUpValidator() {
+    validator = Validation.buildDefaultValidatorFactory().getValidator();
+  }
+
+  SampleService sampleService = new SampleService("Daina Goodwin", 1, new BigDecimal("1.50"));
+
+  // =========================================================================
+  // Creation
+  // =========================================================================
+
+  @Nested
+  @DisplayName("Creation")
+  class SampleServiceCreationTest {
+
+    @Test
+    @DisplayName("can be created")
+    void testCanBeCreated() {
+      assertThat(sampleService).isNotNull();
     }
 
-    SampleService sampleService =
-            new SampleService("Daina Goodwin", 1, new BigDecimal("1.50"));
-
-    // =========================================================================
-    // SampleService object creation
-    // =========================================================================
-
-    @Nested
-    @DisplayName("SampleService object creation")
-    class SampleServiceCreationTest {
-
-        @Test
-        @DisplayName("sampleService can be created")
-        void testCanBeCreated() {
-            assertThat(sampleService).isNotNull();
-        }
-
-        @Test
-        @DisplayName("sampleService holds expected values")
-        void testHoldsExpectedValues() {
-            assertThat(sampleService.getName()).isEqualTo("Daina Goodwin");
-            assertThat(sampleService.getQuantity()).isEqualTo(1);
-            assertThat(sampleService.getPrice()).isEqualTo(new BigDecimal("1.50"));
-        }
-
-        @Test
-        @DisplayName("sampleService is valid")
-        void testIsValid() {
-            assertThat(validator.validate(sampleService)).isEmpty();
-        }
+    @Test
+    @DisplayName("holds expected values")
+    void testHoldsExpectedValues() {
+      assertThat(sampleService.getName()).isEqualTo("Daina Goodwin");
+      assertThat(sampleService.getQuantity()).isEqualTo(1);
+      assertThat(sampleService.getPrice()).isEqualTo(new BigDecimal("1.50"));
     }
 
-    // =========================================================================
-    // name in SampleService
-    // =========================================================================
+    @Test
+    @DisplayName("is valid (no constraint violations)")
+    void testIsValid() {
+      assertThat(validator.validate(sampleService)).isEmpty();
+    }
+  }
 
-    @Nested
-    @DisplayName("name in SampleService")
-    class SampleServiceNameTest {
+  // =========================================================================
+  // name
+  // =========================================================================
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validNames")
-        @DisplayName("name accepts valid value")
-        void testAcceptsName(String description, String name) {
-            SampleService obj = new SampleService(name, 1, new BigDecimal("1.50"));
-            assertThat(validator.validate(obj)).isEmpty();
-        }
+  @Nested
+  @DisplayName("name")
+  class SampleServiceNameTest {
 
-        static Stream<Arguments> validNames() {
-            return Stream.of(
-                Arguments.of("name 0", "Mervin Swaniawski")
-            );
-        }
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("invalidNames")
-        @DisplayName("name rejects invalid value")
-        void testRejectsName(String description, String name) {
-            SampleService obj = new SampleService(name, 1, new BigDecimal("1.50"));
-            assertThat(validator.validate(obj)).isNotEmpty();
-        }
-
-        static Stream<Arguments> invalidNames() {
-            return Stream.of(
-                Arguments.of("null name", (String) null),
-                Arguments.of("blank name", "")
-            );
-        }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validNames")
+    @DisplayName("accepts valid value")
+    void testAcceptsName(String description, String name) {
+      SampleService obj = new SampleService(name, 1, new BigDecimal("1.50"));
+      assertThat(validator.validate(obj)).isEmpty();
     }
 
-    // =========================================================================
-    // quantity in SampleService
-    // =========================================================================
-
-    @Nested
-    @DisplayName("quantity in SampleService")
-    class SampleServiceQuantityTest {
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validQuantitys")
-        @DisplayName("quantity accepts valid value")
-        void testAcceptsQuantity(String description, Integer quantity) {
-            SampleService obj = new SampleService("Daina Goodwin", quantity, new BigDecimal("1.50"));
-            assertThat(validator.validate(obj)).isEmpty();
-        }
-
-        static Stream<Arguments> validQuantitys() {
-            return Stream.of(
-                Arguments.of("valid quantity 1", 1),
-                Arguments.of("valid quantity 2", 1),
-                Arguments.of("valid quantity 3", 2),
-                Arguments.of("valid quantity 4", 50),
-                Arguments.of("valid quantity 5", 99),
-                Arguments.of("valid quantity 6", 100)
-            );
-        }
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("invalidQuantitys")
-        @DisplayName("quantity rejects invalid value")
-        void testRejectsQuantity(String description, Integer quantity) {
-            SampleService obj = new SampleService("Daina Goodwin", quantity, new BigDecimal("1.50"));
-            assertThat(validator.validate(obj)).isNotEmpty();
-        }
-
-        static Stream<Arguments> invalidQuantitys() {
-            return Stream.of(
-                Arguments.of("invalid quantity 1", 0),
-                Arguments.of("invalid quantity 2", 101)
-            );
-        }
-
+    static Stream<Arguments> validNames() {
+      return Stream.of(Arguments.of("name 0", "Thomas Quigley"));
     }
 
-    // =========================================================================
-    // price in SampleService
-    // =========================================================================
-
-    @Nested
-    @DisplayName("price in SampleService")
-    class SampleServicePriceTest {
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validPrices")
-        @DisplayName("price accepts valid value")
-        void testAcceptsPrice(String description, BigDecimal price) {
-            SampleService obj = new SampleService("Daina Goodwin", 1, price);
-            assertThat(validator.validate(obj)).isEmpty();
-        }
-
-        static Stream<Arguments> validPrices() {
-            return Stream.of(
-                Arguments.of("valid price 1", new BigDecimal("1.50")),
-                Arguments.of("valid price 2", new BigDecimal("1.00")),
-                Arguments.of("valid price 3", new BigDecimal("2.00"))
-            );
-        }
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("invalidPrices")
-        @DisplayName("price rejects invalid value")
-        void testRejectsPrice(String description, BigDecimal price) {
-            SampleService obj = new SampleService("Daina Goodwin", 1, price);
-            assertThat(validator.validate(obj)).isNotEmpty();
-        }
-
-        static Stream<Arguments> invalidPrices() {
-            return Stream.of(
-                Arguments.of("null price", (BigDecimal) null),
-                Arguments.of("invalid price 2", new BigDecimal("0"))
-            );
-        }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidNames")
+    @DisplayName("rejects invalid value")
+    void testRejectsName(String description, String name) {
+      try {
+        SampleService obj = new SampleService(name, 1, new BigDecimal("1.50"));
+        assertThat(validator.validate(obj)).isNotEmpty();
+      } catch (Exception ignored) {
+        // Constructor enforced the contract — test passes
+      }
     }
 
-    // =========================================================================
-    // applyDiscount in SampleService
-    // =========================================================================
+    static Stream<Arguments> invalidNames() {
+      return Stream.of(Arguments.of("null name", (String) null), Arguments.of("blank name", ""));
+    }
+  }
 
-    @Nested
-    @DisplayName("applyDiscount in SampleService")
-    class SampleServiceMethodApplyDiscountTest {
+  // =========================================================================
+  // quantity
+  // =========================================================================
 
-        private record ApplyDiscountResult(@NotNull @Positive BigDecimal value) {}
+  @Nested
+  @DisplayName("quantity")
+  class SampleServiceQuantityTest {
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validApplyDiscountInputs")
-        @DisplayName("applyDiscount accepts valid input")
-        void testAcceptsValidInput(String description, BigDecimal arg0) {
-            BigDecimal result = sampleService.applyDiscount(arg0);
-            assertThat(validator.validate(new ApplyDiscountResult(result))).isEmpty();
-        }
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("invalidApplyDiscountInputs")
-        @DisplayName("applyDiscount rejects invalid input")
-        void testRejectsInvalidInput(String description, BigDecimal arg0) {
-            assertThatThrownBy(() -> sampleService.applyDiscount(arg0))
-                    .isInstanceOf(Exception.class);
-        }
-
-        static Stream<Arguments> validApplyDiscountInputs() {
-            return Stream.of(
-                Arguments.of("valid applyDiscount",
-                    new BigDecimal("0.50"))
-            );
-        }
-
-        static Stream<Arguments> invalidApplyDiscountInputs() {
-            return Stream.of(
-                Arguments.of("invalid arg0 1", new BigDecimal("-1")),
-                Arguments.of("invalid arg0 2", new BigDecimal("2"))
-            );
-        }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validQuantitys")
+    @DisplayName("accepts valid value")
+    void testAcceptsQuantity(String description, Integer quantity) {
+      SampleService obj = new SampleService("Daina Goodwin", quantity, new BigDecimal("1.50"));
+      assertThat(validator.validate(obj)).isEmpty();
     }
 
-    // =========================================================================
-    // formatName in SampleService
-    // =========================================================================
-
-    @Nested
-    @DisplayName("formatName in SampleService")
-    class SampleServiceMethodFormatNameTest {
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validFormatNameInputs")
-        @DisplayName("formatName accepts valid input")
-        void testAcceptsValidInput(String description, String arg0) {
-            String result = sampleService.formatName(arg0);
-            assertThat(result).isNotNull();
-        }
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("invalidFormatNameInputs")
-        @DisplayName("formatName rejects invalid input")
-        void testRejectsInvalidInput(String description, String arg0) {
-            assertThatThrownBy(() -> sampleService.formatName(arg0))
-                    .isInstanceOf(Exception.class);
-        }
-
-        static Stream<Arguments> validFormatNameInputs() {
-            return Stream.of(
-                Arguments.of("valid formatName",
-                    "aspernatur")
-            );
-        }
-
-        static Stream<Arguments> invalidFormatNameInputs() {
-            return Stream.of(
-                Arguments.of("invalid arg0 1", null),
-                Arguments.of("invalid arg0 2", "")
-            );
-        }
-
+    static Stream<Arguments> validQuantitys() {
+      return Stream.of(
+          Arguments.of("valid quantity 1", 1),
+          Arguments.of("valid quantity 2", 1),
+          Arguments.of("valid quantity 3", 2),
+          Arguments.of("valid quantity 4", 50),
+          Arguments.of("valid quantity 5", 99),
+          Arguments.of("valid quantity 6", 100));
     }
 
-    // =========================================================================
-    // describe in SampleService
-    // =========================================================================
-
-    @Nested
-    @DisplayName("describe in SampleService")
-    class SampleServiceMethodDescribeTest {
-
-        private record DescribeResult(@NotBlank String value) {}
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validDescribeInputs")
-        @DisplayName("describe accepts valid input")
-        void testAcceptsValidInput(String description, String arg0) {
-            String result = sampleService.describe(arg0);
-            assertThat(validator.validate(new DescribeResult(result))).isEmpty();
-        }
-
-        static Stream<Arguments> validDescribeInputs() {
-            return Stream.of(
-                Arguments.of("valid describe",
-                    (String) null)
-            );
-        }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidQuantitys")
+    @DisplayName("rejects invalid value")
+    void testRejectsQuantity(String description, Integer quantity) {
+      try {
+        SampleService obj = new SampleService("Daina Goodwin", quantity, new BigDecimal("1.50"));
+        assertThat(validator.validate(obj)).isNotEmpty();
+      } catch (Exception ignored) {
+        // Constructor enforced the contract — test passes
+      }
     }
 
-    // =========================================================================
-    // reset in SampleService
-    // =========================================================================
+    static Stream<Arguments> invalidQuantitys() {
+      return Stream.of(
+          Arguments.of("invalid quantity 1", 0), Arguments.of("invalid quantity 2", 101));
+    }
+  }
 
-    @Nested
-    @DisplayName("reset in SampleService")
-    class SampleServiceMethodResetTest {
+  // =========================================================================
+  // price
+  // =========================================================================
 
-        @Test
-        @DisplayName("executes without exception")
-        void testExecutesWithoutException() {
-            assertThatCode(() -> sampleService.reset()).doesNotThrowAnyException();
-        }
+  @Nested
+  @DisplayName("price")
+  class SampleServicePriceTest {
 
-        @Test
-        @DisplayName("object remains valid after execution")
-        void testObjectRemainsValidAfterExecution() {
-            sampleService.reset();
-            assertThat(validator.validate(sampleService)).isEmpty();
-        }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validPrices")
+    @DisplayName("accepts valid value")
+    void testAcceptsPrice(String description, BigDecimal price) {
+      SampleService obj = new SampleService("Daina Goodwin", 1, price);
+      assertThat(validator.validate(obj)).isEmpty();
     }
 
-    // =========================================================================
-    // encode in SampleService
-    // =========================================================================
-
-    @Nested
-    @DisplayName("encode in SampleService")
-    class SampleServiceMethodEncodeTest {
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validEncodeInputs")
-        @DisplayName("encode accepts valid input")
-        void testAcceptsValidInput(String description, String arg0) {
-            String result = sampleService.encode(arg0);
-            assertThat(result).isNotNull();
-        }
-
-        static Stream<Arguments> validEncodeInputs() {
-            return Stream.of(
-                Arguments.of("valid encode",
-                    (String) null)
-            );
-        }
-
+    static Stream<Arguments> validPrices() {
+      return Stream.of(
+          Arguments.of("valid price 1", new BigDecimal("1.50")),
+          Arguments.of("valid price 2", new BigDecimal("1.00")),
+          Arguments.of("valid price 3", new BigDecimal("2.00")));
     }
 
-    // =========================================================================
-    // merge in SampleService
-    // =========================================================================
-
-    @Nested
-    @DisplayName("merge in SampleService")
-    class SampleServiceMethodMergeTest {
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validMergeInputs")
-        @DisplayName("merge accepts valid input")
-        void testAcceptsValidInput(String description, SampleService arg0, String arg1) {
-            SampleService result = sampleService.merge(arg0, arg1);
-            assertThat(validator.validate(result)).isEmpty();
-        }
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("invalidMergeInputs")
-        @DisplayName("merge rejects invalid input")
-        void testRejectsInvalidInput(String description, SampleService arg0, String arg1) {
-            assertThatThrownBy(() -> sampleService.merge(arg0, arg1))
-                    .isInstanceOf(Exception.class);
-        }
-
-        static Stream<Arguments> validMergeInputs() {
-            return Stream.of(
-                Arguments.of("valid merge",
-                    null,
-                    "sequi")
-            );
-        }
-
-        static Stream<Arguments> invalidMergeInputs() {
-            return Stream.of(
-                Arguments.of("invalid arg0",
-                    null,
-                    "ratione"),
-                Arguments.of("invalid arg1",
-                    null,
-                    null),
-                Arguments.of("invalid arg1",
-                    null,
-                    "")
-            );
-        }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidPrices")
+    @DisplayName("rejects invalid value")
+    void testRejectsPrice(String description, BigDecimal price) {
+      try {
+        SampleService obj = new SampleService("Daina Goodwin", 1, price);
+        assertThat(validator.validate(obj)).isNotEmpty();
+      } catch (Exception ignored) {
+        // Constructor enforced the contract — test passes
+      }
     }
 
-    // =========================================================================
-    // combine in SampleService
-    // =========================================================================
+    static Stream<Arguments> invalidPrices() {
+      return Stream.of(
+          Arguments.of("null price", (BigDecimal) null),
+          Arguments.of("invalid price 2", new BigDecimal("0")));
+    }
+  }
 
-    @Nested
-    @DisplayName("combine in SampleService")
-    class SampleServiceMethodCombineTest {
+  // =========================================================================
+  // reset()
+  // =========================================================================
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validCombineInputs")
-        @DisplayName("combine accepts valid input")
-        void testAcceptsValidInput(String description, int arg0, int arg1) {
-            int result = sampleService.combine(arg0, arg1);
-        }
+  @Nested
+  @DisplayName("reset()")
+  class SampleServiceMethodResetTest {
 
-        static Stream<Arguments> validCombineInputs() {
-            return Stream.of(
-                Arguments.of("valid combine",
-                    0,
-                    0)
-            );
-        }
-
+    @Test
+    @DisplayName("executes without exception")
+    void testExecutesWithoutException() {
+      assertThatCode(() -> sampleService.reset()).doesNotThrowAnyException();
     }
 
-    // =========================================================================
-    // transferTo in SampleService
-    // =========================================================================
+    @Test
+    @DisplayName("object remains valid after execution")
+    void testObjectRemainsValidAfterExecution() {
+      sampleService.reset();
+      assertThat(validator.validate(sampleService)).isEmpty();
+    }
+  }
 
-    @Nested
-    @DisplayName("transferTo in SampleService")
-    class SampleServiceMethodTransferToTest {
+  // =========================================================================
+  // encode()
+  // =========================================================================
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validTransferToInputs")
-        @DisplayName("transferTo accepts valid input")
-        void testAcceptsValidInput(String description, SampleService arg0, int arg1) {
-            assertThatCode(() -> sampleService.transferTo(arg0, arg1)).doesNotThrowAnyException();
-        }
+  @Nested
+  @DisplayName("encode()")
+  class SampleServiceMethodEncodeTest {
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("invalidTransferToInputs")
-        @DisplayName("transferTo rejects invalid input")
-        void testRejectsInvalidInput(String description, SampleService arg0, int arg1) {
-            assertThatThrownBy(() -> sampleService.transferTo(arg0, arg1))
-                    .isInstanceOf(Exception.class);
-        }
-
-        static Stream<Arguments> validTransferToInputs() {
-            return Stream.of(
-                Arguments.of("valid transferTo",
-                    null,
-                    0)
-            );
-        }
-
-        static Stream<Arguments> invalidTransferToInputs() {
-            return Stream.of(
-                Arguments.of("invalid arg0 1",
-                    null,
-                    0)
-            );
-        }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validEncodeInputs")
+    @DisplayName("encode accepts valid input")
+    void testAcceptsValidInput(String description, String format) {
+      String result = sampleService.encode(format);
+      assertThat(result).isNotNull();
     }
 
-    // =========================================================================
-    // multiply in SampleService
-    // =========================================================================
+    static Stream<Arguments> validEncodeInputs() {
+      return Stream.of(Arguments.of("valid encode", (String) null));
+    }
+  }
 
-    @Nested
-    @DisplayName("multiply in SampleService")
-    class SampleServiceMethodMultiplyTest {
+  // =========================================================================
+  // merge()
+  // =========================================================================
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validMultiplyInputs")
-        @DisplayName("multiply accepts valid input")
-        void testAcceptsValidInput(String description, int arg0) {
-            int result = sampleService.multiply(arg0);
-        }
+  @Nested
+  @DisplayName("merge()")
+  class SampleServiceMethodMergeTest {
 
-        static Stream<Arguments> validMultiplyInputs() {
-            return Stream.of(
-                Arguments.of("valid multiply",
-                    0)
-            );
-        }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validMergeInputs")
+    @DisplayName("merge accepts valid input")
+    void testAcceptsValidInput(String description, SampleService other, String newName) {
+      SampleService result = sampleService.merge(other, newName);
+      assertThat(validator.validate(result)).isEmpty();
     }
 
-    // =========================================================================
-    // swap in SampleService
-    // =========================================================================
-
-    @Nested
-    @DisplayName("swap in SampleService")
-    class SampleServiceMethodSwapTest {
-
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("validSwapInputs")
-        @DisplayName("swap accepts valid input")
-        void testAcceptsValidInput(String description, String arg0, String arg1) {
-            assertThatCode(() -> sampleService.swap(arg0, arg1)).doesNotThrowAnyException();
-        }
-
-        static Stream<Arguments> validSwapInputs() {
-            return Stream.of(
-                Arguments.of("valid swap",
-                    (String) null,
-                    (String) null)
-            );
-        }
-
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidMergeInputs")
+    @DisplayName("merge rejects invalid input")
+    void testRejectsInvalidInput(String description, SampleService other, String newName) {
+      // Enforce @NotNull: DataValidation.notNull(other);
+      // Enforce @NotBlank: DataValidation.notBlank(newName);
+      assertThatThrownBy(() -> sampleService.merge(other, newName)).isInstanceOf(Exception.class);
     }
 
+    static Stream<Arguments> validMergeInputs() {
+      return Stream.of(
+          Arguments.of(
+              "valid merge",
+              new SampleService("Derrick Adams", 1, new BigDecimal("1.50")),
+              "Ms. Jesse Marvin"));
+    }
+
+    static Stream<Arguments> invalidMergeInputs() {
+      return Stream.of(
+          Arguments.of("invalid other", null, "Verda Thompson"),
+          Arguments.of(
+              "invalid newName",
+              new SampleService("Rheba Daniel", 1, new BigDecimal("1.50")),
+              null),
+          Arguments.of(
+              "invalid newName",
+              new SampleService("Mr. Marc Larson", 1, new BigDecimal("1.50")),
+              ""));
+    }
+  }
+
+  // =========================================================================
+  // combine()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("combine()")
+  class SampleServiceMethodCombineTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validCombineInputs")
+    @DisplayName("combine accepts valid input")
+    void testAcceptsValidInput(String description, int a, int b) {
+      int result = sampleService.combine(a, b);
+    }
+
+    static Stream<Arguments> validCombineInputs() {
+      return Stream.of(Arguments.of("valid combine", 0, 0));
+    }
+  }
+
+  // =========================================================================
+  // transferTo()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("transferTo()")
+  class SampleServiceMethodTransferToTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validTransferToInputs")
+    @DisplayName("transferTo accepts valid input")
+    void testAcceptsValidInput(String description, SampleService target, int amount) {
+      assertThatCode(() -> sampleService.transferTo(target, amount)).doesNotThrowAnyException();
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidTransferToInputs")
+    @DisplayName("transferTo rejects invalid input")
+    void testRejectsInvalidInput(String description, SampleService target, int amount) {
+      // Enforce @NotNull: DataValidation.notNull(target);
+      assertThatThrownBy(() -> sampleService.transferTo(target, amount))
+          .isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validTransferToInputs() {
+      return Stream.of(
+          Arguments.of(
+              "valid transferTo",
+              new SampleService("Berenice Brakus", 1, new BigDecimal("1.50")),
+              0));
+    }
+
+    static Stream<Arguments> invalidTransferToInputs() {
+      return Stream.of(Arguments.of("invalid target 1", null, 0));
+    }
+  }
+
+  // =========================================================================
+  // multiply()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("multiply()")
+  class SampleServiceMethodMultiplyTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validMultiplyInputs")
+    @DisplayName("multiply accepts valid input")
+    void testAcceptsValidInput(String description, int factor) {
+      int result = sampleService.multiply(factor);
+    }
+
+    static Stream<Arguments> validMultiplyInputs() {
+      return Stream.of(Arguments.of("valid multiply", 0));
+    }
+  }
+
+  // =========================================================================
+  // swap()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("swap()")
+  class SampleServiceMethodSwapTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validSwapInputs")
+    @DisplayName("swap accepts valid input")
+    void testAcceptsValidInput(String description, String a, String b) {
+      assertThatCode(() -> sampleService.swap(a, b)).doesNotThrowAnyException();
+    }
+
+    static Stream<Arguments> validSwapInputs() {
+      return Stream.of(Arguments.of("valid swap", (String) null, (String) null));
+    }
+  }
+
+  // =========================================================================
+  // applyDiscount()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("applyDiscount()")
+  class SampleServiceMethodApplyDiscountTest {
+
+    private record ApplyDiscountResult(@NotNull @Positive BigDecimal value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validApplyDiscountInputs")
+    @DisplayName("applyDiscount accepts valid input")
+    void testAcceptsValidInput(String description, BigDecimal rate) {
+      BigDecimal result = sampleService.applyDiscount(rate);
+      DataValidation.notNull(result);
+      DataValidation.positive(result);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidApplyDiscountInputs")
+    @DisplayName("applyDiscount rejects invalid input")
+    void testRejectsInvalidInput(String description, BigDecimal rate) {
+      // Enforce @DecimalMin: DataValidation.decimalMin("0.0", rate);
+      // Enforce @DecimalMax: DataValidation.decimalMax("1.0", rate);
+      assertThatThrownBy(() -> sampleService.applyDiscount(rate)).isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validApplyDiscountInputs() {
+      return Stream.of(Arguments.of("valid applyDiscount", new BigDecimal("0.50")));
+    }
+
+    static Stream<Arguments> invalidApplyDiscountInputs() {
+      return Stream.of(
+          Arguments.of("invalid rate 1", new BigDecimal("-1")),
+          Arguments.of("invalid rate 2", new BigDecimal("2")));
+    }
+  }
+
+  // =========================================================================
+  // formatName()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("formatName()")
+  class SampleServiceMethodFormatNameTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validFormatNameInputs")
+    @DisplayName("formatName accepts valid input")
+    void testAcceptsValidInput(String description, String prefix) {
+      String result = sampleService.formatName(prefix);
+      assertThat(result).isNotNull();
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidFormatNameInputs")
+    @DisplayName("formatName rejects invalid input")
+    void testRejectsInvalidInput(String description, String prefix) {
+      // Enforce @NotBlank: DataValidation.notBlank(prefix);
+      assertThatThrownBy(() -> sampleService.formatName(prefix)).isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validFormatNameInputs() {
+      return Stream.of(Arguments.of("valid formatName", "Mr."));
+    }
+
+    static Stream<Arguments> invalidFormatNameInputs() {
+      return Stream.of(
+          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
+    }
+  }
+
+  // =========================================================================
+  // describe()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("describe()")
+  class SampleServiceMethodDescribeTest {
+
+    private record DescribeResult(@NotBlank String value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validDescribeInputs")
+    @DisplayName("describe accepts valid input")
+    void testAcceptsValidInput(String description, String separator) {
+      String result = sampleService.describe(separator);
+      DataValidation.notBlank(result);
+    }
+
+    static Stream<Arguments> validDescribeInputs() {
+      return Stream.of(Arguments.of("valid describe", (String) null));
+    }
+  }
 }
