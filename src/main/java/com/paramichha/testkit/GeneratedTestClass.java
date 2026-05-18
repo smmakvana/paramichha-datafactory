@@ -1,7 +1,8 @@
 package com.paramichha.testkit;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Output of {@link TestKits#generate()} — the generated Java source.
@@ -37,12 +38,10 @@ public record GeneratedTestClass(
         }
     }
 
-    /** Returns formatted source — useful for preview/testing without writing. */
-    public String formatted() {
-        return format(source);
-    }
 
-    public String asString() { return source; }
+    public String asString() {
+        return source;
+    }
 
     // ── Formatting ────────────────────────────────────────────────────────
 
@@ -50,14 +49,12 @@ public record GeneratedTestClass(
      * Two-pass cleanup:
      * 1. RemoveUnusedImports — removes any import not referenced in the source
      * 2. Formatter           — formats whitespace, indentation, line breaks
-     *
      * Requires JVM flags (add to .mvn/jvm.config):
-     *   --add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
-     *   --add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
-     *   --add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
-     *   --add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
-     *   --add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
-     *
+     * --add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
+     * --add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
+     * --add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
+     * --add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
+     * --add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
      * Falls back to raw source if flags are missing.
      */
     private static String format(String source) {
