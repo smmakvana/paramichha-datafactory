@@ -89,7 +89,7 @@ class ObjectMixedServiceTest {
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Janae Macejkovic"));
+      return Stream.of(Arguments.of("name 0", "Mr. Levi Crist"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -136,7 +136,7 @@ class ObjectMixedServiceTest {
       return Stream.of(
           Arguments.of("valid price 1", new BigDecimal("-1.00")),
           Arguments.of("valid price 2", new BigDecimal("0.00")),
-          Arguments.of("valid price 3", new BigDecimal("177.57")));
+          Arguments.of("valid price 3", new BigDecimal("292.35")));
     }
 
     // TODO: add constraints to price then uncomment
@@ -217,7 +217,7 @@ class ObjectMixedServiceTest {
     }
 
     static Stream<Arguments> validEmails() {
-      return Stream.of(Arguments.of("email 0", "daine.cummings@gmail.com"));
+      return Stream.of(Arguments.of("email 0", "ronda.pollich@gmail.com"));
     }
 
     // TODO: add constraints to email then uncomment
@@ -291,10 +291,10 @@ class ObjectMixedServiceTest {
           Arguments.of(
               "valid merge",
               new ObjectMixedService(
-                  "Armand Wolff III",
+                  "Mr. Audrey Barton",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "frances.reinger@gmail.com"),
+                  "ming.kirlin@gmail.com"),
               (String) null));
     }
 
@@ -332,10 +332,10 @@ class ObjectMixedServiceTest {
           Arguments.of(
               "valid copyFrom",
               new ObjectMixedService(
-                  "Lino Schmitt",
+                  "Kelvin Schmitt",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "donnie.kihn@yahoo.com"),
+                  "marx.roberts@gmail.com"),
               (String) null));
     }
 
@@ -393,7 +393,7 @@ class ObjectMixedServiceTest {
     }
 
     static Stream<Arguments> validFormatDisplayInputs() {
-      return Stream.of(Arguments.of("valid formatDisplay", "Mrs."));
+      return Stream.of(Arguments.of("valid formatDisplay", "Mr."));
     }
 
     static Stream<Arguments> invalidFormatDisplayInputs() {

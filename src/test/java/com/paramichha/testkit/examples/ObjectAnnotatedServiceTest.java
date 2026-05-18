@@ -91,7 +91,7 @@ class ObjectAnnotatedServiceTest {
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Dwight Mann"));
+      return Stream.of(Arguments.of("name 0", "Ms. Karl Morissette"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -227,7 +227,7 @@ class ObjectAnnotatedServiceTest {
     }
 
     static Stream<Arguments> validEmails() {
-      return Stream.of(Arguments.of("email 0", "bernard.muller@hotmail.com"));
+      return Stream.of(Arguments.of("email 0", "janna.daugherty@yahoo.com"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -302,31 +302,31 @@ class ObjectAnnotatedServiceTest {
           Arguments.of(
               "valid merge",
               new ObjectAnnotatedService(
-                  "Boyce Parisian MD",
+                  "Wilford Vandervort",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "ji.brekke@hotmail.com"),
-              "Dr. Eldora Jenkins"));
+                  "gaston.turcotte@yahoo.com"),
+              "Michal Stracke"));
     }
 
     static Stream<Arguments> invalidMergeInputs() {
       return Stream.of(
-          Arguments.of("invalid other", null, "Marchelle Wilderman"),
+          Arguments.of("invalid other", null, "Mrs. Ken Schiller"),
           Arguments.of(
               "invalid newName",
               new ObjectAnnotatedService(
-                  "Wan Watsica",
+                  "Mrs. Maria Huels",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "scotty.ortiz@yahoo.com"),
+                  "sang.ritchie@yahoo.com"),
               null),
           Arguments.of(
               "invalid newName",
               new ObjectAnnotatedService(
-                  "Caroline Gleason MD",
+                  "Basil Dibbert",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "mason.beier@hotmail.com"),
+                  "korey.bogan@yahoo.com"),
               ""));
     }
   }
@@ -362,54 +362,19 @@ class ObjectAnnotatedServiceTest {
           Arguments.of(
               "valid copyFrom",
               new ObjectAnnotatedService(
-                  "Korey Reinger",
+                  "Louie DuBuque",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "virgilio.toy@gmail.com"),
-              "Tempore saepe temporibus."));
+                  "roosevelt.fay@yahoo.com"),
+              "Modi error saepe."));
     }
 
     static Stream<Arguments> invalidCopyFromInputs() {
       return Stream.of(
           Arguments.of(
-              "invalid source 1", null, "Ducimus magnam ab est cumque illo quam quibusdam."));
-    }
-  }
-
-  // =========================================================================
-  // formatDisplay()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("formatDisplay()")
-  class ObjectAnnotatedServiceMethodFormatDisplayTest {
-
-    private record FormatDisplayResult(@NotBlank String value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validFormatDisplayInputs")
-    @DisplayName("formatDisplay accepts valid input")
-    void testAcceptsValidInput(String description, String prefix) {
-      String result = objectAnnotatedService.formatDisplay(prefix);
-      DataValidation.notBlank(result);
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidFormatDisplayInputs")
-    @DisplayName("formatDisplay rejects invalid input")
-    void testRejectsInvalidInput(String description, String prefix) {
-      // Enforce @NotBlank: DataValidation.notBlank(prefix);
-      assertThatThrownBy(() -> objectAnnotatedService.formatDisplay(prefix))
-          .isInstanceOf(Exception.class);
-    }
-
-    static Stream<Arguments> validFormatDisplayInputs() {
-      return Stream.of(Arguments.of("valid formatDisplay", "Mrs."));
-    }
-
-    static Stream<Arguments> invalidFormatDisplayInputs() {
-      return Stream.of(
-          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
+              "invalid source 1",
+              null,
+              "Vel vero aspernatur delectus exercitationem corporis possimus."));
     }
   }
 
@@ -450,6 +415,43 @@ class ObjectAnnotatedServiceTest {
       return Stream.of(
           Arguments.of("invalid taxRate 1", new BigDecimal("-1")),
           Arguments.of("invalid taxRate 2", new BigDecimal("2")));
+    }
+  }
+
+  // =========================================================================
+  // formatDisplay()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("formatDisplay()")
+  class ObjectAnnotatedServiceMethodFormatDisplayTest {
+
+    private record FormatDisplayResult(@NotBlank String value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validFormatDisplayInputs")
+    @DisplayName("formatDisplay accepts valid input")
+    void testAcceptsValidInput(String description, String prefix) {
+      String result = objectAnnotatedService.formatDisplay(prefix);
+      DataValidation.notBlank(result);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidFormatDisplayInputs")
+    @DisplayName("formatDisplay rejects invalid input")
+    void testRejectsInvalidInput(String description, String prefix) {
+      // Enforce @NotBlank: DataValidation.notBlank(prefix);
+      assertThatThrownBy(() -> objectAnnotatedService.formatDisplay(prefix))
+          .isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validFormatDisplayInputs() {
+      return Stream.of(Arguments.of("valid formatDisplay", "Mrs."));
+    }
+
+    static Stream<Arguments> invalidFormatDisplayInputs() {
+      return Stream.of(
+          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
     }
   }
 }

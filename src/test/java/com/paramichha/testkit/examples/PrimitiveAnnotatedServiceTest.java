@@ -421,6 +421,31 @@ class PrimitiveAnnotatedServiceTest {
   }
 
   // =========================================================================
+  // totalValue()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("totalValue()")
+  class PrimitiveAnnotatedServiceMethodTotalValueTest {
+
+    private record TotalValueResult(@Min(value = 0L) Long value) {}
+
+    @Test
+    @DisplayName("totalValue returns a result")
+    void testReturnsResult() {
+      long result = primitiveAnnotatedService.totalValue();
+      DataValidation.min(0, result);
+    }
+
+    @Test
+    @DisplayName("totalValue returns consistent result")
+    void testReturnsConsistentResult() {
+      assertThat(primitiveAnnotatedService.totalValue())
+          .isEqualTo(primitiveAnnotatedService.totalValue());
+    }
+  }
+
+  // =========================================================================
   // applyDiscount()
   // =========================================================================
 
@@ -456,31 +481,6 @@ class PrimitiveAnnotatedServiceTest {
       return Stream.of(
           Arguments.of("invalid discountPercent 1", -1),
           Arguments.of("invalid discountPercent 2", 101));
-    }
-  }
-
-  // =========================================================================
-  // totalValue()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("totalValue()")
-  class PrimitiveAnnotatedServiceMethodTotalValueTest {
-
-    private record TotalValueResult(@Min(value = 0L) Long value) {}
-
-    @Test
-    @DisplayName("totalValue returns a result")
-    void testReturnsResult() {
-      long result = primitiveAnnotatedService.totalValue();
-      DataValidation.min(0, result);
-    }
-
-    @Test
-    @DisplayName("totalValue returns consistent result")
-    void testReturnsConsistentResult() {
-      assertThat(primitiveAnnotatedService.totalValue())
-          .isEqualTo(primitiveAnnotatedService.totalValue());
     }
   }
 }

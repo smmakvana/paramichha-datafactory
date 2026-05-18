@@ -165,7 +165,7 @@ class PrimitivePlainServiceTest {
       return Stream.of(
           Arguments.of("valid rate 1", -1.0d),
           Arguments.of("valid rate 2", 0.0d),
-          Arguments.of("valid rate 3", 835.21d));
+          Arguments.of("valid rate 3", 827.1d));
     }
 
     // TODO: add constraints to rate then uncomment
@@ -378,26 +378,6 @@ class PrimitivePlainServiceTest {
   }
 
   // =========================================================================
-  // applyDiscount()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("applyDiscount()")
-  class PrimitivePlainServiceMethodApplyDiscountTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyDiscountInputs")
-    @DisplayName("applyDiscount accepts valid input")
-    void testAcceptsValidInput(String description, int discountPercent) {
-      double result = primitivePlainService.applyDiscount(discountPercent);
-    }
-
-    static Stream<Arguments> validApplyDiscountInputs() {
-      return Stream.of(Arguments.of("valid applyDiscount", 0));
-    }
-  }
-
-  // =========================================================================
   // totalValue()
   // =========================================================================
 
@@ -415,6 +395,26 @@ class PrimitivePlainServiceTest {
     @DisplayName("totalValue returns consistent result")
     void testReturnsConsistentResult() {
       assertThat(primitivePlainService.totalValue()).isEqualTo(primitivePlainService.totalValue());
+    }
+  }
+
+  // =========================================================================
+  // applyDiscount()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("applyDiscount()")
+  class PrimitivePlainServiceMethodApplyDiscountTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validApplyDiscountInputs")
+    @DisplayName("applyDiscount accepts valid input")
+    void testAcceptsValidInput(String description, int discountPercent) {
+      double result = primitivePlainService.applyDiscount(discountPercent);
+    }
+
+    static Stream<Arguments> validApplyDiscountInputs() {
+      return Stream.of(Arguments.of("valid applyDiscount", 0));
     }
   }
 }

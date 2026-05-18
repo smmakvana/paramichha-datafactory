@@ -360,6 +360,29 @@ class PrimitiveMixedServiceTest {
   }
 
   // =========================================================================
+  // scaledRate()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("scaledRate()")
+  class PrimitiveMixedServiceMethodScaledRateTest {
+
+    private record ScaledRateResult(@Positive Double value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validScaledRateInputs")
+    @DisplayName("scaledRate accepts valid input")
+    void testAcceptsValidInput(String description, int factor) {
+      double result = primitiveMixedService.scaledRate(factor);
+      DataValidation.positive(result);
+    }
+
+    static Stream<Arguments> validScaledRateInputs() {
+      return Stream.of(Arguments.of("valid scaledRate", 0));
+    }
+  }
+
+  // =========================================================================
   // applyDiscount()
   // =========================================================================
 
@@ -392,29 +415,6 @@ class PrimitiveMixedServiceTest {
       return Stream.of(
           Arguments.of("invalid discountPercent 1", -1),
           Arguments.of("invalid discountPercent 2", 101));
-    }
-  }
-
-  // =========================================================================
-  // scaledRate()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("scaledRate()")
-  class PrimitiveMixedServiceMethodScaledRateTest {
-
-    private record ScaledRateResult(@Positive Double value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validScaledRateInputs")
-    @DisplayName("scaledRate accepts valid input")
-    void testAcceptsValidInput(String description, int factor) {
-      double result = primitiveMixedService.scaledRate(factor);
-      DataValidation.positive(result);
-    }
-
-    static Stream<Arguments> validScaledRateInputs() {
-      return Stream.of(Arguments.of("valid scaledRate", 0));
     }
   }
 }
