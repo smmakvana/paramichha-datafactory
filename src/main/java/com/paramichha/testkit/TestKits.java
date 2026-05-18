@@ -5,7 +5,6 @@ import com.paramichha.testkit.data.DataFactoryTestDataProvider;
 import com.paramichha.testkit.generator.DefaultTestGenerator;
 import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.TestData;
-import com.paramichha.testkit.reader.DefaultClassReader;
 
 import java.util.List;
 

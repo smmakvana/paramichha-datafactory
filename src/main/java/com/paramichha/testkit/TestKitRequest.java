@@ -2,7 +2,6 @@ package com.paramichha.testkit;
 
 import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.model.ClassMeta;
-import com.paramichha.testkit.reader.DefaultClassReader;
 
 /**
  * Request object for TestKit — carries the subject and all optional config.

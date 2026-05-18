@@ -1,6 +1,5 @@
-package com.paramichha.testkit.reader;
+package com.paramichha.testkit;
 
-import com.paramichha.testkit.ClassReader;
 import com.paramichha.testkit.model.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
