@@ -1,7 +1,7 @@
 package com.paramichha.testkit;
 
 import com.paramichha.datafactory.GenerationMode;
-import com.paramichha.testkit.data.DataFactoryTestDataProvider;
+import com.paramichha.testkit.data.DefaultTestDataProvider;
 import com.paramichha.testkit.generator.DefaultTestGenerator;
 import com.paramichha.testkit.model.ClassMeta;
 import com.paramichha.testkit.model.TestData;
@@ -23,21 +23,23 @@ import java.util.List;
  */
 public final class TestKits implements TestKit {
 
-    private final ClassMeta classMeta;
-    private final TestDataProvider dataProvider = DataFactoryTestDataProvider.INSTANCE;
+    private final TestDataProvider dataProvider = DefaultTestDataProvider.INSTANCE;
     private final TestGenerator generator = DefaultTestGenerator.INSTANCE;
+    private final ClassMeta classMeta;
     private String targetPackage;
-    private Long seed = null;
-    private GenerationMode mode = GenerationMode.PRODUCTION;
+    private Long seed;
+    private ProjectType projectType;
+    private GenerationMode mode;
     private TestKitTemplate template = TestKitTemplate.DEFAULT;
-    private boolean split = false;
-    private ProjectType projectType = ProjectType.detect();
 
     // ── Constructors ──────────────────────────────────────────────────────
 
-    private TestKits(ClassMeta classMeta) {
+    private TestKits(ClassMeta classMeta, Long seed, ProjectType projectType, GenerationMode mode) {
         this.classMeta     = classMeta;
         this.targetPackage = classMeta.packageName();
+        this.seed = seed;
+        this.projectType = projectType;
+        this.mode = mode;
     }
 
     // ── Entry points ──────────────────────────────────────────────────────
@@ -45,13 +47,13 @@ public final class TestKits implements TestKit {
     /** Reads ClassMeta from reflection then delegates to of(ClassMeta). */
     public static TestKits of(Class<?> type) {
         if (type == null) throw new TestKitException("type must not be null");
-        return new TestKits(DefaultClassReader.INSTANCE.read(type));
+        return new TestKits(DefaultClassReader.INSTANCE.read(type), 69L, ProjectType.detect(), GenerationMode.PRODUCTION);
     }
 
     /** Accepts pre-built ClassMeta — PSI, YAML, or manual path. */
     public static TestKits of(ClassMeta classMeta) {
         if (classMeta == null) throw new TestKitException("classMeta must not be null");
-        return new TestKits(classMeta);
+        return new TestKits(classMeta, 69L, ProjectType.detect(), GenerationMode.PRODUCTION);
     }
 
     // ── Config ────────────────────────────────────────────────────────────
@@ -83,11 +85,6 @@ public final class TestKits implements TestKit {
     public TestKits withProjectType(ProjectType projectType) {
         if (projectType == null) throw new TestKitException("projectType must not be null");
         this.projectType = projectType;
-        return this;
-    }
-
-    public TestKits split() {
-        this.split = true;
         return this;
     }
 
@@ -124,7 +121,7 @@ public final class TestKits implements TestKit {
     // ── Internal ──────────────────────────────────────────────────────────
 
     private TestData buildTestData() {
-        return (dataProvider instanceof DataFactoryTestDataProvider dfp)
+        return (dataProvider instanceof DefaultTestDataProvider dfp)
                 ? dfp.provide(classMeta.type(), mode, seed)
                 : dataProvider.provide(classMeta.type());
     }

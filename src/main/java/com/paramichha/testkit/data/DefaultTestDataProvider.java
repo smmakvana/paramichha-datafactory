@@ -20,18 +20,15 @@ import java.util.Map;
  *   2. Add all per-field boundary variants from validAllPerField
  * This guarantees validObjects is never empty when a valid object exists.
  */
-public final class DataFactoryTestDataProvider implements TestDataProvider {
+public final class DefaultTestDataProvider implements TestDataProvider {
 
-    public static final DataFactoryTestDataProvider INSTANCE = new DataFactoryTestDataProvider();
+    public static final DefaultTestDataProvider INSTANCE = new DefaultTestDataProvider();
 
-    public DataFactoryTestDataProvider() {}
+    public DefaultTestDataProvider() {}
 
     @Override
     public TestData provide(Class<?> type) {
-        // Seed from class name — deterministic output so generated files
-        // are identical on every run. Same class = same test data = no diff.
-        long classSeed = Seeds.stableHash(type);
-        return provide(type, GenerationMode.PRODUCTION, classSeed);
+        return provide(type, GenerationMode.PRODUCTION, Seeds.stableHash(type));
     }
 
 /**
@@ -42,6 +39,7 @@ public final class DataFactoryTestDataProvider implements TestDataProvider {
      * separately by FieldTestWriter for parameterized field tests.
      */
     @SuppressWarnings("unchecked")
+    @Override
     public TestData provide(Class<?> type, GenerationMode mode, Long seed) {
         // Always seed from class name when no explicit seed given — deterministic output.
         long effectiveSeed = seed != null ? seed : Seeds.stableHash(type);

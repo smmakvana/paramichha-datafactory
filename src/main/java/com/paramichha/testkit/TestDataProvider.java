@@ -1,5 +1,6 @@
 package com.paramichha.testkit;
 
+import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.model.TestData;
 
 /**
@@ -8,4 +9,6 @@ import com.paramichha.testkit.model.TestData;
  */
 public interface TestDataProvider {
     TestData provide(Class<?> type);
+
+    TestData provide(Class<?> type, GenerationMode mode, Long seed);
 }
