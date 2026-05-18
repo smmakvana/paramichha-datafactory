@@ -181,7 +181,6 @@ class TestKitTest {
         void generateAllProducesMultipleFiles() {
             var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
-                    .split()
                     .generateAll();
             assertThat(files).hasSizeGreaterThan(1);
         }
@@ -190,7 +189,6 @@ class TestKitTest {
         void baseClassIsFirst() {
             var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
-                    .split()
                     .generateAll();
             assertThat(files.get(0).className()).isEqualTo("UserRegistrationTest");
         }
@@ -199,7 +197,6 @@ class TestKitTest {
         void creationFileIsSecond() {
             var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
-                    .split()
                     .generateAll();
             assertThat(files.get(1).className()).isEqualTo("UserRegistrationCreationTest");
         }
@@ -208,7 +205,6 @@ class TestKitTest {
         void allFilesHaveCorrectPackage() {
             var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
-                    .split()
                     .generateAll();
             files.forEach(f ->
                     assertThat(f.packageName()).isEqualTo("com.example.split"));
@@ -218,7 +214,6 @@ class TestKitTest {
         void bracesBalancedInAllFiles() {
             var files = TestKits.of(CombinedRecord.class)
                     .withPackage("com.example.split")
-                    .split()
                     .generateAll();
             files.forEach(f -> {
                 String src = f.asString();
