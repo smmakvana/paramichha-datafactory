@@ -43,7 +43,7 @@ public class GenerateTestForClass {
 
         GeneratedTestClass generated = TestKits.of(TARGET_CLASS)
                 .withMode(GenerationMode.PRODUCTION)
-                .generate();
+                .generateTest();
 
         Path outputFile = generated.writeTo(OUTPUT_DIR);
 

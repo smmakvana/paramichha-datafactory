@@ -49,96 +49,96 @@ class TestKitRunnerTest {
 
         @Test
         void generatesRecord() {
-            String src = TestKits.of(UserRegistration.class).generate().asString();
+            String src = TestKits.of(UserRegistration.class).generateTest().asString();
             assertStructure(src, "UserRegistration");
             assertHasValidator(src);
         }
 
         @Test
         void generatesAllArgs() {
-            String src = TestKits.of(NotNullAllArgs.class).generate().asString();
+            String src = TestKits.of(NotNullAllArgs.class).generateTest().asString();
             assertStructure(src, "NotNullAllArgs");
             assertHasValidator(src);
         }
 
         @Test
         void generatesTemporal() {
-            String src = TestKits.of(DateRecord.class).generate().asString();
+            String src = TestKits.of(DateRecord.class).generateTest().asString();
             assertStructure(src, "DateRecord");
             assertHasValidator(src);
         }
 
         @Test
         void generatesNested() {
-            String src = TestKits.of(NestedRecord.class).generate().asString();
+            String src = TestKits.of(NestedRecord.class).generateTest().asString();
             assertStructure(src, "NestedRecord");
         }
 
         @Test
         void generatesUnannotated() {
-            String src = TestKits.of(NumberRecord.class).generate().asString();
+            String src = TestKits.of(NumberRecord.class).generateTest().asString();
             assertStructure(src, "NumberRecord");
             assertNoValidator(src);
         }
 
         @Test
         void generatesSingleAnnotation() {
-            String src = TestKits.of(NotNullRecord.class).generate().asString();
+            String src = TestKits.of(NotNullRecord.class).generateTest().asString();
             assertStructure(src, "NotNullRecord");
             assertHasValidator(src);
         }
 
         @Test
         void generatesCombinedAnnotation() {
-            String src = TestKits.of(NumericConstraintRecord.class).generate().asString();
+            String src = TestKits.of(NumericConstraintRecord.class).generateTest().asString();
             assertStructure(src, "NumericConstraintRecord");
             assertHasValidator(src);
         }
 
         @Test
         void generatesEmail() {
-            String src = TestKits.of(EmailRecord.class).generate().asString();
+            String src = TestKits.of(EmailRecord.class).generateTest().asString();
             assertStructure(src, "EmailRecord");
             assertThat(src).contains("notanemail");
         }
 
         @Test
         void generatesCombined() {
-            String src = TestKits.of(CombinedRecord.class).generate().asString();
+            String src = TestKits.of(CombinedRecord.class).generateTest().asString();
             assertStructure(src, "CombinedRecord");
             assertHasValidator(src);
         }
 
         @Test
         void generatesPayment() {
-            String src = TestKits.of(Payment.class).generate().asString();
+            String src = TestKits.of(Payment.class).generateTest().asString();
             assertStructure(src, "Payment");
             assertThat(src).contains("new Payment(");
         }
 
         @Test
         void generatesTrade() {
-            String src = TestKits.of(Trade.class).generate().asString();
+            String src = TestKits.of(Trade.class).generateTest().asString();
             assertStructure(src, "Trade");
         }
 
         @Test
         void defaultPackageMatchesClass() {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class).generate();
+            GeneratedTestClass result = TestKits.of(UserRegistration.class).generateTest();
             assertThat(result.packageName())
                     .isEqualTo(UserRegistration.class.getPackageName());
         }
 
         @Test
         void classNameHasTestSuffix() {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class).generate();
+            GeneratedTestClass result = TestKits.of(UserRegistration.class).generateTest();
             assertThat(result.className()).isEqualTo("UserRegistrationTest");
         }
 
         @Test
         void bracesBalanced() {
             for (Class<?> c : coreFixtures()) {
-                String src = TestKits.of(c).generate().asString();
+                String src = TestKits.of(c).generateTest().asString();
                 long opens  = src.chars().filter(ch -> ch == '{').count();
                 long closes = src.chars().filter(ch -> ch == '}').count();
                 assertThat(opens)
@@ -151,7 +151,7 @@ class TestKitRunnerTest {
         void writesFileToCorrectPath(@TempDir Path tmp) {
             Path written = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.out")
-                    .generate()
+                    .generateTest()
                     .writeTo(tmp);
             assertThat(written).exists();
             assertThat(written.getFileName().toString())

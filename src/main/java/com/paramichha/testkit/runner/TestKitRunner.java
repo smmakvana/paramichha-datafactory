@@ -48,7 +48,7 @@ public final class TestKitRunner {
         return targets.stream()
                 .map(t -> TestKits.of(t.type())
                         .withPackage(t.targetPackage())
-                        .generate()
+                        .generateTest()
                         .writeTo(sourceRoot))
                 .toList();
     }
@@ -58,7 +58,7 @@ public final class TestKitRunner {
         return targets.stream()
                 .map(t -> TestKits.of(t.type())
                         .withPackage(t.targetPackage())
-                        .generate())
+                        .generateTest())
                 .toList();
     }
 
@@ -77,10 +77,10 @@ public final class TestKitRunner {
                 .flatMap(t -> java.util.stream.Stream.of(
                         TestKits.of(t.type()).withPackage(t.targetPackage())
                                .withMode(GenerationMode.PRODUCTION)
-                               .generate().writeTo(sourceRoot),
+                               .generateTest().writeTo(sourceRoot),
                         TestKits.of(t.type()).withPackage(t.targetPackage())
                                .withMode(GenerationMode.DEV)
-                               .generate().writeTo(sourceRoot)))
+                               .generateTest().writeTo(sourceRoot)))
                 .toList();
     }
 
@@ -91,9 +91,9 @@ public final class TestKitRunner {
         return targets.stream()
                 .flatMap(t -> java.util.stream.Stream.of(
                         TestKits.of(t.type()).withPackage(t.targetPackage())
-                               .withMode(GenerationMode.PRODUCTION).generate(),
+                               .withMode(GenerationMode.PRODUCTION).generateTest(),
                         TestKits.of(t.type()).withPackage(t.targetPackage())
-                               .withMode(GenerationMode.DEV).generate()))
+                               .withMode(GenerationMode.DEV).generateTest()))
                 .toList();
     }
 }

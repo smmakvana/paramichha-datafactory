@@ -91,7 +91,7 @@ public final class TestKits implements TestKit {
     // ── Generate ──────────────────────────────────────────────────────────
 
     @Override
-    public List<GeneratedTestClass> generateAll() {
+    public List<GeneratedTestClass> generateTests() {
         try {
             TestData data = buildTestData();
             return generator.generateAll(classMeta, data, targetPackage, template, projectType);
@@ -103,7 +103,7 @@ public final class TestKits implements TestKit {
     }
 
     @Override
-    public GeneratedTestClass generate() {
+    public GeneratedTestClass generateTest() {
         try {
             TestData data = buildTestData();
             return generator.generate(classMeta, data, targetPackage, template, projectType);

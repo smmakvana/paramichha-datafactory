@@ -44,7 +44,7 @@ class TestKitTest {
         @Test
         void generatesSourceForRecord() {
             String src = TestKits.of(UserRegistration.class)
-                    .withPackage("com.example.test").generate().asString();
+                    .withPackage("com.example.test").generateTest().asString();
             assertThat(src).contains("package com.example.test");
             assertThat(src).contains("class UserRegistrationTest");
             assertThat(src).contains("UserRegistration userRegistration");
@@ -54,28 +54,28 @@ class TestKitTest {
         @Test
         void generatesSourceForAllArgs() {
             String src = TestKits.of(CombinedAllArgs.class)
-                    .withPackage("com.example.test").generate().asString();
+                    .withPackage("com.example.test").generateTest().asString();
             assertThat(src).contains("CombinedAllArgs combinedAllArgs");
             assertThat(src).contains("CombinedAllArgsCreationTest");
         }
 
         @Test
         void defaultPackageIsClassPackage() {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class).generate();
+            GeneratedTestClass result = TestKits.of(UserRegistration.class).generateTest();
             assertThat(result.packageName())
                     .isEqualTo(UserRegistration.class.getPackageName());
         }
 
         @Test
         void classNameIsTypeNamePlusSuffix() {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class).generate();
+            GeneratedTestClass result = TestKits.of(UserRegistration.class).generateTest();
             assertThat(result.className()).isEqualTo("UserRegistrationTest");
         }
 
         @Test
         void annotatedClassHasMemberNestedClasses() {
             String src = TestKits.of(NumericConstraintRecord.class)
-                    .withPackage("com.example").generate().asString();
+                    .withPackage("com.example").generateTest().asString();
             assertThat(src).contains("@Nested");
             assertThat(src).contains("in NumericConstraintRecord");
         }
@@ -83,7 +83,7 @@ class TestKitTest {
         @Test
         void annotatedClassHasValidator() {
             String src = TestKits.of(UserRegistration.class)
-                    .withPackage("com.example").generate().asString();
+                    .withPackage("com.example").generateTest().asString();
             assertThat(src).contains("Validator validator");
             assertThat(src).contains("setUpValidator");
         }
@@ -91,7 +91,7 @@ class TestKitTest {
         @Test
         void unannotatedClassHasNoValidator() {
             String src = TestKits.of(NumberRecord.class)
-                    .withPackage("com.example").generate().asString();
+                    .withPackage("com.example").generateTest().asString();
             assertThat(src).doesNotContain("setUpValidator");
             assertThat(src).doesNotContain("Validation.buildDefaultValidatorFactory");
         }
@@ -99,21 +99,21 @@ class TestKitTest {
         @Test
         void annotatedFieldHasRejectTest() {
             String src = TestKits.of(EmailRecord.class)
-                    .withPackage("com.example").generate().asString();
+                    .withPackage("com.example").generateTest().asString();
             assertThat(src).contains("rejectsEmail");
         }
 
         @Test
         void unannotatedFieldRejectIsCommentedOut() {
             String src = TestKits.of(NumberRecord.class)
-                    .withPackage("com.example").generate().asString();
+                    .withPackage("com.example").generateTest().asString();
             assertThat(src).contains("// TODO");
         }
 
         @Test
         void bracesAreBalanced() {
             String src = TestKits.of(CombinedRecord.class)
-                    .withPackage("com.example").generate().asString();
+                    .withPackage("com.example").generateTest().asString();
             long opens  = src.chars().filter(c -> c == '{').count();
             long closes = src.chars().filter(c -> c == '}').count();
             assertThat(opens).isEqualTo(closes);
@@ -122,14 +122,14 @@ class TestKitTest {
         @Test
         void nestedObjectClassGenerates() {
             String src = TestKits.of(NestedRecord.class)
-                    .withPackage("com.example").generate().asString();
+                    .withPackage("com.example").generateTest().asString();
             assertThat(src).contains("NestedRecordTest");
         }
 
         @Test
         void numericBoundaryValuesPresent() {
             String src = TestKits.of(NumericConstraintAllArgs.class)
-                    .withPackage("com.example").generate().asString();
+                    .withPackage("com.example").generateTest().asString();
             assertThat(src).containsAnyOf("18", "19", "20");
         }
     }
@@ -147,7 +147,7 @@ class TestKitTest {
         @Test
         void packageAppearsInOutput() {
             String src = TestKits.of(UserRegistration.class)
-                    .withPackage("com.custom.pkg").generate().asString();
+                    .withPackage("com.custom.pkg").generateTest().asString();
             assertThat(src).contains("package com.custom.pkg;");
         }
     }
@@ -158,14 +158,14 @@ class TestKitTest {
 
         @Test
         void asStringReturnsSource() {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class).generate();
+            GeneratedTestClass result = TestKits.of(UserRegistration.class).generateTest();
             assertThat(result.asString()).isEqualTo(result.source());
         }
 
         @Test
         void writeToCreatesFile(@TempDir Path tmp) {
             GeneratedTestClass result = TestKits.of(UserRegistration.class)
-                    .withPackage("com.example.out").generate();
+                    .withPackage("com.example.out").generateTest();
             Path written = result.writeTo(tmp);
             assertThat(written).exists();
             assertThat(written.getFileName().toString())
@@ -181,7 +181,7 @@ class TestKitTest {
         void generateAllProducesMultipleFiles() {
             var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
-                    .generateAll();
+                    .generateTests();
             assertThat(files).hasSizeGreaterThan(1);
         }
 
@@ -189,7 +189,7 @@ class TestKitTest {
         void baseClassIsFirst() {
             var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
-                    .generateAll();
+                    .generateTests();
             assertThat(files.get(0).className()).isEqualTo("UserRegistrationTest");
         }
 
@@ -197,7 +197,7 @@ class TestKitTest {
         void creationFileIsSecond() {
             var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
-                    .generateAll();
+                    .generateTests();
             assertThat(files.get(1).className()).isEqualTo("UserRegistrationCreationTest");
         }
 
@@ -205,7 +205,7 @@ class TestKitTest {
         void allFilesHaveCorrectPackage() {
             var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
-                    .generateAll();
+                    .generateTests();
             files.forEach(f ->
                     assertThat(f.packageName()).isEqualTo("com.example.split"));
         }
@@ -214,7 +214,7 @@ class TestKitTest {
         void bracesBalancedInAllFiles() {
             var files = TestKits.of(CombinedRecord.class)
                     .withPackage("com.example.split")
-                    .generateAll();
+                    .generateTests();
             files.forEach(f -> {
                 String src = f.asString();
                 long opens  = src.chars().filter(c -> c == '{').count();
