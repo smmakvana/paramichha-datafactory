@@ -27,13 +27,13 @@ class TestKitTest {
 
         @Test
         void nullTypeThrows() {
-            assertThatThrownBy(() -> TestKit.of((Class<?>) null))
+            assertThatThrownBy(() -> TestKits.of((Class<?>) null))
                     .isInstanceOf(TestKitException.class);
         }
 
         @Test
         void returnsTestKitInstance() {
-            assertThat(TestKit.of(UserRegistration.class)).isNotNull();
+            assertThat(TestKits.of(UserRegistration.class)).isNotNull();
         }
     }
 
@@ -43,7 +43,7 @@ class TestKitTest {
 
         @Test
         void generatesSourceForRecord() {
-            String src = TestKit.of(UserRegistration.class)
+            String src = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.test").generate().asString();
             assertThat(src).contains("package com.example.test");
             assertThat(src).contains("class UserRegistrationTest");
@@ -53,7 +53,7 @@ class TestKitTest {
 
         @Test
         void generatesSourceForAllArgs() {
-            String src = TestKit.of(CombinedAllArgs.class)
+            String src = TestKits.of(CombinedAllArgs.class)
                     .withPackage("com.example.test").generate().asString();
             assertThat(src).contains("CombinedAllArgs combinedAllArgs");
             assertThat(src).contains("CombinedAllArgsCreationTest");
@@ -61,20 +61,20 @@ class TestKitTest {
 
         @Test
         void defaultPackageIsClassPackage() {
-            GeneratedTestClass result = TestKit.of(UserRegistration.class).generate();
+            GeneratedTestClass result = TestKits.of(UserRegistration.class).generate();
             assertThat(result.packageName())
                     .isEqualTo(UserRegistration.class.getPackageName());
         }
 
         @Test
         void classNameIsTypeNamePlusSuffix() {
-            GeneratedTestClass result = TestKit.of(UserRegistration.class).generate();
+            GeneratedTestClass result = TestKits.of(UserRegistration.class).generate();
             assertThat(result.className()).isEqualTo("UserRegistrationTest");
         }
 
         @Test
         void annotatedClassHasMemberNestedClasses() {
-            String src = TestKit.of(NumericConstraintRecord.class)
+            String src = TestKits.of(NumericConstraintRecord.class)
                     .withPackage("com.example").generate().asString();
             assertThat(src).contains("@Nested");
             assertThat(src).contains("in NumericConstraintRecord");
@@ -82,7 +82,7 @@ class TestKitTest {
 
         @Test
         void annotatedClassHasValidator() {
-            String src = TestKit.of(UserRegistration.class)
+            String src = TestKits.of(UserRegistration.class)
                     .withPackage("com.example").generate().asString();
             assertThat(src).contains("Validator validator");
             assertThat(src).contains("setUpValidator");
@@ -90,7 +90,7 @@ class TestKitTest {
 
         @Test
         void unannotatedClassHasNoValidator() {
-            String src = TestKit.of(NumberRecord.class)
+            String src = TestKits.of(NumberRecord.class)
                     .withPackage("com.example").generate().asString();
             assertThat(src).doesNotContain("setUpValidator");
             assertThat(src).doesNotContain("Validation.buildDefaultValidatorFactory");
@@ -98,21 +98,21 @@ class TestKitTest {
 
         @Test
         void annotatedFieldHasRejectTest() {
-            String src = TestKit.of(EmailRecord.class)
+            String src = TestKits.of(EmailRecord.class)
                     .withPackage("com.example").generate().asString();
             assertThat(src).contains("rejectsEmail");
         }
 
         @Test
         void unannotatedFieldRejectIsCommentedOut() {
-            String src = TestKit.of(NumberRecord.class)
+            String src = TestKits.of(NumberRecord.class)
                     .withPackage("com.example").generate().asString();
             assertThat(src).contains("// TODO");
         }
 
         @Test
         void bracesAreBalanced() {
-            String src = TestKit.of(CombinedRecord.class)
+            String src = TestKits.of(CombinedRecord.class)
                     .withPackage("com.example").generate().asString();
             long opens  = src.chars().filter(c -> c == '{').count();
             long closes = src.chars().filter(c -> c == '}').count();
@@ -121,14 +121,14 @@ class TestKitTest {
 
         @Test
         void nestedObjectClassGenerates() {
-            String src = TestKit.of(NestedRecord.class)
+            String src = TestKits.of(NestedRecord.class)
                     .withPackage("com.example").generate().asString();
             assertThat(src).contains("NestedRecordTest");
         }
 
         @Test
         void numericBoundaryValuesPresent() {
-            String src = TestKit.of(NumericConstraintAllArgs.class)
+            String src = TestKits.of(NumericConstraintAllArgs.class)
                     .withPackage("com.example").generate().asString();
             assertThat(src).containsAnyOf("18", "19", "20");
         }
@@ -140,13 +140,13 @@ class TestKitTest {
 
         @Test
         void blankPackageThrows() {
-            assertThatThrownBy(() -> TestKit.of(UserRegistration.class).withPackage(""))
+            assertThatThrownBy(() -> TestKits.of(UserRegistration.class).withPackage(""))
                     .isInstanceOf(TestKitException.class);
         }
 
         @Test
         void packageAppearsInOutput() {
-            String src = TestKit.of(UserRegistration.class)
+            String src = TestKits.of(UserRegistration.class)
                     .withPackage("com.custom.pkg").generate().asString();
             assertThat(src).contains("package com.custom.pkg;");
         }
@@ -158,13 +158,13 @@ class TestKitTest {
 
         @Test
         void asStringReturnsSource() {
-            GeneratedTestClass result = TestKit.of(UserRegistration.class).generate();
+            GeneratedTestClass result = TestKits.of(UserRegistration.class).generate();
             assertThat(result.asString()).isEqualTo(result.source());
         }
 
         @Test
         void writeToCreatesFile(@TempDir Path tmp) {
-            GeneratedTestClass result = TestKit.of(UserRegistration.class)
+            GeneratedTestClass result = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.out").generate();
             Path written = result.writeTo(tmp);
             assertThat(written).exists();
@@ -179,7 +179,7 @@ class TestKitTest {
 
         @Test
         void generateAllProducesMultipleFiles() {
-            var files = TestKit.of(UserRegistration.class)
+            var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
                     .split()
                     .generateAll();
@@ -188,7 +188,7 @@ class TestKitTest {
 
         @Test
         void baseClassIsFirst() {
-            var files = TestKit.of(UserRegistration.class)
+            var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
                     .split()
                     .generateAll();
@@ -197,7 +197,7 @@ class TestKitTest {
 
         @Test
         void creationFileIsSecond() {
-            var files = TestKit.of(UserRegistration.class)
+            var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
                     .split()
                     .generateAll();
@@ -206,7 +206,7 @@ class TestKitTest {
 
         @Test
         void allFilesHaveCorrectPackage() {
-            var files = TestKit.of(UserRegistration.class)
+            var files = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.split")
                     .split()
                     .generateAll();
@@ -216,7 +216,7 @@ class TestKitTest {
 
         @Test
         void bracesBalancedInAllFiles() {
-            var files = TestKit.of(CombinedRecord.class)
+            var files = TestKits.of(CombinedRecord.class)
                     .withPackage("com.example.split")
                     .split()
                     .generateAll();

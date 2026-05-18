@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.*;
 
 /**
- * Output of {@link TestKit#generate()} — the generated Java source.
+ * Output of {@link TestKits#generate()} — the generated Java source.
  *
  * <p>On write: unused imports are removed, then source is formatted
  * using Google Java Format — clean, consistent output every time.

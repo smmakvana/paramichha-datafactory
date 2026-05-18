@@ -2,7 +2,7 @@ package com.paramichha.testkit.examples;
 
 import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.GeneratedTestClass;
-import com.paramichha.testkit.TestKit;
+import com.paramichha.testkit.TestKits;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,7 +41,7 @@ public class GenerateTestForClass {
         System.out.println("Output directory:    " + OUTPUT_DIR.toAbsolutePath());
         System.out.println();
 
-        GeneratedTestClass generated = TestKit.of(TARGET_CLASS)
+        GeneratedTestClass generated = TestKits.of(TARGET_CLASS)
                 .withMode(GenerationMode.PRODUCTION)
                 .generate();
 

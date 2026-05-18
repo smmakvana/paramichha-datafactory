@@ -2,7 +2,7 @@ package com.paramichha.testkit.runner;
 
 import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.GeneratedTestClass;
-import com.paramichha.testkit.TestKit;
+import com.paramichha.testkit.TestKits;
 import com.paramichha.testkit.reader.TestableScanner;
 
 import java.nio.file.Path;
@@ -46,7 +46,7 @@ public final class TestKitRunner {
     /** Generate and write all test classes to {@code sourceRoot}. */
     public List<Path> writeTo(Path sourceRoot) {
         return targets.stream()
-                .map(t -> TestKit.of(t.type())
+                .map(t -> TestKits.of(t.type())
                         .withPackage(t.targetPackage())
                         .generate()
                         .writeTo(sourceRoot))
@@ -56,7 +56,7 @@ public final class TestKitRunner {
     /** Generate all test classes and return as strings — useful for preview. */
     public List<GeneratedTestClass> generate() {
         return targets.stream()
-                .map(t -> TestKit.of(t.type())
+                .map(t -> TestKits.of(t.type())
                         .withPackage(t.targetPackage())
                         .generate())
                 .toList();
@@ -75,10 +75,10 @@ public final class TestKitRunner {
     public List<Path> writeBothModesTo(Path sourceRoot) {
         return targets.stream()
                 .flatMap(t -> java.util.stream.Stream.of(
-                        TestKit.of(t.type()).withPackage(t.targetPackage())
+                        TestKits.of(t.type()).withPackage(t.targetPackage())
                                .withMode(GenerationMode.PRODUCTION)
                                .generate().writeTo(sourceRoot),
-                        TestKit.of(t.type()).withPackage(t.targetPackage())
+                        TestKits.of(t.type()).withPackage(t.targetPackage())
                                .withMode(GenerationMode.DEV)
                                .generate().writeTo(sourceRoot)))
                 .toList();
@@ -90,9 +90,9 @@ public final class TestKitRunner {
     public List<GeneratedTestClass> generateBothModes() {
         return targets.stream()
                 .flatMap(t -> java.util.stream.Stream.of(
-                        TestKit.of(t.type()).withPackage(t.targetPackage())
+                        TestKits.of(t.type()).withPackage(t.targetPackage())
                                .withMode(GenerationMode.PRODUCTION).generate(),
-                        TestKit.of(t.type()).withPackage(t.targetPackage())
+                        TestKits.of(t.type()).withPackage(t.targetPackage())
                                .withMode(GenerationMode.DEV).generate()))
                 .toList();
     }
