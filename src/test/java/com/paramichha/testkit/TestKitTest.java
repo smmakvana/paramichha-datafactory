@@ -27,7 +27,7 @@ class TestKitTest {
 
         @Test
         void nullTypeThrows() {
-            assertThatThrownBy(() -> TestKit.of(null))
+            assertThatThrownBy(() -> TestKit.of((Class<?>) null))
                     .isInstanceOf(TestKitException.class);
         }
 

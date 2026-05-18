@@ -17,12 +17,14 @@ import java.util.List;
  *        .withPackage("com.example.test")
  *        .generate()
  *        .writeTo(Path.of("src/test/java"));
+ *
+ * TestKit.of(classMeta)           // PSI / YAML path
+ *        .generate();
  * </pre>
  */
 public final class TestKit implements TestKitGenerator {
 
-    private final Class<?> type;
-    private final ClassReader reader = DefaultClassReader.INSTANCE;
+    private final ClassMeta classMeta;
     private final TestDataProvider dataProvider = DataFactoryTestDataProvider.INSTANCE;
     private final TestGenerator generator = DefaultTestGenerator.INSTANCE;
     private String targetPackage;
@@ -32,15 +34,28 @@ public final class TestKit implements TestKitGenerator {
     private boolean split = false;
     private ProjectType projectType = ProjectType.detect();
 
-    private TestKit(Class<?> type) {
-        this.type = type;
-        this.targetPackage = type.getPackageName();
+    // ── Constructors ──────────────────────────────────────────────────────
+
+    private TestKit(ClassMeta classMeta) {
+        this.classMeta     = classMeta;
+        this.targetPackage = classMeta.packageName();
     }
 
+    // ── Entry points ──────────────────────────────────────────────────────
+
+    /** Reads ClassMeta from reflection then delegates to of(ClassMeta). */
     public static TestKit of(Class<?> type) {
         if (type == null) throw new TestKitException("type must not be null");
-        return new TestKit(type);
+        return new TestKit(DefaultClassReader.INSTANCE.read(type));
     }
+
+    /** Accepts pre-built ClassMeta — PSI, YAML, or manual path. */
+    public static TestKit of(ClassMeta classMeta) {
+        if (classMeta == null) throw new TestKitException("classMeta must not be null");
+        return new TestKit(classMeta);
+    }
+
+    // ── Config ────────────────────────────────────────────────────────────
 
     public TestKit withPackage(String packageName) {
         if (packageName == null || packageName.isBlank())
@@ -49,61 +64,43 @@ public final class TestKit implements TestKitGenerator {
         return this;
     }
 
-    /**
-     * Seeds the DataFactory random generator for deterministic test data.
-     */
     public TestKit withSeed(long seed) {
         this.seed = seed;
         return this;
     }
 
-    /**
-     * Sets the DataFactory generation mode. Defaults to PRODUCTION.
-     */
     public TestKit withMode(GenerationMode mode) {
         if (mode == null) throw new TestKitException("mode must not be null");
         this.mode = mode;
         return this;
     }
 
-    /**
-     * Sets a custom template for generated names and display strings.
-     */
     public TestKit withTemplate(TestKitTemplate template) {
         if (template == null) throw new TestKitException("template must not be null");
         this.template = template;
         return this;
     }
 
-    /**
-     * Sets the project type for test generation. Auto-detected by default.
-     */
     public TestKit withProjectType(ProjectType projectType) {
         if (projectType == null) throw new TestKitException("projectType must not be null");
         this.projectType = projectType;
         return this;
     }
 
-    /**
-     * Opt-in to split mode — generates one file per concern.
-     * Use {@link #generateAll()} as the terminal method.
-     */
     public TestKit split() {
         this.split = true;
         return this;
     }
 
+    // ── Generate ──────────────────────────────────────────────────────────
 
     @Override
     public List<GeneratedTestClass> generateAll() {
         try {
-            ClassMeta meta = reader.read(type);
-            TestData data = (dataProvider instanceof DataFactoryTestDataProvider dfp)
-                    ? dfp.provide(type, mode, seed)
-                    : dataProvider.provide(type);
-            return generator.generateAll(meta, data, targetPackage, template, projectType);
+            TestData data = buildTestData();
+            return generator.generateAll(classMeta, data, targetPackage, template, projectType);
         } catch (Exception e) {
-            String className = type.getSimpleName() + "Test";
+            String className = classMeta.simpleName() + "Test";
             String src = "package " + targetPackage + ";\n\n// Generation failed: " + e.getMessage() + "\n";
             return List.of(new GeneratedTestClass(className, targetPackage, src));
         }
@@ -112,19 +109,24 @@ public final class TestKit implements TestKitGenerator {
     @Override
     public GeneratedTestClass generate() {
         try {
-            ClassMeta meta = reader.read(type);
-            TestData data = (dataProvider instanceof DataFactoryTestDataProvider dfp)
-                    ? dfp.provide(type, mode, seed)
-                    : dataProvider.provide(type);
-            return generator.generate(meta, data, targetPackage, template, projectType);
+            TestData data = buildTestData();
+            return generator.generate(classMeta, data, targetPackage, template, projectType);
         } catch (Exception e) {
-            String className = type.getSimpleName() + "Test";
+            String className = classMeta.simpleName() + "Test";
             String source = "package " + targetPackage + ";\n\n"
                     + "// TODO: " + className + "\n"
-                    + "// Generation failed for " + type.getSimpleName() + "\n"
+                    + "// Generation failed for " + classMeta.simpleName() + "\n"
                     + "// Reason: " + e.getMessage() + "\n"
                     + "// Fix the issue and regenerate.\n";
             return new GeneratedTestClass(className, targetPackage, source);
         }
+    }
+
+    // ── Internal ──────────────────────────────────────────────────────────
+
+    private TestData buildTestData() {
+        return (dataProvider instanceof DataFactoryTestDataProvider dfp)
+                ? dfp.provide(classMeta.type(), mode, seed)
+                : dataProvider.provide(classMeta.type());
     }
 }
