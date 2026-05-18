@@ -2,7 +2,7 @@ package com.paramichha.testkit;
 
 import java.util.List;
 
-public interface TestKitGenerator {
+public interface TestKit {
     /**
      * Generates multiple files — base class plus one per concern.
      *

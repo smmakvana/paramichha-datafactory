@@ -22,7 +22,7 @@ import java.util.List;
  *        .generate();
  * </pre>
  */
-public final class TestKits implements TestKitGenerator {
+public final class TestKits implements TestKit {
 
     private final ClassMeta classMeta;
     private final TestDataProvider dataProvider = DataFactoryTestDataProvider.INSTANCE;
