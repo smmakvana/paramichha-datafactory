@@ -7,8 +7,7 @@ public record ClassMeta(
         List<FieldMeta> fields,
         List<MethodMeta> methods,
         boolean utilityClass,
-        Class<?> type) {
-    public enum ConstructorStyle { LOMBOK_BUILDER, RECORD, ALL_ARGS, SETTER }
+        Class<?> type) implements ClassMetaData {
 
     public ClassMeta(ConstructorStyle constructorStyle, List<FieldMeta> fields, Class<?> type) {
         this(constructorStyle, fields, List.of(), false, type);
@@ -18,10 +17,12 @@ public record ClassMeta(
         this(constructorStyle, fields, methods, false, type);
     }
 
+    @Override
     public String simpleName() {
         return type.getSimpleName();
     }
 
+    @Override
     public String packageName() {
         return type.getPackageName();
     }
