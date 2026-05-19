@@ -22,28 +22,28 @@ import java.util.List;
  */
 public final class TestKit {
 
-    private final Class<?>       type;
-    private final ClassInfo      classInfo;
-    private String               targetPackage;
-    private TestKitTemplate      template      = TestKitTemplate.DEFAULT;
-    private ProjectType          projectType   = ProjectType.detect();
-    private GenerationMode       mode          = GenerationMode.PRODUCTION;
-    private Long                 seed          = null;
-    private final CodeGenerator  generator     = JavaTestCodeGenerator.INSTANCE;
-    private final ClassReader    reader        = ReflectionClassReader.INSTANCE;
+    private final Class<?> type;
+    private final ClassInfo classInfo;
+    private String targetPackage;
+    private TestKitTemplate template = TestKitTemplate.DEFAULT;
+    private ProjectType projectType = ProjectType.detect();
+    private GenerationMode mode = GenerationMode.PRODUCTION;
+    private Long seed = null;
+    private final CodeGenerator generator = JavaTestCodeGenerator.INSTANCE;
+    private final ClassReader reader = ReflectionClassReader.INSTANCE;
     private final TestDataProvider dataProvider = DefaultTestDataProvider.INSTANCE;
 
     // ── Constructors ──────────────────────────────────────────────────────
 
     private TestKit(Class<?> type) {
-        this.type          = type;
-        this.classInfo     = null;
+        this.type = type;
+        this.classInfo = null;
         this.targetPackage = type.getPackageName();
     }
 
     private TestKit(ClassInfo classInfo) {
-        this.type          = null;
-        this.classInfo     = classInfo;
+        this.type = null;
+        this.classInfo = classInfo;
         this.targetPackage = classInfo.packageName();
     }
 
