@@ -124,7 +124,7 @@ final class LiteralConverter {
         try {
             java.lang.reflect.RecordComponent[] rcs = record.getClass().getRecordComponents();
             // Use enclosing-aware name: InnerRecord → OuterClass.InnerRecord
-            String typeName = FieldTestWriter.sourceTypeName(record.getClass());
+            String typeName = JavaTypeNames.of(record.getClass());
             StringBuilder sb = new StringBuilder("new ")
                     .append(typeName).append("(");
             for (int i = 0; i < rcs.length; i++) {

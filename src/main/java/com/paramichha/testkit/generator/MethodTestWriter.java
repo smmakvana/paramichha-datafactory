@@ -123,7 +123,7 @@ final class MethodTestWriter {
         if (ret.isVoid()) {
             sb.append(indBody).append("assertThatCode(() -> ").append(call).append(").doesNotThrowAnyException();\n");
         } else {
-            String typeName = FieldTestWriter.sourceTypeName(ret.type());
+            String typeName = JavaTypeNames.of(ret.type());
             sb.append(indBody).append(typeName).append(" result = ").append(call).append(";\n");
             writeReturnAssertion(sb, ret, methodName, "result", indBody);
         }
@@ -200,7 +200,7 @@ final class MethodTestWriter {
                     .append(fieldName).append(".").append(method.name()).append("(").append(call)
                     .append(")).doesNotThrowAnyException();\n");
         } else {
-            String typeName = FieldTestWriter.sourceTypeName(ret.type());
+            String typeName = JavaTypeNames.of(ret.type());
             sb.append(indBody).append(typeName).append(" result = ")
                     .append(fieldName).append(".").append(method.name()).append("(").append(call).append(");\n");
             writeReturnAssertion(sb, ret, method.name(), "result", indBody);
@@ -350,7 +350,7 @@ final class MethodTestWriter {
     }
 
     private String boxedTypeName(Class<?> type) {
-        if (!type.isPrimitive()) return FieldTestWriter.sourceTypeName(type);
+        if (!type.isPrimitive()) return JavaTypeNames.of(type);
         return switch (type.getName()) {
             case "boolean" -> "Boolean";
             case "byte"    -> "Byte";
@@ -579,7 +579,7 @@ final class MethodTestWriter {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.size(); i++) {
             if (i > 0) sb.append(", ");
-            sb.append(FieldTestWriter.sourceTypeName(params.get(i).type()))
+            sb.append(JavaTypeNames.of(params.get(i).type()))
                     .append(" ").append(params.get(i).name());
         }
         return sb.toString();
@@ -608,6 +608,6 @@ final class MethodTestWriter {
                 default        -> "0";
             };
         }
-        return "(" + FieldTestWriter.sourceTypeName(type) + ") null";
+        return "(" + JavaTypeNames.of(type) + ") null";
     }
 }

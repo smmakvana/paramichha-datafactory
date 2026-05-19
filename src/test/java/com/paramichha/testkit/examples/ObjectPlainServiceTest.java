@@ -77,7 +77,7 @@ class ObjectPlainServiceTest {
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Abraham Schmitt"));
+      return Stream.of(Arguments.of("name 0", "Erlinda Jaskolski"));
     }
 
     // TODO: add constraints to name then uncomment
@@ -120,7 +120,7 @@ class ObjectPlainServiceTest {
       return Stream.of(
           Arguments.of("valid price 1", new BigDecimal("-1.00")),
           Arguments.of("valid price 2", new BigDecimal("0.00")),
-          Arguments.of("valid price 3", new BigDecimal("223.56")));
+          Arguments.of("valid price 3", new BigDecimal("271.36")));
     }
 
     // TODO: add constraints to price then uncomment
@@ -200,7 +200,7 @@ class ObjectPlainServiceTest {
     }
 
     static Stream<Arguments> validEmails() {
-      return Stream.of(Arguments.of("email 0", "gabriel.nader@yahoo.com"));
+      return Stream.of(Arguments.of("email 0", "yevette.schowalter@yahoo.com"));
     }
 
     // TODO: add constraints to email then uncomment
@@ -264,10 +264,10 @@ class ObjectPlainServiceTest {
           Arguments.of(
               "valid merge",
               new ObjectPlainService(
-                  "Raleigh Gerhold PhD",
+                  "Isreal Langosh",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "joseph.bergnaum@hotmail.com"),
+                  "kiersten.terry@yahoo.com"),
               (String) null));
     }
   }
@@ -292,10 +292,10 @@ class ObjectPlainServiceTest {
           Arguments.of(
               "valid copyFrom",
               new ObjectPlainService(
-                  "Iris Powlowski I",
+                  "Steffanie Legros",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "thanh.wiza@hotmail.com"),
+                  "breanna.hauck@yahoo.com"),
               (String) null));
     }
   }

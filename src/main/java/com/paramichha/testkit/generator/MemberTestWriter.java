@@ -202,7 +202,7 @@ final class MemberTestWriter {
     }
 
     private static String boxed(Class<?> type) {
-        if (!type.isPrimitive()) return FieldTestWriter.sourceTypeName(type);
+        if (!type.isPrimitive()) return JavaTypeNames.of(type);
         return switch (type.getName()) {
             case "boolean" -> "Boolean";
             case "byte"    -> "Byte";
@@ -212,7 +212,7 @@ final class MemberTestWriter {
             case "float"   -> "Float";
             case "double"  -> "Double";
             case "char"    -> "Character";
-            default        -> FieldTestWriter.sourceTypeName(type);
+            default        -> JavaTypeNames.of(type);
         };
     }
 }

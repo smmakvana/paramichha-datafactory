@@ -63,7 +63,7 @@ final class SourceWriter {
         sb.append("    private static ").append(name).append(" build").append(name).append("(");
         for (int i = 0; i < fields.size(); i++) {
             if (i > 0) sb.append(", ");
-            sb.append(FieldTestWriter.sourceTypeName(fields.get(i).rawType()))
+            sb.append(JavaTypeNames.of(fields.get(i).rawType()))
                     .append(" ").append(fields.get(i).name());
         }
         sb.append(") {\n");

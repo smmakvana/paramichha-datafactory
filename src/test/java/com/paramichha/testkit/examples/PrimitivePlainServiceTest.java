@@ -165,7 +165,7 @@ class PrimitivePlainServiceTest {
       return Stream.of(
           Arguments.of("valid rate 1", -1.0d),
           Arguments.of("valid rate 2", 0.0d),
-          Arguments.of("valid rate 3", 75.38d));
+          Arguments.of("valid rate 3", 216.92d));
     }
 
     // TODO: add constraints to rate then uncomment

@@ -79,7 +79,7 @@ class SampleServiceTest {
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Bethanie Veum"));
+      return Stream.of(Arguments.of("name 0", "Ms. Lizbeth Mills"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -257,18 +257,18 @@ class SampleServiceTest {
       return Stream.of(
           Arguments.of(
               "valid merge",
-              new SampleService("Bernie Orn", 1, new BigDecimal("1.50")),
-              "Mr. Arlen Lemke"));
+              new SampleService("Miss Christal Hill", 1, new BigDecimal("1.50")),
+              "Marcia Botsford"));
     }
 
     static Stream<Arguments> invalidMergeInputs() {
       return Stream.of(
-          Arguments.of("invalid other", null, "Gertude Hauck"),
+          Arguments.of("invalid other", null, "Avery Schoen"),
           Arguments.of(
-              "invalid newName", new SampleService("Rima Beahan", 1, new BigDecimal("1.50")), null),
+              "invalid newName", new SampleService("Robin Lesch", 1, new BigDecimal("1.50")), null),
           Arguments.of(
               "invalid newName",
-              new SampleService("Dr. Georgiann Balistreri", 1, new BigDecimal("1.50")),
+              new SampleService("Edgardo VonRueden", 1, new BigDecimal("1.50")),
               ""));
     }
   }
@@ -320,9 +320,7 @@ class SampleServiceTest {
     static Stream<Arguments> validTransferToInputs() {
       return Stream.of(
           Arguments.of(
-              "valid transferTo",
-              new SampleService("Mozelle Dickinson", 1, new BigDecimal("1.50")),
-              0));
+              "valid transferTo", new SampleService("Jed Hintz", 1, new BigDecimal("1.50")), 0));
     }
 
     static Stream<Arguments> invalidTransferToInputs() {
@@ -457,7 +455,7 @@ class SampleServiceTest {
     }
 
     static Stream<Arguments> validFormatNameInputs() {
-      return Stream.of(Arguments.of("valid formatName", "Dr."));
+      return Stream.of(Arguments.of("valid formatName", "Mrs."));
     }
 
     static Stream<Arguments> invalidFormatNameInputs() {
