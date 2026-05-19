@@ -11,7 +11,7 @@ public interface MethodInfo {
 
     ReflectionReturnTypeInfo returnType();
 
-    List<ReflectionParameterInfo> parameters();
+    List<ParameterInfo> parameters();
 
     MethodKind kind();
 }

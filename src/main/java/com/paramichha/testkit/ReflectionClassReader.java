@@ -104,7 +104,7 @@ public final class ReflectionClassReader implements ClassReader {
             if (isGetterOrSetter(m)) continue;
             if (m.isSynthetic() || m.isBridge()) continue;
 
-            List<ReflectionParameterInfo> params = extractParameters(m);
+            List<ParameterInfo> params = extractParameters(m);
             // Return annotations come from two places:
             // 1. Method-level: public @NotNull BigDecimal method() → m.getAnnotations()
             // 2. Type-use:     public BigDecimal @NotNull method() → m.getAnnotatedReturnType()
@@ -120,8 +120,8 @@ public final class ReflectionClassReader implements ClassReader {
         return Collections.unmodifiableList(result);
     }
 
-    private List<ReflectionParameterInfo> extractParameters(Method m) {
-        List<ReflectionParameterInfo> result = new ArrayList<>();
+    private List<ParameterInfo> extractParameters(Method m) {
+        List<ParameterInfo> result = new ArrayList<>();
         for (Parameter p : m.getParameters()) {
             List<Annotation> validations = filterValidation(Arrays.asList(p.getAnnotations()));
             boolean indirect = typeHasConstraints(p.getType());
@@ -130,7 +130,7 @@ public final class ReflectionClassReader implements ClassReader {
         return Collections.unmodifiableList(result);
     }
 
-    private MethodKind classify(Class<?> returnType, List<ReflectionParameterInfo> params) {
+    private MethodKind classify(Class<?> returnType, List<ParameterInfo> params) {
         boolean isVoid = returnType == void.class || returnType == Void.class;
         int paramCount = params.size();
         if (isVoid && paramCount == 0) return MethodKind.COMMAND;
