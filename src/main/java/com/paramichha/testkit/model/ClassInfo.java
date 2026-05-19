@@ -7,7 +7,7 @@ public interface ClassInfo {
 
     String packageName();
 
-    ReflectionClassInfo.ConstructorStyle constructorStyle();
+    ConstructorStyle constructorStyle();
 
     List<FieldInfo> fields();
 

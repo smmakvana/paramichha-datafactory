@@ -40,7 +40,7 @@ final class CreationTestWriter {
                               List<Object> validInstanceParts, boolean nested) {
 
         boolean hasJakarta   = data.hasJakarta(meta);
-        boolean isRecord     = meta.constructorStyle() == ReflectionClassInfo.ConstructorStyle.RECORD;
+        boolean isRecord     = meta.constructorStyle() == ConstructorStyle.RECORD;
         String  className    = meta.simpleName();
         String  fieldName    = TestNames.toVariable(className);
         String  ind          = nested ? "        " : "    ";

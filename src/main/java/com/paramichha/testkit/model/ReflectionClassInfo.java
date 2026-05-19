@@ -82,5 +82,4 @@ public final class ReflectionClassInfo implements ClassInfo {
     }
 
 
-    public enum ConstructorStyle {LOMBOK_BUILDER, RECORD, ALL_ARGS, SETTER}
 }

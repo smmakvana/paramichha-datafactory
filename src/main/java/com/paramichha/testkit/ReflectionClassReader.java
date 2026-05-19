@@ -24,7 +24,7 @@ public final class ReflectionClassReader implements ClassReader {
         if (isUtilityClass(type)) {
             List<MethodInfo> methods = extractMethods(type, true);
             return new ReflectionClassInfo(
-                    ReflectionClassInfo.ConstructorStyle.ALL_ARGS, List.of(), methods, true, type);
+                    ConstructorStyle.ALL_ARGS, List.of(), methods, true, type);
         }
         List<FieldInfo> fields  = extractFields(type);
         List<MethodInfo> methods = extractMethods(type, false);
@@ -34,19 +34,19 @@ public final class ReflectionClassReader implements ClassReader {
 
     // ── Fields ────────────────────────────────────────────────────────────
 
-    private ReflectionClassInfo.ConstructorStyle detectStyle(Class<?> type, List<FieldInfo> fields) {
-        if (type.isRecord()) return ReflectionClassInfo.ConstructorStyle.RECORD;
+    private ConstructorStyle detectStyle(Class<?> type, List<FieldInfo> fields) {
+        if (type.isRecord()) return ConstructorStyle.RECORD;
         try {
             Method b = type.getDeclaredMethod("builder");
-            if (Modifier.isStatic(b.getModifiers())) return ReflectionClassInfo.ConstructorStyle.LOMBOK_BUILDER;
+            if (Modifier.isStatic(b.getModifiers())) return ConstructorStyle.LOMBOK_BUILDER;
         } catch (NoSuchMethodException ignored) {}
         for (Constructor<?> c : type.getDeclaredConstructors())
-            if (c.getParameterCount() == fields.size()) return ReflectionClassInfo.ConstructorStyle.ALL_ARGS;
+            if (c.getParameterCount() == fields.size()) return ConstructorStyle.ALL_ARGS;
         try {
             type.getDeclaredConstructor();
-            return ReflectionClassInfo.ConstructorStyle.SETTER;
+            return ConstructorStyle.SETTER;
         } catch (NoSuchMethodException ignored) {}
-        return ReflectionClassInfo.ConstructorStyle.ALL_ARGS;
+        return ConstructorStyle.ALL_ARGS;
     }
 
     private List<FieldInfo> extractFields(Class<?> type) {

@@ -1,8 +1,8 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.ConstructorStyle;
 import com.paramichha.testkit.model.FieldInfo;
-import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.utils.Texts;
 
 import java.util.List;
@@ -37,7 +37,7 @@ final class FieldTestWriter {
     void write(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
                Map<String, List<?>> validAllPerField) {
 
-        boolean isRecord = meta.constructorStyle() == ReflectionClassInfo.ConstructorStyle.RECORD;
+        boolean isRecord = meta.constructorStyle() == ConstructorStyle.RECORD;
         String outerType = meta.simpleName();
         List<FieldInfo> fields = meta.fields();
 

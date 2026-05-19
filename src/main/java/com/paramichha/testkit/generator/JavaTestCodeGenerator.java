@@ -219,7 +219,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
         writeClassOpen(sb, meta, className);
         if (projectType.hasValidator()) writeValidatorSetup(sb, template);
         writeValidInstance(sb, meta, validInstanceParts, instantiation, template);
-        if (meta.constructorStyle() == ReflectionClassInfo.ConstructorStyle.SETTER) writeSetterHelper(sb, meta);
+        if (meta.constructorStyle() == ConstructorStyle.SETTER) writeSetterHelper(sb, meta);
         if (!meta.utilityClass()) {
             creationWriter.write(sb, data, validInstanceParts, valueExtractor);
             memberWriter.write(sb, type, validInstanceParts, data.validAllPerField());
