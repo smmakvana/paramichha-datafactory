@@ -457,7 +457,7 @@ final class MethodTestWriter {
                         ReflectionClassReader.INSTANCE.read(type);
                 InstantiationWriter iw = new InstantiationWriter(paramMeta);
                 java.util.List<Object> parts = new java.util.ArrayList<>();
-                for (ReflectionFieldInfo f : paramMeta.fields()) {
+                for (FieldInfo f : paramMeta.fields()) {
                     java.util.List<?> vals = iw.validValuesFor(type, f);
                     parts.add(vals.isEmpty() ? null : vals.get(0));
                 }

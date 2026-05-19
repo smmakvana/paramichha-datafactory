@@ -5,14 +5,14 @@ import java.util.Objects;
 
 public final class ReflectionClassInfo implements ClassInfo {
     private final ConstructorStyle constructorStyle;
-    private final List<ReflectionFieldInfo> fields;
+    private final List<FieldInfo> fields;
     private final List<ReflectionMethodInfo> methods;
     private final boolean utilityClass;
     private final Class<?> type;
 
     public ReflectionClassInfo(
             ConstructorStyle constructorStyle,
-            List<ReflectionFieldInfo> fields,
+            List<FieldInfo> fields,
             List<ReflectionMethodInfo> methods,
             boolean utilityClass,
             Class<?> type) {
@@ -23,11 +23,11 @@ public final class ReflectionClassInfo implements ClassInfo {
         this.type = type;
     }
 
-    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<ReflectionFieldInfo> fields, Class<?> type) {
+    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, Class<?> type) {
         this(constructorStyle, fields, List.of(), false, type);
     }
 
-    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<ReflectionFieldInfo> fields, List<ReflectionMethodInfo> methods, Class<?> type) {
+    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, List<ReflectionMethodInfo> methods, Class<?> type) {
         this(constructorStyle, fields, methods, false, type);
     }
 
@@ -47,7 +47,7 @@ public final class ReflectionClassInfo implements ClassInfo {
     }
 
     @Override
-    public List<ReflectionFieldInfo> fields() {
+    public List<FieldInfo> fields() {
         return fields;
     }
 

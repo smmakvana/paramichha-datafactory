@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
 
-public final class ReflectionFieldInfo {
+public final class ReflectionFieldInfo implements FieldInfo {
     private final String name;
     private final Class<?> rawType;
     private final Type genericType;
@@ -34,45 +34,39 @@ public final class ReflectionFieldInfo {
         this(name, rawType, genericType, validations, required, false);
     }
 
+    @Override
     public boolean isConstrained() {
         return !validations.isEmpty() || hasIndirectConstraints;
     }
 
+    @Override
     public String name() {
         return name;
     }
 
+    @Override
     public Class<?> rawType() {
         return rawType;
     }
 
+    @Override
     public Type genericType() {
         return genericType;
     }
 
+    @Override
     public List<Annotation> validations() {
         return validations;
     }
 
+    @Override
     public boolean required() {
         return required;
     }
 
+    @Override
     public boolean hasIndirectConstraints() {
         return hasIndirectConstraints;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (ReflectionFieldInfo) obj;
-        return Objects.equals(this.name, that.name) &&
-                Objects.equals(this.rawType, that.rawType) &&
-                Objects.equals(this.genericType, that.genericType) &&
-                Objects.equals(this.validations, that.validations) &&
-                this.required == that.required &&
-                this.hasIndirectConstraints == that.hasIndirectConstraints;
     }
 
     @Override

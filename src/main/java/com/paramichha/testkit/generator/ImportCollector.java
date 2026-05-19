@@ -1,6 +1,6 @@
 package com.paramichha.testkit.generator;
 
-import com.paramichha.testkit.model.ReflectionFieldInfo;
+import com.paramichha.testkit.model.FieldInfo;
 
 import java.util.*;
 
@@ -44,8 +44,8 @@ final class ImportCollector {
      * This covers: enum types, domain types, nested types — anything that
      * appears in the generated constructor call.
      */
-    void addFieldTypeImports(List<ReflectionFieldInfo> fields) {
-        for (ReflectionFieldInfo field : fields) {
+    void addFieldTypeImports(List<FieldInfo> fields) {
+        for (FieldInfo field : fields) {
             addIfNeeded(field.rawType());
 
             // Handle generic type arguments — e.g. List<LocalDate>, List<FixtureStatus>

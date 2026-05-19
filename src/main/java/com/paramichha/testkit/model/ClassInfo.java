@@ -9,7 +9,7 @@ public interface ClassInfo {
 
     ReflectionClassInfo.ConstructorStyle constructorStyle();
 
-    List<ReflectionFieldInfo> fields();
+    List<FieldInfo> fields();
 
     List<ReflectionMethodInfo> methods();
 

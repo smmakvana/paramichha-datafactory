@@ -1,10 +1,7 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.TestKitTemplate;
-import com.paramichha.testkit.model.ClassInfo;
-import com.paramichha.testkit.model.ReflectionClassInfo;
-import com.paramichha.testkit.model.ReflectionFieldInfo;
-import com.paramichha.testkit.model.TestData;
+import com.paramichha.testkit.model.*;
 import com.paramichha.testkit.utils.TestNames;
 import com.paramichha.testkit.utils.JavaNames;
 
@@ -76,7 +73,7 @@ final class CreationTestWriter {
         sb.append(ind).append("@DisplayName(\"").append(holdsDisplay).append("\")\n");
         sb.append(ind).append("void ").append(holdsMethod).append("() {\n");
         for (int i = 0; i < meta.fields().size(); i++) {
-            ReflectionFieldInfo field = meta.fields().get(i);
+            FieldInfo field = meta.fields().get(i);
             Object value = i < validInstanceParts.size() ? validInstanceParts.get(i) : null;
             if (!LiteralConverter.canSerialize(value)) continue;
             if (isComplexType(field.rawType())) continue;

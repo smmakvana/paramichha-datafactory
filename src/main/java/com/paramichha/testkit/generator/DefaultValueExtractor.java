@@ -1,6 +1,6 @@
 package com.paramichha.testkit.generator;
 
-import com.paramichha.testkit.model.ReflectionFieldInfo;
+import com.paramichha.testkit.model.FieldInfo;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -16,12 +16,12 @@ final class DefaultValueExtractor implements ValueExtractor {
     private DefaultValueExtractor() {}
 
     @Override
-    public List<Object> extract(Object instance, Class<?> type, List<ReflectionFieldInfo> fields) {
+    public List<Object> extract(Object instance, Class<?> type, List<FieldInfo> fields) {
         if (instance == null)
             return fields.stream().map(f -> (Object) null).toList();
 
         List<Object> values = new ArrayList<>();
-        for (ReflectionFieldInfo field : fields) {
+        for (FieldInfo field : fields) {
             try {
                 if (type.isRecord()) {
                     values.add(type.getDeclaredMethod(field.name()).invoke(instance));
