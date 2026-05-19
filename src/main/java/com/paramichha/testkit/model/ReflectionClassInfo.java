@@ -4,16 +4,16 @@ import java.util.List;
 
 public record ReflectionClassInfo(
         ConstructorStyle constructorStyle,
-        List<FieldInfo> fields,
+        List<ReflectionFieldInfo> fields,
         List<MethodInfo> methods,
         boolean utilityClass,
         Class<?> type)  {
 
-    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, Class<?> type) {
+    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<ReflectionFieldInfo> fields, Class<?> type) {
         this(constructorStyle, fields, List.of(), false, type);
     }
 
-    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, List<MethodInfo> methods, Class<?> type) {
+    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<ReflectionFieldInfo> fields, List<MethodInfo> methods, Class<?> type) {
         this(constructorStyle, fields, methods, false, type);
     }
 

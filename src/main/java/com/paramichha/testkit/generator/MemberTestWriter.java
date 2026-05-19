@@ -2,7 +2,7 @@ package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.TestKitTemplate;
 import com.paramichha.testkit.model.ReflectionClassInfo;
-import com.paramichha.testkit.model.FieldInfo;
+import com.paramichha.testkit.model.ReflectionFieldInfo;
 import com.paramichha.testkit.utils.TestNames;
 import com.paramichha.testkit.utils.JavaNames;
 
@@ -42,13 +42,13 @@ final class MemberTestWriter {
 
     /** Called by split mode — writes one field directly without @Nested wrapper. */
     void writeFlat(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
-                   FieldInfo field, int fieldIndex) {
+                   ReflectionFieldInfo field, int fieldIndex) {
         write(sb, type, validInstanceParts, java.util.Map.of(), field, fieldIndex, false);
     }
 
     void write(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
                Map<String, List<?>> validAllPerField) {
-        List<FieldInfo> fields = meta.fields();
+        List<ReflectionFieldInfo> fields = meta.fields();
         for (int i = 0; i < fields.size(); i++) {
             write(sb, type, validInstanceParts, validAllPerField, fields.get(i), i, true);
         }
@@ -56,7 +56,7 @@ final class MemberTestWriter {
 
     private void write(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
                        Map<String, List<?>> validAllPerField,
-                       FieldInfo field, int fi, boolean nested) {
+                       ReflectionFieldInfo field, int fi, boolean nested) {
 
         boolean isRecord  = meta.constructorStyle() == ReflectionClassInfo.ConstructorStyle.RECORD;
         String  className = meta.simpleName();
@@ -188,7 +188,7 @@ final class MemberTestWriter {
 
     // ── helpers ───────────────────────────────────────────────────────────
 
-    private static String accessorFor(FieldInfo field, boolean isRecord) {
+    private static String accessorFor(ReflectionFieldInfo field, boolean isRecord) {
         return isRecord
                 ? field.name() + "()"
                 : JavaNames.getterName(field.name(), field.rawType()) + "()";

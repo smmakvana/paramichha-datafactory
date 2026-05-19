@@ -26,7 +26,7 @@ public final class ReflactionClassReader implements ClassReader {
             return new ReflectionClassInfo(
                     ReflectionClassInfo.ConstructorStyle.ALL_ARGS, List.of(), methods, true, type);
         }
-        List<FieldInfo> fields  = extractFields(type);
+        List<ReflectionFieldInfo> fields  = extractFields(type);
         List<MethodInfo> methods = extractMethods(type, false);
         return new ReflectionClassInfo(
                 detectStyle(type, fields), fields, methods, false, type);
@@ -34,7 +34,7 @@ public final class ReflactionClassReader implements ClassReader {
 
     // ── Fields ────────────────────────────────────────────────────────────
 
-    private ReflectionClassInfo.ConstructorStyle detectStyle(Class<?> type, List<FieldInfo> fields) {
+    private ReflectionClassInfo.ConstructorStyle detectStyle(Class<?> type, List<ReflectionFieldInfo> fields) {
         if (type.isRecord()) return ReflectionClassInfo.ConstructorStyle.RECORD;
         try {
             Method b = type.getDeclaredMethod("builder");
@@ -49,12 +49,12 @@ public final class ReflactionClassReader implements ClassReader {
         return ReflectionClassInfo.ConstructorStyle.ALL_ARGS;
     }
 
-    private List<FieldInfo> extractFields(Class<?> type) {
+    private List<ReflectionFieldInfo> extractFields(Class<?> type) {
         return type.isRecord() ? extractRecordFields(type) : extractClassFields(type);
     }
 
-    private List<FieldInfo> extractRecordFields(Class<?> type) {
-        List<FieldInfo> result = new ArrayList<>();
+    private List<ReflectionFieldInfo> extractRecordFields(Class<?> type) {
+        List<ReflectionFieldInfo> result = new ArrayList<>();
         RecordComponent[] components = type.getRecordComponents();
         Parameter[] params = type.getDeclaredConstructors()[0].getParameters();
         for (int i = 0; i < components.length; i++) {
@@ -67,22 +67,22 @@ public final class ReflactionClassReader implements ClassReader {
             if (i < params.length) all.addAll(Arrays.asList(params[i].getAnnotations()));
             List<Annotation> validations = filterValidation(all);
             boolean indirect = typeHasConstraints(rc.getType());
-            result.add(new FieldInfo(rc.getName(), rc.getType(), rc.getGenericType(),
+            result.add(new ReflectionFieldInfo(rc.getName(), rc.getType(), rc.getGenericType(),
                     validations, isRequired(validations), indirect));
         }
         return result;
     }
 
-    private List<FieldInfo> extractClassFields(Class<?> type) {
+    private List<ReflectionFieldInfo> extractClassFields(Class<?> type) {
         List<Field> allFields = new ArrayList<>();
         for (Class<?> c = type; c != null && c != Object.class; c = c.getSuperclass())
             allFields.addAll(0, Arrays.asList(c.getDeclaredFields()));
-        List<FieldInfo> result = new ArrayList<>();
+        List<ReflectionFieldInfo> result = new ArrayList<>();
         for (Field f : allFields) {
             if (Modifier.isStatic(f.getModifiers()) || f.isSynthetic()) continue;
             List<Annotation> validations = filterValidation(Arrays.asList(f.getAnnotations()));
             boolean indirect = typeHasConstraints(f.getType());
-            result.add(new FieldInfo(f.getName(), f.getType(), f.getGenericType(),
+            result.add(new ReflectionFieldInfo(f.getName(), f.getType(), f.getGenericType(),
                     validations, isRequired(validations), indirect));
         }
         return result;

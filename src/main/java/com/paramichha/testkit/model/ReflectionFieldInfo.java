@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public record FieldInfo(
+public record ReflectionFieldInfo(
         String name,
         Class<?> rawType,
         Type genericType,
@@ -12,8 +12,8 @@ public record FieldInfo(
         boolean required,
         boolean hasIndirectConstraints
 ) {
-    public FieldInfo(String name, Class<?> rawType, Type genericType,
-                     List<Annotation> validations, boolean required) {
+    public ReflectionFieldInfo(String name, Class<?> rawType, Type genericType,
+                               List<Annotation> validations, boolean required) {
         this(name, rawType, genericType, validations, required, false);
     }
 

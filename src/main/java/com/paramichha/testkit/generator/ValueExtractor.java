@@ -1,6 +1,6 @@
 package com.paramichha.testkit.generator;
 
-import com.paramichha.testkit.model.FieldInfo;
+import com.paramichha.testkit.model.ReflectionFieldInfo;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  * Used to decompose DataFactory output into per-field literals.
  */
 public interface ValueExtractor {
-    List<Object> extract(Object instance, Class<?> type, List<FieldInfo> fields);
+    List<Object> extract(Object instance, Class<?> type, List<ReflectionFieldInfo> fields);
 }

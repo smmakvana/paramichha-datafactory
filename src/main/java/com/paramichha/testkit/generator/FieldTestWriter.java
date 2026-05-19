@@ -1,7 +1,7 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.model.ReflectionClassInfo;
-import com.paramichha.testkit.model.FieldInfo;
+import com.paramichha.testkit.model.ReflectionFieldInfo;
 import com.paramichha.utils.Texts;
 
 import java.util.List;
@@ -38,10 +38,10 @@ final class FieldTestWriter {
 
         boolean isRecord = meta.constructorStyle() == ReflectionClassInfo.ConstructorStyle.RECORD;
         String outerType = meta.simpleName();
-        List<FieldInfo> fields = meta.fields();
+        List<ReflectionFieldInfo> fields = meta.fields();
 
         for (int i = 0; i < fields.size(); i++) {
-            FieldInfo field = fields.get(i);
+            ReflectionFieldInfo field = fields.get(i);
             boolean hasJakarta = !field.validations().isEmpty();
 
             // fetch directly — bypasses DefaultDataBuilder's <= 1 skip
