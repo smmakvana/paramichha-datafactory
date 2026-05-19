@@ -3,7 +3,7 @@ package com.paramichha.testkit.runner;
 import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.GenerationResult;
 import com.paramichha.testkit.TestKits;
-import com.paramichha.testkit.reader.TestableScanner;
+import com.paramichha.testkit.scan.TestableScanner;
 
 import java.nio.file.Path;
 import java.util.Arrays;

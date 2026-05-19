@@ -1,4 +1,4 @@
-package com.paramichha.testkit;
+package com.paramichha.testkit.scan;
 
 import java.lang.annotation.*;
 

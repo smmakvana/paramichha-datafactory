@@ -1,7 +1,4 @@
-package com.paramichha.testkit.reader;
-
-import com.paramichha.testkit.Testable;
-import com.paramichha.testkit.Testables;
+package com.paramichha.testkit.scan;
 
 import java.io.IOException;
 import java.net.URI;

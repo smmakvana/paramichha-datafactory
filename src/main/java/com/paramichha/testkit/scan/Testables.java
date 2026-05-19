@@ -1,4 +1,4 @@
-package com.paramichha.testkit;
+package com.paramichha.testkit.scan;
 
 import java.lang.annotation.*;
 
@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  * Place on any class (typically a dedicated config class).
  *
  * <pre>
- * {@literal @}Testables({
+ * {@literal @}Testable({
  *     UserRequest.class,
  *     PaymentRequest.class,
  *     RegisterRequest.class
