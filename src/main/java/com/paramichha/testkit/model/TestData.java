@@ -21,7 +21,7 @@ public record TestData(
     public boolean hasError() { return error != null; }
 
     /** True if any field carries a Jakarta validation annotation. */
-    public boolean hasJakarta(ClassInfo meta) {
+    public boolean hasJakarta(ReflectionClassInfo meta) {
         return meta.fields().stream().anyMatch(f -> !f.validations().isEmpty());
     }
 }

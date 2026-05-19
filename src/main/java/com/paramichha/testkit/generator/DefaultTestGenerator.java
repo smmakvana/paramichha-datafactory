@@ -4,7 +4,7 @@ import com.paramichha.testkit.GeneratedTestClass;
 import com.paramichha.testkit.ProjectType;
 import com.paramichha.testkit.TestGenerator;
 import com.paramichha.testkit.TestKitTemplate;
-import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.testkit.model.FieldInfo;
 import com.paramichha.testkit.model.MethodInfo;
 import com.paramichha.testkit.model.TestData;
@@ -27,7 +27,7 @@ public final class DefaultTestGenerator implements TestGenerator {
     private ProjectType projectType = ProjectType.detect();
 
     @Override
-    public List<GeneratedTestClass> generateAll(ClassInfo meta, TestData data,
+    public List<GeneratedTestClass> generateAll(ReflectionClassInfo meta, TestData data,
                                                 String targetPackage, TestKitTemplate template,
                                                 ProjectType projectType) {
         this.projectType = projectType;
@@ -35,7 +35,7 @@ public final class DefaultTestGenerator implements TestGenerator {
     }
 
     @Override
-    public List<GeneratedTestClass> generateAll(ClassInfo meta, TestData data,
+    public List<GeneratedTestClass> generateAll(ReflectionClassInfo meta, TestData data,
                                                 String targetPackage, TestKitTemplate template) {
         if (data.hasError()) {
             return List.of(new GeneratedTestClass(
@@ -51,7 +51,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         }
     }
 
-    private List<GeneratedTestClass> buildSplit(ClassInfo meta, TestData data,
+    private List<GeneratedTestClass> buildSplit(ReflectionClassInfo meta, TestData data,
                                                 String targetPackage, TestKitTemplate template) {
         Class<?> type = data.type();
         String className = meta.simpleName();
@@ -137,7 +137,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         return List.copyOf(files);
     }
 
-    private void addImports(StringBuilder sb, ClassInfo meta, Class<?> type,
+    private void addImports(StringBuilder sb, ReflectionClassInfo meta, Class<?> type,
                             List<Object> parts) {
         ImportCollector ic = new ImportCollector();
         ic.addTypeImport(type);
@@ -163,7 +163,7 @@ public final class DefaultTestGenerator implements TestGenerator {
     }
 
     @Override
-    public GeneratedTestClass generate(ClassInfo meta, TestData data,
+    public GeneratedTestClass generate(ReflectionClassInfo meta, TestData data,
                                        String targetPackage, TestKitTemplate template,
                                        ProjectType projectType) {
         this.projectType = projectType;
@@ -171,17 +171,17 @@ public final class DefaultTestGenerator implements TestGenerator {
     }
 
     @Override
-    public GeneratedTestClass generate(ClassInfo meta, TestData data,
+    public GeneratedTestClass generate(ReflectionClassInfo meta, TestData data,
                                        String targetPackage, TestKitTemplate template) {
         return generateWithTemplate(meta, data, targetPackage, template);
     }
 
     @Override
-    public GeneratedTestClass generate(ClassInfo meta, TestData data, String targetPackage) {
+    public GeneratedTestClass generate(ReflectionClassInfo meta, TestData data, String targetPackage) {
         return generateWithTemplate(meta, data, targetPackage, TestKitTemplate.DEFAULT);
     }
 
-    private GeneratedTestClass generateWithTemplate(ClassInfo meta, TestData data,
+    private GeneratedTestClass generateWithTemplate(ReflectionClassInfo meta, TestData data,
                                                     String targetPackage, TestKitTemplate template) {
         // DEV mode gets a distinct class name so both files coexist
         boolean isDev = data.mode() == com.paramichha.datafactory.GenerationMode.DEV;
@@ -204,7 +204,7 @@ public final class DefaultTestGenerator implements TestGenerator {
 
     // ── full generation ───────────────────────────────────────────────────
 
-    private GeneratedTestClass buildFull(ClassInfo meta, TestData data,
+    private GeneratedTestClass buildFull(ReflectionClassInfo meta, TestData data,
                                          String targetPackage, String className,
                                          boolean isDev, TestKitTemplate template) {
         Class<?> type = data.type();
@@ -223,7 +223,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         writeClassOpen(sb, meta, className);
         if (projectType.hasValidator()) writeValidatorSetup(sb, template);
         writeValidInstance(sb, meta, validInstanceParts, instantiation, template);
-        if (meta.constructorStyle() == ClassInfo.ConstructorStyle.SETTER) writeSetterHelper(sb, meta);
+        if (meta.constructorStyle() == ReflectionClassInfo.ConstructorStyle.SETTER) writeSetterHelper(sb, meta);
         if (!meta.utilityClass()) {
             creationWriter.write(sb, data, validInstanceParts, valueExtractor);
             memberWriter.write(sb, type, validInstanceParts, data.validAllPerField());
@@ -236,7 +236,7 @@ public final class DefaultTestGenerator implements TestGenerator {
 
     // ── placeholder generation ────────────────────────────────────────────
 
-    private String buildPlaceholder(ClassInfo meta, String targetPackage, String error,
+    private String buildPlaceholder(ReflectionClassInfo meta, String targetPackage, String error,
                                     String className) {
         return "package " + targetPackage + ";\n\n"
                 + "// TODO: " + className + "\n"
@@ -251,7 +251,7 @@ public final class DefaultTestGenerator implements TestGenerator {
 
     // ── helpers ───────────────────────────────────────────────────────────
 
-    private ImportCollector buildImports(ClassInfo meta, Class<?> type,
+    private ImportCollector buildImports(ReflectionClassInfo meta, Class<?> type,
                                          TestData data, List<Object> validInstanceParts) {
         ImportCollector ic = new ImportCollector();
         ic.addTypeImport(type);
@@ -270,7 +270,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         return ic;
     }
 
-    private void writeHeader(StringBuilder sb, ClassInfo meta, boolean isDev) {
+    private void writeHeader(StringBuilder sb, ReflectionClassInfo meta, boolean isDev) {
         sb.append("// Generated by TestKit — do not edit by hand.\n");
         if (isDev) {
             sb.append("// Mode: DEV — full type range, nullable fields.\n");
@@ -291,7 +291,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         sb.append("\n");
     }
 
-    private void writeClassOpen(StringBuilder sb, ClassInfo meta, String className) {
+    private void writeClassOpen(StringBuilder sb, ReflectionClassInfo meta, String className) {
         sb.append("@DisplayName(\"").append(meta.simpleName()).append("\")\n");
         sb.append("class ").append(className).append(" {\n\n");
     }
@@ -305,7 +305,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         sb.append("    }\n\n");
     }
 
-    private void writeValidInstance(StringBuilder sb, ClassInfo meta,
+    private void writeValidInstance(StringBuilder sb, ReflectionClassInfo meta,
                                     List<Object> validInstanceParts,
                                     InstantiationWriter instantiation, TestKitTemplate template) {
         if (meta.fields().isEmpty()) return;
@@ -315,7 +315,7 @@ public final class DefaultTestGenerator implements TestGenerator {
                 .append(";\n\n");
     }
 
-    private void writeSetterHelper(StringBuilder sb, ClassInfo meta) {
+    private void writeSetterHelper(StringBuilder sb, ReflectionClassInfo meta) {
         String name = meta.simpleName();
         sb.append("    private static ").append(name).append(" build").append(name).append("(");
         List<FieldInfo> fields = meta.fields();

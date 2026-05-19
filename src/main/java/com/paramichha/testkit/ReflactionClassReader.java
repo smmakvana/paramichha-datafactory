@@ -20,33 +20,33 @@ public final class ReflactionClassReader implements ClassReader {
     private ReflactionClassReader() {}
 
     @Override
-    public ClassInfo read(Class<?> type) {
+    public ReflectionClassInfo read(Class<?> type) {
         if (isUtilityClass(type)) {
             List<MethodInfo> methods = extractMethods(type, true);
-            return new ClassInfo(
-                    ClassInfo.ConstructorStyle.ALL_ARGS, List.of(), methods, true, type);
+            return new ReflectionClassInfo(
+                    ReflectionClassInfo.ConstructorStyle.ALL_ARGS, List.of(), methods, true, type);
         }
         List<FieldInfo> fields  = extractFields(type);
         List<MethodInfo> methods = extractMethods(type, false);
-        return new ClassInfo(
+        return new ReflectionClassInfo(
                 detectStyle(type, fields), fields, methods, false, type);
     }
 
     // ── Fields ────────────────────────────────────────────────────────────
 
-    private ClassInfo.ConstructorStyle detectStyle(Class<?> type, List<FieldInfo> fields) {
-        if (type.isRecord()) return ClassInfo.ConstructorStyle.RECORD;
+    private ReflectionClassInfo.ConstructorStyle detectStyle(Class<?> type, List<FieldInfo> fields) {
+        if (type.isRecord()) return ReflectionClassInfo.ConstructorStyle.RECORD;
         try {
             Method b = type.getDeclaredMethod("builder");
-            if (Modifier.isStatic(b.getModifiers())) return ClassInfo.ConstructorStyle.LOMBOK_BUILDER;
+            if (Modifier.isStatic(b.getModifiers())) return ReflectionClassInfo.ConstructorStyle.LOMBOK_BUILDER;
         } catch (NoSuchMethodException ignored) {}
         for (Constructor<?> c : type.getDeclaredConstructors())
-            if (c.getParameterCount() == fields.size()) return ClassInfo.ConstructorStyle.ALL_ARGS;
+            if (c.getParameterCount() == fields.size()) return ReflectionClassInfo.ConstructorStyle.ALL_ARGS;
         try {
             type.getDeclaredConstructor();
-            return ClassInfo.ConstructorStyle.SETTER;
+            return ReflectionClassInfo.ConstructorStyle.SETTER;
         } catch (NoSuchMethodException ignored) {}
-        return ClassInfo.ConstructorStyle.ALL_ARGS;
+        return ReflectionClassInfo.ConstructorStyle.ALL_ARGS;
     }
 
     private List<FieldInfo> extractFields(Class<?> type) {

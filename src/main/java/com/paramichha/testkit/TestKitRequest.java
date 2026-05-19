@@ -1,7 +1,7 @@
 package com.paramichha.testkit;
 
 import com.paramichha.datafactory.GenerationMode;
-import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.ReflectionClassInfo;
 
 /**
  * Request object for TestKit — carries the subject and all optional config.
@@ -18,7 +18,7 @@ import com.paramichha.testkit.model.ClassInfo;
  */
 public final class TestKitRequest {
 
-    private final ClassInfo classInfo;
+    private final ReflectionClassInfo reflectionClassInfo;
     private String targetPackage;
     private ProjectType projectType = ProjectType.detect();
     private TestKitTemplate template = TestKitTemplate.DEFAULT;
@@ -27,9 +27,9 @@ public final class TestKitRequest {
 
     // ── Constructors ──────────────────────────────────────────────────────
 
-    private TestKitRequest(ClassInfo classInfo) {
-        this.classInfo = classInfo;
-        this.targetPackage = classInfo.packageName();
+    private TestKitRequest(ReflectionClassInfo reflectionClassInfo) {
+        this.reflectionClassInfo = reflectionClassInfo;
+        this.targetPackage = reflectionClassInfo.packageName();
     }
 
     // ── Entry points ──────────────────────────────────────────────────────
@@ -45,9 +45,9 @@ public final class TestKitRequest {
     /**
      * Accepts pre-built ClassMeta — PSI, YAML, or any other source.
      */
-    public static TestKitRequest of(ClassInfo classInfo) {
-        if (classInfo == null) throw new TestKitException("classMeta must not be null");
-        return new TestKitRequest(classInfo);
+    public static TestKitRequest of(ReflectionClassInfo reflectionClassInfo) {
+        if (reflectionClassInfo == null) throw new TestKitException("classMeta must not be null");
+        return new TestKitRequest(reflectionClassInfo);
     }
 
     // ── Optional config ───────────────────────────────────────────────────
@@ -85,8 +85,8 @@ public final class TestKitRequest {
 
     // ── Accessors (package-private — TestKit reads these) ─────────────────
 
-    ClassInfo classMeta() {
-        return classInfo;
+    ReflectionClassInfo classMeta() {
+        return reflectionClassInfo;
     }
 
     String targetPackage() {

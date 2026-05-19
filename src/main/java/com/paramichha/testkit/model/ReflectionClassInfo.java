@@ -2,18 +2,18 @@ package com.paramichha.testkit.model;
 
 import java.util.List;
 
-public record ClassInfo(
+public record ReflectionClassInfo(
         ConstructorStyle constructorStyle,
         List<FieldInfo> fields,
         List<MethodInfo> methods,
         boolean utilityClass,
         Class<?> type)  {
 
-    public ClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, Class<?> type) {
+    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, Class<?> type) {
         this(constructorStyle, fields, List.of(), false, type);
     }
 
-    public ClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, List<MethodInfo> methods, Class<?> type) {
+    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, List<MethodInfo> methods, Class<?> type) {
         this(constructorStyle, fields, methods, false, type);
     }
 

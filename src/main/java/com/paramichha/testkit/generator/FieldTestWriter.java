@@ -1,6 +1,6 @@
 package com.paramichha.testkit.generator;
 
-import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.testkit.model.FieldInfo;
 import com.paramichha.utils.Texts;
 
@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
  */
 final class FieldTestWriter {
 
-    private final ClassInfo meta;
+    private final ReflectionClassInfo meta;
     private final InstantiationWriter instantiation;
     private final ValueExtractor valueExtractor;
 
-    FieldTestWriter(ClassInfo meta, InstantiationWriter instantiation, ValueExtractor valueExtractor) {
+    FieldTestWriter(ReflectionClassInfo meta, InstantiationWriter instantiation, ValueExtractor valueExtractor) {
         this.meta = meta;
         this.instantiation = instantiation;
         this.valueExtractor = valueExtractor;
@@ -36,7 +36,7 @@ final class FieldTestWriter {
     void write(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
                Map<String, List<?>> validAllPerField) {
 
-        boolean isRecord = meta.constructorStyle() == ClassInfo.ConstructorStyle.RECORD;
+        boolean isRecord = meta.constructorStyle() == ReflectionClassInfo.ConstructorStyle.RECORD;
         String outerType = meta.simpleName();
         List<FieldInfo> fields = meta.fields();
 

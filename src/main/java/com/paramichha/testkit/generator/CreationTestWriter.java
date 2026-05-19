@@ -1,7 +1,7 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.TestKitTemplate;
-import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.testkit.model.FieldInfo;
 import com.paramichha.testkit.model.TestData;
 import com.paramichha.testkit.utils.TestNames;
@@ -15,11 +15,11 @@ import java.util.List;
  */
 final class CreationTestWriter {
 
-    private final ClassInfo meta;
+    private final ReflectionClassInfo meta;
     private final InstantiationWriter instantiation;
     private final TestKitTemplate template;
 
-    CreationTestWriter(ClassInfo meta, InstantiationWriter instantiation,
+    CreationTestWriter(ReflectionClassInfo meta, InstantiationWriter instantiation,
                        TestKitTemplate template) {
         this.meta          = meta;
         this.instantiation = instantiation;
@@ -42,7 +42,7 @@ final class CreationTestWriter {
                               List<Object> validInstanceParts, boolean nested) {
 
         boolean hasJakarta   = data.hasJakarta(meta);
-        boolean isRecord     = meta.constructorStyle() == ClassInfo.ConstructorStyle.RECORD;
+        boolean isRecord     = meta.constructorStyle() == ReflectionClassInfo.ConstructorStyle.RECORD;
         String  className    = meta.simpleName();
         String  fieldName    = TestNames.toVariable(className);
         String  ind          = nested ? "        " : "    ";

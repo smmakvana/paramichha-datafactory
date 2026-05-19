@@ -1,7 +1,7 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.TestKitTemplate;
-import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.testkit.model.FieldInfo;
 import com.paramichha.testkit.utils.TestNames;
 import com.paramichha.testkit.utils.JavaNames;
@@ -27,12 +27,12 @@ import java.util.stream.Collectors;
  */
 final class MemberTestWriter {
 
-    private final ClassInfo meta;
+    private final ReflectionClassInfo meta;
     private final InstantiationWriter instantiation;
     private final ValueExtractor valueExtractor;
     private final TestKitTemplate template;
 
-    MemberTestWriter(ClassInfo meta, InstantiationWriter instantiation,
+    MemberTestWriter(ReflectionClassInfo meta, InstantiationWriter instantiation,
                      ValueExtractor valueExtractor, TestKitTemplate template) {
         this.meta          = meta;
         this.instantiation = instantiation;
@@ -58,7 +58,7 @@ final class MemberTestWriter {
                        Map<String, List<?>> validAllPerField,
                        FieldInfo field, int fi, boolean nested) {
 
-        boolean isRecord  = meta.constructorStyle() == ClassInfo.ConstructorStyle.RECORD;
+        boolean isRecord  = meta.constructorStyle() == ReflectionClassInfo.ConstructorStyle.RECORD;
         String  className = meta.simpleName();
         String  fieldName = TestNames.toVariable(className);
 

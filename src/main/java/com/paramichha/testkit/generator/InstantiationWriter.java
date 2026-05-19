@@ -1,7 +1,7 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.datafactory.DataFactory;
-import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.testkit.model.FieldInfo;
 
 import com.paramichha.utils.Texts;
@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
  */
 final class InstantiationWriter {
 
-    private final ClassInfo meta;
+    private final ReflectionClassInfo meta;
 
-    InstantiationWriter(ClassInfo meta) {
+    InstantiationWriter(ReflectionClassInfo meta) {
         this.meta = meta;
     }
 
