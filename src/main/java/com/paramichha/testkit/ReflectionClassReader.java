@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  * Reads class structure via standard Java reflection.
- * No dependency on datafactory engine internals.
+ * No dependency on data factory engine internals.
  */
 public final class ReflectionClassReader implements ClassReader {
 

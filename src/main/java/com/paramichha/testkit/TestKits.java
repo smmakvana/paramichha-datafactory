@@ -1,7 +1,6 @@
 package com.paramichha.testkit;
 
 import com.paramichha.datafactory.GenerationMode;
-import com.paramichha.testkit.data.DefaultTestDataProvider;
 import com.paramichha.testkit.generator.JavaTestCodeGenerator;
 import com.paramichha.testkit.model.ClassInfo;
 import com.paramichha.testkit.model.TestData;

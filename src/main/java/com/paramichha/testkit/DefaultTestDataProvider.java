@@ -1,8 +1,7 @@
-package com.paramichha.testkit.data;
+package com.paramichha.testkit;
 
 import com.paramichha.datafactory.DataFactory;
 import com.paramichha.datafactory.GenerationMode;
-import com.paramichha.testkit.TestDataProvider;
 import com.paramichha.testkit.model.TestData;
 
 import com.paramichha.utils.Seeds;
