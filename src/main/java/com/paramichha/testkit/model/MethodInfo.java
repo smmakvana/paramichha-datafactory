@@ -9,7 +9,7 @@ public interface MethodInfo {
 
     String name();
 
-    ReflectionReturnTypeInfo returnType();
+    ReturnTypeInfo returnType();
 
     List<ParameterInfo> parameters();
 

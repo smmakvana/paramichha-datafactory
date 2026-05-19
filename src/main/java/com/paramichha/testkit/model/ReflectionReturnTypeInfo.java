@@ -8,7 +8,7 @@ import java.util.Objects;
  * Metadata for a method's return type — type + Jakarta annotations.
  * Passed directly to DataFactory for value generation.
  */
-public final class ReflectionReturnTypeInfo {
+public final class ReflectionReturnTypeInfo implements ReturnTypeInfo {
     private final Class<?> type;
     private final List<Annotation> annotations;
 
@@ -23,33 +23,29 @@ public final class ReflectionReturnTypeInfo {
         this.annotations = annotations;
     }
 
+    @Override
     public boolean isVoid() {
         return type == void.class || type == Void.class;
     }
 
+    @Override
     public boolean isConstrained() {
         return !annotations.isEmpty();
     }
 
+    @Override
     public boolean isPrimitive() {
         return type.isPrimitive() && !isVoid();
     }
 
+    @Override
     public Class<?> type() {
         return type;
     }
 
+    @Override
     public List<Annotation> annotations() {
         return annotations;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (ReflectionReturnTypeInfo) obj;
-        return Objects.equals(this.type, that.type) &&
-                Objects.equals(this.annotations, that.annotations);
     }
 
     @Override

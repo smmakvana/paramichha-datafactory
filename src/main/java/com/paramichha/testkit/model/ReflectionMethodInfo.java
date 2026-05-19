@@ -6,13 +6,13 @@ import java.util.Objects;
 
 public final class ReflectionMethodInfo implements MethodInfo {
     private final String name;
-    private final ReflectionReturnTypeInfo returnType;
+    private final ReturnTypeInfo returnType;
     private final List<ParameterInfo> parameters;
     private final MethodKind kind;
 
     public ReflectionMethodInfo(
             String name,
-            ReflectionReturnTypeInfo returnType,
+            ReturnTypeInfo returnType,
             List<ParameterInfo> parameters,
             MethodKind kind
     ) {
@@ -55,7 +55,7 @@ public final class ReflectionMethodInfo implements MethodInfo {
     }
 
     @Override
-    public ReflectionReturnTypeInfo returnType() {
+    public ReturnTypeInfo returnType() {
         return returnType;
     }
 
