@@ -11,7 +11,7 @@ public interface ClassInfo {
 
     List<FieldInfo> fields();
 
-    List<ReflectionMethodInfo> methods();
+    List<MethodInfo> methods();
 
     boolean utilityClass();
 

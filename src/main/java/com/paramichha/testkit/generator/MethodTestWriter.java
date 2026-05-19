@@ -31,19 +31,19 @@ final class MethodTestWriter {
     }
 
     void write(StringBuilder sb, List<Object> validInstanceParts, boolean hasJakarta) {
-        for (ReflectionMethodInfo method : meta.methods()) {
+        for (MethodInfo method : meta.methods()) {
             writeMethodClass(sb, method, hasJakarta, true);
         }
     }
 
-    void writeFlat(StringBuilder sb, ReflectionMethodInfo method,
+    void writeFlat(StringBuilder sb, MethodInfo method,
                    List<Object> validInstanceParts, boolean hasJakarta) {
         writeMethodClass(sb, method, hasJakarta, false);
     }
 
     // ── Core ──────────────────────────────────────────────────────────────
 
-    private void writeMethodClass(StringBuilder sb, ReflectionMethodInfo method,
+    private void writeMethodClass(StringBuilder sb, MethodInfo method,
                                   boolean hasJakarta, boolean nested) {
         String className  = meta.simpleName();
         String fieldName  = meta.utilityClass() ? className : TestNames.toVariable(className);
@@ -86,7 +86,7 @@ final class MethodTestWriter {
 
     // ── COMMAND ───────────────────────────────────────────────────────────
 
-    private void writeCommand(StringBuilder sb, ReflectionMethodInfo method, String fieldName,
+    private void writeCommand(StringBuilder sb, MethodInfo method, String fieldName,
                               boolean hasJakarta, String ind, String indBody) {
         String methodName = method.name();
 
@@ -110,7 +110,7 @@ final class MethodTestWriter {
 
     // ── QUERY ─────────────────────────────────────────────────────────────
 
-    private void writeQuery(StringBuilder sb, ReflectionMethodInfo method, String fieldName,
+    private void writeQuery(StringBuilder sb, MethodInfo method, String fieldName,
                             String ind, String indBody) {
         String methodName   = method.name();
         ReflectionReturnTypeInfo ret  = method.returnType();
@@ -141,7 +141,7 @@ final class MethodTestWriter {
 
     // ── MUTATOR / TRANSFORMER ─────────────────────────────────────────────
 
-    private void writeMutatorOrTransformer(StringBuilder sb, ReflectionMethodInfo method,
+    private void writeMutatorOrTransformer(StringBuilder sb, MethodInfo method,
                                            String fieldName,
                                            String validSrc, String invalidSrc,
                                            String ind, String indBody) {
@@ -163,7 +163,7 @@ final class MethodTestWriter {
 
     // ── OPERATION ─────────────────────────────────────────────────────────
 
-    private void writeOperation(StringBuilder sb, ReflectionMethodInfo method,
+    private void writeOperation(StringBuilder sb, MethodInfo method,
                                 String fieldName,
                                 String validSrc, String invalidSrc,
                                 String ind, String indBody) {
@@ -185,7 +185,7 @@ final class MethodTestWriter {
 
     // ── Shared test methods ───────────────────────────────────────────────
 
-    private void writeAcceptsTest(StringBuilder sb, ReflectionMethodInfo method, String fieldName,
+    private void writeAcceptsTest(StringBuilder sb, MethodInfo method, String fieldName,
                                   String validSrc, String sig, String call,
                                   String ind, String indBody) {
         sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");

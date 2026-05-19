@@ -22,12 +22,12 @@ public final class ReflectionClassReader implements ClassReader {
     @Override
     public ClassInfo read(Class<?> type) {
         if (isUtilityClass(type)) {
-            List<ReflectionMethodInfo> methods = extractMethods(type, true);
+            List<MethodInfo> methods = extractMethods(type, true);
             return new ReflectionClassInfo(
                     ReflectionClassInfo.ConstructorStyle.ALL_ARGS, List.of(), methods, true, type);
         }
         List<FieldInfo> fields  = extractFields(type);
-        List<ReflectionMethodInfo> methods = extractMethods(type, false);
+        List<MethodInfo> methods = extractMethods(type, false);
         return new ReflectionClassInfo(
                 detectStyle(type, fields), fields, methods, false, type);
     }
@@ -90,11 +90,11 @@ public final class ReflectionClassReader implements ClassReader {
 
     // ── Methods ───────────────────────────────────────────────────────────
 
-    private List<ReflectionMethodInfo> extractMethods(Class<?> type, boolean utility) {
+    private List<MethodInfo> extractMethods(Class<?> type, boolean utility) {
         if (!utility && (type.isRecord() || type.isEnum() || type.isInterface())) return List.of();
 
         Set<String> objectMethods = objectMethodNames();
-        List<ReflectionMethodInfo> result = new ArrayList<>();
+        List<MethodInfo> result = new ArrayList<>();
 
         for (Method m : type.getMethods()) {
             boolean isStatic = Modifier.isStatic(m.getModifiers());

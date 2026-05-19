@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Objects;
 
-public final class ReflectionMethodInfo {
+public final class ReflectionMethodInfo implements MethodInfo {
     private final String name;
     private final ReflectionReturnTypeInfo returnType;
     private final List<ReflectionParameterInfo> parameters;
@@ -39,39 +39,34 @@ public final class ReflectionMethodInfo {
         this(name, new ReflectionReturnTypeInfo(rawReturnType, List.of()), parameters, kind);
     }
 
+    @Override
     public boolean hasParameters() {
         return !parameters.isEmpty();
     }
 
+    @Override
     public boolean hasReturnConstraints() {
         return returnType.isConstrained();
     }
 
+    @Override
     public String name() {
         return name;
     }
 
+    @Override
     public ReflectionReturnTypeInfo returnType() {
         return returnType;
     }
 
+    @Override
     public List<ReflectionParameterInfo> parameters() {
         return parameters;
     }
 
+    @Override
     public MethodKind kind() {
         return kind;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (ReflectionMethodInfo) obj;
-        return Objects.equals(this.name, that.name) &&
-                Objects.equals(this.returnType, that.returnType) &&
-                Objects.equals(this.parameters, that.parameters) &&
-                Objects.equals(this.kind, that.kind);
     }
 
     @Override
