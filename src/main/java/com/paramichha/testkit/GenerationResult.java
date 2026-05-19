@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Output of {@link TestKitsX#generateTest()} — the generated Java source.
+ * Output of {@link TestKit#generateTest()} — the generated Java source.
  *
  * <p>On write: unused imports are removed, then source is formatted
  * using Google Java Format — clean, consistent output every time.
