@@ -19,11 +19,11 @@ import java.util.List;
  */
 final class MethodTestWriter {
 
-    private final ReflectionClassInfo meta;
+    private final ClassInfo meta;
     private final InstantiationWriter instantiation;
     private final TestKitTemplate template;
 
-    MethodTestWriter(ReflectionClassInfo meta, InstantiationWriter instantiation,
+    MethodTestWriter(ClassInfo meta, InstantiationWriter instantiation,
                      TestKitTemplate template) {
         this.meta          = meta;
         this.instantiation = instantiation;
@@ -453,7 +453,7 @@ final class MethodTestWriter {
                 && !pkg.startsWith("javax.");
         if (isDomain) {
             try {
-                ReflectionClassInfo paramMeta =
+                ClassInfo paramMeta =
                         ReflectionClassReader.INSTANCE.read(type);
                 InstantiationWriter iw = new InstantiationWriter(paramMeta);
                 java.util.List<Object> parts = new java.util.ArrayList<>();

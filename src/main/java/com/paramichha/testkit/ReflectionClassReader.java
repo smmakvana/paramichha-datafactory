@@ -20,7 +20,7 @@ public final class ReflectionClassReader implements ClassReader {
     private ReflectionClassReader() {}
 
     @Override
-    public ReflectionClassInfo read(Class<?> type) {
+    public ClassInfo read(Class<?> type) {
         if (isUtilityClass(type)) {
             List<ReflectionMethodInfo> methods = extractMethods(type, true);
             return new ReflectionClassInfo(

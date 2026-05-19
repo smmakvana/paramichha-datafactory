@@ -1,6 +1,7 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.TestKitTemplate;
+import com.paramichha.testkit.model.ClassInfo;
 import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.testkit.model.ReflectionFieldInfo;
 import com.paramichha.testkit.utils.TestNames;
@@ -27,12 +28,12 @@ import java.util.stream.Collectors;
  */
 final class MemberTestWriter {
 
-    private final ReflectionClassInfo meta;
+    private final ClassInfo meta;
     private final InstantiationWriter instantiation;
     private final ValueExtractor valueExtractor;
     private final TestKitTemplate template;
 
-    MemberTestWriter(ReflectionClassInfo meta, InstantiationWriter instantiation,
+    MemberTestWriter(ClassInfo meta, InstantiationWriter instantiation,
                      ValueExtractor valueExtractor, TestKitTemplate template) {
         this.meta          = meta;
         this.instantiation = instantiation;

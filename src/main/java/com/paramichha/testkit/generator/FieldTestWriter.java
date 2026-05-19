@@ -1,5 +1,6 @@
 package com.paramichha.testkit.generator;
 
+import com.paramichha.testkit.model.ClassInfo;
 import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.testkit.model.ReflectionFieldInfo;
 import com.paramichha.utils.Texts;
@@ -23,11 +24,11 @@ import java.util.stream.Collectors;
  */
 final class FieldTestWriter {
 
-    private final ReflectionClassInfo meta;
+    private final ClassInfo meta;
     private final InstantiationWriter instantiation;
     private final ValueExtractor valueExtractor;
 
-    FieldTestWriter(ReflectionClassInfo meta, InstantiationWriter instantiation, ValueExtractor valueExtractor) {
+    FieldTestWriter(ClassInfo meta, InstantiationWriter instantiation, ValueExtractor valueExtractor) {
         this.meta = meta;
         this.instantiation = instantiation;
         this.valueExtractor = valueExtractor;

@@ -1,5 +1,6 @@
 package com.paramichha.testkit;
 
+import com.paramichha.testkit.model.ClassInfo;
 import com.paramichha.testkit.model.ReflectionClassInfo;
 
 /**
@@ -7,5 +8,5 @@ import com.paramichha.testkit.model.ReflectionClassInfo;
  * Implement to support non-standard class structures.
  */
 public interface ClassReader {
-    ReflectionClassInfo read(Class<?> type);
+    ClassInfo read(Class<?> type);
 }

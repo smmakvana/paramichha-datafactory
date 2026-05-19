@@ -1,6 +1,7 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.TestKitTemplate;
+import com.paramichha.testkit.model.ClassInfo;
 import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.testkit.model.ReflectionFieldInfo;
 import com.paramichha.testkit.model.TestData;
@@ -15,11 +16,11 @@ import java.util.List;
  */
 final class CreationTestWriter {
 
-    private final ReflectionClassInfo meta;
+    private final ClassInfo meta;
     private final InstantiationWriter instantiation;
     private final TestKitTemplate template;
 
-    CreationTestWriter(ReflectionClassInfo meta, InstantiationWriter instantiation,
+    CreationTestWriter(ClassInfo meta, InstantiationWriter instantiation,
                        TestKitTemplate template) {
         this.meta          = meta;
         this.instantiation = instantiation;

@@ -4,10 +4,7 @@ import com.paramichha.testkit.GenerationResult;
 import com.paramichha.testkit.ProjectType;
 import com.paramichha.testkit.CodeGenerator;
 import com.paramichha.testkit.TestKitTemplate;
-import com.paramichha.testkit.model.ReflectionClassInfo;
-import com.paramichha.testkit.model.ReflectionFieldInfo;
-import com.paramichha.testkit.model.ReflectionMethodInfo;
-import com.paramichha.testkit.model.TestData;
+import com.paramichha.testkit.model.*;
 
 import com.paramichha.testkit.utils.TestNames;
 import com.paramichha.testkit.utils.JavaNames;
@@ -26,7 +23,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
     private ProjectType projectType = ProjectType.detect();
 
     @Override
-    public List<GenerationResult> generateAll(ReflectionClassInfo meta, TestData data,
+    public List<GenerationResult> generateAll(ClassInfo meta, TestData data,
                                               String targetPackage, TestKitTemplate template,
                                               ProjectType projectType) {
         this.projectType = projectType;
@@ -34,7 +31,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public List<GenerationResult> generateAll(ReflectionClassInfo meta, TestData data,
+    public List<GenerationResult> generateAll(ClassInfo meta, TestData data,
                                               String targetPackage, TestKitTemplate template) {
         if (data.hasError()) {
             return List.of(new GenerationResult(
@@ -50,7 +47,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
         }
     }
 
-    private List<GenerationResult> buildSplit(ReflectionClassInfo meta, TestData data,
+    private List<GenerationResult> buildSplit(ClassInfo meta, TestData data,
                                               String targetPackage, TestKitTemplate template) {
         Class<?> type = data.type();
         String className = meta.simpleName();
@@ -136,7 +133,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
         return List.copyOf(files);
     }
 
-    private void addImports(StringBuilder sb, ReflectionClassInfo meta, Class<?> type,
+    private void addImports(StringBuilder sb, ClassInfo meta, Class<?> type,
                             List<Object> parts) {
         ImportCollector ic = new ImportCollector();
         ic.addTypeImport(type);
@@ -162,7 +159,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public GenerationResult generate(ReflectionClassInfo meta, TestData data,
+    public GenerationResult generate(ClassInfo meta, TestData data,
                                      String targetPackage, TestKitTemplate template,
                                      ProjectType projectType) {
         this.projectType = projectType;
@@ -170,17 +167,17 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public GenerationResult generate(ReflectionClassInfo meta, TestData data,
+    public GenerationResult generate(ClassInfo meta, TestData data,
                                      String targetPackage, TestKitTemplate template) {
         return generateWithTemplate(meta, data, targetPackage, template);
     }
 
     @Override
-    public GenerationResult generate(ReflectionClassInfo meta, TestData data, String targetPackage) {
+    public GenerationResult generate(ClassInfo meta, TestData data, String targetPackage) {
         return generateWithTemplate(meta, data, targetPackage, TestKitTemplate.DEFAULT);
     }
 
-    private GenerationResult generateWithTemplate(ReflectionClassInfo meta, TestData data,
+    private GenerationResult generateWithTemplate(ClassInfo meta, TestData data,
                                                   String targetPackage, TestKitTemplate template) {
         // DEV mode gets a distinct class name so both files coexist
         boolean isDev = data.mode() == com.paramichha.datafactory.GenerationMode.DEV;
@@ -203,7 +200,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
 
     // ── full generation ───────────────────────────────────────────────────
 
-    private GenerationResult buildFull(ReflectionClassInfo meta, TestData data,
+    private GenerationResult buildFull(ClassInfo meta, TestData data,
                                        String targetPackage, String className,
                                        boolean isDev, TestKitTemplate template) {
         Class<?> type = data.type();
@@ -235,7 +232,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
 
     // ── placeholder generation ────────────────────────────────────────────
 
-    private String buildPlaceholder(ReflectionClassInfo meta, String targetPackage, String error,
+    private String buildPlaceholder(ClassInfo meta, String targetPackage, String error,
                                     String className) {
         return "package " + targetPackage + ";\n\n"
                 + "// TODO: " + className + "\n"
@@ -250,7 +247,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
 
     // ── helpers ───────────────────────────────────────────────────────────
 
-    private ImportCollector buildImports(ReflectionClassInfo meta, Class<?> type,
+    private ImportCollector buildImports(ClassInfo meta, Class<?> type,
                                          TestData data, List<Object> validInstanceParts) {
         ImportCollector ic = new ImportCollector();
         ic.addTypeImport(type);
@@ -269,7 +266,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
         return ic;
     }
 
-    private void writeHeader(StringBuilder sb, ReflectionClassInfo meta, boolean isDev) {
+    private void writeHeader(StringBuilder sb, ClassInfo meta, boolean isDev) {
         sb.append("// Generated by TestKit — do not edit by hand.\n");
         if (isDev) {
             sb.append("// Mode: DEV — full type range, nullable fields.\n");
@@ -290,7 +287,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
         sb.append("\n");
     }
 
-    private void writeClassOpen(StringBuilder sb, ReflectionClassInfo meta, String className) {
+    private void writeClassOpen(StringBuilder sb, ClassInfo meta, String className) {
         sb.append("@DisplayName(\"").append(meta.simpleName()).append("\")\n");
         sb.append("class ").append(className).append(" {\n\n");
     }
@@ -304,7 +301,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
         sb.append("    }\n\n");
     }
 
-    private void writeValidInstance(StringBuilder sb, ReflectionClassInfo meta,
+    private void writeValidInstance(StringBuilder sb, ClassInfo meta,
                                     List<Object> validInstanceParts,
                                     InstantiationWriter instantiation, TestKitTemplate template) {
         if (meta.fields().isEmpty()) return;
@@ -314,7 +311,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
                 .append(";\n\n");
     }
 
-    private void writeSetterHelper(StringBuilder sb, ReflectionClassInfo meta) {
+    private void writeSetterHelper(StringBuilder sb, ClassInfo meta) {
         String name = meta.simpleName();
         sb.append("    private static ").append(name).append(" build").append(name).append("(");
         List<ReflectionFieldInfo> fields = meta.fields();

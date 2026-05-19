@@ -3,7 +3,7 @@ package com.paramichha.testkit.model;
 import java.util.List;
 import java.util.Objects;
 
-public final class ReflectionClassInfo {
+public final class ReflectionClassInfo implements ClassInfo {
     private final ConstructorStyle constructorStyle;
     private final List<ReflectionFieldInfo> fields;
     private final List<ReflectionMethodInfo> methods;
@@ -31,44 +31,39 @@ public final class ReflectionClassInfo {
         this(constructorStyle, fields, methods, false, type);
     }
 
+    @Override
     public String simpleName() {
         return type.getSimpleName();
     }
 
+    @Override
     public String packageName() {
         return type.getPackageName();
     }
 
+    @Override
     public ConstructorStyle constructorStyle() {
         return constructorStyle;
     }
 
+    @Override
     public List<ReflectionFieldInfo> fields() {
         return fields;
     }
 
+    @Override
     public List<ReflectionMethodInfo> methods() {
         return methods;
     }
 
+    @Override
     public boolean utilityClass() {
         return utilityClass;
     }
 
+    @Override
     public Class<?> type() {
         return type;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (ReflectionClassInfo) obj;
-        return Objects.equals(this.constructorStyle, that.constructorStyle) &&
-                Objects.equals(this.fields, that.fields) &&
-                Objects.equals(this.methods, that.methods) &&
-                this.utilityClass == that.utilityClass &&
-                Objects.equals(this.type, that.type);
     }
 
     @Override
