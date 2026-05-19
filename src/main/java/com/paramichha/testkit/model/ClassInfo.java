@@ -7,7 +7,7 @@ public record ClassInfo(
         List<FieldInfo> fields,
         List<MethodInfo> methods,
         boolean utilityClass,
-        Class<?> type) implements ClassMetaData {
+        Class<?> type)  {
 
     public ClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, Class<?> type) {
         this(constructorStyle, fields, List.of(), false, type);
@@ -17,13 +17,13 @@ public record ClassInfo(
         this(constructorStyle, fields, methods, false, type);
     }
 
-    @Override
     public String simpleName() {
         return type.getSimpleName();
     }
 
-    @Override
     public String packageName() {
         return type.getPackageName();
     }
+
+    public enum ConstructorStyle {LOMBOK_BUILDER, RECORD, ALL_ARGS, SETTER}
 }
