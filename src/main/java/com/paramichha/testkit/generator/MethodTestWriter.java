@@ -3,10 +3,7 @@ package com.paramichha.testkit.generator;
 import com.paramichha.datafactory.DataFactory;
 import com.paramichha.testkit.DefaultClassReader;
 import com.paramichha.testkit.TestKitTemplate;
-import com.paramichha.testkit.model.ClassMeta;
-import com.paramichha.testkit.model.MethodMeta;
-import com.paramichha.testkit.model.ParameterMeta;
-import com.paramichha.testkit.model.ReturnTypeMeta;
+import com.paramichha.testkit.model.*;
 import com.paramichha.testkit.utils.TestNames;
 
 import java.lang.annotation.Annotation;
@@ -22,11 +19,11 @@ import java.util.List;
  */
 final class MethodTestWriter {
 
-    private final ClassMeta meta;
+    private final ClassInfo meta;
     private final InstantiationWriter instantiation;
     private final TestKitTemplate template;
 
-    MethodTestWriter(ClassMeta meta, InstantiationWriter instantiation,
+    MethodTestWriter(ClassInfo meta, InstantiationWriter instantiation,
                      TestKitTemplate template) {
         this.meta          = meta;
         this.instantiation = instantiation;
@@ -34,19 +31,19 @@ final class MethodTestWriter {
     }
 
     void write(StringBuilder sb, List<Object> validInstanceParts, boolean hasJakarta) {
-        for (MethodMeta method : meta.methods()) {
+        for (MethodInfo method : meta.methods()) {
             writeMethodClass(sb, method, hasJakarta, true);
         }
     }
 
-    void writeFlat(StringBuilder sb, MethodMeta method,
+    void writeFlat(StringBuilder sb, MethodInfo method,
                    List<Object> validInstanceParts, boolean hasJakarta) {
         writeMethodClass(sb, method, hasJakarta, false);
     }
 
     // ── Core ──────────────────────────────────────────────────────────────
 
-    private void writeMethodClass(StringBuilder sb, MethodMeta method,
+    private void writeMethodClass(StringBuilder sb, MethodInfo method,
                                   boolean hasJakarta, boolean nested) {
         String className  = meta.simpleName();
         String fieldName  = meta.utilityClass() ? className : TestNames.toVariable(className);
@@ -89,7 +86,7 @@ final class MethodTestWriter {
 
     // ── COMMAND ───────────────────────────────────────────────────────────
 
-    private void writeCommand(StringBuilder sb, MethodMeta method, String fieldName,
+    private void writeCommand(StringBuilder sb, MethodInfo method, String fieldName,
                               boolean hasJakarta, String ind, String indBody) {
         String methodName = method.name();
 
@@ -113,10 +110,10 @@ final class MethodTestWriter {
 
     // ── QUERY ─────────────────────────────────────────────────────────────
 
-    private void writeQuery(StringBuilder sb, MethodMeta method, String fieldName,
+    private void writeQuery(StringBuilder sb, MethodInfo method, String fieldName,
                             String ind, String indBody) {
         String methodName   = method.name();
-        ReturnTypeMeta ret  = method.returnType();
+        ReturnInfo ret  = method.returnType();
         String call         = fieldName + "." + methodName + "()";
 
         sb.append(ind).append("@Test\n");
@@ -144,15 +141,15 @@ final class MethodTestWriter {
 
     // ── MUTATOR / TRANSFORMER ─────────────────────────────────────────────
 
-    private void writeMutatorOrTransformer(StringBuilder sb, MethodMeta method,
+    private void writeMutatorOrTransformer(StringBuilder sb, MethodInfo method,
                                            String fieldName,
                                            String validSrc, String invalidSrc,
                                            String ind, String indBody) {
         String methodName      = method.name();
-        List<ParameterMeta> params = method.parameters();
+        List<ParameterInfo> params = method.parameters();
         String sig             = buildParamSignature(params);
         String call            = buildParamCall(params);
-        boolean anyConstrained = params.stream().anyMatch(ParameterMeta::isConstrained);
+        boolean anyConstrained = params.stream().anyMatch(ParameterInfo::isConstrained);
 
         writeAcceptsTest(sb, method, fieldName, validSrc, sig, call, ind, indBody);
 
@@ -166,15 +163,15 @@ final class MethodTestWriter {
 
     // ── OPERATION ─────────────────────────────────────────────────────────
 
-    private void writeOperation(StringBuilder sb, MethodMeta method,
+    private void writeOperation(StringBuilder sb, MethodInfo method,
                                 String fieldName,
                                 String validSrc, String invalidSrc,
                                 String ind, String indBody) {
         String methodName      = method.name();
-        List<ParameterMeta> params = method.parameters();
+        List<ParameterInfo> params = method.parameters();
         String sig             = buildParamSignature(params);
         String call            = buildParamCall(params);
-        boolean anyConstrained = params.stream().anyMatch(ParameterMeta::isConstrained);
+        boolean anyConstrained = params.stream().anyMatch(ParameterInfo::isConstrained);
 
         writeAcceptsTest(sb, method, fieldName, validSrc, sig, call, ind, indBody);
 
@@ -188,7 +185,7 @@ final class MethodTestWriter {
 
     // ── Shared test methods ───────────────────────────────────────────────
 
-    private void writeAcceptsTest(StringBuilder sb, MethodMeta method, String fieldName,
+    private void writeAcceptsTest(StringBuilder sb, MethodInfo method, String fieldName,
                                   String validSrc, String sig, String call,
                                   String ind, String indBody) {
         sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
@@ -197,7 +194,7 @@ final class MethodTestWriter {
         sb.append(ind).append("void ").append(template.testAcceptsValidInput)
                 .append("(String description, ").append(sig).append(") {\n");
 
-        ReturnTypeMeta ret = method.returnType();
+        ReturnInfo ret = method.returnType();
         if (ret.isVoid()) {
             sb.append(indBody).append("assertThatCode(() -> ")
                     .append(fieldName).append(".").append(method.name()).append("(").append(call)
@@ -213,7 +210,7 @@ final class MethodTestWriter {
 
     private void writeRejectsTest(StringBuilder sb, String methodName, String fieldName,
                                   String invalidSrc, String sig, String call,
-                                  List<ParameterMeta> params, String ind, String indBody) {
+                                  List<ParameterInfo> params, String ind, String indBody) {
         sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
         sb.append(ind).append("@MethodSource(\"").append(invalidSrc).append("\")\n");
         sb.append(ind).append("@DisplayName(\"").append(methodName).append(" rejects invalid input\")\n");
@@ -230,8 +227,8 @@ final class MethodTestWriter {
      * Writes a comment per constrained param showing the DataValidation call
      * that enforces the contract — teaches dev exactly what to add to make test pass.
      */
-    private void writeEnforcementHints(StringBuilder sb, List<ParameterMeta> params, String indBody) {
-        for (ParameterMeta param : params) {
+    private void writeEnforcementHints(StringBuilder sb, List<ParameterInfo> params, String indBody) {
+        for (ParameterInfo param : params) {
             for (java.lang.annotation.Annotation a : param.validations()) {
                 String hint = dataValidationCall(a, param.name());
                 if (hint != null) {
@@ -255,7 +252,7 @@ final class MethodTestWriter {
      *                          works for all types: primitive, String, BigDecimal, Object
      * - no annotations       → skip for primitive, isNotNull for object
      */
-    private void writeReturnAssertion(StringBuilder sb, ReturnTypeMeta ret,
+    private void writeReturnAssertion(StringBuilder sb, ReturnInfo ret,
                                       String methodName, String resultExpr, String indBody) {
         if (ret.isVoid()) return;
 
@@ -330,7 +327,7 @@ final class MethodTestWriter {
      * Needs a wrapper when the return type can't be validated directly by
      * the Jakarta validator — primitives, String, and java.* types need boxing.
      */
-    private boolean needsWrapperRecord(ReturnTypeMeta ret) {
+    private boolean needsWrapperRecord(ReturnInfo ret) {
         if (ret.isVoid() || !ret.isConstrained()) return false;
         Class<?> t = ret.type();
         return t.isPrimitive()
@@ -341,7 +338,7 @@ final class MethodTestWriter {
     }
 
     private void writeWrapperRecord(StringBuilder sb, String methodName,
-                                    ReturnTypeMeta ret, String ind) {
+                                    ReturnInfo ret, String ind) {
         String annotations = buildAnnotationSource(ret.annotations());
         String boxedType   = boxedTypeName(ret.type());
         sb.append(ind).append("private record ").append(wrapperName(methodName))
@@ -370,7 +367,7 @@ final class MethodTestWriter {
     // ── Data sources — DataFactory drives all values ──────────────────────
 
     private void writeValidDataSource(StringBuilder sb, String methodName,
-                                      List<ParameterMeta> params,
+                                      List<ParameterInfo> params,
                                       String validSrc, String ind) {
         sb.append(ind).append("static Stream<Arguments> ").append(validSrc).append("() {\n");
         sb.append(ind).append("    return Stream.of(\n");
@@ -383,10 +380,10 @@ final class MethodTestWriter {
         sb.append(ind).append("}\n\n");
     }
 
-    private void writeInvalidDataSource(StringBuilder sb, List<ParameterMeta> params,
+    private void writeInvalidDataSource(StringBuilder sb, List<ParameterInfo> params,
                                         String invalidSrc, String ind) {
-        ParameterMeta constrained = params.stream()
-                .filter(ParameterMeta::isConstrained).findFirst().orElse(params.get(0));
+        ParameterInfo constrained = params.stream()
+                .filter(ParameterInfo::isConstrained).findFirst().orElse(params.get(0));
         int constrainedIdx = params.indexOf(constrained);
         List<String> invalids = invalidLiterals(constrained);
 
@@ -412,14 +409,14 @@ final class MethodTestWriter {
         sb.append(ind).append("}\n\n");
     }
 
-    private void writeInvalidDataSourceOperation(StringBuilder sb, List<ParameterMeta> params,
+    private void writeInvalidDataSourceOperation(StringBuilder sb, List<ParameterInfo> params,
                                                  String invalidSrc, String ind) {
         sb.append(ind).append("static Stream<Arguments> ").append(invalidSrc).append("() {\n");
         sb.append(ind).append("    return Stream.of(\n");
 
         java.util.List<String> rows = new java.util.ArrayList<>();
         for (int nullIdx = 0; nullIdx < params.size(); nullIdx++) {
-            ParameterMeta p = params.get(nullIdx);
+            ParameterInfo p = params.get(nullIdx);
             if (!p.isConstrained()) continue;
             List<String> invalids = invalidLiterals(p);
             for (String inv : invalids) {
@@ -444,7 +441,7 @@ final class MethodTestWriter {
     // ── Value generation — DataFactory only ──────────────────────────────
 
     @SuppressWarnings("unchecked")
-    private String validLiteral(ParameterMeta param) {
+    private String validLiteral(ParameterInfo param) {
         Class<?> type = param.type();
 
         // Domain object — build field by field using InstantiationWriter
@@ -456,11 +453,11 @@ final class MethodTestWriter {
                 && !pkg.startsWith("javax.");
         if (isDomain) {
             try {
-                com.paramichha.testkit.model.ClassMeta paramMeta =
+                ClassInfo paramMeta =
                         DefaultClassReader.INSTANCE.read(type);
                 InstantiationWriter iw = new InstantiationWriter(paramMeta);
                 java.util.List<Object> parts = new java.util.ArrayList<>();
-                for (com.paramichha.testkit.model.FieldMeta f : paramMeta.fields()) {
+                for (FieldInfo f : paramMeta.fields()) {
                     java.util.List<?> vals = iw.validValuesFor(type, f);
                     parts.add(vals.isEmpty() ? null : vals.get(0));
                 }
@@ -485,7 +482,7 @@ final class MethodTestWriter {
     }
 
     @SuppressWarnings("unchecked")
-    private List<String> invalidLiterals(ParameterMeta param) {
+    private List<String> invalidLiterals(ParameterInfo param) {
         try {
             List<?> invalids = DataFactory.field(
                     param.name(), (Class<Object>) param.type(),
@@ -578,7 +575,7 @@ final class MethodTestWriter {
 
     // ── String helpers ────────────────────────────────────────────────────
 
-    private String buildParamSignature(List<ParameterMeta> params) {
+    private String buildParamSignature(List<ParameterInfo> params) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.size(); i++) {
             if (i > 0) sb.append(", ");
@@ -588,7 +585,7 @@ final class MethodTestWriter {
         return sb.toString();
     }
 
-    private String buildParamCall(List<ParameterMeta> params) {
+    private String buildParamCall(List<ParameterInfo> params) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.size(); i++) {
             if (i > 0) sb.append(", ");

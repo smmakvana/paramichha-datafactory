@@ -7,7 +7,7 @@ import java.util.List;
  * Metadata for a method's return type — type + Jakarta annotations.
  * Passed directly to DataFactory for value generation.
  */
-public record ReturnTypeMeta(
+public record ReturnInfo(
         Class<?> type,
         List<Annotation> annotations
 ) {

@@ -20,41 +20,41 @@ public final class DefaultClassReader implements ClassReader {
     private DefaultClassReader() {}
 
     @Override
-    public ClassMeta read(Class<?> type) {
+    public ClassInfo read(Class<?> type) {
         if (isUtilityClass(type)) {
-            List<MethodMeta> methods = extractMethods(type, true);
-            return new ClassMeta(
-                    ClassMeta.ConstructorStyle.ALL_ARGS, List.of(), methods, true, type);
+            List<MethodInfo> methods = extractMethods(type, true);
+            return new ClassInfo(
+                    ClassInfo.ConstructorStyle.ALL_ARGS, List.of(), methods, true, type);
         }
-        List<FieldMeta> fields  = extractFields(type);
-        List<MethodMeta> methods = extractMethods(type, false);
-        return new ClassMeta(
+        List<FieldInfo> fields  = extractFields(type);
+        List<MethodInfo> methods = extractMethods(type, false);
+        return new ClassInfo(
                 detectStyle(type, fields), fields, methods, false, type);
     }
 
     // ── Fields ────────────────────────────────────────────────────────────
 
-    private ClassMeta.ConstructorStyle detectStyle(Class<?> type, List<FieldMeta> fields) {
-        if (type.isRecord()) return ClassMeta.ConstructorStyle.RECORD;
+    private ClassInfo.ConstructorStyle detectStyle(Class<?> type, List<FieldInfo> fields) {
+        if (type.isRecord()) return ClassInfo.ConstructorStyle.RECORD;
         try {
             Method b = type.getDeclaredMethod("builder");
-            if (Modifier.isStatic(b.getModifiers())) return ClassMeta.ConstructorStyle.LOMBOK_BUILDER;
+            if (Modifier.isStatic(b.getModifiers())) return ClassInfo.ConstructorStyle.LOMBOK_BUILDER;
         } catch (NoSuchMethodException ignored) {}
         for (Constructor<?> c : type.getDeclaredConstructors())
-            if (c.getParameterCount() == fields.size()) return ClassMeta.ConstructorStyle.ALL_ARGS;
+            if (c.getParameterCount() == fields.size()) return ClassInfo.ConstructorStyle.ALL_ARGS;
         try {
             type.getDeclaredConstructor();
-            return ClassMeta.ConstructorStyle.SETTER;
+            return ClassInfo.ConstructorStyle.SETTER;
         } catch (NoSuchMethodException ignored) {}
-        return ClassMeta.ConstructorStyle.ALL_ARGS;
+        return ClassInfo.ConstructorStyle.ALL_ARGS;
     }
 
-    private List<FieldMeta> extractFields(Class<?> type) {
+    private List<FieldInfo> extractFields(Class<?> type) {
         return type.isRecord() ? extractRecordFields(type) : extractClassFields(type);
     }
 
-    private List<FieldMeta> extractRecordFields(Class<?> type) {
-        List<FieldMeta> result = new ArrayList<>();
+    private List<FieldInfo> extractRecordFields(Class<?> type) {
+        List<FieldInfo> result = new ArrayList<>();
         RecordComponent[] components = type.getRecordComponents();
         Parameter[] params = type.getDeclaredConstructors()[0].getParameters();
         for (int i = 0; i < components.length; i++) {
@@ -67,22 +67,22 @@ public final class DefaultClassReader implements ClassReader {
             if (i < params.length) all.addAll(Arrays.asList(params[i].getAnnotations()));
             List<Annotation> validations = filterValidation(all);
             boolean indirect = typeHasConstraints(rc.getType());
-            result.add(new FieldMeta(rc.getName(), rc.getType(), rc.getGenericType(),
+            result.add(new FieldInfo(rc.getName(), rc.getType(), rc.getGenericType(),
                     validations, isRequired(validations), indirect));
         }
         return result;
     }
 
-    private List<FieldMeta> extractClassFields(Class<?> type) {
+    private List<FieldInfo> extractClassFields(Class<?> type) {
         List<Field> allFields = new ArrayList<>();
         for (Class<?> c = type; c != null && c != Object.class; c = c.getSuperclass())
             allFields.addAll(0, Arrays.asList(c.getDeclaredFields()));
-        List<FieldMeta> result = new ArrayList<>();
+        List<FieldInfo> result = new ArrayList<>();
         for (Field f : allFields) {
             if (Modifier.isStatic(f.getModifiers()) || f.isSynthetic()) continue;
             List<Annotation> validations = filterValidation(Arrays.asList(f.getAnnotations()));
             boolean indirect = typeHasConstraints(f.getType());
-            result.add(new FieldMeta(f.getName(), f.getType(), f.getGenericType(),
+            result.add(new FieldInfo(f.getName(), f.getType(), f.getGenericType(),
                     validations, isRequired(validations), indirect));
         }
         return result;
@@ -90,11 +90,11 @@ public final class DefaultClassReader implements ClassReader {
 
     // ── Methods ───────────────────────────────────────────────────────────
 
-    private List<MethodMeta> extractMethods(Class<?> type, boolean utility) {
+    private List<MethodInfo> extractMethods(Class<?> type, boolean utility) {
         if (!utility && (type.isRecord() || type.isEnum() || type.isInterface())) return List.of();
 
         Set<String> objectMethods = objectMethodNames();
-        List<MethodMeta> result = new ArrayList<>();
+        List<MethodInfo> result = new ArrayList<>();
 
         for (Method m : type.getMethods()) {
             boolean isStatic = Modifier.isStatic(m.getModifiers());
@@ -104,7 +104,7 @@ public final class DefaultClassReader implements ClassReader {
             if (isGetterOrSetter(m)) continue;
             if (m.isSynthetic() || m.isBridge()) continue;
 
-            List<ParameterMeta> params = extractParameters(m);
+            List<ParameterInfo> params = extractParameters(m);
             // Return annotations come from two places:
             // 1. Method-level: public @NotNull BigDecimal method() → m.getAnnotations()
             // 2. Type-use:     public BigDecimal @NotNull method() → m.getAnnotatedReturnType()
@@ -113,24 +113,24 @@ public final class DefaultClassReader implements ClassReader {
             returnAnnsRaw.addAll(Arrays.asList(m.getAnnotatedReturnType().getAnnotations()));
             List<Annotation> returnAnns = filterValidation(returnAnnsRaw);
             MethodKind kind = classify(m.getReturnType(), params);
-            result.add(new MethodMeta(m.getName(), m.getReturnType(),
+            result.add(new MethodInfo(m.getName(), m.getReturnType(),
                     returnAnns, params, kind));
         }
 
         return Collections.unmodifiableList(result);
     }
 
-    private List<ParameterMeta> extractParameters(Method m) {
-        List<ParameterMeta> result = new ArrayList<>();
+    private List<ParameterInfo> extractParameters(Method m) {
+        List<ParameterInfo> result = new ArrayList<>();
         for (Parameter p : m.getParameters()) {
             List<Annotation> validations = filterValidation(Arrays.asList(p.getAnnotations()));
             boolean indirect = typeHasConstraints(p.getType());
-            result.add(new ParameterMeta(p.getName(), p.getType(), validations, indirect));
+            result.add(new ParameterInfo(p.getName(), p.getType(), validations, indirect));
         }
         return Collections.unmodifiableList(result);
     }
 
-    private MethodKind classify(Class<?> returnType, List<ParameterMeta> params) {
+    private MethodKind classify(Class<?> returnType, List<ParameterInfo> params) {
         boolean isVoid = returnType == void.class || returnType == Void.class;
         int paramCount = params.size();
         if (isVoid && paramCount == 0) return MethodKind.COMMAND;

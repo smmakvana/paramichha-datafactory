@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public record FieldMeta(
+public record FieldInfo(
         String name,
         Class<?> rawType,
         Type genericType,
@@ -12,7 +12,7 @@ public record FieldMeta(
         boolean required,
         boolean hasIndirectConstraints
 ) {
-    public FieldMeta(String name, Class<?> rawType, Type genericType,
+    public FieldInfo(String name, Class<?> rawType, Type genericType,
                      List<Annotation> validations, boolean required) {
         this(name, rawType, genericType, validations, required, false);
     }

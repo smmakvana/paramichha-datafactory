@@ -1,8 +1,8 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.datafactory.DataFactory;
-import com.paramichha.testkit.model.ClassMeta;
-import com.paramichha.testkit.model.FieldMeta;
+import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.FieldInfo;
 
 import com.paramichha.utils.Texts;
 import java.lang.annotation.Annotation;
@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
  */
 final class InstantiationWriter {
 
-    private final ClassMeta meta;
+    private final ClassInfo meta;
 
-    InstantiationWriter(ClassMeta meta) {
+    InstantiationWriter(ClassInfo meta) {
         this.meta = meta;
     }
 
@@ -32,14 +32,14 @@ final class InstantiationWriter {
             }
             case LOMBOK_BUILDER -> {
                 StringBuilder b = new StringBuilder(meta.simpleName() + ".builder()");
-                List<FieldMeta> fields = meta.fields();
+                List<FieldInfo> fields = meta.fields();
                 for (int i = 0; i < fields.size() && i < values.size(); i++)
                     b.append("\n                    .").append(fields.get(i).name())
                      .append("(").append(LiteralConverter.toLiteral(values.get(i))).append(")");
                 yield b.append("\n                    .build()").toString();
             }
             case SETTER -> {
-                List<FieldMeta> fields = meta.fields();
+                List<FieldInfo> fields = meta.fields();
                 StringBuilder b = new StringBuilder("build" + meta.simpleName() + "(");
                 for (int i = 0; i < fields.size() && i < values.size(); i++) {
                     if (i > 0) b.append(", ");
@@ -54,7 +54,7 @@ final class InstantiationWriter {
     /** Constructor call with one field replaced by a variable reference. */
     String constructorCallWithVar(List<Object> baseParts, int fieldIndex, String varName) {
         List<String> args = new java.util.ArrayList<>();
-        List<FieldMeta> fields = meta.fields();
+        List<FieldInfo> fields = meta.fields();
         for (int i = 0; i < fields.size(); i++)
             args.add(i == fieldIndex ? varName : LiteralConverter.toLiteral(baseParts.get(i)));
 
@@ -84,7 +84,7 @@ final class InstantiationWriter {
      * This bypasses the DefaultDataBuilder.validList() skip of fields with <= 1 value,
      * ensuring every field always has at least one valid value for test generation.
      */
-    List<?> validValuesFor(Class<?> type, FieldMeta field) {
+    List<?> validValuesFor(Class<?> type, FieldInfo field) {
         try {
             // Use field name + type + FieldMeta annotations — NOT field.getAnnotations()
             // because for records, Jakarta annotations live on the record component/
@@ -140,7 +140,7 @@ final class InstantiationWriter {
      * Uses DataFactory to generate one valid element of the list's element type.
      */
     @SuppressWarnings("unchecked")
-    private Object buildOneValidListElement(FieldMeta field) {
+    private Object buildOneValidListElement(FieldInfo field) {
         try {
             // Extract element type from FieldMeta.genericType (e.g. List<String> → String)
             Class<?> elemType = String.class;
@@ -163,7 +163,7 @@ final class InstantiationWriter {
     /**
      * Returns invalid field values by calling DataFactory.field(f).invalidList().
      */
-    List<?> invalidValuesFor(Class<?> type, FieldMeta field) {
+    List<?> invalidValuesFor(Class<?> type, FieldInfo field) {
         try {
             List<Annotation> annotations = field.validations();
             @SuppressWarnings("unchecked")

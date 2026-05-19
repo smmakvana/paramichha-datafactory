@@ -2,18 +2,18 @@ package com.paramichha.testkit.model;
 
 import java.util.List;
 
-public record ClassMeta(
+public record ClassInfo(
         ConstructorStyle constructorStyle,
-        List<FieldMeta> fields,
-        List<MethodMeta> methods,
+        List<FieldInfo> fields,
+        List<MethodInfo> methods,
         boolean utilityClass,
         Class<?> type) implements ClassMetaData {
 
-    public ClassMeta(ConstructorStyle constructorStyle, List<FieldMeta> fields, Class<?> type) {
+    public ClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, Class<?> type) {
         this(constructorStyle, fields, List.of(), false, type);
     }
 
-    public ClassMeta(ConstructorStyle constructorStyle, List<FieldMeta> fields, List<MethodMeta> methods, Class<?> type) {
+    public ClassInfo(ConstructorStyle constructorStyle, List<FieldInfo> fields, List<MethodInfo> methods, Class<?> type) {
         this(constructorStyle, fields, methods, false, type);
     }
 

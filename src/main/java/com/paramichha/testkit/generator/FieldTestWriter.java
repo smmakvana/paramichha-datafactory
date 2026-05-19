@@ -1,7 +1,7 @@
 package com.paramichha.testkit.generator;
 
-import com.paramichha.testkit.model.ClassMeta;
-import com.paramichha.testkit.model.FieldMeta;
+import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.FieldInfo;
 import com.paramichha.utils.Texts;
 
 import java.util.List;
@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
  */
 final class FieldTestWriter {
 
-    private final ClassMeta meta;
+    private final ClassInfo meta;
     private final InstantiationWriter instantiation;
     private final ValueExtractor valueExtractor;
 
-    FieldTestWriter(ClassMeta meta, InstantiationWriter instantiation, ValueExtractor valueExtractor) {
+    FieldTestWriter(ClassInfo meta, InstantiationWriter instantiation, ValueExtractor valueExtractor) {
         this.meta = meta;
         this.instantiation = instantiation;
         this.valueExtractor = valueExtractor;
@@ -36,12 +36,12 @@ final class FieldTestWriter {
     void write(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
                Map<String, List<?>> validAllPerField) {
 
-        boolean isRecord = meta.constructorStyle() == ClassMeta.ConstructorStyle.RECORD;
+        boolean isRecord = meta.constructorStyle() == ClassInfo.ConstructorStyle.RECORD;
         String outerType = meta.simpleName();
-        List<FieldMeta> fields = meta.fields();
+        List<FieldInfo> fields = meta.fields();
 
         for (int i = 0; i < fields.size(); i++) {
-            FieldMeta field = fields.get(i);
+            FieldInfo field = fields.get(i);
             boolean hasJakarta = !field.validations().isEmpty();
 
             // fetch directly — bypasses DefaultDataBuilder's <= 1 skip

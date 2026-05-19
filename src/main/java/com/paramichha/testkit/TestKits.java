@@ -3,7 +3,7 @@ package com.paramichha.testkit;
 import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.data.DefaultTestDataProvider;
 import com.paramichha.testkit.generator.DefaultTestGenerator;
-import com.paramichha.testkit.model.ClassMeta;
+import com.paramichha.testkit.model.ClassInfo;
 import com.paramichha.testkit.model.TestData;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public final class TestKits implements TestKit {
 
     private final TestDataProvider dataProvider = DefaultTestDataProvider.INSTANCE;
     private final TestGenerator generator = DefaultTestGenerator.INSTANCE;
-    private final ClassMeta classMeta;
+    private final ClassInfo classInfo;
     private String targetPackage;
     private Long seed;
     private ProjectType projectType;
@@ -34,9 +34,9 @@ public final class TestKits implements TestKit {
 
     // ── Constructors ──────────────────────────────────────────────────────
 
-    private TestKits(ClassMeta classMeta, Long seed, ProjectType projectType, GenerationMode mode) {
-        this.classMeta     = classMeta;
-        this.targetPackage = classMeta.packageName();
+    private TestKits(ClassInfo classInfo, Long seed, ProjectType projectType, GenerationMode mode) {
+        this.classInfo = classInfo;
+        this.targetPackage = classInfo.packageName();
         this.seed = seed;
         this.projectType = projectType;
         this.mode = mode;
@@ -51,9 +51,9 @@ public final class TestKits implements TestKit {
     }
 
     /** Accepts pre-built ClassMeta — PSI, YAML, or manual path. */
-    public static TestKits of(ClassMeta classMeta) {
-        if (classMeta == null) throw new TestKitException("classMeta must not be null");
-        return new TestKits(classMeta, 69L, ProjectType.detect(), GenerationMode.PRODUCTION);
+    public static TestKits of(ClassInfo classInfo) {
+        if (classInfo == null) throw new TestKitException("classMeta must not be null");
+        return new TestKits(classInfo, 69L, ProjectType.detect(), GenerationMode.PRODUCTION);
     }
 
     // ── Config ────────────────────────────────────────────────────────────
@@ -94,9 +94,9 @@ public final class TestKits implements TestKit {
     public List<GeneratedTestClass> generateTests() {
         try {
             TestData data = buildTestData();
-            return generator.generateAll(classMeta, data, targetPackage, template, projectType);
+            return generator.generateAll(classInfo, data, targetPackage, template, projectType);
         } catch (Exception e) {
-            String className = classMeta.simpleName() + "Test";
+            String className = classInfo.simpleName() + "Test";
             String src = "package " + targetPackage + ";\n\n// Generation failed: " + e.getMessage() + "\n";
             return List.of(new GeneratedTestClass(className, targetPackage, src));
         }
@@ -106,12 +106,12 @@ public final class TestKits implements TestKit {
     public GeneratedTestClass generateTest() {
         try {
             TestData data = buildTestData();
-            return generator.generate(classMeta, data, targetPackage, template, projectType);
+            return generator.generate(classInfo, data, targetPackage, template, projectType);
         } catch (Exception e) {
-            String className = classMeta.simpleName() + "Test";
+            String className = classInfo.simpleName() + "Test";
             String source = "package " + targetPackage + ";\n\n"
                     + "// TODO: " + className + "\n"
-                    + "// Generation failed for " + classMeta.simpleName() + "\n"
+                    + "// Generation failed for " + classInfo.simpleName() + "\n"
                     + "// Reason: " + e.getMessage() + "\n"
                     + "// Fix the issue and regenerate.\n";
             return new GeneratedTestClass(className, targetPackage, source);
@@ -122,7 +122,7 @@ public final class TestKits implements TestKit {
 
     private TestData buildTestData() {
         return (dataProvider instanceof DefaultTestDataProvider dfp)
-                ? dfp.provide(classMeta.type(), mode, seed)
-                : dataProvider.provide(classMeta.type());
+                ? dfp.provide(classInfo.type(), mode, seed)
+                : dataProvider.provide(classInfo.type());
     }
 }

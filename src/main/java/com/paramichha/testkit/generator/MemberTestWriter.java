@@ -1,8 +1,8 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.TestKitTemplate;
-import com.paramichha.testkit.model.ClassMeta;
-import com.paramichha.testkit.model.FieldMeta;
+import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.FieldInfo;
 import com.paramichha.testkit.utils.TestNames;
 import com.paramichha.testkit.utils.JavaNames;
 
@@ -27,12 +27,12 @@ import java.util.stream.Collectors;
  */
 final class MemberTestWriter {
 
-    private final ClassMeta meta;
+    private final ClassInfo meta;
     private final InstantiationWriter instantiation;
     private final ValueExtractor valueExtractor;
     private final TestKitTemplate template;
 
-    MemberTestWriter(ClassMeta meta, InstantiationWriter instantiation,
+    MemberTestWriter(ClassInfo meta, InstantiationWriter instantiation,
                      ValueExtractor valueExtractor, TestKitTemplate template) {
         this.meta          = meta;
         this.instantiation = instantiation;
@@ -42,13 +42,13 @@ final class MemberTestWriter {
 
     /** Called by split mode — writes one field directly without @Nested wrapper. */
     void writeFlat(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
-                   com.paramichha.testkit.model.FieldMeta field, int fieldIndex) {
+                   FieldInfo field, int fieldIndex) {
         write(sb, type, validInstanceParts, java.util.Map.of(), field, fieldIndex, false);
     }
 
     void write(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
                Map<String, List<?>> validAllPerField) {
-        List<com.paramichha.testkit.model.FieldMeta> fields = meta.fields();
+        List<FieldInfo> fields = meta.fields();
         for (int i = 0; i < fields.size(); i++) {
             write(sb, type, validInstanceParts, validAllPerField, fields.get(i), i, true);
         }
@@ -56,9 +56,9 @@ final class MemberTestWriter {
 
     private void write(StringBuilder sb, Class<?> type, List<Object> validInstanceParts,
                        Map<String, List<?>> validAllPerField,
-                       com.paramichha.testkit.model.FieldMeta field, int fi, boolean nested) {
+                       FieldInfo field, int fi, boolean nested) {
 
-        boolean isRecord  = meta.constructorStyle() == ClassMeta.ConstructorStyle.RECORD;
+        boolean isRecord  = meta.constructorStyle() == ClassInfo.ConstructorStyle.RECORD;
         String  className = meta.simpleName();
         String  fieldName = TestNames.toVariable(className);
 
@@ -188,7 +188,7 @@ final class MemberTestWriter {
 
     // ── helpers ───────────────────────────────────────────────────────────
 
-    private static String accessorFor(FieldMeta field, boolean isRecord) {
+    private static String accessorFor(FieldInfo field, boolean isRecord) {
         return isRecord
                 ? field.name() + "()"
                 : JavaNames.getterName(field.name(), field.rawType()) + "()";

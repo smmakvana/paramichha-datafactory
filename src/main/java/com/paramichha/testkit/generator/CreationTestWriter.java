@@ -1,8 +1,8 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.testkit.TestKitTemplate;
-import com.paramichha.testkit.model.ClassMeta;
-import com.paramichha.testkit.model.FieldMeta;
+import com.paramichha.testkit.model.ClassInfo;
+import com.paramichha.testkit.model.FieldInfo;
 import com.paramichha.testkit.model.TestData;
 import com.paramichha.testkit.utils.TestNames;
 import com.paramichha.testkit.utils.JavaNames;
@@ -15,11 +15,11 @@ import java.util.List;
  */
 final class CreationTestWriter {
 
-    private final ClassMeta meta;
+    private final ClassInfo meta;
     private final InstantiationWriter instantiation;
     private final TestKitTemplate template;
 
-    CreationTestWriter(ClassMeta meta, InstantiationWriter instantiation,
+    CreationTestWriter(ClassInfo meta, InstantiationWriter instantiation,
                        TestKitTemplate template) {
         this.meta          = meta;
         this.instantiation = instantiation;
@@ -42,7 +42,7 @@ final class CreationTestWriter {
                               List<Object> validInstanceParts, boolean nested) {
 
         boolean hasJakarta   = data.hasJakarta(meta);
-        boolean isRecord     = meta.constructorStyle() == ClassMeta.ConstructorStyle.RECORD;
+        boolean isRecord     = meta.constructorStyle() == ClassInfo.ConstructorStyle.RECORD;
         String  className    = meta.simpleName();
         String  fieldName    = TestNames.toVariable(className);
         String  ind          = nested ? "        " : "    ";
@@ -75,7 +75,7 @@ final class CreationTestWriter {
         sb.append(ind).append("@DisplayName(\"").append(holdsDisplay).append("\")\n");
         sb.append(ind).append("void ").append(holdsMethod).append("() {\n");
         for (int i = 0; i < meta.fields().size(); i++) {
-            FieldMeta field = meta.fields().get(i);
+            FieldInfo field = meta.fields().get(i);
             Object value = i < validInstanceParts.size() ? validInstanceParts.get(i) : null;
             if (!LiteralConverter.canSerialize(value)) continue;
             if (isComplexType(field.rawType())) continue;

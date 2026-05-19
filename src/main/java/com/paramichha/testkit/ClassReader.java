@@ -1,11 +1,11 @@
 package com.paramichha.testkit;
 
-import com.paramichha.testkit.model.ClassMeta;
+import com.paramichha.testkit.model.ClassInfo;
 
 /**
- * Reads a {@link Class} and produces {@link ClassMeta}.
+ * Reads a {@link Class} and produces {@link ClassInfo}.
  * Implement to support non-standard class structures.
  */
 public interface ClassReader {
-    ClassMeta read(Class<?> type);
+    ClassInfo read(Class<?> type);
 }

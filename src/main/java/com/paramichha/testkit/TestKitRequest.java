@@ -1,7 +1,7 @@
 package com.paramichha.testkit;
 
 import com.paramichha.datafactory.GenerationMode;
-import com.paramichha.testkit.model.ClassMeta;
+import com.paramichha.testkit.model.ClassInfo;
 
 /**
  * Request object for TestKit — carries the subject and all optional config.
@@ -18,7 +18,7 @@ import com.paramichha.testkit.model.ClassMeta;
  */
 public final class TestKitRequest {
 
-    private final ClassMeta classMeta;
+    private final ClassInfo classInfo;
     private String targetPackage;
     private ProjectType projectType = ProjectType.detect();
     private TestKitTemplate template = TestKitTemplate.DEFAULT;
@@ -27,9 +27,9 @@ public final class TestKitRequest {
 
     // ── Constructors ──────────────────────────────────────────────────────
 
-    private TestKitRequest(ClassMeta classMeta) {
-        this.classMeta = classMeta;
-        this.targetPackage = classMeta.packageName();
+    private TestKitRequest(ClassInfo classInfo) {
+        this.classInfo = classInfo;
+        this.targetPackage = classInfo.packageName();
     }
 
     // ── Entry points ──────────────────────────────────────────────────────
@@ -45,9 +45,9 @@ public final class TestKitRequest {
     /**
      * Accepts pre-built ClassMeta — PSI, YAML, or any other source.
      */
-    public static TestKitRequest of(ClassMeta classMeta) {
-        if (classMeta == null) throw new TestKitException("classMeta must not be null");
-        return new TestKitRequest(classMeta);
+    public static TestKitRequest of(ClassInfo classInfo) {
+        if (classInfo == null) throw new TestKitException("classMeta must not be null");
+        return new TestKitRequest(classInfo);
     }
 
     // ── Optional config ───────────────────────────────────────────────────
@@ -85,8 +85,8 @@ public final class TestKitRequest {
 
     // ── Accessors (package-private — TestKit reads these) ─────────────────
 
-    ClassMeta classMeta() {
-        return classMeta;
+    ClassInfo classMeta() {
+        return classInfo;
     }
 
     String targetPackage() {

@@ -9,9 +9,9 @@ public interface ClassMetaData {
 
     ConstructorStyle constructorStyle();
 
-    List<FieldMeta> fields();
+    List<FieldInfo> fields();
 
-    List<MethodMeta> methods();
+    List<MethodInfo> methods();
 
     boolean utilityClass();
 
