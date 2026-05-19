@@ -2,7 +2,7 @@ package com.paramichha.testkit;
 
 import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.data.DefaultTestDataProvider;
-import com.paramichha.testkit.generator.DefaultTestGenerator;
+import com.paramichha.testkit.generator.JavaCodeGenerator;
 import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.testkit.model.TestData;
 
@@ -24,7 +24,7 @@ import java.util.List;
 public final class TestKits implements TestKit {
 
     private final TestDataProvider dataProvider = DefaultTestDataProvider.INSTANCE;
-    private final TestGenerator generator = DefaultTestGenerator.INSTANCE;
+    private final CodeGenerator generator = JavaCodeGenerator.INSTANCE;
     private final ReflectionClassInfo reflectionClassInfo;
     private String targetPackage;
     private Long seed;
@@ -91,19 +91,19 @@ public final class TestKits implements TestKit {
     // ── Generate ──────────────────────────────────────────────────────────
 
     @Override
-    public List<GeneratedTestClass> generateTests() {
+    public List<GenerationResult> generateTests() {
         try {
             TestData data = buildTestData();
             return generator.generateAll(reflectionClassInfo, data, targetPackage, template, projectType);
         } catch (Exception e) {
             String className = reflectionClassInfo.simpleName() + "Test";
             String src = "package " + targetPackage + ";\n\n// Generation failed: " + e.getMessage() + "\n";
-            return List.of(new GeneratedTestClass(className, targetPackage, src));
+            return List.of(new GenerationResult(className, targetPackage, src));
         }
     }
 
     @Override
-    public GeneratedTestClass generateTest() {
+    public GenerationResult generateTest() {
         try {
             TestData data = buildTestData();
             return generator.generate(reflectionClassInfo, data, targetPackage, template, projectType);
@@ -114,7 +114,7 @@ public final class TestKits implements TestKit {
                     + "// Generation failed for " + reflectionClassInfo.simpleName() + "\n"
                     + "// Reason: " + e.getMessage() + "\n"
                     + "// Fix the issue and regenerate.\n";
-            return new GeneratedTestClass(className, targetPackage, source);
+            return new GenerationResult(className, targetPackage, source);
         }
     }
 

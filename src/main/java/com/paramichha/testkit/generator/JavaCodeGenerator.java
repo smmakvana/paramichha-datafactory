@@ -1,8 +1,8 @@
 package com.paramichha.testkit.generator;
 
-import com.paramichha.testkit.GeneratedTestClass;
+import com.paramichha.testkit.GenerationResult;
 import com.paramichha.testkit.ProjectType;
-import com.paramichha.testkit.TestGenerator;
+import com.paramichha.testkit.CodeGenerator;
 import com.paramichha.testkit.TestKitTemplate;
 import com.paramichha.testkit.model.ReflectionClassInfo;
 import com.paramichha.testkit.model.ReflectionFieldInfo;
@@ -19,40 +19,40 @@ import java.util.List;
  * If DataFactory failed, writes a placeholder file with error comment.
  * Never throws — always produces a GeneratedTestClass.
  */
-public final class DefaultTestGenerator implements TestGenerator {
+public final class JavaCodeGenerator implements CodeGenerator {
 
-    public static final DefaultTestGenerator INSTANCE = new DefaultTestGenerator(
+    public static final JavaCodeGenerator INSTANCE = new JavaCodeGenerator(
             DefaultValueExtractor.INSTANCE);
 
     private ProjectType projectType = ProjectType.detect();
 
     @Override
-    public List<GeneratedTestClass> generateAll(ReflectionClassInfo meta, TestData data,
-                                                String targetPackage, TestKitTemplate template,
-                                                ProjectType projectType) {
+    public List<GenerationResult> generateAll(ReflectionClassInfo meta, TestData data,
+                                              String targetPackage, TestKitTemplate template,
+                                              ProjectType projectType) {
         this.projectType = projectType;
         return generateAll(meta, data, targetPackage, template);
     }
 
     @Override
-    public List<GeneratedTestClass> generateAll(ReflectionClassInfo meta, TestData data,
-                                                String targetPackage, TestKitTemplate template) {
+    public List<GenerationResult> generateAll(ReflectionClassInfo meta, TestData data,
+                                              String targetPackage, TestKitTemplate template) {
         if (data.hasError()) {
-            return List.of(new GeneratedTestClass(
+            return List.of(new GenerationResult(
                     meta.simpleName() + "Test", targetPackage,
                     "// Generation failed: " + data.error()));
         }
         try {
             return buildSplit(meta, data, targetPackage, template);
         } catch (Exception e) {
-            return List.of(new GeneratedTestClass(
+            return List.of(new GenerationResult(
                     meta.simpleName() + "Test", targetPackage,
                     "// Generation failed: " + e.getMessage()));
         }
     }
 
-    private List<GeneratedTestClass> buildSplit(ReflectionClassInfo meta, TestData data,
-                                                String targetPackage, TestKitTemplate template) {
+    private List<GenerationResult> buildSplit(ReflectionClassInfo meta, TestData data,
+                                              String targetPackage, TestKitTemplate template) {
         Class<?> type = data.type();
         String className = meta.simpleName();
         String fieldName = TestNames.toVariable(className);
@@ -60,7 +60,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         InstantiationWriter inst = new InstantiationWriter(meta);
         boolean hasJakarta = projectType.hasValidator();
         String baseName = className + "Test";
-        List<GeneratedTestClass> files = new ArrayList<>();
+        List<GenerationResult> files = new ArrayList<>();
 
         // ── 1. Base class ─────────────────────────────────────────────────
         StringBuilder base = new StringBuilder();
@@ -80,7 +80,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         base.append("    ").append(className).append(" ").append(fieldName)
                 .append(" =\n            ").append(inst.constructorCall(parts)).append(";\n\n");
         base.append("}\n");
-        files.add(new GeneratedTestClass(baseName, targetPackage, base.toString()));
+        files.add(new GenerationResult(baseName, targetPackage, base.toString()));
 
         // ── 2. Creation file ──────────────────────────────────────────────
         String creationName = template.resolve(template.creationClassName, className, "");
@@ -94,7 +94,7 @@ public final class DefaultTestGenerator implements TestGenerator {
                 .append(" extends ").append(baseName).append(" {\n\n");
         new CreationTestWriter(meta, inst, template).writeFlat(cr, data, parts, valueExtractor);
         cr.append("}\n");
-        files.add(new GeneratedTestClass(creationName, targetPackage, cr.toString()));
+        files.add(new GenerationResult(creationName, targetPackage, cr.toString()));
 
         // ── 3. One file per field ─────────────────────────────────────────
         MemberTestWriter mw = new MemberTestWriter(meta, inst, valueExtractor, template);
@@ -113,7 +113,7 @@ public final class DefaultTestGenerator implements TestGenerator {
                     .append(" extends ").append(baseName).append(" {\n\n");
             mw.writeFlat(mb, type, parts, field, i);
             mb.append("}\n");
-            files.add(new GeneratedTestClass(memberName, targetPackage, mb.toString()));
+            files.add(new GenerationResult(memberName, targetPackage, mb.toString()));
         }
 
         // ── 4. One file per method ───────────────────────────────────────
@@ -131,7 +131,7 @@ public final class DefaultTestGenerator implements TestGenerator {
                     .append(" extends ").append(baseName).append(" {\n\n");
             methodWriter2.writeFlat(mm, method, parts, hasJakarta);
             mm.append("}\n");
-            files.add(new GeneratedTestClass(methodClassName, targetPackage, mm.toString()));
+            files.add(new GenerationResult(methodClassName, targetPackage, mm.toString()));
         }
 
         return List.copyOf(files);
@@ -158,31 +158,31 @@ public final class DefaultTestGenerator implements TestGenerator {
 
     private final ValueExtractor valueExtractor;
 
-    DefaultTestGenerator(ValueExtractor valueExtractor) {
+    JavaCodeGenerator(ValueExtractor valueExtractor) {
         this.valueExtractor = valueExtractor;
     }
 
     @Override
-    public GeneratedTestClass generate(ReflectionClassInfo meta, TestData data,
-                                       String targetPackage, TestKitTemplate template,
-                                       ProjectType projectType) {
+    public GenerationResult generate(ReflectionClassInfo meta, TestData data,
+                                     String targetPackage, TestKitTemplate template,
+                                     ProjectType projectType) {
         this.projectType = projectType;
         return generateWithTemplate(meta, data, targetPackage, template);
     }
 
     @Override
-    public GeneratedTestClass generate(ReflectionClassInfo meta, TestData data,
-                                       String targetPackage, TestKitTemplate template) {
+    public GenerationResult generate(ReflectionClassInfo meta, TestData data,
+                                     String targetPackage, TestKitTemplate template) {
         return generateWithTemplate(meta, data, targetPackage, template);
     }
 
     @Override
-    public GeneratedTestClass generate(ReflectionClassInfo meta, TestData data, String targetPackage) {
+    public GenerationResult generate(ReflectionClassInfo meta, TestData data, String targetPackage) {
         return generateWithTemplate(meta, data, targetPackage, TestKitTemplate.DEFAULT);
     }
 
-    private GeneratedTestClass generateWithTemplate(ReflectionClassInfo meta, TestData data,
-                                                    String targetPackage, TestKitTemplate template) {
+    private GenerationResult generateWithTemplate(ReflectionClassInfo meta, TestData data,
+                                                  String targetPackage, TestKitTemplate template) {
         // DEV mode gets a distinct class name so both files coexist
         boolean isDev = data.mode() == com.paramichha.datafactory.GenerationMode.DEV;
         String className = isDev
@@ -190,23 +190,23 @@ public final class DefaultTestGenerator implements TestGenerator {
                 : meta.simpleName() + "Test";
 
         if (data.hasError()) {
-            return new GeneratedTestClass(className, targetPackage,
+            return new GenerationResult(className, targetPackage,
                     buildPlaceholder(meta, targetPackage, data.error(), className));
         }
 
         try {
             return buildFull(meta, data, targetPackage, className, isDev, template);
         } catch (Exception e) {
-            return new GeneratedTestClass(className, targetPackage,
+            return new GenerationResult(className, targetPackage,
                     buildPlaceholder(meta, targetPackage, e.getMessage(), className));
         }
     }
 
     // ── full generation ───────────────────────────────────────────────────
 
-    private GeneratedTestClass buildFull(ReflectionClassInfo meta, TestData data,
-                                         String targetPackage, String className,
-                                         boolean isDev, TestKitTemplate template) {
+    private GenerationResult buildFull(ReflectionClassInfo meta, TestData data,
+                                       String targetPackage, String className,
+                                       boolean isDev, TestKitTemplate template) {
         Class<?> type = data.type();
         List<Object> validInstanceParts = valueExtractor.extract(data.base(), type, meta.fields());
 
@@ -231,7 +231,7 @@ public final class DefaultTestGenerator implements TestGenerator {
         methodWriter.write(sb, validInstanceParts, projectType.hasValidator());
         sb.append("}\n");
 
-        return new GeneratedTestClass(className, targetPackage, sb.toString());
+        return new GenerationResult(className, targetPackage, sb.toString());
     }
 
     // ── placeholder generation ────────────────────────────────────────────

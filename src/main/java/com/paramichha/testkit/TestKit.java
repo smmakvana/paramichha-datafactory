@@ -13,7 +13,7 @@ public interface TestKit {
      *        .forEach(f -> f.writeTo(outputPath));
      * </pre>
      */
-    List<GeneratedTestClass> generateTests();
+    List<GenerationResult> generateTests();
 
-    GeneratedTestClass generateTest();
+    GenerationResult generateTest();
 }

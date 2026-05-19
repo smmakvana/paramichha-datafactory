@@ -1,7 +1,7 @@
 package com.paramichha.testkit.runner;
 
 import com.paramichha.datafactory.GenerationMode;
-import com.paramichha.testkit.GeneratedTestClass;
+import com.paramichha.testkit.GenerationResult;
 import com.paramichha.testkit.TestKits;
 import com.paramichha.testkit.reader.TestableScanner;
 
@@ -54,7 +54,7 @@ public final class TestKitRunner {
     }
 
     /** Generate all test classes and return as strings — useful for preview. */
-    public List<GeneratedTestClass> generate() {
+    public List<GenerationResult> generate() {
         return targets.stream()
                 .map(t -> TestKits.of(t.type())
                         .withPackage(t.targetPackage())
@@ -87,7 +87,7 @@ public final class TestKitRunner {
     /**
      * Generate both PRODUCTION and DEV mode test classes as strings.
      */
-    public List<GeneratedTestClass> generateBothModes() {
+    public List<GenerationResult> generateBothModes() {
         return targets.stream()
                 .flatMap(t -> java.util.stream.Stream.of(
                         TestKits.of(t.type()).withPackage(t.targetPackage())

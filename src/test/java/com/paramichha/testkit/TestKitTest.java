@@ -61,14 +61,14 @@ class TestKitTest {
 
         @Test
         void defaultPackageIsClassPackage() {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class).generateTest();
+            GenerationResult result = TestKits.of(UserRegistration.class).generateTest();
             assertThat(result.packageName())
                     .isEqualTo(UserRegistration.class.getPackageName());
         }
 
         @Test
         void classNameIsTypeNamePlusSuffix() {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class).generateTest();
+            GenerationResult result = TestKits.of(UserRegistration.class).generateTest();
             assertThat(result.className()).isEqualTo("UserRegistrationTest");
         }
 
@@ -154,17 +154,17 @@ class TestKitTest {
 
     @Nested
     @DisplayName("GeneratedTestClass")
-    class GeneratedTestClassTests {
+    class GenerationResultTests {
 
         @Test
         void asStringReturnsSource() {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class).generateTest();
+            GenerationResult result = TestKits.of(UserRegistration.class).generateTest();
             assertThat(result.asString()).isEqualTo(result.source());
         }
 
         @Test
         void writeToCreatesFile(@TempDir Path tmp) {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class)
+            GenerationResult result = TestKits.of(UserRegistration.class)
                     .withPackage("com.example.out").generateTest();
             Path written = result.writeTo(tmp);
             assertThat(written).exists();

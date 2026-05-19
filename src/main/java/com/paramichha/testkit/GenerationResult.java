@@ -11,7 +11,7 @@ import java.nio.file.Path;
  * using Google Java Format — clean, consistent output every time.
  * Falls back to raw source if JVM flags are missing.
  */
-public record GeneratedTestClass(
+public record GenerationResult(
         String className,
         String packageName,
         String source

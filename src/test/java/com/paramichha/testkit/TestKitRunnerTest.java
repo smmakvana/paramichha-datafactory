@@ -124,14 +124,14 @@ class TestKitRunnerTest {
 
         @Test
         void defaultPackageMatchesClass() {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class).generateTest();
+            GenerationResult result = TestKits.of(UserRegistration.class).generateTest();
             assertThat(result.packageName())
                     .isEqualTo(UserRegistration.class.getPackageName());
         }
 
         @Test
         void classNameHasTestSuffix() {
-            GeneratedTestClass result = TestKits.of(UserRegistration.class).generateTest();
+            GenerationResult result = TestKits.of(UserRegistration.class).generateTest();
             assertThat(result.className()).isEqualTo("UserRegistrationTest");
         }
 
@@ -193,7 +193,7 @@ class TestKitRunnerTest {
 
         @Test
         void scanPackageFindsTestableClasses() {
-            List<GeneratedTestClass> results = TestKitRunner
+            List<GenerationResult> results = TestKitRunner
                     .scanPackage("com.paramichha.datafactory.catalog.realworld")
                     .generate();
             assertThat(results).isNotEmpty();
