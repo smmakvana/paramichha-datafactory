@@ -47,7 +47,7 @@ public final class TestKits implements TestKit {
     /** Reads ClassMeta from reflection then delegates to of(ClassMeta). */
     public static TestKits of(Class<?> type) {
         if (type == null) throw new TestKitException("type must not be null");
-        return new TestKits(ReflactionClassReader.INSTANCE.read(type), 69L, ProjectType.detect(), GenerationMode.PRODUCTION);
+        return new TestKits(ReflectionClassReader.INSTANCE.read(type), 69L, ProjectType.detect(), GenerationMode.PRODUCTION);
     }
 
     /** Accepts pre-built ClassMeta — PSI, YAML, or manual path. */

@@ -1,7 +1,7 @@
 package com.paramichha.testkit.generator;
 
 import com.paramichha.datafactory.DataFactory;
-import com.paramichha.testkit.ReflactionClassReader;
+import com.paramichha.testkit.ReflectionClassReader;
 import com.paramichha.testkit.TestKitTemplate;
 import com.paramichha.testkit.model.*;
 import com.paramichha.testkit.utils.TestNames;
@@ -454,7 +454,7 @@ final class MethodTestWriter {
         if (isDomain) {
             try {
                 ReflectionClassInfo paramMeta =
-                        ReflactionClassReader.INSTANCE.read(type);
+                        ReflectionClassReader.INSTANCE.read(type);
                 InstantiationWriter iw = new InstantiationWriter(paramMeta);
                 java.util.List<Object> parts = new java.util.ArrayList<>();
                 for (ReflectionFieldInfo f : paramMeta.fields()) {
