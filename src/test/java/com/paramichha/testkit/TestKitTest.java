@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("TestKit")
-class TestKitTestX {
+class TestKitTest {
 
     @Nested
     @DisplayName("of()")
