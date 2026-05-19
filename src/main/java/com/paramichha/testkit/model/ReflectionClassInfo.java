@@ -5,7 +5,7 @@ import java.util.List;
 public record ReflectionClassInfo(
         ConstructorStyle constructorStyle,
         List<ReflectionFieldInfo> fields,
-        List<MethodInfo> methods,
+        List<ReflectionMethodInfo> methods,
         boolean utilityClass,
         Class<?> type)  {
 
@@ -13,7 +13,7 @@ public record ReflectionClassInfo(
         this(constructorStyle, fields, List.of(), false, type);
     }
 
-    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<ReflectionFieldInfo> fields, List<MethodInfo> methods, Class<?> type) {
+    public ReflectionClassInfo(ConstructorStyle constructorStyle, List<ReflectionFieldInfo> fields, List<ReflectionMethodInfo> methods, Class<?> type) {
         this(constructorStyle, fields, methods, false, type);
     }
 

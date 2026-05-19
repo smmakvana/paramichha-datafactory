@@ -22,12 +22,12 @@ public final class ReflactionClassReader implements ClassReader {
     @Override
     public ReflectionClassInfo read(Class<?> type) {
         if (isUtilityClass(type)) {
-            List<MethodInfo> methods = extractMethods(type, true);
+            List<ReflectionMethodInfo> methods = extractMethods(type, true);
             return new ReflectionClassInfo(
                     ReflectionClassInfo.ConstructorStyle.ALL_ARGS, List.of(), methods, true, type);
         }
         List<ReflectionFieldInfo> fields  = extractFields(type);
-        List<MethodInfo> methods = extractMethods(type, false);
+        List<ReflectionMethodInfo> methods = extractMethods(type, false);
         return new ReflectionClassInfo(
                 detectStyle(type, fields), fields, methods, false, type);
     }
@@ -90,11 +90,11 @@ public final class ReflactionClassReader implements ClassReader {
 
     // ── Methods ───────────────────────────────────────────────────────────
 
-    private List<MethodInfo> extractMethods(Class<?> type, boolean utility) {
+    private List<ReflectionMethodInfo> extractMethods(Class<?> type, boolean utility) {
         if (!utility && (type.isRecord() || type.isEnum() || type.isInterface())) return List.of();
 
         Set<String> objectMethods = objectMethodNames();
-        List<MethodInfo> result = new ArrayList<>();
+        List<ReflectionMethodInfo> result = new ArrayList<>();
 
         for (Method m : type.getMethods()) {
             boolean isStatic = Modifier.isStatic(m.getModifiers());
@@ -113,7 +113,7 @@ public final class ReflactionClassReader implements ClassReader {
             returnAnnsRaw.addAll(Arrays.asList(m.getAnnotatedReturnType().getAnnotations()));
             List<Annotation> returnAnns = filterValidation(returnAnnsRaw);
             MethodKind kind = classify(m.getReturnType(), params);
-            result.add(new MethodInfo(m.getName(), m.getReturnType(),
+            result.add(new ReflectionMethodInfo(m.getName(), m.getReturnType(),
                     returnAnns, params, kind));
         }
 

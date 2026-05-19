@@ -31,19 +31,19 @@ final class MethodTestWriter {
     }
 
     void write(StringBuilder sb, List<Object> validInstanceParts, boolean hasJakarta) {
-        for (MethodInfo method : meta.methods()) {
+        for (ReflectionMethodInfo method : meta.methods()) {
             writeMethodClass(sb, method, hasJakarta, true);
         }
     }
 
-    void writeFlat(StringBuilder sb, MethodInfo method,
+    void writeFlat(StringBuilder sb, ReflectionMethodInfo method,
                    List<Object> validInstanceParts, boolean hasJakarta) {
         writeMethodClass(sb, method, hasJakarta, false);
     }
 
     // ── Core ──────────────────────────────────────────────────────────────
 
-    private void writeMethodClass(StringBuilder sb, MethodInfo method,
+    private void writeMethodClass(StringBuilder sb, ReflectionMethodInfo method,
                                   boolean hasJakarta, boolean nested) {
         String className  = meta.simpleName();
         String fieldName  = meta.utilityClass() ? className : TestNames.toVariable(className);
@@ -86,7 +86,7 @@ final class MethodTestWriter {
 
     // ── COMMAND ───────────────────────────────────────────────────────────
 
-    private void writeCommand(StringBuilder sb, MethodInfo method, String fieldName,
+    private void writeCommand(StringBuilder sb, ReflectionMethodInfo method, String fieldName,
                               boolean hasJakarta, String ind, String indBody) {
         String methodName = method.name();
 
@@ -110,10 +110,10 @@ final class MethodTestWriter {
 
     // ── QUERY ─────────────────────────────────────────────────────────────
 
-    private void writeQuery(StringBuilder sb, MethodInfo method, String fieldName,
+    private void writeQuery(StringBuilder sb, ReflectionMethodInfo method, String fieldName,
                             String ind, String indBody) {
         String methodName   = method.name();
-        ReturnTypeInfo ret  = method.returnType();
+        ReflectionReturnTypeInfo ret  = method.returnType();
         String call         = fieldName + "." + methodName + "()";
 
         sb.append(ind).append("@Test\n");
@@ -141,7 +141,7 @@ final class MethodTestWriter {
 
     // ── MUTATOR / TRANSFORMER ─────────────────────────────────────────────
 
-    private void writeMutatorOrTransformer(StringBuilder sb, MethodInfo method,
+    private void writeMutatorOrTransformer(StringBuilder sb, ReflectionMethodInfo method,
                                            String fieldName,
                                            String validSrc, String invalidSrc,
                                            String ind, String indBody) {
@@ -163,7 +163,7 @@ final class MethodTestWriter {
 
     // ── OPERATION ─────────────────────────────────────────────────────────
 
-    private void writeOperation(StringBuilder sb, MethodInfo method,
+    private void writeOperation(StringBuilder sb, ReflectionMethodInfo method,
                                 String fieldName,
                                 String validSrc, String invalidSrc,
                                 String ind, String indBody) {
@@ -185,7 +185,7 @@ final class MethodTestWriter {
 
     // ── Shared test methods ───────────────────────────────────────────────
 
-    private void writeAcceptsTest(StringBuilder sb, MethodInfo method, String fieldName,
+    private void writeAcceptsTest(StringBuilder sb, ReflectionMethodInfo method, String fieldName,
                                   String validSrc, String sig, String call,
                                   String ind, String indBody) {
         sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
@@ -194,7 +194,7 @@ final class MethodTestWriter {
         sb.append(ind).append("void ").append(template.testAcceptsValidInput)
                 .append("(String description, ").append(sig).append(") {\n");
 
-        ReturnTypeInfo ret = method.returnType();
+        ReflectionReturnTypeInfo ret = method.returnType();
         if (ret.isVoid()) {
             sb.append(indBody).append("assertThatCode(() -> ")
                     .append(fieldName).append(".").append(method.name()).append("(").append(call)
@@ -252,7 +252,7 @@ final class MethodTestWriter {
      *                          works for all types: primitive, String, BigDecimal, Object
      * - no annotations       → skip for primitive, isNotNull for object
      */
-    private void writeReturnAssertion(StringBuilder sb, ReturnTypeInfo ret,
+    private void writeReturnAssertion(StringBuilder sb, ReflectionReturnTypeInfo ret,
                                       String methodName, String resultExpr, String indBody) {
         if (ret.isVoid()) return;
 
@@ -327,7 +327,7 @@ final class MethodTestWriter {
      * Needs a wrapper when the return type can't be validated directly by
      * the Jakarta validator — primitives, String, and java.* types need boxing.
      */
-    private boolean needsWrapperRecord(ReturnTypeInfo ret) {
+    private boolean needsWrapperRecord(ReflectionReturnTypeInfo ret) {
         if (ret.isVoid() || !ret.isConstrained()) return false;
         Class<?> t = ret.type();
         return t.isPrimitive()
@@ -338,7 +338,7 @@ final class MethodTestWriter {
     }
 
     private void writeWrapperRecord(StringBuilder sb, String methodName,
-                                    ReturnTypeInfo ret, String ind) {
+                                    ReflectionReturnTypeInfo ret, String ind) {
         String annotations = buildAnnotationSource(ret.annotations());
         String boxedType   = boxedTypeName(ret.type());
         sb.append(ind).append("private record ").append(wrapperName(methodName))
