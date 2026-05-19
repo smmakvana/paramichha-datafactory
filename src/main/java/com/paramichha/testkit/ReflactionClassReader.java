@@ -13,11 +13,11 @@ import java.util.*;
  * Reads class structure via standard Java reflection.
  * No dependency on datafactory engine internals.
  */
-public final class DefaultClassReader implements ClassReader {
+public final class ReflactionClassReader implements ClassReader {
 
-    public static final DefaultClassReader INSTANCE = new DefaultClassReader();
+    public static final ReflactionClassReader INSTANCE = new ReflactionClassReader();
 
-    private DefaultClassReader() {}
+    private ReflactionClassReader() {}
 
     @Override
     public ClassInfo read(Class<?> type) {

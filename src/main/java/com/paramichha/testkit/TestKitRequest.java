@@ -39,7 +39,7 @@ public final class TestKitRequest {
      */
     public static TestKitRequest of(Class<?> type) {
         if (type == null) throw new TestKitException("type must not be null");
-        return new TestKitRequest(DefaultClassReader.INSTANCE.read(type));
+        return new TestKitRequest(ReflactionClassReader.INSTANCE.read(type));
     }
 
     /**
