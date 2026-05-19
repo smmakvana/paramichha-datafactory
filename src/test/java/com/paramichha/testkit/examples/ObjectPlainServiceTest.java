@@ -29,10 +29,10 @@ class ObjectPlainServiceTest {
 
   ObjectPlainService objectPlainService =
       new ObjectPlainService(
-          "Judi Gaylord",
+          "Ethel Labadie",
           new BigDecimal("-1.00"),
           LocalDate.of(2024, 1, 15),
-          "marnie.turner@gmail.com");
+          "colin.lindgren@yahoo.com");
 
   // =========================================================================
   // Creation
@@ -51,10 +51,10 @@ class ObjectPlainServiceTest {
     @Test
     @DisplayName("holds expected values")
     void testHoldsExpectedValues() {
-      assertThat(objectPlainService.getName()).isEqualTo("Judi Gaylord");
+      assertThat(objectPlainService.getName()).isEqualTo("Ethel Labadie");
       assertThat(objectPlainService.getPrice()).isEqualTo(new BigDecimal("-1.00"));
       assertThat(objectPlainService.getCreatedDate()).isEqualTo(LocalDate.of(2024, 1, 15));
-      assertThat(objectPlainService.getEmail()).isEqualTo("marnie.turner@gmail.com");
+      assertThat(objectPlainService.getEmail()).isEqualTo("colin.lindgren@yahoo.com");
     }
   }
 
@@ -72,12 +72,12 @@ class ObjectPlainServiceTest {
     void testAcceptsName(String description, String name) {
       ObjectPlainService obj =
           new ObjectPlainService(
-              name, new BigDecimal("-1.00"), LocalDate.of(2024, 1, 15), "marnie.turner@gmail.com");
+              name, new BigDecimal("-1.00"), LocalDate.of(2024, 1, 15), "colin.lindgren@yahoo.com");
       assertThat(obj.getName()).isEqualTo(name);
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Mr. Kathleen Heathcote"));
+      return Stream.of(Arguments.of("name 0", "Jerrica Kutch"));
     }
 
     // TODO: add constraints to name then uncomment
@@ -86,7 +86,7 @@ class ObjectPlainServiceTest {
     // @DisplayName("rejects invalid value")
     // void testRejectsName(String description, String name) {
     //     ObjectPlainService obj = new ObjectPlainService(name, new BigDecimal("-1.00"),
-    // LocalDate.of(2024, 1, 15), "marnie.turner@gmail.com");
+    // LocalDate.of(2024, 1, 15), "colin.lindgren@yahoo.com");
     //     assertThat(validator.validate(obj)).isNotEmpty();
     // }
 
@@ -112,7 +112,7 @@ class ObjectPlainServiceTest {
     void testAcceptsPrice(String description, BigDecimal price) {
       ObjectPlainService obj =
           new ObjectPlainService(
-              "Judi Gaylord", price, LocalDate.of(2024, 1, 15), "marnie.turner@gmail.com");
+              "Ethel Labadie", price, LocalDate.of(2024, 1, 15), "colin.lindgren@yahoo.com");
       assertThat(obj.getPrice()).isEqualTo(price);
     }
 
@@ -120,7 +120,7 @@ class ObjectPlainServiceTest {
       return Stream.of(
           Arguments.of("valid price 1", new BigDecimal("-1.00")),
           Arguments.of("valid price 2", new BigDecimal("0.00")),
-          Arguments.of("valid price 3", new BigDecimal("777.70")));
+          Arguments.of("valid price 3", new BigDecimal("535.80")));
     }
 
     // TODO: add constraints to price then uncomment
@@ -128,8 +128,8 @@ class ObjectPlainServiceTest {
     // @MethodSource("invalidPrices")
     // @DisplayName("rejects invalid value")
     // void testRejectsPrice(String description, BigDecimal price) {
-    //     ObjectPlainService obj = new ObjectPlainService("Judi Gaylord", price, LocalDate.of(2024,
-    // 1, 15), "marnie.turner@gmail.com");
+    //     ObjectPlainService obj = new ObjectPlainService("Ethel Labadie", price,
+    // LocalDate.of(2024, 1, 15), "colin.lindgren@yahoo.com");
     //     assertThat(validator.validate(obj)).isNotEmpty();
     // }
 
@@ -155,7 +155,7 @@ class ObjectPlainServiceTest {
     void testAcceptsCreatedDate(String description, LocalDate createdDate) {
       ObjectPlainService obj =
           new ObjectPlainService(
-              "Judi Gaylord", new BigDecimal("-1.00"), createdDate, "marnie.turner@gmail.com");
+              "Ethel Labadie", new BigDecimal("-1.00"), createdDate, "colin.lindgren@yahoo.com");
       assertThat(obj.getCreatedDate()).isEqualTo(createdDate);
     }
 
@@ -168,8 +168,8 @@ class ObjectPlainServiceTest {
     // @MethodSource("invalidCreatedDates")
     // @DisplayName("rejects invalid value")
     // void testRejectsCreatedDate(String description, LocalDate createdDate) {
-    //     ObjectPlainService obj = new ObjectPlainService("Judi Gaylord", new BigDecimal("-1.00"),
-    // createdDate, "marnie.turner@gmail.com");
+    //     ObjectPlainService obj = new ObjectPlainService("Ethel Labadie", new BigDecimal("-1.00"),
+    // createdDate, "colin.lindgren@yahoo.com");
     //     assertThat(validator.validate(obj)).isNotEmpty();
     // }
 
@@ -195,12 +195,12 @@ class ObjectPlainServiceTest {
     void testAcceptsEmail(String description, String email) {
       ObjectPlainService obj =
           new ObjectPlainService(
-              "Judi Gaylord", new BigDecimal("-1.00"), LocalDate.of(2024, 1, 15), email);
+              "Ethel Labadie", new BigDecimal("-1.00"), LocalDate.of(2024, 1, 15), email);
       assertThat(obj.getEmail()).isEqualTo(email);
     }
 
     static Stream<Arguments> validEmails() {
-      return Stream.of(Arguments.of("email 0", "jc.gislason@hotmail.com"));
+      return Stream.of(Arguments.of("email 0", "dodie.bergstrom@hotmail.com"));
     }
 
     // TODO: add constraints to email then uncomment
@@ -208,7 +208,7 @@ class ObjectPlainServiceTest {
     // @MethodSource("invalidEmails")
     // @DisplayName("rejects invalid value")
     // void testRejectsEmail(String description, String email) {
-    //     ObjectPlainService obj = new ObjectPlainService("Judi Gaylord", new BigDecimal("-1.00"),
+    //     ObjectPlainService obj = new ObjectPlainService("Ethel Labadie", new BigDecimal("-1.00"),
     // LocalDate.of(2024, 1, 15), email);
     //     assertThat(validator.validate(obj)).isNotEmpty();
     // }
@@ -264,10 +264,10 @@ class ObjectPlainServiceTest {
           Arguments.of(
               "valid merge",
               new ObjectPlainService(
-                  "Dr. Bennie Klocko",
+                  "Dwayne Davis",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "debby.langosh@hotmail.com"),
+                  "melaine.murray@gmail.com"),
               (String) null));
     }
   }
@@ -292,32 +292,11 @@ class ObjectPlainServiceTest {
           Arguments.of(
               "valid copyFrom",
               new ObjectPlainService(
-                  "Jesusita Luettgen",
+                  "Leontine Frami",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "johnie.corwin@hotmail.com"),
+                  "art.hirthe@hotmail.com"),
               (String) null));
-    }
-  }
-
-  // =========================================================================
-  // applyTax()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("applyTax()")
-  class ObjectPlainServiceMethodApplyTaxTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyTaxInputs")
-    @DisplayName("applyTax accepts valid input")
-    void testAcceptsValidInput(String description, BigDecimal rate) {
-      BigDecimal result = objectPlainService.applyTax(rate);
-      assertThat(result).isNotNull();
-    }
-
-    static Stream<Arguments> validApplyTaxInputs() {
-      return Stream.of(Arguments.of("valid applyTax", (BigDecimal) null));
     }
   }
 
@@ -339,6 +318,27 @@ class ObjectPlainServiceTest {
 
     static Stream<Arguments> validFormatDisplayInputs() {
       return Stream.of(Arguments.of("valid formatDisplay", (String) null));
+    }
+  }
+
+  // =========================================================================
+  // applyTax()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("applyTax()")
+  class ObjectPlainServiceMethodApplyTaxTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validApplyTaxInputs")
+    @DisplayName("applyTax accepts valid input")
+    void testAcceptsValidInput(String description, BigDecimal rate) {
+      BigDecimal result = objectPlainService.applyTax(rate);
+      assertThat(result).isNotNull();
+    }
+
+    static Stream<Arguments> validApplyTaxInputs() {
+      return Stream.of(Arguments.of("valid applyTax", (BigDecimal) null));
     }
   }
 }

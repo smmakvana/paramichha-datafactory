@@ -2,7 +2,7 @@ package com.paramichha.testkit;
 
 import com.paramichha.datafactory.DataFactory;
 import com.paramichha.datafactory.GenerationMode;
-import com.paramichha.testkit.model.TestData;
+import com.paramichha.testkit.model.TestFixture;
 
 import com.paramichha.utils.Seeds;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public final class DefaultTestDataProvider implements TestDataProvider {
     public DefaultTestDataProvider() {}
 
     @Override
-    public TestData provide(Class<?> type) {
+    public TestFixture provide(Class<?> type) {
         return provide(type, GenerationMode.PRODUCTION, Seeds.stableHash(type));
     }
 
@@ -39,7 +39,7 @@ public final class DefaultTestDataProvider implements TestDataProvider {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public TestData provide(Class<?> type, GenerationMode mode, Long seed) {
+    public TestFixture provide(Class<?> type, GenerationMode mode, Long seed) {
         // Always seed from class name when no explicit seed given — deterministic output.
         long effectiveSeed = seed != null ? seed : Seeds.stableHash(type);
         Object base = null;
@@ -72,7 +72,7 @@ public final class DefaultTestDataProvider implements TestDataProvider {
         // creation tests and method tests are still generated.
         String error = baseError != null ? "valid() failed: " + baseError : null;
 
-        return new TestData(type, base, mode, violations, validAllPerField, validObjects, error);
+        return new TestFixture(type, base, mode, violations, validAllPerField, validObjects, error);
     }
 
     public static List<Object> buildValidObjects(Object base,

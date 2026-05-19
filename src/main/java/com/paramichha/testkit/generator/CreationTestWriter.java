@@ -25,18 +25,18 @@ final class CreationTestWriter {
     }
 
     /** Standard mode — writes @Nested block inside the outer test class. */
-    void write(StringBuilder sb, TestData data, List<Object> validInstanceParts,
+    void write(StringBuilder sb, TestFixture data, List<Object> validInstanceParts,
                ValueExtractor valueExtractor) {
         writeContent(sb, data, validInstanceParts, true);
     }
 
     /** Split mode — writes content directly without the @Nested wrapper. */
-    void writeFlat(StringBuilder sb, TestData data, List<Object> validInstanceParts,
+    void writeFlat(StringBuilder sb, TestFixture data, List<Object> validInstanceParts,
                    ValueExtractor valueExtractor) {
         writeContent(sb, data, validInstanceParts, false);
     }
 
-    private void writeContent(StringBuilder sb, TestData data,
+    private void writeContent(StringBuilder sb, TestFixture data,
                               List<Object> validInstanceParts, boolean nested) {
 
         boolean hasJakarta   = data.hasJakarta(meta);

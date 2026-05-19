@@ -3,7 +3,7 @@ package com.paramichha.testkit;
 import com.paramichha.datafactory.GenerationMode;
 import com.paramichha.testkit.generator.JavaTestCodeGenerator;
 import com.paramichha.testkit.model.ClassInfo;
-import com.paramichha.testkit.model.TestData;
+import com.paramichha.testkit.model.TestFixture;
 
 import java.util.List;
 
@@ -92,7 +92,7 @@ public final class TestKits implements TestKit {
     @Override
     public List<GenerationResult> generateTests() {
         try {
-            TestData data = buildTestData();
+            TestFixture data = buildTestData();
             return generator.generateAll(classInfo, data, targetPackage, template, projectType);
         } catch (Exception e) {
             String className = classInfo.simpleName() + "Test";
@@ -104,7 +104,7 @@ public final class TestKits implements TestKit {
     @Override
     public GenerationResult generateTest() {
         try {
-            TestData data = buildTestData();
+            TestFixture data = buildTestData();
             return generator.generate(classInfo, data, targetPackage, template, projectType);
         } catch (Exception e) {
             String className = classInfo.simpleName() + "Test";
@@ -119,7 +119,7 @@ public final class TestKits implements TestKit {
 
     // ── Internal ──────────────────────────────────────────────────────────
 
-    private TestData buildTestData() {
+    private TestFixture buildTestData() {
         return (dataProvider instanceof DefaultTestDataProvider dfp)
                 ? dfp.provide(classInfo.type(), mode, seed)
                 : dataProvider.provide(classInfo.type());

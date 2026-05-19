@@ -32,10 +32,10 @@ class ObjectMixedServiceTest {
 
   ObjectMixedService objectMixedService =
       new ObjectMixedService(
-          "Harvey Dach",
+          "Ethel Labadie",
           new BigDecimal("-1.00"),
           LocalDate.of(2024, 1, 15),
-          "elane.greenholt@yahoo.com");
+          "colin.lindgren@yahoo.com");
 
   // =========================================================================
   // Creation
@@ -54,10 +54,10 @@ class ObjectMixedServiceTest {
     @Test
     @DisplayName("holds expected values")
     void testHoldsExpectedValues() {
-      assertThat(objectMixedService.getName()).isEqualTo("Harvey Dach");
+      assertThat(objectMixedService.getName()).isEqualTo("Ethel Labadie");
       assertThat(objectMixedService.getPrice()).isEqualTo(new BigDecimal("-1.00"));
       assertThat(objectMixedService.getCreatedDate()).isEqualTo(LocalDate.of(2024, 1, 15));
-      assertThat(objectMixedService.getEmail()).isEqualTo("elane.greenholt@yahoo.com");
+      assertThat(objectMixedService.getEmail()).isEqualTo("colin.lindgren@yahoo.com");
     }
 
     @Test
@@ -81,15 +81,12 @@ class ObjectMixedServiceTest {
     void testAcceptsName(String description, String name) {
       ObjectMixedService obj =
           new ObjectMixedService(
-              name,
-              new BigDecimal("-1.00"),
-              LocalDate.of(2024, 1, 15),
-              "elane.greenholt@yahoo.com");
+              name, new BigDecimal("-1.00"), LocalDate.of(2024, 1, 15), "colin.lindgren@yahoo.com");
       assertThat(validator.validate(obj)).isEmpty();
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Mr. Levi Crist"));
+      return Stream.of(Arguments.of("name 0", "Miss Monique Stark"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -102,7 +99,7 @@ class ObjectMixedServiceTest {
                 name,
                 new BigDecimal("-1.00"),
                 LocalDate.of(2024, 1, 15),
-                "elane.greenholt@yahoo.com");
+                "colin.lindgren@yahoo.com");
         assertThat(validator.validate(obj)).isNotEmpty();
       } catch (Exception ignored) {
         // Constructor enforced the contract — test passes
@@ -128,7 +125,7 @@ class ObjectMixedServiceTest {
     void testAcceptsPrice(String description, BigDecimal price) {
       ObjectMixedService obj =
           new ObjectMixedService(
-              "Harvey Dach", price, LocalDate.of(2024, 1, 15), "elane.greenholt@yahoo.com");
+              "Ethel Labadie", price, LocalDate.of(2024, 1, 15), "colin.lindgren@yahoo.com");
       assertThat(obj.getPrice()).isEqualTo(price);
     }
 
@@ -136,7 +133,7 @@ class ObjectMixedServiceTest {
       return Stream.of(
           Arguments.of("valid price 1", new BigDecimal("-1.00")),
           Arguments.of("valid price 2", new BigDecimal("0.00")),
-          Arguments.of("valid price 3", new BigDecimal("292.35")));
+          Arguments.of("valid price 3", new BigDecimal("788.93")));
     }
 
     // TODO: add constraints to price then uncomment
@@ -144,8 +141,8 @@ class ObjectMixedServiceTest {
     // @MethodSource("invalidPrices")
     // @DisplayName("rejects invalid value")
     // void testRejectsPrice(String description, BigDecimal price) {
-    //     ObjectMixedService obj = new ObjectMixedService("Harvey Dach", price, LocalDate.of(2024,
-    // 1, 15), "elane.greenholt@yahoo.com");
+    //     ObjectMixedService obj = new ObjectMixedService("Ethel Labadie", price,
+    // LocalDate.of(2024, 1, 15), "colin.lindgren@yahoo.com");
     //     assertThat(validator.validate(obj)).isNotEmpty();
     // }
 
@@ -171,7 +168,7 @@ class ObjectMixedServiceTest {
     void testAcceptsCreatedDate(String description, LocalDate createdDate) {
       ObjectMixedService obj =
           new ObjectMixedService(
-              "Harvey Dach", new BigDecimal("-1.00"), createdDate, "elane.greenholt@yahoo.com");
+              "Ethel Labadie", new BigDecimal("-1.00"), createdDate, "colin.lindgren@yahoo.com");
       assertThat(validator.validate(obj)).isEmpty();
     }
 
@@ -186,7 +183,7 @@ class ObjectMixedServiceTest {
       try {
         ObjectMixedService obj =
             new ObjectMixedService(
-                "Harvey Dach", new BigDecimal("-1.00"), createdDate, "elane.greenholt@yahoo.com");
+                "Ethel Labadie", new BigDecimal("-1.00"), createdDate, "colin.lindgren@yahoo.com");
         assertThat(validator.validate(obj)).isNotEmpty();
       } catch (Exception ignored) {
         // Constructor enforced the contract — test passes
@@ -212,12 +209,12 @@ class ObjectMixedServiceTest {
     void testAcceptsEmail(String description, String email) {
       ObjectMixedService obj =
           new ObjectMixedService(
-              "Harvey Dach", new BigDecimal("-1.00"), LocalDate.of(2024, 1, 15), email);
+              "Ethel Labadie", new BigDecimal("-1.00"), LocalDate.of(2024, 1, 15), email);
       assertThat(obj.getEmail()).isEqualTo(email);
     }
 
     static Stream<Arguments> validEmails() {
-      return Stream.of(Arguments.of("email 0", "ronda.pollich@gmail.com"));
+      return Stream.of(Arguments.of("email 0", "rudolph.haley@hotmail.com"));
     }
 
     // TODO: add constraints to email then uncomment
@@ -225,7 +222,7 @@ class ObjectMixedServiceTest {
     // @MethodSource("invalidEmails")
     // @DisplayName("rejects invalid value")
     // void testRejectsEmail(String description, String email) {
-    //     ObjectMixedService obj = new ObjectMixedService("Harvey Dach", new BigDecimal("-1.00"),
+    //     ObjectMixedService obj = new ObjectMixedService("Ethel Labadie", new BigDecimal("-1.00"),
     // LocalDate.of(2024, 1, 15), email);
     //     assertThat(validator.validate(obj)).isNotEmpty();
     // }
@@ -291,10 +288,10 @@ class ObjectMixedServiceTest {
           Arguments.of(
               "valid merge",
               new ObjectMixedService(
-                  "Mr. Audrey Barton",
+                  "Sonja Schuppe",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "ming.kirlin@gmail.com"),
+                  "salina.beier@yahoo.com"),
               (String) null));
     }
 
@@ -332,10 +329,10 @@ class ObjectMixedServiceTest {
           Arguments.of(
               "valid copyFrom",
               new ObjectMixedService(
-                  "Kelvin Schmitt",
+                  "Parker Gutkowski",
                   new BigDecimal("-1.00"),
                   LocalDate.of(2024, 1, 15),
-                  "marx.roberts@gmail.com"),
+                  "cara.smith@yahoo.com"),
               (String) null));
     }
 
@@ -393,7 +390,7 @@ class ObjectMixedServiceTest {
     }
 
     static Stream<Arguments> validFormatDisplayInputs() {
-      return Stream.of(Arguments.of("valid formatDisplay", "Mr."));
+      return Stream.of(Arguments.of("valid formatDisplay", "Miss"));
     }
 
     static Stream<Arguments> invalidFormatDisplayInputs() {

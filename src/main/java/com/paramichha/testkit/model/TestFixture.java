@@ -9,7 +9,7 @@ import java.util.Map;
  * If {@link #error()} is non-null, DataFactory failed and the generator
  * will write a commented placeholder file instead.
  */
-public record TestData(
+public record TestFixture(
         Class<?> type,
         Object base,
         GenerationMode mode,

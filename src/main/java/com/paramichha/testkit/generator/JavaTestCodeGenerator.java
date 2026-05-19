@@ -23,7 +23,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
     private ProjectType projectType = ProjectType.detect();
 
     @Override
-    public List<GenerationResult> generateAll(ClassInfo meta, TestData data,
+    public List<GenerationResult> generateAll(ClassInfo meta, TestFixture data,
                                               String targetPackage, TestKitTemplate template,
                                               ProjectType projectType) {
         this.projectType = projectType;
@@ -31,7 +31,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public List<GenerationResult> generateAll(ClassInfo meta, TestData data,
+    public List<GenerationResult> generateAll(ClassInfo meta, TestFixture data,
                                               String targetPackage, TestKitTemplate template) {
         if (data.hasError()) {
             return List.of(new GenerationResult(
@@ -47,7 +47,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
         }
     }
 
-    private List<GenerationResult> buildSplit(ClassInfo meta, TestData data,
+    private List<GenerationResult> buildSplit(ClassInfo meta, TestFixture data,
                                               String targetPackage, TestKitTemplate template) {
         Class<?> type = data.type();
         String className = meta.simpleName();
@@ -159,7 +159,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public GenerationResult generate(ClassInfo meta, TestData data,
+    public GenerationResult generate(ClassInfo meta, TestFixture data,
                                      String targetPackage, TestKitTemplate template,
                                      ProjectType projectType) {
         this.projectType = projectType;
@@ -167,17 +167,17 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public GenerationResult generate(ClassInfo meta, TestData data,
+    public GenerationResult generate(ClassInfo meta, TestFixture data,
                                      String targetPackage, TestKitTemplate template) {
         return generateWithTemplate(meta, data, targetPackage, template);
     }
 
     @Override
-    public GenerationResult generate(ClassInfo meta, TestData data, String targetPackage) {
+    public GenerationResult generate(ClassInfo meta, TestFixture data, String targetPackage) {
         return generateWithTemplate(meta, data, targetPackage, TestKitTemplate.DEFAULT);
     }
 
-    private GenerationResult generateWithTemplate(ClassInfo meta, TestData data,
+    private GenerationResult generateWithTemplate(ClassInfo meta, TestFixture data,
                                                   String targetPackage, TestKitTemplate template) {
         // DEV mode gets a distinct class name so both files coexist
         boolean isDev = data.mode() == com.paramichha.datafactory.GenerationMode.DEV;
@@ -200,7 +200,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
 
     // ── full generation ───────────────────────────────────────────────────
 
-    private GenerationResult buildFull(ClassInfo meta, TestData data,
+    private GenerationResult buildFull(ClassInfo meta, TestFixture data,
                                        String targetPackage, String className,
                                        boolean isDev, TestKitTemplate template) {
         Class<?> type = data.type();
@@ -248,7 +248,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
     // ── helpers ───────────────────────────────────────────────────────────
 
     private ImportCollector buildImports(ClassInfo meta, Class<?> type,
-                                         TestData data, List<Object> validInstanceParts) {
+                                         TestFixture data, List<Object> validInstanceParts) {
         ImportCollector ic = new ImportCollector();
         ic.addTypeImport(type);
         ic.addFieldTypeImports(meta.fields());

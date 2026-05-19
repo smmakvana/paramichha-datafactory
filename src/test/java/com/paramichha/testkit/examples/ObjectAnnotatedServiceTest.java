@@ -34,10 +34,10 @@ class ObjectAnnotatedServiceTest {
 
   ObjectAnnotatedService objectAnnotatedService =
       new ObjectAnnotatedService(
-          "Annabell Lynch",
+          "Ethel Labadie",
           new BigDecimal("1.50"),
           LocalDate.of(2020, 6, 15),
-          "aurelio.gutkowski@gmail.com");
+          "markus.weimann@hotmail.com");
 
   // =========================================================================
   // Creation
@@ -56,10 +56,10 @@ class ObjectAnnotatedServiceTest {
     @Test
     @DisplayName("holds expected values")
     void testHoldsExpectedValues() {
-      assertThat(objectAnnotatedService.getName()).isEqualTo("Annabell Lynch");
+      assertThat(objectAnnotatedService.getName()).isEqualTo("Ethel Labadie");
       assertThat(objectAnnotatedService.getPrice()).isEqualTo(new BigDecimal("1.50"));
       assertThat(objectAnnotatedService.getCreatedDate()).isEqualTo(LocalDate.of(2020, 6, 15));
-      assertThat(objectAnnotatedService.getEmail()).isEqualTo("aurelio.gutkowski@gmail.com");
+      assertThat(objectAnnotatedService.getEmail()).isEqualTo("markus.weimann@hotmail.com");
     }
 
     @Test
@@ -86,12 +86,12 @@ class ObjectAnnotatedServiceTest {
               name,
               new BigDecimal("1.50"),
               LocalDate.of(2020, 6, 15),
-              "aurelio.gutkowski@gmail.com");
+              "markus.weimann@hotmail.com");
       assertThat(validator.validate(obj)).isEmpty();
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Ms. Karl Morissette"));
+      return Stream.of(Arguments.of("name 0", "Marilyn Nitzsche"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -104,7 +104,7 @@ class ObjectAnnotatedServiceTest {
                 name,
                 new BigDecimal("1.50"),
                 LocalDate.of(2020, 6, 15),
-                "aurelio.gutkowski@gmail.com");
+                "markus.weimann@hotmail.com");
         assertThat(validator.validate(obj)).isNotEmpty();
       } catch (Exception ignored) {
         // Constructor enforced the contract — test passes
@@ -130,7 +130,7 @@ class ObjectAnnotatedServiceTest {
     void testAcceptsPrice(String description, BigDecimal price) {
       ObjectAnnotatedService obj =
           new ObjectAnnotatedService(
-              "Annabell Lynch", price, LocalDate.of(2020, 6, 15), "aurelio.gutkowski@gmail.com");
+              "Ethel Labadie", price, LocalDate.of(2020, 6, 15), "markus.weimann@hotmail.com");
       assertThat(validator.validate(obj)).isEmpty();
     }
 
@@ -148,7 +148,7 @@ class ObjectAnnotatedServiceTest {
       try {
         ObjectAnnotatedService obj =
             new ObjectAnnotatedService(
-                "Annabell Lynch", price, LocalDate.of(2020, 6, 15), "aurelio.gutkowski@gmail.com");
+                "Ethel Labadie", price, LocalDate.of(2020, 6, 15), "markus.weimann@hotmail.com");
         assertThat(validator.validate(obj)).isNotEmpty();
       } catch (Exception ignored) {
         // Constructor enforced the contract — test passes
@@ -176,7 +176,7 @@ class ObjectAnnotatedServiceTest {
     void testAcceptsCreatedDate(String description, LocalDate createdDate) {
       ObjectAnnotatedService obj =
           new ObjectAnnotatedService(
-              "Annabell Lynch", new BigDecimal("1.50"), createdDate, "aurelio.gutkowski@gmail.com");
+              "Ethel Labadie", new BigDecimal("1.50"), createdDate, "markus.weimann@hotmail.com");
       assertThat(validator.validate(obj)).isEmpty();
     }
 
@@ -191,10 +191,7 @@ class ObjectAnnotatedServiceTest {
       try {
         ObjectAnnotatedService obj =
             new ObjectAnnotatedService(
-                "Annabell Lynch",
-                new BigDecimal("1.50"),
-                createdDate,
-                "aurelio.gutkowski@gmail.com");
+                "Ethel Labadie", new BigDecimal("1.50"), createdDate, "markus.weimann@hotmail.com");
         assertThat(validator.validate(obj)).isNotEmpty();
       } catch (Exception ignored) {
         // Constructor enforced the contract — test passes
@@ -222,12 +219,12 @@ class ObjectAnnotatedServiceTest {
     void testAcceptsEmail(String description, String email) {
       ObjectAnnotatedService obj =
           new ObjectAnnotatedService(
-              "Annabell Lynch", new BigDecimal("1.50"), LocalDate.of(2020, 6, 15), email);
+              "Ethel Labadie", new BigDecimal("1.50"), LocalDate.of(2020, 6, 15), email);
       assertThat(validator.validate(obj)).isEmpty();
     }
 
     static Stream<Arguments> validEmails() {
-      return Stream.of(Arguments.of("email 0", "janna.daugherty@yahoo.com"));
+      return Stream.of(Arguments.of("email 0", "yoshie.dicki@hotmail.com"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -237,7 +234,7 @@ class ObjectAnnotatedServiceTest {
       try {
         ObjectAnnotatedService obj =
             new ObjectAnnotatedService(
-                "Annabell Lynch", new BigDecimal("1.50"), LocalDate.of(2020, 6, 15), email);
+                "Ethel Labadie", new BigDecimal("1.50"), LocalDate.of(2020, 6, 15), email);
         assertThat(validator.validate(obj)).isNotEmpty();
       } catch (Exception ignored) {
         // Constructor enforced the contract — test passes
@@ -302,31 +299,31 @@ class ObjectAnnotatedServiceTest {
           Arguments.of(
               "valid merge",
               new ObjectAnnotatedService(
-                  "Wilford Vandervort",
+                  "Glenna Kunze",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "gaston.turcotte@yahoo.com"),
-              "Michal Stracke"));
+                  "delorse.conroy@hotmail.com"),
+              "Evia Hackett"));
     }
 
     static Stream<Arguments> invalidMergeInputs() {
       return Stream.of(
-          Arguments.of("invalid other", null, "Mrs. Ken Schiller"),
+          Arguments.of("invalid other", null, "Mrs. Nichol Kuphal"),
           Arguments.of(
               "invalid newName",
               new ObjectAnnotatedService(
-                  "Mrs. Maria Huels",
+                  "Carla Frami",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "sang.ritchie@yahoo.com"),
+                  "porter.wisoky@gmail.com"),
               null),
           Arguments.of(
               "invalid newName",
               new ObjectAnnotatedService(
-                  "Basil Dibbert",
+                  "Nakita Balistreri II",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "korey.bogan@yahoo.com"),
+                  "brendan.graham@yahoo.com"),
               ""));
     }
   }
@@ -362,19 +359,53 @@ class ObjectAnnotatedServiceTest {
           Arguments.of(
               "valid copyFrom",
               new ObjectAnnotatedService(
-                  "Louie DuBuque",
+                  "Edison Feil",
                   new BigDecimal("1.50"),
                   LocalDate.of(2020, 6, 15),
-                  "roosevelt.fay@yahoo.com"),
-              "Modi error saepe."));
+                  "emery.bauch@gmail.com"),
+              "Totam delectus qui ea illum rem."));
     }
 
     static Stream<Arguments> invalidCopyFromInputs() {
       return Stream.of(
-          Arguments.of(
-              "invalid source 1",
-              null,
-              "Vel vero aspernatur delectus exercitationem corporis possimus."));
+          Arguments.of("invalid source 1", null, "Harum vel saepe doloremque cupiditate fugit."));
+    }
+  }
+
+  // =========================================================================
+  // formatDisplay()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("formatDisplay()")
+  class ObjectAnnotatedServiceMethodFormatDisplayTest {
+
+    private record FormatDisplayResult(@NotBlank String value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validFormatDisplayInputs")
+    @DisplayName("formatDisplay accepts valid input")
+    void testAcceptsValidInput(String description, String prefix) {
+      String result = objectAnnotatedService.formatDisplay(prefix);
+      DataValidation.notBlank(result);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidFormatDisplayInputs")
+    @DisplayName("formatDisplay rejects invalid input")
+    void testRejectsInvalidInput(String description, String prefix) {
+      // Enforce @NotBlank: DataValidation.notBlank(prefix);
+      assertThatThrownBy(() -> objectAnnotatedService.formatDisplay(prefix))
+          .isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validFormatDisplayInputs() {
+      return Stream.of(Arguments.of("valid formatDisplay", "Ms."));
+    }
+
+    static Stream<Arguments> invalidFormatDisplayInputs() {
+      return Stream.of(
+          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
     }
   }
 
@@ -415,43 +446,6 @@ class ObjectAnnotatedServiceTest {
       return Stream.of(
           Arguments.of("invalid taxRate 1", new BigDecimal("-1")),
           Arguments.of("invalid taxRate 2", new BigDecimal("2")));
-    }
-  }
-
-  // =========================================================================
-  // formatDisplay()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("formatDisplay()")
-  class ObjectAnnotatedServiceMethodFormatDisplayTest {
-
-    private record FormatDisplayResult(@NotBlank String value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validFormatDisplayInputs")
-    @DisplayName("formatDisplay accepts valid input")
-    void testAcceptsValidInput(String description, String prefix) {
-      String result = objectAnnotatedService.formatDisplay(prefix);
-      DataValidation.notBlank(result);
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidFormatDisplayInputs")
-    @DisplayName("formatDisplay rejects invalid input")
-    void testRejectsInvalidInput(String description, String prefix) {
-      // Enforce @NotBlank: DataValidation.notBlank(prefix);
-      assertThatThrownBy(() -> objectAnnotatedService.formatDisplay(prefix))
-          .isInstanceOf(Exception.class);
-    }
-
-    static Stream<Arguments> validFormatDisplayInputs() {
-      return Stream.of(Arguments.of("valid formatDisplay", "Mrs."));
-    }
-
-    static Stream<Arguments> invalidFormatDisplayInputs() {
-      return Stream.of(
-          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
     }
   }
 }
