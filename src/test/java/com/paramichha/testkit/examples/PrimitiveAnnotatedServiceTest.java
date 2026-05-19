@@ -327,6 +327,70 @@ class PrimitiveAnnotatedServiceTest {
   }
 
   // =========================================================================
+  // applyDiscount()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("applyDiscount()")
+  class PrimitiveAnnotatedServiceMethodApplyDiscountTest {
+
+    private record ApplyDiscountResult(@Positive Double value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validApplyDiscountInputs")
+    @DisplayName("applyDiscount accepts valid input")
+    void testAcceptsValidInput(String description, int discountPercent) {
+      double result = primitiveAnnotatedService.applyDiscount(discountPercent);
+      DataValidation.positive(result);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidApplyDiscountInputs")
+    @DisplayName("applyDiscount rejects invalid input")
+    void testRejectsInvalidInput(String description, int discountPercent) {
+      // Enforce @Min: DataValidation.min(0, discountPercent);
+      // Enforce @Max: DataValidation.max(100, discountPercent);
+      assertThatThrownBy(() -> primitiveAnnotatedService.applyDiscount(discountPercent))
+          .isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validApplyDiscountInputs() {
+      return Stream.of(Arguments.of("valid applyDiscount", 1));
+    }
+
+    static Stream<Arguments> invalidApplyDiscountInputs() {
+      return Stream.of(
+          Arguments.of("invalid discountPercent 1", -1),
+          Arguments.of("invalid discountPercent 2", 101));
+    }
+  }
+
+  // =========================================================================
+  // totalValue()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("totalValue()")
+  class PrimitiveAnnotatedServiceMethodTotalValueTest {
+
+    private record TotalValueResult(@Min(value = 0L) Long value) {}
+
+    @Test
+    @DisplayName("totalValue returns a result")
+    void testReturnsResult() {
+      long result = primitiveAnnotatedService.totalValue();
+      DataValidation.min(0, result);
+    }
+
+    @Test
+    @DisplayName("totalValue returns consistent result")
+    void testReturnsConsistentResult() {
+      assertThat(primitiveAnnotatedService.totalValue())
+          .isEqualTo(primitiveAnnotatedService.totalValue());
+    }
+  }
+
+  // =========================================================================
   // reset()
   // =========================================================================
 
@@ -417,70 +481,6 @@ class PrimitiveAnnotatedServiceTest {
 
     static Stream<Arguments> invalidTransferInputs() {
       return Stream.of(Arguments.of("invalid amount 1", 0, 1));
-    }
-  }
-
-  // =========================================================================
-  // totalValue()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("totalValue()")
-  class PrimitiveAnnotatedServiceMethodTotalValueTest {
-
-    private record TotalValueResult(@Min(value = 0L) Long value) {}
-
-    @Test
-    @DisplayName("totalValue returns a result")
-    void testReturnsResult() {
-      long result = primitiveAnnotatedService.totalValue();
-      DataValidation.min(0, result);
-    }
-
-    @Test
-    @DisplayName("totalValue returns consistent result")
-    void testReturnsConsistentResult() {
-      assertThat(primitiveAnnotatedService.totalValue())
-          .isEqualTo(primitiveAnnotatedService.totalValue());
-    }
-  }
-
-  // =========================================================================
-  // applyDiscount()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("applyDiscount()")
-  class PrimitiveAnnotatedServiceMethodApplyDiscountTest {
-
-    private record ApplyDiscountResult(@Positive Double value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyDiscountInputs")
-    @DisplayName("applyDiscount accepts valid input")
-    void testAcceptsValidInput(String description, int discountPercent) {
-      double result = primitiveAnnotatedService.applyDiscount(discountPercent);
-      DataValidation.positive(result);
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidApplyDiscountInputs")
-    @DisplayName("applyDiscount rejects invalid input")
-    void testRejectsInvalidInput(String description, int discountPercent) {
-      // Enforce @Min: DataValidation.min(0, discountPercent);
-      // Enforce @Max: DataValidation.max(100, discountPercent);
-      assertThatThrownBy(() -> primitiveAnnotatedService.applyDiscount(discountPercent))
-          .isInstanceOf(Exception.class);
-    }
-
-    static Stream<Arguments> validApplyDiscountInputs() {
-      return Stream.of(Arguments.of("valid applyDiscount", 1));
-    }
-
-    static Stream<Arguments> invalidApplyDiscountInputs() {
-      return Stream.of(
-          Arguments.of("invalid discountPercent 1", -1),
-          Arguments.of("invalid discountPercent 2", 101));
     }
   }
 }

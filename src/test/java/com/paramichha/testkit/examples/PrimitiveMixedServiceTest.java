@@ -271,6 +271,65 @@ class PrimitiveMixedServiceTest {
   }
 
   // =========================================================================
+  // applyDiscount()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("applyDiscount()")
+  class PrimitiveMixedServiceMethodApplyDiscountTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validApplyDiscountInputs")
+    @DisplayName("applyDiscount accepts valid input")
+    void testAcceptsValidInput(String description, int discountPercent) {
+      double result = primitiveMixedService.applyDiscount(discountPercent);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidApplyDiscountInputs")
+    @DisplayName("applyDiscount rejects invalid input")
+    void testRejectsInvalidInput(String description, int discountPercent) {
+      // Enforce @Min: DataValidation.min(0, discountPercent);
+      // Enforce @Max: DataValidation.max(100, discountPercent);
+      assertThatThrownBy(() -> primitiveMixedService.applyDiscount(discountPercent))
+          .isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validApplyDiscountInputs() {
+      return Stream.of(Arguments.of("valid applyDiscount", 1));
+    }
+
+    static Stream<Arguments> invalidApplyDiscountInputs() {
+      return Stream.of(
+          Arguments.of("invalid discountPercent 1", -1),
+          Arguments.of("invalid discountPercent 2", 101));
+    }
+  }
+
+  // =========================================================================
+  // scaledRate()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("scaledRate()")
+  class PrimitiveMixedServiceMethodScaledRateTest {
+
+    private record ScaledRateResult(@Positive Double value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validScaledRateInputs")
+    @DisplayName("scaledRate accepts valid input")
+    void testAcceptsValidInput(String description, int factor) {
+      double result = primitiveMixedService.scaledRate(factor);
+      DataValidation.positive(result);
+    }
+
+    static Stream<Arguments> validScaledRateInputs() {
+      return Stream.of(Arguments.of("valid scaledRate", 0));
+    }
+  }
+
+  // =========================================================================
   // reset()
   // =========================================================================
 
@@ -356,65 +415,6 @@ class PrimitiveMixedServiceTest {
 
     static Stream<Arguments> invalidTransferInputs() {
       return Stream.of(Arguments.of("invalid amount 1", 0, 0));
-    }
-  }
-
-  // =========================================================================
-  // scaledRate()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("scaledRate()")
-  class PrimitiveMixedServiceMethodScaledRateTest {
-
-    private record ScaledRateResult(@Positive Double value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validScaledRateInputs")
-    @DisplayName("scaledRate accepts valid input")
-    void testAcceptsValidInput(String description, int factor) {
-      double result = primitiveMixedService.scaledRate(factor);
-      DataValidation.positive(result);
-    }
-
-    static Stream<Arguments> validScaledRateInputs() {
-      return Stream.of(Arguments.of("valid scaledRate", 0));
-    }
-  }
-
-  // =========================================================================
-  // applyDiscount()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("applyDiscount()")
-  class PrimitiveMixedServiceMethodApplyDiscountTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyDiscountInputs")
-    @DisplayName("applyDiscount accepts valid input")
-    void testAcceptsValidInput(String description, int discountPercent) {
-      double result = primitiveMixedService.applyDiscount(discountPercent);
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidApplyDiscountInputs")
-    @DisplayName("applyDiscount rejects invalid input")
-    void testRejectsInvalidInput(String description, int discountPercent) {
-      // Enforce @Min: DataValidation.min(0, discountPercent);
-      // Enforce @Max: DataValidation.max(100, discountPercent);
-      assertThatThrownBy(() -> primitiveMixedService.applyDiscount(discountPercent))
-          .isInstanceOf(Exception.class);
-    }
-
-    static Stream<Arguments> validApplyDiscountInputs() {
-      return Stream.of(Arguments.of("valid applyDiscount", 1));
-    }
-
-    static Stream<Arguments> invalidApplyDiscountInputs() {
-      return Stream.of(
-          Arguments.of("invalid discountPercent 1", -1),
-          Arguments.of("invalid discountPercent 2", 101));
     }
   }
 }

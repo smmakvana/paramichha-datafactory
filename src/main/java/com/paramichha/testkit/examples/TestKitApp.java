@@ -1,6 +1,6 @@
 package com.paramichha.testkit.examples;
 
-import com.paramichha.testkit.TestKits;
+import com.paramichha.testkit.TestKitsX;
 
 import java.nio.file.Path;
 
@@ -33,7 +33,7 @@ public class TestKitApp {
     static void generate(Class<?>... classes) {
         for (Class<?> type : classes) {
             try {
-                Path written = TestKits.of(type).generateTest().writeTo(OUTPUT_DIR);
+                Path written = TestKitsX.of(type).generateTest().writeTo(OUTPUT_DIR);
                 System.out.println("✓ " + type.getSimpleName() + " → " + written);
             } catch (Exception e) {
                 System.err.println("✗ " + type.getSimpleName() + " → " + e.getMessage());

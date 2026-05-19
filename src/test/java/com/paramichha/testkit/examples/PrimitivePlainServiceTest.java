@@ -165,7 +165,7 @@ class PrimitivePlainServiceTest {
       return Stream.of(
           Arguments.of("valid rate 1", -1.0d),
           Arguments.of("valid rate 2", 0.0d),
-          Arguments.of("valid rate 3", 461.51d));
+          Arguments.of("valid rate 3", 393.11d));
     }
 
     // TODO: add constraints to rate then uncomment
@@ -204,7 +204,7 @@ class PrimitivePlainServiceTest {
 
     static Stream<Arguments> validLevels() {
       return Stream.of(
-          Arguments.of("valid level 1", (byte) 127),
+          Arguments.of("valid level 1", (byte) 68),
           Arguments.of("valid level 2", (byte) -128),
           Arguments.of("valid level 3", (byte) -127),
           Arguments.of("valid level 4", (byte) 0),
@@ -315,6 +315,47 @@ class PrimitivePlainServiceTest {
   }
 
   // =========================================================================
+  // applyDiscount()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("applyDiscount()")
+  class PrimitivePlainServiceMethodApplyDiscountTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validApplyDiscountInputs")
+    @DisplayName("applyDiscount accepts valid input")
+    void testAcceptsValidInput(String description, int discountPercent) {
+      double result = primitivePlainService.applyDiscount(discountPercent);
+    }
+
+    static Stream<Arguments> validApplyDiscountInputs() {
+      return Stream.of(Arguments.of("valid applyDiscount", 0));
+    }
+  }
+
+  // =========================================================================
+  // totalValue()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("totalValue()")
+  class PrimitivePlainServiceMethodTotalValueTest {
+
+    @Test
+    @DisplayName("totalValue returns a result")
+    void testReturnsResult() {
+      long result = primitivePlainService.totalValue();
+    }
+
+    @Test
+    @DisplayName("totalValue returns consistent result")
+    void testReturnsConsistentResult() {
+      assertThat(primitivePlainService.totalValue()).isEqualTo(primitivePlainService.totalValue());
+    }
+  }
+
+  // =========================================================================
   // reset()
   // =========================================================================
 
@@ -374,47 +415,6 @@ class PrimitivePlainServiceTest {
 
     static Stream<Arguments> validTransferInputs() {
       return Stream.of(Arguments.of("valid transfer", 0, 0));
-    }
-  }
-
-  // =========================================================================
-  // totalValue()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("totalValue()")
-  class PrimitivePlainServiceMethodTotalValueTest {
-
-    @Test
-    @DisplayName("totalValue returns a result")
-    void testReturnsResult() {
-      long result = primitivePlainService.totalValue();
-    }
-
-    @Test
-    @DisplayName("totalValue returns consistent result")
-    void testReturnsConsistentResult() {
-      assertThat(primitivePlainService.totalValue()).isEqualTo(primitivePlainService.totalValue());
-    }
-  }
-
-  // =========================================================================
-  // applyDiscount()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("applyDiscount()")
-  class PrimitivePlainServiceMethodApplyDiscountTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyDiscountInputs")
-    @DisplayName("applyDiscount accepts valid input")
-    void testAcceptsValidInput(String description, int discountPercent) {
-      double result = primitivePlainService.applyDiscount(discountPercent);
-    }
-
-    static Stream<Arguments> validApplyDiscountInputs() {
-      return Stream.of(Arguments.of("valid applyDiscount", 0));
     }
   }
 }

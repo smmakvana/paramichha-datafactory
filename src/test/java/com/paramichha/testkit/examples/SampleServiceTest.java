@@ -79,7 +79,7 @@ class SampleServiceTest {
     }
 
     static Stream<Arguments> validNames() {
-      return Stream.of(Arguments.of("name 0", "Carmel Wyman"));
+      return Stream.of(Arguments.of("name 0", "Ms. Freddy Jacobson"));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -186,6 +186,102 @@ class SampleServiceTest {
   }
 
   // =========================================================================
+  // applyDiscount()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("applyDiscount()")
+  class SampleServiceMethodApplyDiscountTest {
+
+    private record ApplyDiscountResult(@NotNull @Positive BigDecimal value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validApplyDiscountInputs")
+    @DisplayName("applyDiscount accepts valid input")
+    void testAcceptsValidInput(String description, BigDecimal rate) {
+      BigDecimal result = sampleService.applyDiscount(rate);
+      DataValidation.notNull(result);
+      DataValidation.positive(result);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidApplyDiscountInputs")
+    @DisplayName("applyDiscount rejects invalid input")
+    void testRejectsInvalidInput(String description, BigDecimal rate) {
+      // Enforce @DecimalMin: DataValidation.decimalMin("0.0", rate);
+      // Enforce @DecimalMax: DataValidation.decimalMax("1.0", rate);
+      assertThatThrownBy(() -> sampleService.applyDiscount(rate)).isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validApplyDiscountInputs() {
+      return Stream.of(Arguments.of("valid applyDiscount", new BigDecimal("0.50")));
+    }
+
+    static Stream<Arguments> invalidApplyDiscountInputs() {
+      return Stream.of(
+          Arguments.of("invalid rate 1", new BigDecimal("-1")),
+          Arguments.of("invalid rate 2", new BigDecimal("2")));
+    }
+  }
+
+  // =========================================================================
+  // formatName()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("formatName()")
+  class SampleServiceMethodFormatNameTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validFormatNameInputs")
+    @DisplayName("formatName accepts valid input")
+    void testAcceptsValidInput(String description, String prefix) {
+      String result = sampleService.formatName(prefix);
+      assertThat(result).isNotNull();
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidFormatNameInputs")
+    @DisplayName("formatName rejects invalid input")
+    void testRejectsInvalidInput(String description, String prefix) {
+      // Enforce @NotBlank: DataValidation.notBlank(prefix);
+      assertThatThrownBy(() -> sampleService.formatName(prefix)).isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validFormatNameInputs() {
+      return Stream.of(Arguments.of("valid formatName", "Ms."));
+    }
+
+    static Stream<Arguments> invalidFormatNameInputs() {
+      return Stream.of(
+          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
+    }
+  }
+
+  // =========================================================================
+  // describe()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("describe()")
+  class SampleServiceMethodDescribeTest {
+
+    private record DescribeResult(@NotBlank String value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validDescribeInputs")
+    @DisplayName("describe accepts valid input")
+    void testAcceptsValidInput(String description, String separator) {
+      String result = sampleService.describe(separator);
+      DataValidation.notBlank(result);
+    }
+
+    static Stream<Arguments> validDescribeInputs() {
+      return Stream.of(Arguments.of("valid describe", (String) null));
+    }
+  }
+
+  // =========================================================================
   // reset()
   // =========================================================================
 
@@ -257,19 +353,21 @@ class SampleServiceTest {
       return Stream.of(
           Arguments.of(
               "valid merge",
-              new SampleService("Ms. Madlyn Greenfelder", 1, new BigDecimal("1.50")),
-              "Marcell Gislason"));
+              new SampleService("Jamar Oberbrunner PhD", 1, new BigDecimal("1.50")),
+              "Glory D'Amore"));
     }
 
     static Stream<Arguments> invalidMergeInputs() {
       return Stream.of(
-          Arguments.of("invalid other", null, "Lemuel Koepp"),
+          Arguments.of("invalid other", null, "Mirna Keeling"),
           Arguments.of(
               "invalid newName",
-              new SampleService("Miss Frida Harris", 1, new BigDecimal("1.50")),
+              new SampleService("Lorraine Crooks", 1, new BigDecimal("1.50")),
               null),
           Arguments.of(
-              "invalid newName", new SampleService("Carol Berge", 1, new BigDecimal("1.50")), ""));
+              "invalid newName",
+              new SampleService("Mrs. Estelle Lueilwitz", 1, new BigDecimal("1.50")),
+              ""));
     }
   }
 
@@ -321,7 +419,7 @@ class SampleServiceTest {
       return Stream.of(
           Arguments.of(
               "valid transferTo",
-              new SampleService("Donnie Hackett", 1, new BigDecimal("1.50")),
+              new SampleService("Miss Launa Smitham", 1, new BigDecimal("1.50")),
               0));
     }
 
@@ -367,102 +465,6 @@ class SampleServiceTest {
 
     static Stream<Arguments> validSwapInputs() {
       return Stream.of(Arguments.of("valid swap", (String) null, (String) null));
-    }
-  }
-
-  // =========================================================================
-  // formatName()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("formatName()")
-  class SampleServiceMethodFormatNameTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validFormatNameInputs")
-    @DisplayName("formatName accepts valid input")
-    void testAcceptsValidInput(String description, String prefix) {
-      String result = sampleService.formatName(prefix);
-      assertThat(result).isNotNull();
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidFormatNameInputs")
-    @DisplayName("formatName rejects invalid input")
-    void testRejectsInvalidInput(String description, String prefix) {
-      // Enforce @NotBlank: DataValidation.notBlank(prefix);
-      assertThatThrownBy(() -> sampleService.formatName(prefix)).isInstanceOf(Exception.class);
-    }
-
-    static Stream<Arguments> validFormatNameInputs() {
-      return Stream.of(Arguments.of("valid formatName", "Dr."));
-    }
-
-    static Stream<Arguments> invalidFormatNameInputs() {
-      return Stream.of(
-          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
-    }
-  }
-
-  // =========================================================================
-  // describe()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("describe()")
-  class SampleServiceMethodDescribeTest {
-
-    private record DescribeResult(@NotBlank String value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validDescribeInputs")
-    @DisplayName("describe accepts valid input")
-    void testAcceptsValidInput(String description, String separator) {
-      String result = sampleService.describe(separator);
-      DataValidation.notBlank(result);
-    }
-
-    static Stream<Arguments> validDescribeInputs() {
-      return Stream.of(Arguments.of("valid describe", (String) null));
-    }
-  }
-
-  // =========================================================================
-  // applyDiscount()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("applyDiscount()")
-  class SampleServiceMethodApplyDiscountTest {
-
-    private record ApplyDiscountResult(@NotNull @Positive BigDecimal value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyDiscountInputs")
-    @DisplayName("applyDiscount accepts valid input")
-    void testAcceptsValidInput(String description, BigDecimal rate) {
-      BigDecimal result = sampleService.applyDiscount(rate);
-      DataValidation.notNull(result);
-      DataValidation.positive(result);
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidApplyDiscountInputs")
-    @DisplayName("applyDiscount rejects invalid input")
-    void testRejectsInvalidInput(String description, BigDecimal rate) {
-      // Enforce @DecimalMin: DataValidation.decimalMin("0.0", rate);
-      // Enforce @DecimalMax: DataValidation.decimalMax("1.0", rate);
-      assertThatThrownBy(() -> sampleService.applyDiscount(rate)).isInstanceOf(Exception.class);
-    }
-
-    static Stream<Arguments> validApplyDiscountInputs() {
-      return Stream.of(Arguments.of("valid applyDiscount", new BigDecimal("0.50")));
-    }
-
-    static Stream<Arguments> invalidApplyDiscountInputs() {
-      return Stream.of(
-          Arguments.of("invalid rate 1", new BigDecimal("-1")),
-          Arguments.of("invalid rate 2", new BigDecimal("2")));
     }
   }
 }

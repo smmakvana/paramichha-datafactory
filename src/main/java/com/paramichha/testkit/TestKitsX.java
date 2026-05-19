@@ -20,7 +20,7 @@ import java.util.List;
  *        .generate();
  * </pre>
  */
-public final class TestKits implements TestKit {
+public final class TestKitsX implements TestKitX {
 
     private final TestDataProvider dataProvider = DefaultTestDataProvider.INSTANCE;
     private final CodeGenerator generator = JavaTestCodeGenerator.INSTANCE;
@@ -33,7 +33,7 @@ public final class TestKits implements TestKit {
 
     // ── Constructors ──────────────────────────────────────────────────────
 
-    private TestKits(ClassInfo classInfo, Long seed, ProjectType projectType, GenerationMode mode) {
+    private TestKitsX(ClassInfo classInfo, Long seed, ProjectType projectType, GenerationMode mode) {
         this.classInfo = classInfo;
         this.targetPackage = classInfo.packageName();
         this.seed = seed;
@@ -44,44 +44,44 @@ public final class TestKits implements TestKit {
     // ── Entry points ──────────────────────────────────────────────────────
 
     /** Reads ClassMeta from reflection then delegates to of(ClassMeta). */
-    public static TestKits of(Class<?> type) {
+    public static TestKitsX of(Class<?> type) {
         if (type == null) throw new TestKitException("type must not be null");
-        return new TestKits(ReflectionClassReader.INSTANCE.read(type), 69L, ProjectType.detect(), GenerationMode.PRODUCTION);
+        return new TestKitsX(ReflectionClassReader.INSTANCE.read(type), 69L, ProjectType.detect(), GenerationMode.PRODUCTION);
     }
 
     /** Accepts pre-built ClassMeta — PSI, YAML, or manual path. */
-    public static TestKits of(ClassInfo classInfo) {
+    public static TestKitsX of(ClassInfo classInfo) {
         if (classInfo == null) throw new TestKitException("classMeta must not be null");
-        return new TestKits(classInfo, 69L, ProjectType.detect(), GenerationMode.PRODUCTION);
+        return new TestKitsX(classInfo, 69L, ProjectType.detect(), GenerationMode.PRODUCTION);
     }
 
     // ── Config ────────────────────────────────────────────────────────────
 
-    public TestKits withPackage(String packageName) {
+    public TestKitsX withPackage(String packageName) {
         if (packageName == null || packageName.isBlank())
             throw new TestKitException("packageName must not be blank");
         this.targetPackage = packageName;
         return this;
     }
 
-    public TestKits withSeed(long seed) {
+    public TestKitsX withSeed(long seed) {
         this.seed = seed;
         return this;
     }
 
-    public TestKits withMode(GenerationMode mode) {
+    public TestKitsX withMode(GenerationMode mode) {
         if (mode == null) throw new TestKitException("mode must not be null");
         this.mode = mode;
         return this;
     }
 
-    public TestKits withTemplate(TestKitTemplate template) {
+    public TestKitsX withTemplate(TestKitTemplate template) {
         if (template == null) throw new TestKitException("template must not be null");
         this.template = template;
         return this;
     }
 
-    public TestKits withProjectType(ProjectType projectType) {
+    public TestKitsX withProjectType(ProjectType projectType) {
         if (projectType == null) throw new TestKitException("projectType must not be null");
         this.projectType = projectType;
         return this;
