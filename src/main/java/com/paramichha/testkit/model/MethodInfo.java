@@ -5,7 +5,7 @@ import java.util.List;
 
 public record MethodInfo(
         String name,
-        ReturnInfo returnType,
+        ReturnTypeInfo returnType,
         List<ParameterInfo> parameters,
         MethodKind kind
 ) {
@@ -13,13 +13,13 @@ public record MethodInfo(
     public MethodInfo(String name, Class<?> rawReturnType,
                       List<Annotation> returnAnnotations,
                       List<ParameterInfo> parameters, MethodKind kind) {
-        this(name, new ReturnInfo(rawReturnType, returnAnnotations), parameters, kind);
+        this(name, new ReturnTypeInfo(rawReturnType, returnAnnotations), parameters, kind);
     }
 
     /** Backward-compatible — no return annotations. */
     public MethodInfo(String name, Class<?> rawReturnType,
                       List<ParameterInfo> parameters, MethodKind kind) {
-        this(name, new ReturnInfo(rawReturnType, List.of()), parameters, kind);
+        this(name, new ReturnTypeInfo(rawReturnType, List.of()), parameters, kind);
     }
 
     public boolean hasParameters()    { return !parameters.isEmpty(); }

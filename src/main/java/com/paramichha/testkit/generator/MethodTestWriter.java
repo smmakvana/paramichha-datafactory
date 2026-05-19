@@ -113,7 +113,7 @@ final class MethodTestWriter {
     private void writeQuery(StringBuilder sb, MethodInfo method, String fieldName,
                             String ind, String indBody) {
         String methodName   = method.name();
-        ReturnInfo ret  = method.returnType();
+        ReturnTypeInfo ret  = method.returnType();
         String call         = fieldName + "." + methodName + "()";
 
         sb.append(ind).append("@Test\n");
@@ -194,7 +194,7 @@ final class MethodTestWriter {
         sb.append(ind).append("void ").append(template.testAcceptsValidInput)
                 .append("(String description, ").append(sig).append(") {\n");
 
-        ReturnInfo ret = method.returnType();
+        ReturnTypeInfo ret = method.returnType();
         if (ret.isVoid()) {
             sb.append(indBody).append("assertThatCode(() -> ")
                     .append(fieldName).append(".").append(method.name()).append("(").append(call)
@@ -252,7 +252,7 @@ final class MethodTestWriter {
      *                          works for all types: primitive, String, BigDecimal, Object
      * - no annotations       → skip for primitive, isNotNull for object
      */
-    private void writeReturnAssertion(StringBuilder sb, ReturnInfo ret,
+    private void writeReturnAssertion(StringBuilder sb, ReturnTypeInfo ret,
                                       String methodName, String resultExpr, String indBody) {
         if (ret.isVoid()) return;
 
@@ -327,7 +327,7 @@ final class MethodTestWriter {
      * Needs a wrapper when the return type can't be validated directly by
      * the Jakarta validator — primitives, String, and java.* types need boxing.
      */
-    private boolean needsWrapperRecord(ReturnInfo ret) {
+    private boolean needsWrapperRecord(ReturnTypeInfo ret) {
         if (ret.isVoid() || !ret.isConstrained()) return false;
         Class<?> t = ret.type();
         return t.isPrimitive()
@@ -338,7 +338,7 @@ final class MethodTestWriter {
     }
 
     private void writeWrapperRecord(StringBuilder sb, String methodName,
-                                    ReturnInfo ret, String ind) {
+                                    ReturnTypeInfo ret, String ind) {
         String annotations = buildAnnotationSource(ret.annotations());
         String boxedType   = boxedTypeName(ret.type());
         sb.append(ind).append("private record ").append(wrapperName(methodName))
