@@ -7,13 +7,13 @@ import java.util.Objects;
 public final class ReflectionMethodInfo {
     private final String name;
     private final ReflectionReturnTypeInfo returnType;
-    private final List<ParameterInfo> parameters;
+    private final List<ReflectionParameterInfo> parameters;
     private final MethodKind kind;
 
     public ReflectionMethodInfo(
             String name,
             ReflectionReturnTypeInfo returnType,
-            List<ParameterInfo> parameters,
+            List<ReflectionParameterInfo> parameters,
             MethodKind kind
     ) {
         this.name = name;
@@ -27,7 +27,7 @@ public final class ReflectionMethodInfo {
      */
     public ReflectionMethodInfo(String name, Class<?> rawReturnType,
                                 List<Annotation> returnAnnotations,
-                                List<ParameterInfo> parameters, MethodKind kind) {
+                                List<ReflectionParameterInfo> parameters, MethodKind kind) {
         this(name, new ReflectionReturnTypeInfo(rawReturnType, returnAnnotations), parameters, kind);
     }
 
@@ -35,7 +35,7 @@ public final class ReflectionMethodInfo {
      * Backward-compatible — no return annotations.
      */
     public ReflectionMethodInfo(String name, Class<?> rawReturnType,
-                                List<ParameterInfo> parameters, MethodKind kind) {
+                                List<ReflectionParameterInfo> parameters, MethodKind kind) {
         this(name, new ReflectionReturnTypeInfo(rawReturnType, List.of()), parameters, kind);
     }
 
@@ -55,7 +55,7 @@ public final class ReflectionMethodInfo {
         return returnType;
     }
 
-    public List<ParameterInfo> parameters() {
+    public List<ReflectionParameterInfo> parameters() {
         return parameters;
     }
 

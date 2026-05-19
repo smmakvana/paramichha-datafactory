@@ -146,10 +146,10 @@ final class MethodTestWriter {
                                            String validSrc, String invalidSrc,
                                            String ind, String indBody) {
         String methodName      = method.name();
-        List<ParameterInfo> params = method.parameters();
+        List<ReflectionParameterInfo> params = method.parameters();
         String sig             = buildParamSignature(params);
         String call            = buildParamCall(params);
-        boolean anyConstrained = params.stream().anyMatch(ParameterInfo::isConstrained);
+        boolean anyConstrained = params.stream().anyMatch(ReflectionParameterInfo::isConstrained);
 
         writeAcceptsTest(sb, method, fieldName, validSrc, sig, call, ind, indBody);
 
@@ -168,10 +168,10 @@ final class MethodTestWriter {
                                 String validSrc, String invalidSrc,
                                 String ind, String indBody) {
         String methodName      = method.name();
-        List<ParameterInfo> params = method.parameters();
+        List<ReflectionParameterInfo> params = method.parameters();
         String sig             = buildParamSignature(params);
         String call            = buildParamCall(params);
-        boolean anyConstrained = params.stream().anyMatch(ParameterInfo::isConstrained);
+        boolean anyConstrained = params.stream().anyMatch(ReflectionParameterInfo::isConstrained);
 
         writeAcceptsTest(sb, method, fieldName, validSrc, sig, call, ind, indBody);
 
@@ -210,7 +210,7 @@ final class MethodTestWriter {
 
     private void writeRejectsTest(StringBuilder sb, String methodName, String fieldName,
                                   String invalidSrc, String sig, String call,
-                                  List<ParameterInfo> params, String ind, String indBody) {
+                                  List<ReflectionParameterInfo> params, String ind, String indBody) {
         sb.append(ind).append("@ParameterizedTest(name = \"{0}\")\n");
         sb.append(ind).append("@MethodSource(\"").append(invalidSrc).append("\")\n");
         sb.append(ind).append("@DisplayName(\"").append(methodName).append(" rejects invalid input\")\n");
@@ -227,8 +227,8 @@ final class MethodTestWriter {
      * Writes a comment per constrained param showing the DataValidation call
      * that enforces the contract — teaches dev exactly what to add to make test pass.
      */
-    private void writeEnforcementHints(StringBuilder sb, List<ParameterInfo> params, String indBody) {
-        for (ParameterInfo param : params) {
+    private void writeEnforcementHints(StringBuilder sb, List<ReflectionParameterInfo> params, String indBody) {
+        for (ReflectionParameterInfo param : params) {
             for (java.lang.annotation.Annotation a : param.validations()) {
                 String hint = dataValidationCall(a, param.name());
                 if (hint != null) {
@@ -367,7 +367,7 @@ final class MethodTestWriter {
     // ── Data sources — DataFactory drives all values ──────────────────────
 
     private void writeValidDataSource(StringBuilder sb, String methodName,
-                                      List<ParameterInfo> params,
+                                      List<ReflectionParameterInfo> params,
                                       String validSrc, String ind) {
         sb.append(ind).append("static Stream<Arguments> ").append(validSrc).append("() {\n");
         sb.append(ind).append("    return Stream.of(\n");
@@ -380,10 +380,10 @@ final class MethodTestWriter {
         sb.append(ind).append("}\n\n");
     }
 
-    private void writeInvalidDataSource(StringBuilder sb, List<ParameterInfo> params,
+    private void writeInvalidDataSource(StringBuilder sb, List<ReflectionParameterInfo> params,
                                         String invalidSrc, String ind) {
-        ParameterInfo constrained = params.stream()
-                .filter(ParameterInfo::isConstrained).findFirst().orElse(params.get(0));
+        ReflectionParameterInfo constrained = params.stream()
+                .filter(ReflectionParameterInfo::isConstrained).findFirst().orElse(params.get(0));
         int constrainedIdx = params.indexOf(constrained);
         List<String> invalids = invalidLiterals(constrained);
 
@@ -409,14 +409,14 @@ final class MethodTestWriter {
         sb.append(ind).append("}\n\n");
     }
 
-    private void writeInvalidDataSourceOperation(StringBuilder sb, List<ParameterInfo> params,
+    private void writeInvalidDataSourceOperation(StringBuilder sb, List<ReflectionParameterInfo> params,
                                                  String invalidSrc, String ind) {
         sb.append(ind).append("static Stream<Arguments> ").append(invalidSrc).append("() {\n");
         sb.append(ind).append("    return Stream.of(\n");
 
         java.util.List<String> rows = new java.util.ArrayList<>();
         for (int nullIdx = 0; nullIdx < params.size(); nullIdx++) {
-            ParameterInfo p = params.get(nullIdx);
+            ReflectionParameterInfo p = params.get(nullIdx);
             if (!p.isConstrained()) continue;
             List<String> invalids = invalidLiterals(p);
             for (String inv : invalids) {
@@ -441,7 +441,7 @@ final class MethodTestWriter {
     // ── Value generation — DataFactory only ──────────────────────────────
 
     @SuppressWarnings("unchecked")
-    private String validLiteral(ParameterInfo param) {
+    private String validLiteral(ReflectionParameterInfo param) {
         Class<?> type = param.type();
 
         // Domain object — build field by field using InstantiationWriter
@@ -482,7 +482,7 @@ final class MethodTestWriter {
     }
 
     @SuppressWarnings("unchecked")
-    private List<String> invalidLiterals(ParameterInfo param) {
+    private List<String> invalidLiterals(ReflectionParameterInfo param) {
         try {
             List<?> invalids = DataFactory.field(
                     param.name(), (Class<Object>) param.type(),
@@ -575,7 +575,7 @@ final class MethodTestWriter {
 
     // ── String helpers ────────────────────────────────────────────────────
 
-    private String buildParamSignature(List<ParameterInfo> params) {
+    private String buildParamSignature(List<ReflectionParameterInfo> params) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.size(); i++) {
             if (i > 0) sb.append(", ");
@@ -585,7 +585,7 @@ final class MethodTestWriter {
         return sb.toString();
     }
 
-    private String buildParamCall(List<ParameterInfo> params) {
+    private String buildParamCall(List<ReflectionParameterInfo> params) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.size(); i++) {
             if (i > 0) sb.append(", ");

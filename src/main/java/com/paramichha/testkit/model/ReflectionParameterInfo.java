@@ -4,13 +4,13 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Objects;
 
-public final class ParameterInfo {
+public final class ReflectionParameterInfo {
     private final String name;
     private final Class<?> type;
     private final List<Annotation> validations;
     private final boolean hasIndirectConstraints;
 
-    public ParameterInfo(
+    public ReflectionParameterInfo(
             String name,
             Class<?> type,
             List<Annotation> validations,
@@ -22,7 +22,7 @@ public final class ParameterInfo {
         this.hasIndirectConstraints = hasIndirectConstraints;
     }
 
-    public ParameterInfo(String name, Class<?> type, List<Annotation> validations) {
+    public ReflectionParameterInfo(String name, Class<?> type, List<Annotation> validations) {
         this(name, type, validations, false);
     }
 
@@ -50,7 +50,7 @@ public final class ParameterInfo {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (ParameterInfo) obj;
+        var that = (ReflectionParameterInfo) obj;
         return Objects.equals(this.name, that.name) &&
                 Objects.equals(this.type, that.type) &&
                 Objects.equals(this.validations, that.validations) &&
