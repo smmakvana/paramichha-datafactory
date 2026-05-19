@@ -19,10 +19,9 @@ import java.util.List;
  * If DataFactory failed, writes a placeholder file with error comment.
  * Never throws — always produces a GeneratedTestClass.
  */
-public final class JavaCodeGenerator implements CodeGenerator {
+public final class JavaTestCodeGenerator implements CodeGenerator {
 
-    public static final JavaCodeGenerator INSTANCE = new JavaCodeGenerator(
-            DefaultValueExtractor.INSTANCE);
+    public static final JavaTestCodeGenerator INSTANCE = new JavaTestCodeGenerator(DefaultValueExtractor.INSTANCE);
 
     private ProjectType projectType = ProjectType.detect();
 
@@ -158,7 +157,7 @@ public final class JavaCodeGenerator implements CodeGenerator {
 
     private final ValueExtractor valueExtractor;
 
-    JavaCodeGenerator(ValueExtractor valueExtractor) {
+    JavaTestCodeGenerator(ValueExtractor valueExtractor) {
         this.valueExtractor = valueExtractor;
     }
 
