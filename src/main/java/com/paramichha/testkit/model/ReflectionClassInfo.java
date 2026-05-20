@@ -1,5 +1,6 @@
 package com.paramichha.testkit.model;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,8 +18,8 @@ public final class ReflectionClassInfo implements ClassInfo {
             boolean utilityClass,
             Class<?> type) {
         this.constructorStyle = constructorStyle;
-        this.fields = fields;
-        this.methods = methods;
+        this.fields           = List.copyOf(fields);      // declaration order — constructor depends on this
+        this.methods          = sortedMethods(methods);   // alphabetical — safe, no ordering dependency
         this.utilityClass = utilityClass;
         this.type = type;
     }
@@ -31,31 +32,22 @@ public final class ReflectionClassInfo implements ClassInfo {
         this(constructorStyle, fields, methods, false, type);
     }
 
-    @Override
-    public String simpleName() {
-        return type.getSimpleName();
+    // ── Sorting ───────────────────────────────────────────────────────────
+
+    private static List<MethodInfo> sortedMethods(List<MethodInfo> methods) {
+        return methods.stream()
+                .sorted(Comparator.comparing(MethodInfo::name)
+                        .thenComparingInt(m -> m.parameters().size()))
+                .toList();
     }
 
-    @Override
-    public String packageName() {
-        return type.getPackageName();
-    }
+    // ── ClassInfo ─────────────────────────────────────────────────────────
 
-    @Override
-    public ConstructorStyle constructorStyle() {
-        return constructorStyle;
-    }
-
-    @Override
-    public List<FieldInfo> fields() {
-        return fields;
-    }
-
-    @Override
-    public List<MethodInfo> methods() {
-        return methods;
-    }
-
+    @Override public String           simpleName()       { return type.getSimpleName(); }
+    @Override public String           packageName()      { return type.getPackageName(); }
+    @Override public ConstructorStyle constructorStyle() { return constructorStyle; }
+    @Override public List<FieldInfo>  fields()           { return fields; }
+    @Override public List<MethodInfo> methods()          { return methods; }
     @Override
     public boolean utilityClass() {
         return utilityClass;
@@ -73,12 +65,12 @@ public final class ReflectionClassInfo implements ClassInfo {
 
     @Override
     public String toString() {
-        return "ReflectionClassInfo[" +
-                "constructorStyle=" + constructorStyle + ", " +
-                "fields=" + fields + ", " +
-                "methods=" + methods + ", " +
-                "utilityClass=" + utilityClass + ", " +
-                "type=" + type + ']';
+        return "ReflectionClassInfo["
+                + "constructorStyle=" + constructorStyle + ", "
+                + "fields=" + fields + ", "
+                + "methods=" + methods + ", "
+                + "utilityClass=" + utilityClass + ", "
+                + "type=" + type + ']';
     }
 
 
