@@ -315,47 +315,6 @@ class PrimitivePlainServiceTest {
   }
 
   // =========================================================================
-  // applyDiscount()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("applyDiscount()")
-  class PrimitivePlainServiceMethodApplyDiscountTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyDiscountInputs")
-    @DisplayName("applyDiscount accepts valid input")
-    void testAcceptsValidInput(String description, int discountPercent) {
-      double result = primitivePlainService.applyDiscount(discountPercent);
-    }
-
-    static Stream<Arguments> validApplyDiscountInputs() {
-      return Stream.of(Arguments.of("valid applyDiscount", 0));
-    }
-  }
-
-  // =========================================================================
-  // totalValue()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("totalValue()")
-  class PrimitivePlainServiceMethodTotalValueTest {
-
-    @Test
-    @DisplayName("totalValue returns a result")
-    void testReturnsResult() {
-      long result = primitivePlainService.totalValue();
-    }
-
-    @Test
-    @DisplayName("totalValue returns consistent result")
-    void testReturnsConsistentResult() {
-      assertThat(primitivePlainService.totalValue()).isEqualTo(primitivePlainService.totalValue());
-    }
-  }
-
-  // =========================================================================
   // reset()
   // =========================================================================
 
@@ -415,6 +374,47 @@ class PrimitivePlainServiceTest {
 
     static Stream<Arguments> validTransferInputs() {
       return Stream.of(Arguments.of("valid transfer", 0, 0));
+    }
+  }
+
+  // =========================================================================
+  // applyDiscount()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("applyDiscount()")
+  class PrimitivePlainServiceMethodApplyDiscountTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validApplyDiscountInputs")
+    @DisplayName("applyDiscount accepts valid input")
+    void testAcceptsValidInput(String description, int discountPercent) {
+      double result = primitivePlainService.applyDiscount(discountPercent);
+    }
+
+    static Stream<Arguments> validApplyDiscountInputs() {
+      return Stream.of(Arguments.of("valid applyDiscount", 0));
+    }
+  }
+
+  // =========================================================================
+  // totalValue()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("totalValue()")
+  class PrimitivePlainServiceMethodTotalValueTest {
+
+    @Test
+    @DisplayName("totalValue returns a result")
+    void testReturnsResult() {
+      long result = primitivePlainService.totalValue();
+    }
+
+    @Test
+    @DisplayName("totalValue returns consistent result")
+    void testReturnsConsistentResult() {
+      assertThat(primitivePlainService.totalValue()).isEqualTo(primitivePlainService.totalValue());
     }
   }
 }
