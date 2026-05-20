@@ -109,6 +109,12 @@ public final class DefaultShortValue implements ShortValue {
      * @return a valid Short
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
+    public FieldValue<Short> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     public Short valid() {
         return delegate.valid();
     }

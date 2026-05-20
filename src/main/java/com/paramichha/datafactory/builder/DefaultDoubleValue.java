@@ -82,6 +82,12 @@ public final class DefaultDoubleValue implements DoubleValue {
      * @return a valid Double
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
+    public FieldValue<Double> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     public Double valid() {
         return delegate.valid();
     }

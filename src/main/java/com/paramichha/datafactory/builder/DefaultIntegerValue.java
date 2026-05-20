@@ -112,6 +112,12 @@ public final class DefaultIntegerValue implements IntegerValue {
      * @return a valid Integer
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
+    public FieldValue<Integer> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     public Integer valid() {
         return delegate.valid();
     }

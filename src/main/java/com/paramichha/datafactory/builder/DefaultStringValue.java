@@ -193,6 +193,12 @@ public final class DefaultStringValue implements StringValue {
      * @return a valid string satisfying all constraints
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
+    public FieldValue<String> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     public String valid() {
         return delegate.valid();
     }

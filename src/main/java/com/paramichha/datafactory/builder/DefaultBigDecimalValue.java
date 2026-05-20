@@ -131,6 +131,12 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      * @return a valid BigDecimal
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
+    public FieldValue<BigDecimal> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     public BigDecimal valid() {
         return applyScale(delegate.valid());
     }

@@ -89,6 +89,12 @@ public final class DefaultLocalDateTimeValue implements LocalDateTimeValue {
      * @return a valid datetime satisfying all constraints
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
+    public FieldValue<LocalDateTime> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     public LocalDateTime valid() {
         return delegate.valid();
     }

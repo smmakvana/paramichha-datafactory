@@ -63,6 +63,8 @@ public interface FieldValue<T> {
      */
     FieldValue<T> with(String annotation);
 
+    FieldValue<T> seed(long seed);
+
     /**
      * Returns one value satisfying all constraints added so far.
      * The value is semantically realistic — not just the minimum valid value.

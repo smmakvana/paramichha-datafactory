@@ -89,6 +89,12 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      * @return a valid date satisfying all constraints
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
+    public FieldValue<LocalDate> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     public LocalDate valid() {
         return delegate.valid();
     }

@@ -17,9 +17,11 @@ import java.util.stream.Collectors;
 final class InstantiationWriter {
 
     private final ClassInfo meta;
+    private final long      seed;
 
-    InstantiationWriter(ClassInfo meta) {
+    InstantiationWriter(ClassInfo meta, long seed) {
         this.meta = meta;
+        this.seed = seed;
     }
 
     /** Full constructor call with all field values as literals. */
@@ -35,7 +37,7 @@ final class InstantiationWriter {
                 List<FieldInfo> fields = meta.fields();
                 for (int i = 0; i < fields.size() && i < values.size(); i++)
                     b.append("\n                    .").append(fields.get(i).name())
-                     .append("(").append(LiteralConverter.toLiteral(values.get(i))).append(")");
+                            .append("(").append(LiteralConverter.toLiteral(values.get(i))).append(")");
                 yield b.append("\n                    .build()").toString();
             }
             case SETTER -> {
@@ -113,7 +115,7 @@ final class InstantiationWriter {
                     && !pkg.startsWith("java.") && !pkg.startsWith("jakarta.");
             if (isDomainType) {
                 try {
-                    Object domainValid = DataFactory.valid(rawType);
+                    Object domainValid = DataFactory.of(rawType).seed(seed).valid();
                     return domainValid != null ? List.of(domainValid) : List.of();
                 } catch (Exception ignored2) {
                     return List.of();
@@ -122,11 +124,11 @@ final class InstantiationWriter {
 
             @SuppressWarnings("unchecked")
             List<?> values = DataFactory.field(
-                    field.name(), (Class<Object>) rawType, annotations).validList();
+                    field.name(), (Class<Object>) rawType, annotations).seed(seed).validList();
             // validAll may return empty for truly unknown types — fall back to valid()
             if (values.isEmpty()) {
                 Object single = DataFactory.field(
-                        field.name(), (Class<Object>) rawType, annotations).valid();
+                        field.name(), (Class<Object>) rawType, annotations).seed(seed).valid();
                 return single != null ? List.of(single) : List.of();
             }
             return values;
@@ -150,10 +152,10 @@ final class InstantiationWriter {
             }
             // Domain type — use DefaultDataBuilder to create a valid instance
             if (!elemType.getPackageName().startsWith("java.")) {
-                return java.util.List.of(DataFactory.valid(elemType));
+                return java.util.List.of(DataFactory.of(elemType).seed(seed).valid());
             }
             // Java type — use FieldBuilder
-            Object elem = DataFactory.field(field.name(), (Class<Object>) elemType, java.util.List.of()).valid();
+            Object elem = DataFactory.field(field.name(), (Class<Object>) elemType, java.util.List.of()).seed(seed).valid();
             return elem != null ? java.util.List.of(elem) : java.util.List.of("x");
         } catch (Exception e) {
             return java.util.List.of();
@@ -168,7 +170,7 @@ final class InstantiationWriter {
             List<Annotation> annotations = field.validations();
             @SuppressWarnings("unchecked")
             List<?> values = DataFactory.field(
-                    field.name(), (Class<Object>) field.rawType(), annotations).invalidList();
+                    field.name(), (Class<Object>) field.rawType(), annotations).seed(seed).invalidList();
             return values;
         } catch (Exception e) {
             return List.of();

@@ -66,6 +66,12 @@ public final class DefaultFloatValue implements FloatValue {
         return this;
     }
 
+    @Override
+    public FieldValue<Float> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     /**
      * Returns one valid value as a primitive {@code float}.
      *

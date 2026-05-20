@@ -22,12 +22,14 @@ final class MethodTestWriter {
     private final ClassInfo meta;
     private final InstantiationWriter instantiation;
     private final TestKitTemplate template;
+    private final long            seed;
 
     MethodTestWriter(ClassInfo meta, InstantiationWriter instantiation,
-                     TestKitTemplate template) {
+                     TestKitTemplate template, long seed) {
         this.meta          = meta;
         this.instantiation = instantiation;
         this.template      = template;
+        this.seed          = seed;
     }
 
     void write(StringBuilder sb, List<Object> validInstanceParts, boolean hasJakarta) {
@@ -455,7 +457,7 @@ final class MethodTestWriter {
             try {
                 ClassInfo paramMeta =
                         ReflectionClassReader.INSTANCE.read(type);
-                InstantiationWriter iw = new InstantiationWriter(paramMeta);
+                InstantiationWriter iw = new InstantiationWriter(paramMeta,seed);
                 java.util.List<Object> parts = new java.util.ArrayList<>();
                 for (FieldInfo f : paramMeta.fields()) {
                     java.util.List<?> vals = iw.validValuesFor(type, f);
@@ -468,12 +470,12 @@ final class MethodTestWriter {
         }
 
         // All other types — DataFactory direct (primitives, String, BigDecimal etc)
-        long seed = com.paramichha.utils.Seeds.stableHash(param.name());
+        long paramSeed = com.paramichha.utils.Seeds.stableHash(param.name()) ^ seed;
         try {
             Object val = param.validations().isEmpty()
-                    ? DataFactory.of(type).seed(seed).valid()
+                    ? DataFactory.of(type).seed(paramSeed).valid()
                     : DataFactory.field(param.name(), (Class<Object>) type,
-                    param.validations()).valid();
+                    param.validations()).seed(paramSeed).valid();
             if (val == null) return nullCast(type);
             String lit = LiteralConverter.toLiteralOrNull(val);
             if (lit != null && !lit.startsWith("/* TODO")) return lit;

@@ -40,6 +40,7 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     }
 
     private DataMachine machine() {
+        if (seed != null) return DataMachines.seeded(seed);
         return machine != null ? machine : DataMachines.random();
     }
 
@@ -75,6 +76,11 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
         List<Annotation> merged = new ArrayList<>(extraAnnotations);
         return AnnotationResolver.analyze(
                 constraints.fieldName(), constraints.fieldType(), merged);
+    }
+
+    @Override
+    public FieldValueBuilder<T> seed(long seed) {
+        return new FieldValueBuilder<>(constraints, extraAnnotations, machine, seed);
     }
 
     @Override
@@ -264,7 +270,7 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
         if (type == LocalDate.class)      return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE;
         if (type == LocalDateTime.class)  return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE_TIME;
         if (type == ZonedDateTime.class)  return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE_TIME.atZone(com.paramichha.datafactory.generation.TemporalAnchor.ZONE);
-        if (type == OffsetDateTime.class) return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE_TIME.atOffset(java.time.ZoneOffset.UTC);
+        if (type == OffsetDateTime.class) return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE_TIME.atOffset(ZoneOffset.UTC);
         if (type == Date.class)           return Date.from(com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_INSTANT);
         if (type == Year.class)           return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_YEAR;
         if (type == YearMonth.class)      return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_YEARMONTH;
@@ -275,7 +281,7 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
         if (type == LocalDate.class)      return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE;
         if (type == LocalDateTime.class)  return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE_TIME;
         if (type == ZonedDateTime.class)  return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE_TIME.atZone(com.paramichha.datafactory.generation.TemporalAnchor.ZONE);
-        if (type == OffsetDateTime.class) return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE_TIME.atOffset(java.time.ZoneOffset.UTC);
+        if (type == OffsetDateTime.class) return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE_TIME.atOffset(ZoneOffset.UTC);
         if (type == Date.class)           return Date.from(com.paramichha.datafactory.generation.TemporalAnchor.PAST_INSTANT);
         if (type == Year.class)           return com.paramichha.datafactory.generation.TemporalAnchor.PAST_YEAR;
         if (type == YearMonth.class)      return com.paramichha.datafactory.generation.TemporalAnchor.PAST_YEARMONTH;

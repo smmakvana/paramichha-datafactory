@@ -109,6 +109,12 @@ public final class DefaultByteValue implements ByteValue {
      * @return a valid Byte
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
+    public FieldValue<Byte> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     public Byte valid() {
         return delegate.valid();
     }

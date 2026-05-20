@@ -66,7 +66,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
             new MemberTestWriter(ctx.classInfo, ctx.instantiation, DefaultValueExtractor.INSTANCE, ctx.template)
                     .write(sb, ctx.fixture.type(), ctx.validParts, ctx.validAllPerField());
         }
-        new MethodTestWriter(ctx.classInfo, ctx.instantiation, ctx.template)
+        new MethodTestWriter(ctx.classInfo, ctx.instantiation, ctx.template, ctx.seed)
                 .write(sb, ctx.validParts, ctx.hasJakarta);
 
         sb.append("}\n");
@@ -153,7 +153,7 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
                 .append(ctx.template.resolveMethod(ctx.template.methodDisplay, ctx.simpleName(), method.name()))
                 .append("\")\n");
         sb.append("class ").append(methodClassName).append(" extends ").append(baseName).append(" {\n\n");
-        new MethodTestWriter(ctx.classInfo, ctx.instantiation, ctx.template)
+        new MethodTestWriter(ctx.classInfo, ctx.instantiation, ctx.template, ctx.seed)
                 .writeFlat(sb, method, ctx.validParts, ctx.hasJakarta);
         sb.append("}\n");
         return new GenerationResult(methodClassName, ctx.targetPackage, sb.toString());

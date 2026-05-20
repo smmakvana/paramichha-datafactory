@@ -71,6 +71,12 @@ public final class DefaultBooleanValue implements BooleanValue {
      * @return a valid boolean value satisfying all constraints
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
+    public FieldValue<Boolean> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     public Boolean valid() {
         return delegate.valid();
     }

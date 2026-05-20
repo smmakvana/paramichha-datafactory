@@ -111,6 +111,12 @@ public final class DefaultLongValue implements LongValue {
      * @return a valid Long
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
+    public FieldValue<Long> seed(long seed) {
+        delegate = delegate.seed(seed);
+        return this;
+    }
+
     public Long valid() {
         return delegate.valid();
     }
