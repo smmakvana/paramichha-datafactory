@@ -1,13 +1,11 @@
 package com.paramichha.testkit.generator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Produces source code for a complete Java class — top-level or nested.
- *
- * <p>Checks {@link ClassCodingInfo#isNested()} to decide whether to emit
- * header, package, and imports. Delegates fields, methods, and nested classes
- * to their respective coders. Recurses for nested classes.
+ * Recurses for nested classes. Handles {@link ClassCodingInfo#rawBody()} escape hatch.
  */
 public final class ClassCoder implements Coder<ClassCodingInfo> {
 
@@ -34,11 +32,11 @@ public final class ClassCoder implements Coder<ClassCodingInfo> {
         }
 
         // Annotations
+        String prefix = spec.isNested() ? INDENT : "";
         for (String ann : spec.annotations())
-            sb.append(spec.isNested() ? INDENT : "").append(ann).append("\n");
+            sb.append(prefix).append(ann).append("\n");
 
         // Class declaration
-        String prefix = spec.isNested() ? INDENT : "";
         sb.append(prefix);
         for (String mod : spec.modifiers())
             sb.append(mod).append(" ");
@@ -47,21 +45,25 @@ public final class ClassCoder implements Coder<ClassCodingInfo> {
             sb.append(" extends ").append(spec.extendsClass());
         sb.append(" {\n\n");
 
-        // Fields
-        for (FieldCodingInfo field : spec.fields())
-            sb.append(indent(FIELD_CODER.code(field), spec.isNested()));
+        // Body — rawBody takes priority over structured fields/methods/nestedClasses
+        if (spec.rawBody() != null) {
+            sb.append(indent(spec.rawBody(), spec.isNested()));
+        } else {
+            // Fields
+            for (FieldCodingInfo field : spec.fields())
+                sb.append(indent(FIELD_CODER.code(field), spec.isNested()));
 
-        // Blank line after fields if any
-        if (!spec.fields().isEmpty() && !spec.methods().isEmpty())
-            sb.append("\n");
+            if (!spec.fields().isEmpty() && (!spec.methods().isEmpty() || !spec.nestedClasses().isEmpty()))
+                sb.append("\n");
 
-        // Methods
-        for (MethodCodingInfo method : spec.methods())
-            sb.append(indent(METHOD_CODER.code(method), spec.isNested()));
+            // Methods
+            for (MethodCodingInfo method : spec.methods())
+                sb.append(indent(METHOD_CODER.code(method), spec.isNested()));
 
-        // Nested classes — recursive
-        for (ClassCodingInfo nested : spec.nestedClasses())
-            sb.append(indent(code(nested), spec.isNested()));
+            // Nested classes — recursive
+            for (ClassCodingInfo nested : spec.nestedClasses())
+                sb.append(indent(code(nested), spec.isNested()));
+        }
 
         sb.append(prefix).append("}\n");
         if (spec.isNested()) sb.append("\n");
@@ -69,14 +71,10 @@ public final class ClassCoder implements Coder<ClassCodingInfo> {
         return sb.toString();
     }
 
-    /**
-     * Indents every line by one extra level when inside a nested class.
-     * Top-level classes don't need extra indentation.
-     */
     private static String indent(String src, boolean nested) {
-        if (!nested || src.isBlank()) return src;
+        if (!nested || src == null || src.isBlank()) return src == null ? "" : src;
         return src.lines()
                 .map(line -> line.isBlank() ? line : INDENT + line)
-                .collect(java.util.stream.Collectors.joining("\n", "", "\n"));
+                .collect(Collectors.joining("\n", "", "\n"));
     }
 }

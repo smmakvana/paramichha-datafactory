@@ -4,7 +4,6 @@ import java.util.List;
 
 /**
  * Plain class implementation of {@link ClassCodingInfo}.
- * Used by {@link TestClassBuilder} to assemble the coding info tree.
  */
 final class DefaultClassCodingInfo implements ClassCodingInfo {
 
@@ -20,13 +19,15 @@ final class DefaultClassCodingInfo implements ClassCodingInfo {
     private final List<FieldCodingInfo>  fields;
     private final List<MethodCodingInfo> methods;
     private final List<ClassCodingInfo>  nestedClasses;
+    private final String               rawBody;       // nullable escape hatch
 
     DefaultClassCodingInfo(
             boolean nested, String header, String packageName, List<String> imports,
             String className, String displayName, List<String> modifiers, List<String> annotations,
             String extendsClass,
             List<FieldCodingInfo> fields, List<MethodCodingInfo> methods,
-            List<ClassCodingInfo> nestedClasses) {
+            List<ClassCodingInfo> nestedClasses,
+            String rawBody) {
         this.nested        = nested;
         this.header        = header;
         this.packageName   = packageName;
@@ -39,18 +40,20 @@ final class DefaultClassCodingInfo implements ClassCodingInfo {
         this.fields        = fields;
         this.methods       = methods;
         this.nestedClasses = nestedClasses;
+        this.rawBody       = rawBody;
     }
 
-    public boolean             isNested()       { return nested;        }
-    public String              header()         { return header;        }
-    public String              packageName()    { return packageName;   }
-    public List<String>        imports()        { return imports;       }
-    public String              className()      { return className;     }
-    public String              displayName()    { return displayName;   }
-    public List<String>        modifiers()      { return modifiers;     }
-    public List<String>        annotations()    { return annotations;   }
-    public String              extendsClass()   { return extendsClass;  }
-    public List<FieldCodingInfo>  fields()      { return fields;        }
-    public List<MethodCodingInfo> methods()     { return methods;       }
+    public boolean               isNested()       { return nested;        }
+    public String                header()         { return header;        }
+    public String                packageName()    { return packageName;   }
+    public List<String>          imports()        { return imports;       }
+    public String                className()      { return className;     }
+    public String                displayName()    { return displayName;   }
+    public List<String>          modifiers()      { return modifiers;     }
+    public List<String>          annotations()    { return annotations;   }
+    public String                extendsClass()   { return extendsClass;  }
+    public List<FieldCodingInfo>  fields()        { return fields;        }
+    public List<MethodCodingInfo> methods()       { return methods;       }
     public List<ClassCodingInfo>  nestedClasses() { return nestedClasses; }
+    public String                rawBody()        { return rawBody;       }
 }

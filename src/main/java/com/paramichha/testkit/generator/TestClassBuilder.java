@@ -10,30 +10,18 @@ import java.util.stream.Collectors;
 
 /**
  * Builds the full {@link ClassCodingInfo} tree from a {@link TestSourceContext}.
- *
- * <p>This is the only class that knows about tests. It decides:
- * <ul>
- *   <li>Which nested classes to generate (Creation, per-field, per-method)
- *   <li>What DataFactory values to embed in method bodies
- *   <li>What assertions to write per field/method kind
- * </ul>
- *
- * <p>{@link ClassCoder} knows nothing about tests — it just codes what it receives.
+ * Only class that knows about tests — coders know only Java syntax.
  */
 public final class TestClassBuilder implements ClassCodingInfoBuilder {
 
     @Override
     public ClassCodingInfo build(TestSourceContext ctx) {
-        return new DefaultClassCodingInfo(
-                false,
+        return topLevel(
                 buildHeader(ctx),
                 ctx.targetPackage,
                 ctx.imports.collect().stream().sorted().collect(Collectors.toList()),
                 ctx.className,
                 ctx.classInfo.simpleName(),
-                List.of("class"),
-                List.of("@DisplayName(\"" + ctx.classInfo.simpleName() + "\")"),
-                null,
                 buildTopLevelFields(ctx),
                 buildTopLevelMethods(ctx),
                 buildNestedClasses(ctx)
@@ -52,22 +40,15 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
 
     private List<FieldCodingInfo> buildTopLevelFields(TestSourceContext ctx) {
         List<FieldCodingInfo> fields = new ArrayList<>();
-
-        // Validator field
         if (ctx.hasJakarta)
-            fields.add(field("validator", "Validator", List.of("private", "static"), List.of(), null));
-
-        // Valid instance field
-        if (!ctx.classInfo.fields().isEmpty()) {
-            String constructorCall = ctx.instantiation.constructorCall(ctx.validParts);
+            fields.add(field("validator", "Validator",
+                    List.of("private", "static"), List.of(), null));
+        if (!ctx.classInfo.fields().isEmpty())
             fields.add(field(
                     ctx.instanceName,
                     ctx.classInfo.simpleName(),
-                    List.of(),
-                    List.of(),
-                    constructorCall
-            ));
-        }
+                    List.of(), List.of(),
+                    ctx.instantiation.constructorCall(ctx.validParts)));
         return List.copyOf(fields);
     }
 
@@ -76,55 +57,46 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
     private List<MethodCodingInfo> buildTopLevelMethods(TestSourceContext ctx) {
         if (!ctx.hasJakarta) return List.of();
         return List.of(method(
-                ctx.template.validatorSetup,
-                "void",
-                List.of("static"),
-                List.of("@BeforeAll"),
-                List.of(),
+                ctx.template.validatorSetup, "void",
+                List.of("static"), List.of("@BeforeAll"), List.of(),
                 ctx.template.validatorField + " = Validation.buildDefaultValidatorFactory().getValidator();",
-                false
-        ));
+                false));
     }
 
     // ── Nested classes ────────────────────────────────────────────────────
 
     private List<ClassCodingInfo> buildNestedClasses(TestSourceContext ctx) {
         List<ClassCodingInfo> nested = new ArrayList<>();
-
         if (!ctx.classInfo.utilityClass()) {
             nested.add(buildCreationNested(ctx));
             for (int i = 0; i < ctx.classInfo.fields().size(); i++)
                 nested.add(buildFieldNested(ctx, ctx.classInfo.fields().get(i), i));
         }
-
         for (MethodInfo method : ctx.classInfo.methods())
             nested.add(buildMethodNested(ctx, method));
-
         return List.copyOf(nested);
     }
 
     // ── Creation nested ───────────────────────────────────────────────────
 
     private ClassCodingInfo buildCreationNested(TestSourceContext ctx) {
-        String className   = ctx.classInfo.simpleName();
-        String fieldName   = ctx.instanceName;
-        String nestedClass = ctx.template.resolve(ctx.template.creationClassName, className, "");
-        String display     = ctx.template.resolve(ctx.template.creationDisplay, className, "");
+        String  className  = ctx.classInfo.simpleName();
+        String  fieldName  = ctx.instanceName;
+        String  nestedClass = ctx.template.resolve(ctx.template.creationClassName, className, "");
+        String  display    = ctx.template.resolve(ctx.template.creationDisplay, className, "");
         boolean isRecord   = ctx.classInfo.constructorStyle() == ConstructorStyle.RECORD;
 
         List<MethodCodingInfo> methods = new ArrayList<>();
 
-        // testCanBeCreated
         methods.add(method(
                 ctx.template.resolve(ctx.template.canBeCreated, className, ""),
                 "void", List.of(),
-                List.of("@Test", "@DisplayName(\"" + ctx.template.resolve(ctx.template.canBeCreatedDisplay, className, "") + "\")"),
+                List.of("@Test", "@DisplayName(\""
+                        + ctx.template.resolve(ctx.template.canBeCreatedDisplay, className, "") + "\")"),
                 List.of(),
                 "assertThat(" + fieldName + ").isNotNull();",
-                false
-        ));
+                false));
 
-        // testHoldsExpectedValues
         StringBuilder holdsBody = new StringBuilder();
         for (int i = 0; i < ctx.classInfo.fields().size(); i++) {
             FieldInfo field = ctx.classInfo.fields().get(i);
@@ -140,41 +112,40 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
         methods.add(method(
                 ctx.template.resolve(ctx.template.holdsExpectedValues, className, ""),
                 "void", List.of(),
-                List.of("@Test", "@DisplayName(\"" + ctx.template.resolve(ctx.template.holdsExpectedDisplay, className, "") + "\")"),
+                List.of("@Test", "@DisplayName(\""
+                        + ctx.template.resolve(ctx.template.holdsExpectedDisplay, className, "") + "\")"),
                 List.of(),
                 holdsBody.toString().stripTrailing(),
-                false
-        ));
+                false));
 
-        // testIsValid — only if Jakarta
         if (ctx.hasJakarta && ctx.fixture.hasJakarta(ctx.classInfo)) {
             methods.add(method(
                     ctx.template.resolve(ctx.template.isValid, className, ""),
                     "void", List.of(),
-                    List.of("@Test", "@DisplayName(\"" + ctx.template.resolve(ctx.template.isValidDisplay, className, "") + "\")"),
+                    List.of("@Test", "@DisplayName(\""
+                            + ctx.template.resolve(ctx.template.isValidDisplay, className, "") + "\")"),
                     List.of(),
                     "assertThat(" + ctx.template.validatorField + ".validate(" + fieldName + ")).isEmpty();",
-                    false
-            ));
+                    false));
         }
 
-        return nestedClass(nestedClass, display, List.of(), List.of(), methods, List.of());
+        return nested(nestedClass, display, List.of(), methods, List.of(), null);
     }
 
     // ── Field nested ──────────────────────────────────────────────────────
 
     private ClassCodingInfo buildFieldNested(TestSourceContext ctx, FieldInfo field, int fieldIndex) {
-        String  className    = ctx.classInfo.simpleName();
-        boolean isRecord     = ctx.classInfo.constructorStyle() == ConstructorStyle.RECORD;
-        boolean hasJakarta   = !field.validations().isEmpty();
-        String  memberName   = field.name();
-        String  boxedType    = JavaTypeNames.boxed(field.rawType());
-        String  nestedClass  = ctx.template.resolve(ctx.template.memberClassName, className, memberName);
-        String  display      = ctx.template.resolve(ctx.template.memberDisplay, className, memberName);
+        String  className     = ctx.classInfo.simpleName();
+        boolean isRecord      = ctx.classInfo.constructorStyle() == ConstructorStyle.RECORD;
+        boolean hasJakarta    = !field.validations().isEmpty();
+        String  memberName    = field.name();
+        String  boxedType     = JavaTypeNames.boxed(field.rawType());
+        String  nestedClass   = ctx.template.resolve(ctx.template.memberClassName, className, memberName);
+        String  display       = ctx.template.resolve(ctx.template.memberDisplay, className, memberName);
         String  acceptsMethod = ctx.template.resolve(ctx.template.acceptsMethod, className, memberName);
         String  rejectsMethod = ctx.template.resolve(ctx.template.rejectsMethod, className, memberName);
-        String  validSrc     = ctx.template.resolve(ctx.template.validDataSource, className, memberName);
-        String  invalidSrc   = ctx.template.resolve(ctx.template.invalidDataSource, className, memberName);
+        String  validSrc      = ctx.template.resolve(ctx.template.validDataSource, className, memberName);
+        String  invalidSrc    = ctx.template.resolve(ctx.template.invalidDataSource, className, memberName);
 
         List<?> validValues = ctx.instantiation.validValuesFor(ctx.fixture.type(), field).stream()
                 .filter(LiteralConverter::canSerialize).collect(Collectors.toList());
@@ -182,15 +153,16 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
                 .filter(LiteralConverter::canSerialize).collect(Collectors.toList());
 
         if (validValues.isEmpty() && invalidValues.isEmpty())
-            return nestedClass(nestedClass, display, List.of(), List.of(), List.of(), List.of());
+            return nested(nestedClass, display, List.of(), List.of(), List.of(), null);
 
-        List<MethodCodingInfo> methods = new ArrayList<>();
-        ParameterCodingInfo descParam  = param("description", "String");
-        ParameterCodingInfo fieldParam = param(memberName, boxedType);
         String constructorWithVar = ctx.instantiation.constructorCallWithVar(ctx.validParts, fieldIndex, memberName);
         String accessor = isRecord
                 ? "obj." + memberName + "()"
                 : "obj." + JavaNames.getterName(memberName, field.rawType()) + "()";
+
+        ParameterCodingInfo descParam  = param("description", "String");
+        ParameterCodingInfo fieldParam = param(memberName, boxedType);
+        List<MethodCodingInfo> methods = new ArrayList<>();
 
         // Accepts test
         if (!validValues.isEmpty()) {
@@ -198,26 +170,23 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
                     + (hasJakarta
                     ? "assertThat(" + ctx.template.validatorField + ".validate(obj)).isEmpty();"
                     : "assertThat(" + accessor + ").isEqualTo(" + memberName + ");");
-
             methods.add(method(acceptsMethod, "void", List.of(),
                     List.of("@ParameterizedTest(name = \"{0}\")",
                             "@MethodSource(\"" + validSrc + "\")",
                             "@DisplayName(\"" + ctx.template.resolve(ctx.template.acceptsDisplay, className, memberName) + "\")"),
-                    List.of(descParam, fieldParam),
-                    acceptsBody, false));
+                    List.of(descParam, fieldParam), acceptsBody, false));
 
-            // Valid stream
             StringBuilder streamBody = new StringBuilder("return Stream.of(\n");
             for (int j = 0; j < validValues.size(); j++) {
                 Object v = validValues.get(j);
-                String label = labelFor(v, memberName, "valid", j);
                 String literal = v == null ? "(" + boxedType + ") null" : LiteralConverter.toLiteral(v);
-                streamBody.append("    Arguments.of(\"").append(label).append("\", ").append(literal).append(")");
+                streamBody.append("    Arguments.of(\"").append(labelFor(v, memberName, "valid", j))
+                        .append("\", ").append(literal).append(")");
                 streamBody.append(j < validValues.size() - 1 ? ",\n" : "\n");
             }
             streamBody.append(");");
-            methods.add(method(validSrc, "Stream<Arguments>", List.of("static"), List.of(), List.of(),
-                    streamBody.toString(), false));
+            methods.add(method(validSrc, "Stream<Arguments>", List.of("static"),
+                    List.of(), List.of(), streamBody.toString(), false));
         }
 
         // Rejects test
@@ -232,73 +201,78 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
                     List.of("@ParameterizedTest(name = \"{0}\")",
                             "@MethodSource(\"" + invalidSrc + "\")",
                             "@DisplayName(\"" + ctx.template.resolve(ctx.template.rejectsDisplay, className, memberName) + "\")"),
-                    List.of(descParam, fieldParam),
-                    rejectsBody, false));
+                    List.of(descParam, fieldParam), rejectsBody, false));
 
             StringBuilder invalidStream = new StringBuilder("return Stream.of(\n");
             for (int j = 0; j < invalidValues.size(); j++) {
                 Object v = invalidValues.get(j);
-                String label = labelFor(v, memberName, "invalid", j);
                 String literal = v == null ? "(" + boxedType + ") null" : LiteralConverter.toLiteral(v);
-                invalidStream.append("    Arguments.of(\"").append(label).append("\", ").append(literal).append(")");
+                invalidStream.append("    Arguments.of(\"").append(labelFor(v, memberName, "invalid", j))
+                        .append("\", ").append(literal).append(")");
                 invalidStream.append(j < invalidValues.size() - 1 ? ",\n" : "\n");
             }
             invalidStream.append(");");
-            methods.add(method(invalidSrc, "Stream<Arguments>", List.of("static"), List.of(), List.of(),
-                    invalidStream.toString(), false));
+            methods.add(method(invalidSrc, "Stream<Arguments>", List.of("static"),
+                    List.of(), List.of(), invalidStream.toString(), false));
 
         } else if (!hasJakarta) {
             // TODO comment block
-            String todoBody = className + " obj = " + constructorWithVar + ";\n"
-                    + "assertThat(" + ctx.template.validatorField + ".validate(obj)).isNotEmpty();";
-            MethodCodingInfo todo = method(rejectsMethod, "void", List.of(),
+            methods.add(method(rejectsMethod, "void", List.of(),
                     List.of("@ParameterizedTest(name = \"{0}\")",
                             "@MethodSource(\"" + invalidSrc + "\")",
                             "@DisplayName(\"" + ctx.template.resolve(ctx.template.rejectsDisplay, className, memberName) + "\")"),
                     List.of(descParam, fieldParam),
-                    todoBody, true);
-            methods.add(todo);
-
-            methods.add(method(invalidSrc, "Stream<Arguments>", List.of("static"), List.of(), List.of(),
-                    "return Stream.of(\n    // Arguments.of(\"reason\", value)\n);", true));
+                    "// TODO: add constraints to " + memberName + " then implement\n"
+                            + className + " obj = " + constructorWithVar + ";\n"
+                            + "assertThat(" + ctx.template.validatorField + ".validate(obj)).isNotEmpty();",
+                    true));
+            methods.add(method(invalidSrc, "Stream<Arguments>", List.of("static"),
+                    List.of(), List.of(),
+                    "return Stream.of(\n    // Arguments.of(\"reason\", value)\n);",
+                    true));
         }
 
-        return nestedClass(nestedClass, display, List.of(), List.of(), methods, List.of());
+        return nested(nestedClass, display, List.of(), methods, List.of(), null);
     }
 
     // ── Method nested ─────────────────────────────────────────────────────
 
     private ClassCodingInfo buildMethodNested(TestSourceContext ctx, MethodInfo methodInfo) {
-        String className    = ctx.classInfo.simpleName();
-        String methodName   = methodInfo.name();
-        String nestedClass  = ctx.template.resolveMethod(ctx.template.methodClassName, className, methodName);
-        String display      = ctx.template.resolveMethod(ctx.template.methodDisplay, className, methodName);
-        String fieldName    = ctx.classInfo.utilityClass() ? className : ctx.instanceName;
-        String validSrc     = ctx.template.resolveMethod(ctx.template.validInputsSource, className, methodName);
-        String invalidSrc   = ctx.template.resolveMethod(ctx.template.invalidInputsSource, className, methodName);
+        String className   = ctx.classInfo.simpleName();
+        String methodName  = methodInfo.name();
+        String nestedClass = ctx.template.resolveMethod(ctx.template.methodClassName, className, methodName);
+        String display     = ctx.template.resolveMethod(ctx.template.methodDisplay, className, methodName);
 
-        // Delegate body generation to existing MethodTestWriter for now
-        // This will be expanded into full CodingInfo in a future phase
+        // Delegate to MethodTestWriter.writeFlat for this single method only
         StringBuilder sb = new StringBuilder();
         new MethodTestWriter(ctx.classInfo, ctx.instantiation, ctx.template, ctx.seed)
-                .write(sb, ctx.validParts, ctx.hasJakarta);
+                .writeFlat(sb, methodInfo, ctx.validParts, ctx.hasJakarta);
 
-        // For now: one method per nested that contains the raw generated body
-        // This is the bridge — keeps compatibility while new architecture takes shape
-        List<MethodCodingInfo> methods = List.of(
-                method("// delegated", "void", List.of(), List.of(), List.of(), sb.toString(), false)
-        );
-
-        return nestedClass(nestedClass, display, List.of(), List.of(), methods, List.of());
+        // rawBody — ClassCoder emits this directly, skipping fields/methods/nestedClasses
+        return nested(nestedClass, display, List.of(), List.of(), List.of(), sb.toString());
     }
 
     // ── Factory helpers ───────────────────────────────────────────────────
 
-    private static ClassCodingInfo nestedClass(String className, String displayName,
-                                                List<String> modifiers,
-                                                List<String> extraAnnotations,
-                                                List<MethodCodingInfo> methods,
-                                                List<ClassCodingInfo> nestedClasses) {
+    private static ClassCodingInfo topLevel(String header, String packageName, List<String> imports,
+                                             String className, String displayName,
+                                             List<FieldCodingInfo> fields,
+                                             List<MethodCodingInfo> methods,
+                                             List<ClassCodingInfo> nestedClasses) {
+        return new DefaultClassCodingInfo(
+                false, header, packageName, imports,
+                className, displayName,
+                List.of("class"),
+                List.of("@DisplayName(\"" + displayName + "\")"),
+                null,
+                fields, methods, nestedClasses, null);
+    }
+
+    private static ClassCodingInfo nested(String className, String displayName,
+                                           List<String> extraAnnotations,
+                                           List<MethodCodingInfo> methods,
+                                           List<ClassCodingInfo> nestedClasses,
+                                           String rawBody) {
         List<String> annotations = new ArrayList<>();
         annotations.add("@Nested");
         annotations.add("@DisplayName(\"" + displayName + "\")");
@@ -306,11 +280,10 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
         return new DefaultClassCodingInfo(
                 true, null, null, List.of(),
                 className, displayName,
-                modifiers.isEmpty() ? List.of("class") : modifiers,
+                List.of("class"),
                 List.copyOf(annotations),
                 null,
-                List.of(), methods, nestedClasses
-        );
+                List.of(), methods, nestedClasses, rawBody);
     }
 
     private static FieldCodingInfo field(String name, String typeName,
@@ -330,13 +303,13 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
                                             List<ParameterCodingInfo> params,
                                             String body, boolean isEmpty) {
         return new MethodCodingInfo() {
-            public String name()                        { return name; }
-            public String returnType()                  { return returnType; }
-            public List<String> modifiers()             { return modifiers; }
-            public List<String> annotations()           { return annotations; }
+            public String name()                          { return name; }
+            public String returnType()                    { return returnType; }
+            public List<String> modifiers()               { return modifiers; }
+            public List<String> annotations()             { return annotations; }
             public List<ParameterCodingInfo> parameters() { return params; }
-            public String body()                        { return body; }
-            public boolean isEmpty()                    { return isEmpty; }
+            public String body()                          { return body; }
+            public boolean isEmpty()                      { return isEmpty; }
         };
     }
 
