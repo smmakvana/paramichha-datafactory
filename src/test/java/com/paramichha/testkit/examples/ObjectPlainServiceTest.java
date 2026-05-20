@@ -222,53 +222,23 @@ class ObjectPlainServiceTest {
   }
 
   // =========================================================================
-  // reset()
+  // applyTax()
   // =========================================================================
 
   @Nested
-  @DisplayName("reset()")
-  class ObjectPlainServiceMethodResetTest {
-
-    @Test
-    @DisplayName("executes without exception")
-    void testExecutesWithoutException() {
-      assertThatCode(() -> objectPlainService.reset()).doesNotThrowAnyException();
-    }
-
-    @Test
-    @DisplayName("object remains valid after execution")
-    void testObjectRemainsValidAfterExecution() {
-      objectPlainService.reset();
-      assertThat(validator.validate(objectPlainService)).isEmpty();
-    }
-  }
-
-  // =========================================================================
-  // merge()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("merge()")
-  class ObjectPlainServiceMethodMergeTest {
+  @DisplayName("applyTax()")
+  class ObjectPlainServiceMethodApplyTaxTest {
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("validMergeInputs")
-    @DisplayName("merge accepts valid input")
-    void testAcceptsValidInput(String description, ObjectPlainService other, String newName) {
-      ObjectPlainService result = objectPlainService.merge(other, newName);
+    @MethodSource("validApplyTaxInputs")
+    @DisplayName("applyTax accepts valid input")
+    void testAcceptsValidInput(String description, BigDecimal rate) {
+      BigDecimal result = objectPlainService.applyTax(rate);
       assertThat(result).isNotNull();
     }
 
-    static Stream<Arguments> validMergeInputs() {
-      return Stream.of(
-          Arguments.of(
-              "valid merge",
-              new ObjectPlainService(
-                  "Judi Gaylord",
-                  new BigDecimal("-1.00"),
-                  LocalDate.of(2024, 1, 15),
-                  "hans.moen@gmail.com"),
-              (String) null));
+    static Stream<Arguments> validApplyTaxInputs() {
+      return Stream.of(Arguments.of("valid applyTax", (BigDecimal) null));
     }
   }
 
@@ -322,23 +292,53 @@ class ObjectPlainServiceTest {
   }
 
   // =========================================================================
-  // applyTax()
+  // merge()
   // =========================================================================
 
   @Nested
-  @DisplayName("applyTax()")
-  class ObjectPlainServiceMethodApplyTaxTest {
+  @DisplayName("merge()")
+  class ObjectPlainServiceMethodMergeTest {
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyTaxInputs")
-    @DisplayName("applyTax accepts valid input")
-    void testAcceptsValidInput(String description, BigDecimal rate) {
-      BigDecimal result = objectPlainService.applyTax(rate);
+    @MethodSource("validMergeInputs")
+    @DisplayName("merge accepts valid input")
+    void testAcceptsValidInput(String description, ObjectPlainService other, String newName) {
+      ObjectPlainService result = objectPlainService.merge(other, newName);
       assertThat(result).isNotNull();
     }
 
-    static Stream<Arguments> validApplyTaxInputs() {
-      return Stream.of(Arguments.of("valid applyTax", (BigDecimal) null));
+    static Stream<Arguments> validMergeInputs() {
+      return Stream.of(
+          Arguments.of(
+              "valid merge",
+              new ObjectPlainService(
+                  "Judi Gaylord",
+                  new BigDecimal("-1.00"),
+                  LocalDate.of(2024, 1, 15),
+                  "hans.moen@gmail.com"),
+              (String) null));
+    }
+  }
+
+  // =========================================================================
+  // reset()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("reset()")
+  class ObjectPlainServiceMethodResetTest {
+
+    @Test
+    @DisplayName("executes without exception")
+    void testExecutesWithoutException() {
+      assertThatCode(() -> objectPlainService.reset()).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("object remains valid after execution")
+    void testObjectRemainsValidAfterExecution() {
+      objectPlainService.reset();
+      assertThat(validator.validate(objectPlainService)).isEmpty();
     }
   }
 }

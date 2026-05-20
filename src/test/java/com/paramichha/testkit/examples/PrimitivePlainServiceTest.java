@@ -315,24 +315,22 @@ class PrimitivePlainServiceTest {
   }
 
   // =========================================================================
-  // reset()
+  // applyDiscount()
   // =========================================================================
 
   @Nested
-  @DisplayName("reset()")
-  class PrimitivePlainServiceMethodResetTest {
+  @DisplayName("applyDiscount()")
+  class PrimitivePlainServiceMethodApplyDiscountTest {
 
-    @Test
-    @DisplayName("executes without exception")
-    void testExecutesWithoutException() {
-      assertThatCode(() -> primitivePlainService.reset()).doesNotThrowAnyException();
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validApplyDiscountInputs")
+    @DisplayName("applyDiscount accepts valid input")
+    void testAcceptsValidInput(String description, int discountPercent) {
+      double result = primitivePlainService.applyDiscount(discountPercent);
     }
 
-    @Test
-    @DisplayName("object remains valid after execution")
-    void testObjectRemainsValidAfterExecution() {
-      primitivePlainService.reset();
-      assertThat(validator.validate(primitivePlainService)).isEmpty();
+    static Stream<Arguments> validApplyDiscountInputs() {
+      return Stream.of(Arguments.of("valid applyDiscount", 0));
     }
   }
 
@@ -357,43 +355,24 @@ class PrimitivePlainServiceTest {
   }
 
   // =========================================================================
-  // transfer()
+  // reset()
   // =========================================================================
 
   @Nested
-  @DisplayName("transfer()")
-  class PrimitivePlainServiceMethodTransferTest {
+  @DisplayName("reset()")
+  class PrimitivePlainServiceMethodResetTest {
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validTransferInputs")
-    @DisplayName("transfer accepts valid input")
-    void testAcceptsValidInput(String description, int amount, int target) {
-      assertThatCode(() -> primitivePlainService.transfer(amount, target))
-          .doesNotThrowAnyException();
+    @Test
+    @DisplayName("executes without exception")
+    void testExecutesWithoutException() {
+      assertThatCode(() -> primitivePlainService.reset()).doesNotThrowAnyException();
     }
 
-    static Stream<Arguments> validTransferInputs() {
-      return Stream.of(Arguments.of("valid transfer", 0, 0));
-    }
-  }
-
-  // =========================================================================
-  // applyDiscount()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("applyDiscount()")
-  class PrimitivePlainServiceMethodApplyDiscountTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyDiscountInputs")
-    @DisplayName("applyDiscount accepts valid input")
-    void testAcceptsValidInput(String description, int discountPercent) {
-      double result = primitivePlainService.applyDiscount(discountPercent);
-    }
-
-    static Stream<Arguments> validApplyDiscountInputs() {
-      return Stream.of(Arguments.of("valid applyDiscount", 0));
+    @Test
+    @DisplayName("object remains valid after execution")
+    void testObjectRemainsValidAfterExecution() {
+      primitivePlainService.reset();
+      assertThat(validator.validate(primitivePlainService)).isEmpty();
     }
   }
 
@@ -415,6 +394,27 @@ class PrimitivePlainServiceTest {
     @DisplayName("totalValue returns consistent result")
     void testReturnsConsistentResult() {
       assertThat(primitivePlainService.totalValue()).isEqualTo(primitivePlainService.totalValue());
+    }
+  }
+
+  // =========================================================================
+  // transfer()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("transfer()")
+  class PrimitivePlainServiceMethodTransferTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validTransferInputs")
+    @DisplayName("transfer accepts valid input")
+    void testAcceptsValidInput(String description, int amount, int target) {
+      assertThatCode(() -> primitivePlainService.transfer(amount, target))
+          .doesNotThrowAnyException();
+    }
+
+    static Stream<Arguments> validTransferInputs() {
+      return Stream.of(Arguments.of("valid transfer", 0, 0));
     }
   }
 }

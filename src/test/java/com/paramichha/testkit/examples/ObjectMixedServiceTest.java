@@ -239,24 +239,78 @@ class ObjectMixedServiceTest {
   }
 
   // =========================================================================
-  // reset()
+  // copyFrom()
   // =========================================================================
 
   @Nested
-  @DisplayName("reset()")
-  class ObjectMixedServiceMethodResetTest {
+  @DisplayName("copyFrom()")
+  class ObjectMixedServiceMethodCopyFromTest {
 
-    @Test
-    @DisplayName("executes without exception")
-    void testExecutesWithoutException() {
-      assertThatCode(() -> objectMixedService.reset()).doesNotThrowAnyException();
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validCopyFromInputs")
+    @DisplayName("copyFrom accepts valid input")
+    void testAcceptsValidInput(String description, ObjectMixedService source, String reason) {
+      assertThatCode(() -> objectMixedService.copyFrom(source, reason)).doesNotThrowAnyException();
     }
 
-    @Test
-    @DisplayName("object remains valid after execution")
-    void testObjectRemainsValidAfterExecution() {
-      objectMixedService.reset();
-      assertThat(validator.validate(objectMixedService)).isEmpty();
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidCopyFromInputs")
+    @DisplayName("copyFrom rejects invalid input")
+    void testRejectsInvalidInput(String description, ObjectMixedService source, String reason) {
+      // Enforce @NotNull: DataValidation.notNull(source);
+      assertThatThrownBy(() -> objectMixedService.copyFrom(source, reason))
+          .isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validCopyFromInputs() {
+      return Stream.of(
+          Arguments.of(
+              "valid copyFrom",
+              new ObjectMixedService(
+                  "Harvey Dach",
+                  new BigDecimal("-1.00"),
+                  LocalDate.of(2024, 1, 15),
+                  "nathalie.mcclure@hotmail.com"),
+              (String) null));
+    }
+
+    static Stream<Arguments> invalidCopyFromInputs() {
+      return Stream.of(Arguments.of("invalid source 1", null, (String) null));
+    }
+  }
+
+  // =========================================================================
+  // formatDisplay()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("formatDisplay()")
+  class ObjectMixedServiceMethodFormatDisplayTest {
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validFormatDisplayInputs")
+    @DisplayName("formatDisplay accepts valid input")
+    void testAcceptsValidInput(String description, String prefix) {
+      String result = objectMixedService.formatDisplay(prefix);
+      assertThat(result).isNotNull();
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidFormatDisplayInputs")
+    @DisplayName("formatDisplay rejects invalid input")
+    void testRejectsInvalidInput(String description, String prefix) {
+      // Enforce @NotBlank: DataValidation.notBlank(prefix);
+      assertThatThrownBy(() -> objectMixedService.formatDisplay(prefix))
+          .isInstanceOf(Exception.class);
+    }
+
+    static Stream<Arguments> validFormatDisplayInputs() {
+      return Stream.of(Arguments.of("valid formatDisplay", "Mrs."));
+    }
+
+    static Stream<Arguments> invalidFormatDisplayInputs() {
+      return Stream.of(
+          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
     }
   }
 
@@ -304,43 +358,24 @@ class ObjectMixedServiceTest {
   }
 
   // =========================================================================
-  // copyFrom()
+  // reset()
   // =========================================================================
 
   @Nested
-  @DisplayName("copyFrom()")
-  class ObjectMixedServiceMethodCopyFromTest {
+  @DisplayName("reset()")
+  class ObjectMixedServiceMethodResetTest {
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validCopyFromInputs")
-    @DisplayName("copyFrom accepts valid input")
-    void testAcceptsValidInput(String description, ObjectMixedService source, String reason) {
-      assertThatCode(() -> objectMixedService.copyFrom(source, reason)).doesNotThrowAnyException();
+    @Test
+    @DisplayName("executes without exception")
+    void testExecutesWithoutException() {
+      assertThatCode(() -> objectMixedService.reset()).doesNotThrowAnyException();
     }
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidCopyFromInputs")
-    @DisplayName("copyFrom rejects invalid input")
-    void testRejectsInvalidInput(String description, ObjectMixedService source, String reason) {
-      // Enforce @NotNull: DataValidation.notNull(source);
-      assertThatThrownBy(() -> objectMixedService.copyFrom(source, reason))
-          .isInstanceOf(Exception.class);
-    }
-
-    static Stream<Arguments> validCopyFromInputs() {
-      return Stream.of(
-          Arguments.of(
-              "valid copyFrom",
-              new ObjectMixedService(
-                  "Harvey Dach",
-                  new BigDecimal("-1.00"),
-                  LocalDate.of(2024, 1, 15),
-                  "nathalie.mcclure@hotmail.com"),
-              (String) null));
-    }
-
-    static Stream<Arguments> invalidCopyFromInputs() {
-      return Stream.of(Arguments.of("invalid source 1", null, (String) null));
+    @Test
+    @DisplayName("object remains valid after execution")
+    void testObjectRemainsValidAfterExecution() {
+      objectMixedService.reset();
+      assertThat(validator.validate(objectMixedService)).isEmpty();
     }
   }
 
@@ -364,41 +399,6 @@ class ObjectMixedServiceTest {
 
     static Stream<Arguments> validResolvedPriceInputs() {
       return Stream.of(Arguments.of("valid resolvedPrice", (BigDecimal) null));
-    }
-  }
-
-  // =========================================================================
-  // formatDisplay()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("formatDisplay()")
-  class ObjectMixedServiceMethodFormatDisplayTest {
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validFormatDisplayInputs")
-    @DisplayName("formatDisplay accepts valid input")
-    void testAcceptsValidInput(String description, String prefix) {
-      String result = objectMixedService.formatDisplay(prefix);
-      assertThat(result).isNotNull();
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidFormatDisplayInputs")
-    @DisplayName("formatDisplay rejects invalid input")
-    void testRejectsInvalidInput(String description, String prefix) {
-      // Enforce @NotBlank: DataValidation.notBlank(prefix);
-      assertThatThrownBy(() -> objectMixedService.formatDisplay(prefix))
-          .isInstanceOf(Exception.class);
-    }
-
-    static Stream<Arguments> validFormatDisplayInputs() {
-      return Stream.of(Arguments.of("valid formatDisplay", "Mrs."));
-    }
-
-    static Stream<Arguments> invalidFormatDisplayInputs() {
-      return Stream.of(
-          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
     }
   }
 }

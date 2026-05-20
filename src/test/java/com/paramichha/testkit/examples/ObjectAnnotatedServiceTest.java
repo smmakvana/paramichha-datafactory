@@ -250,84 +250,42 @@ class ObjectAnnotatedServiceTest {
   }
 
   // =========================================================================
-  // reset()
+  // applyTax()
   // =========================================================================
 
   @Nested
-  @DisplayName("reset()")
-  class ObjectAnnotatedServiceMethodResetTest {
+  @DisplayName("applyTax()")
+  class ObjectAnnotatedServiceMethodApplyTaxTest {
 
-    @Test
-    @DisplayName("executes without exception")
-    void testExecutesWithoutException() {
-      assertThatCode(() -> objectAnnotatedService.reset()).doesNotThrowAnyException();
-    }
-
-    @Test
-    @DisplayName("object remains valid after execution")
-    void testObjectRemainsValidAfterExecution() {
-      objectAnnotatedService.reset();
-      assertThat(validator.validate(objectAnnotatedService)).isEmpty();
-    }
-  }
-
-  // =========================================================================
-  // merge()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("merge()")
-  class ObjectAnnotatedServiceMethodMergeTest {
+    private record ApplyTaxResult(@NotNull @Positive BigDecimal value) {}
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("validMergeInputs")
-    @DisplayName("merge accepts valid input")
-    void testAcceptsValidInput(String description, ObjectAnnotatedService other, String newName) {
-      ObjectAnnotatedService result = objectAnnotatedService.merge(other, newName);
-      assertThat(validator.validate(result)).isEmpty();
+    @MethodSource("validApplyTaxInputs")
+    @DisplayName("applyTax accepts valid input")
+    void testAcceptsValidInput(String description, BigDecimal taxRate) {
+      BigDecimal result = objectAnnotatedService.applyTax(taxRate);
+      DataValidation.notNull(result);
+      DataValidation.positive(result);
     }
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidMergeInputs")
-    @DisplayName("merge rejects invalid input")
-    void testRejectsInvalidInput(String description, ObjectAnnotatedService other, String newName) {
-      // Enforce @NotNull: DataValidation.notNull(other);
-      // Enforce @NotBlank: DataValidation.notBlank(newName);
-      assertThatThrownBy(() -> objectAnnotatedService.merge(other, newName))
+    @MethodSource("invalidApplyTaxInputs")
+    @DisplayName("applyTax rejects invalid input")
+    void testRejectsInvalidInput(String description, BigDecimal taxRate) {
+      // Enforce @DecimalMin: DataValidation.decimalMin("0.0", taxRate);
+      // Enforce @DecimalMax: DataValidation.decimalMax("1.0", taxRate);
+      assertThatThrownBy(() -> objectAnnotatedService.applyTax(taxRate))
           .isInstanceOf(Exception.class);
     }
 
-    static Stream<Arguments> validMergeInputs() {
-      return Stream.of(
-          Arguments.of(
-              "valid merge",
-              new ObjectAnnotatedService(
-                  "Annabell Lynch",
-                  new BigDecimal("1.50"),
-                  LocalDate.of(2020, 6, 15),
-                  "don.thiel@yahoo.com"),
-              "Mr. Carley Ullrich"));
+    static Stream<Arguments> validApplyTaxInputs() {
+      return Stream.of(Arguments.of("valid applyTax", new BigDecimal("0.50")));
     }
 
-    static Stream<Arguments> invalidMergeInputs() {
+    static Stream<Arguments> invalidApplyTaxInputs() {
       return Stream.of(
-          Arguments.of("invalid other", null, "Mr. Carley Ullrich"),
-          Arguments.of(
-              "invalid newName",
-              new ObjectAnnotatedService(
-                  "Annabell Lynch",
-                  new BigDecimal("1.50"),
-                  LocalDate.of(2020, 6, 15),
-                  "don.thiel@yahoo.com"),
-              null),
-          Arguments.of(
-              "invalid newName",
-              new ObjectAnnotatedService(
-                  "Annabell Lynch",
-                  new BigDecimal("1.50"),
-                  LocalDate.of(2020, 6, 15),
-                  "don.thiel@yahoo.com"),
-              ""));
+          Arguments.of("invalid taxRate 1", new BigDecimal("-1")),
+          Arguments.of("invalid taxRate 2", new BigDecimal("2")));
     }
   }
 
@@ -413,42 +371,84 @@ class ObjectAnnotatedServiceTest {
   }
 
   // =========================================================================
-  // applyTax()
+  // merge()
   // =========================================================================
 
   @Nested
-  @DisplayName("applyTax()")
-  class ObjectAnnotatedServiceMethodApplyTaxTest {
-
-    private record ApplyTaxResult(@NotNull @Positive BigDecimal value) {}
+  @DisplayName("merge()")
+  class ObjectAnnotatedServiceMethodMergeTest {
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("validApplyTaxInputs")
-    @DisplayName("applyTax accepts valid input")
-    void testAcceptsValidInput(String description, BigDecimal taxRate) {
-      BigDecimal result = objectAnnotatedService.applyTax(taxRate);
-      DataValidation.notNull(result);
-      DataValidation.positive(result);
+    @MethodSource("validMergeInputs")
+    @DisplayName("merge accepts valid input")
+    void testAcceptsValidInput(String description, ObjectAnnotatedService other, String newName) {
+      ObjectAnnotatedService result = objectAnnotatedService.merge(other, newName);
+      assertThat(validator.validate(result)).isEmpty();
     }
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("invalidApplyTaxInputs")
-    @DisplayName("applyTax rejects invalid input")
-    void testRejectsInvalidInput(String description, BigDecimal taxRate) {
-      // Enforce @DecimalMin: DataValidation.decimalMin("0.0", taxRate);
-      // Enforce @DecimalMax: DataValidation.decimalMax("1.0", taxRate);
-      assertThatThrownBy(() -> objectAnnotatedService.applyTax(taxRate))
+    @MethodSource("invalidMergeInputs")
+    @DisplayName("merge rejects invalid input")
+    void testRejectsInvalidInput(String description, ObjectAnnotatedService other, String newName) {
+      // Enforce @NotNull: DataValidation.notNull(other);
+      // Enforce @NotBlank: DataValidation.notBlank(newName);
+      assertThatThrownBy(() -> objectAnnotatedService.merge(other, newName))
           .isInstanceOf(Exception.class);
     }
 
-    static Stream<Arguments> validApplyTaxInputs() {
-      return Stream.of(Arguments.of("valid applyTax", new BigDecimal("0.50")));
+    static Stream<Arguments> validMergeInputs() {
+      return Stream.of(
+          Arguments.of(
+              "valid merge",
+              new ObjectAnnotatedService(
+                  "Annabell Lynch",
+                  new BigDecimal("1.50"),
+                  LocalDate.of(2020, 6, 15),
+                  "don.thiel@yahoo.com"),
+              "Mr. Carley Ullrich"));
     }
 
-    static Stream<Arguments> invalidApplyTaxInputs() {
+    static Stream<Arguments> invalidMergeInputs() {
       return Stream.of(
-          Arguments.of("invalid taxRate 1", new BigDecimal("-1")),
-          Arguments.of("invalid taxRate 2", new BigDecimal("2")));
+          Arguments.of("invalid other", null, "Mr. Carley Ullrich"),
+          Arguments.of(
+              "invalid newName",
+              new ObjectAnnotatedService(
+                  "Annabell Lynch",
+                  new BigDecimal("1.50"),
+                  LocalDate.of(2020, 6, 15),
+                  "don.thiel@yahoo.com"),
+              null),
+          Arguments.of(
+              "invalid newName",
+              new ObjectAnnotatedService(
+                  "Annabell Lynch",
+                  new BigDecimal("1.50"),
+                  LocalDate.of(2020, 6, 15),
+                  "don.thiel@yahoo.com"),
+              ""));
+    }
+  }
+
+  // =========================================================================
+  // reset()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("reset()")
+  class ObjectAnnotatedServiceMethodResetTest {
+
+    @Test
+    @DisplayName("executes without exception")
+    void testExecutesWithoutException() {
+      assertThatCode(() -> objectAnnotatedService.reset()).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("object remains valid after execution")
+    void testObjectRemainsValidAfterExecution() {
+      objectAnnotatedService.reset();
+      assertThat(validator.validate(objectAnnotatedService)).isEmpty();
     }
   }
 }
