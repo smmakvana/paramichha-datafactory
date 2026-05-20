@@ -412,29 +412,6 @@ class SampleServiceTest {
   }
 
   // =========================================================================
-  // describe()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("describe()")
-  class SampleServiceMethodDescribeTest {
-
-    private record DescribeResult(@NotBlank String value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validDescribeInputs")
-    @DisplayName("describe accepts valid input")
-    void testAcceptsValidInput(String description, String separator) {
-      String result = sampleService.describe(separator);
-      DataValidation.notBlank(result);
-    }
-
-    static Stream<Arguments> validDescribeInputs() {
-      return Stream.of(Arguments.of("valid describe", (String) null));
-    }
-  }
-
-  // =========================================================================
   // formatName()
   // =========================================================================
 
@@ -465,6 +442,29 @@ class SampleServiceTest {
     static Stream<Arguments> invalidFormatNameInputs() {
       return Stream.of(
           Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
+    }
+  }
+
+  // =========================================================================
+  // describe()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("describe()")
+  class SampleServiceMethodDescribeTest {
+
+    private record DescribeResult(@NotBlank String value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validDescribeInputs")
+    @DisplayName("describe accepts valid input")
+    void testAcceptsValidInput(String description, String separator) {
+      String result = sampleService.describe(separator);
+      DataValidation.notBlank(result);
+    }
+
+    static Stream<Arguments> validDescribeInputs() {
+      return Stream.of(Arguments.of("valid describe", (String) null));
     }
   }
 }

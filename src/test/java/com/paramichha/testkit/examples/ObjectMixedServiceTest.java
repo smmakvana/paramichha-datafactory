@@ -345,6 +345,29 @@ class ObjectMixedServiceTest {
   }
 
   // =========================================================================
+  // resolvedPrice()
+  // =========================================================================
+
+  @Nested
+  @DisplayName("resolvedPrice()")
+  class ObjectMixedServiceMethodResolvedPriceTest {
+
+    private record ResolvedPriceResult(@NotNull BigDecimal value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validResolvedPriceInputs")
+    @DisplayName("resolvedPrice accepts valid input")
+    void testAcceptsValidInput(String description, BigDecimal fallback) {
+      BigDecimal result = objectMixedService.resolvedPrice(fallback);
+      DataValidation.notNull(result);
+    }
+
+    static Stream<Arguments> validResolvedPriceInputs() {
+      return Stream.of(Arguments.of("valid resolvedPrice", (BigDecimal) null));
+    }
+  }
+
+  // =========================================================================
   // formatDisplay()
   // =========================================================================
 
@@ -376,29 +399,6 @@ class ObjectMixedServiceTest {
     static Stream<Arguments> invalidFormatDisplayInputs() {
       return Stream.of(
           Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
-    }
-  }
-
-  // =========================================================================
-  // resolvedPrice()
-  // =========================================================================
-
-  @Nested
-  @DisplayName("resolvedPrice()")
-  class ObjectMixedServiceMethodResolvedPriceTest {
-
-    private record ResolvedPriceResult(@NotNull BigDecimal value) {}
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validResolvedPriceInputs")
-    @DisplayName("resolvedPrice accepts valid input")
-    void testAcceptsValidInput(String description, BigDecimal fallback) {
-      BigDecimal result = objectMixedService.resolvedPrice(fallback);
-      DataValidation.notNull(result);
-    }
-
-    static Stream<Arguments> validResolvedPriceInputs() {
-      return Stream.of(Arguments.of("valid resolvedPrice", (BigDecimal) null));
     }
   }
 }
