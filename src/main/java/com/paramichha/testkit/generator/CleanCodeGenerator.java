@@ -50,8 +50,8 @@ public final class CleanCodeGenerator implements CodeGenerator {
 
     @Override
     public List<GenerationResult> generateAll(TestCodeData payload) {
-        // Delegates to JavaTestCodeGenerator until SplitClassBuilder is implemented
-        return JavaTestCodeGenerator.INSTANCE.generateAll(payload);
+        // TODO not suppored yet!
+        return List.of(generate(payload));
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────

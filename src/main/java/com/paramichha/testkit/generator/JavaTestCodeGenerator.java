@@ -6,8 +6,6 @@ import com.paramichha.testkit.TestCodeData;
 import com.paramichha.testkit.model.ConstructorStyle;
 import com.paramichha.testkit.model.FieldInfo;
 import com.paramichha.testkit.model.MethodInfo;
-import com.paramichha.testkit.utils.JavaNames;
-import com.paramichha.testkit.utils.TestNames;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.List;
 /**
  * Thin orchestrator — builds a {@link TestSourceContext} from the payload,
  * then delegates each section to its writer.
- *
+ * <p>
  * Responsibility: sequencing only. No string building, no value extraction,
  * no import logic — all of that lives in {@link TestSourceContext} and the writers.
  */
@@ -23,7 +21,8 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
 
     public static final JavaTestCodeGenerator INSTANCE = new JavaTestCodeGenerator();
 
-    private JavaTestCodeGenerator() {}
+    private JavaTestCodeGenerator() {
+    }
 
     // ── CodeGenerator ─────────────────────────────────────────────────────
 
@@ -56,9 +55,9 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
         SourceWriter.writePackage(sb, ctx);
         SourceWriter.writeImports(sb, ctx);
         SourceWriter.writeClassOpen(sb, ctx);
-        if (ctx.hasJakarta)           SourceWriter.writeValidatorSetup(sb, ctx);
+        if (ctx.hasJakarta) SourceWriter.writeValidatorSetup(sb, ctx);
         SourceWriter.writeValidInstance(sb, ctx);
-        if (isSetter(ctx))            SourceWriter.writeSetterHelper(sb, ctx);
+        if (isSetter(ctx)) SourceWriter.writeSetterHelper(sb, ctx);
 
         if (!ctx.classInfo.utilityClass()) {
             new CreationTestWriter(ctx.classInfo, ctx.instantiation, ctx.template)
@@ -76,8 +75,8 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
     // ── Split files ───────────────────────────────────────────────────────
 
     private List<GenerationResult> buildSplit(TestSourceContext ctx) {
-        List<GenerationResult> files   = new ArrayList<>();
-        String                 base    = ctx.simpleName() + "Test";
+        List<GenerationResult> files = new ArrayList<>();
+        String base = ctx.simpleName() + "Test";
 
         // 1. Base class
         files.add(buildBase(ctx, base));
@@ -171,8 +170,8 @@ public final class JavaTestCodeGenerator implements CodeGenerator {
 
     private GenerationResult placeholder(TestCodeData payload, String error) {
         String name = payload.classInfo().simpleName() + "Test";
-        String pkg  = payload.targetPackage();
-        String src  = "package " + pkg + ";\n\n"
+        String pkg = payload.targetPackage();
+        String src = "package " + pkg + ";\n\n"
                 + "// TODO: " + name + "\n"
                 + "// Could not generate — DataFactory failed for " + payload.classInfo().simpleName() + "\n"
                 + "// Reason: " + error + "\n"
