@@ -217,13 +217,13 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
 
         } else if (!hasJakarta) {
             // TODO comment block
+            methods.add(todoComment("// TODO: add constraints to " + memberName + " then uncomment"));
             methods.add(method(rejectsMethod, "void", List.of(),
                     List.of("@ParameterizedTest(name = \"{0}\")",
                             "@MethodSource(\"" + invalidSrc + "\")",
                             "@DisplayName(\"" + ctx.template.resolve(ctx.template.rejectsDisplay, className, memberName) + "\")"),
                     List.of(descParam, fieldParam),
-                    "// TODO: add constraints to " + memberName + " then implement\n"
-                            + className + " obj = " + constructorWithVar + ";\n"
+                    className + " obj = " + constructorWithVar + ";\n"
                             + "assertThat(" + ctx.template.validatorField + ".validate(obj)).isNotEmpty();",
                     true));
             methods.add(method(invalidSrc, "Stream<Arguments>", List.of("static"),
@@ -237,19 +237,11 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
 
     // ── Method nested ─────────────────────────────────────────────────────
 
-    private ClassCodingInfo buildMethodNested(TestSourceContext ctx, MethodInfo methodInfo) {
-        String className   = ctx.classInfo.simpleName();
-        String methodName  = methodInfo.name();
-        String nestedClass = ctx.template.resolveMethod(ctx.template.methodClassName, className, methodName);
-        String display     = ctx.template.resolveMethod(ctx.template.methodDisplay, className, methodName);
-
-        // Delegate to MethodTestWriter.writeFlat for this single method only
-        StringBuilder sb = new StringBuilder();
-        new MethodTestWriter(ctx.classInfo, ctx.instantiation, ctx.template, ctx.seed)
-                .writeFlat(sb, methodInfo, ctx.validParts, ctx.hasJakarta);
-
-        // rawBody — ClassCoder emits this directly, skipping fields/methods/nestedClasses
-        return nested(nestedClass, display, List.of(), List.of(), List.of(), sb.toString());
+    private ClassCodingInfo buildMethodNested(TestSourceContext ctx, MethodInfo method) {
+        MethodPayload          payload    = MethodPayloadFactory.build(ctx, method);
+        List<MethodCodingInfo> methods    = new CleanMethodCoder().code(payload);
+        return nested(payload.nestedClassName, payload.displayName,
+                List.of(), methods, List.of(), null);
     }
 
     // ── Factory helpers ───────────────────────────────────────────────────
@@ -318,6 +310,18 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
             public String name()              { return name; }
             public String typeName()          { return typeName; }
             public List<String> annotations() { return List.of(); }
+        };
+    }
+
+    private static MethodCodingInfo todoComment(String comment) {
+        return new MethodCodingInfo() {
+            public String name()                          { return ""; }
+            public String returnType()                    { return ""; }
+            public List<String> modifiers()               { return List.of(); }
+            public List<String> annotations()             { return List.of(); }
+            public List<ParameterCodingInfo> parameters() { return List.of(); }
+            public String body()                          { return comment; }
+            public boolean isEmpty()                      { return true; }
         };
     }
 

@@ -5,65 +5,86 @@ import java.util.stream.Collectors;
 /**
  * Produces source code for a single method.
  *
- * <p>If {@link MethodCodingInfo#isEmpty()} is true, emits the body as a
- * commented-out TODO block — used for reject tests on unconstrained fields.
+ * <p>If {@link MethodCodingInfo#isEmpty()} is true and name is blank,
+ * emits body as a raw line (e.g. private record declarations).
+ * If isEmpty() is true and name is present, emits as a commented-out block.
  */
 public final class MethodCoder implements Coder<MethodCodingInfo> {
 
-    private static final String INDENT      = "    ";
-    private static final String INDENT_BODY = "        ";
+    private static final String      INDENT      = "    ";
+    private static final String      INDENT_BODY = "        ";
     private static final ParameterCoder PARAM_CODER = new ParameterCoder();
 
     @Override
     public String code(MethodCodingInfo spec) {
-        return spec.isEmpty() ? codeAsComment(spec) : codeLive(spec);
+        if (spec.isEmpty()) {
+            return spec.name().isBlank()
+                    ? codeAsRaw(spec)       // private record / raw line
+                    : codeAsComment(spec);  // TODO commented block
+        }
+        return codeLive(spec);
     }
+
+    // ── Live method ───────────────────────────────────────────────────────
 
     private String codeLive(MethodCodingInfo spec) {
         StringBuilder sb = new StringBuilder();
 
-        // Annotations
         for (String ann : spec.annotations())
             sb.append(INDENT).append(ann).append("\n");
 
-        // Signature
         sb.append(INDENT);
         for (String mod : spec.modifiers())
             sb.append(mod).append(" ");
         sb.append(spec.returnType()).append(" ").append(spec.name()).append("(");
+        sb.append(params(spec)).append(") {\n");
 
-        String params = spec.parameters().stream()
-                .map(PARAM_CODER::code)
-                .collect(Collectors.joining(", "));
-        sb.append(params).append(") {\n");
-
-        // Body — indent each line
-        for (String line : spec.body().split("\n"))
+        for (String line : spec.body().split("\n", -1))
             sb.append(INDENT_BODY).append(line).append("\n");
 
         sb.append(INDENT).append("}\n\n");
         return sb.toString();
     }
 
+    // ── Commented-out TODO block — matches old generator format ───────────
+
     private String codeAsComment(MethodCodingInfo spec) {
         StringBuilder sb = new StringBuilder();
-        // Prefix every line of annotations + signature + body with //
+
+        // Annotations — each on its own commented line
         for (String ann : spec.annotations())
             sb.append(INDENT).append("// ").append(ann).append("\n");
 
+        // Signature line
         sb.append(INDENT).append("// ");
         for (String mod : spec.modifiers())
             sb.append(mod).append(" ");
         sb.append(spec.returnType()).append(" ").append(spec.name()).append("(");
-        String params = spec.parameters().stream()
-                .map(PARAM_CODER::code)
-                .collect(Collectors.joining(", "));
-        sb.append(params).append(") {\n");
+        sb.append(params(spec)).append(") {\n");
 
-        for (String line : spec.body().split("\n"))
-            sb.append(INDENT).append("// ").append(INDENT_BODY).append(line).append("\n");
+        // Body lines — 4-space indent inside comment (matches old output)
+        for (String line : spec.body().split("\n", -1))
+            sb.append(INDENT).append("//     ").append(line).append("\n");
 
         sb.append(INDENT).append("// }\n\n");
         return sb.toString();
+    }
+
+    // ── Raw emit — private record, standalone comment lines etc ────────────
+
+    private String codeAsRaw(MethodCodingInfo spec) {
+        StringBuilder sb = new StringBuilder();
+        for (String line : spec.body().split("\n", -1))
+            sb.append(INDENT).append(line).append("\n");
+        sb.append("\n");
+        return sb.toString();
+    }
+
+    // ── Param helper ──────────────────────────────────────────────────────
+
+    private static String params(MethodCodingInfo spec) {
+        return spec.parameters().stream()
+                .map(PARAM_CODER::code)
+                .collect(Collectors.joining(", "));
     }
 }
