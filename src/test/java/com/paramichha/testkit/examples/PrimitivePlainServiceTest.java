@@ -82,6 +82,7 @@ class PrimitivePlainServiceTest {
     }
 
     // TODO: add constraints to quantity then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidQuantitys")
     // @DisplayName("rejects invalid value")
@@ -127,6 +128,7 @@ class PrimitivePlainServiceTest {
     }
 
     // TODO: add constraints to price then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidPrices")
     // @DisplayName("rejects invalid value")
@@ -169,6 +171,7 @@ class PrimitivePlainServiceTest {
     }
 
     // TODO: add constraints to rate then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidRates")
     // @DisplayName("rejects invalid value")
@@ -213,6 +216,7 @@ class PrimitivePlainServiceTest {
     }
 
     // TODO: add constraints to level then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidLevels")
     // @DisplayName("rejects invalid value")
@@ -258,6 +262,7 @@ class PrimitivePlainServiceTest {
     }
 
     // TODO: add constraints to score then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidScores")
     // @DisplayName("rejects invalid value")
@@ -297,6 +302,7 @@ class PrimitivePlainServiceTest {
     }
 
     // TODO: add constraints to active then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidActives")
     // @DisplayName("rejects invalid value")

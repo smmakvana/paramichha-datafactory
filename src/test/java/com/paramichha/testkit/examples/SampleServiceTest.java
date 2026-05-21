@@ -219,8 +219,8 @@ class SampleServiceTest {
 
     static Stream<Arguments> invalidApplyDiscountInputs() {
       return Stream.of(
-          Arguments.of("invalid rate 1", new BigDecimal("-1")),
-          Arguments.of("invalid rate 2", new BigDecimal("2")));
+          Arguments.of("invalid rate", new BigDecimal("-1")),
+          Arguments.of("invalid rate", new BigDecimal("2")));
     }
   }
 
@@ -317,8 +317,7 @@ class SampleServiceTest {
     }
 
     static Stream<Arguments> invalidFormatNameInputs() {
-      return Stream.of(
-          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
+      return Stream.of(Arguments.of("invalid prefix", null), Arguments.of("invalid prefix", ""));
     }
   }
 
@@ -464,7 +463,7 @@ class SampleServiceTest {
     }
 
     static Stream<Arguments> invalidTransferToInputs() {
-      return Stream.of(Arguments.of("invalid target 1", null, 0));
+      return Stream.of(Arguments.of("invalid target", null, 0));
     }
   }
 }

@@ -309,6 +309,7 @@ class PrimitiveAnnotatedServiceTest {
     }
 
     // TODO: add constraints to active then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidActives")
     // @DisplayName("rejects invalid value")
@@ -360,8 +361,8 @@ class PrimitiveAnnotatedServiceTest {
 
     static Stream<Arguments> invalidApplyDiscountInputs() {
       return Stream.of(
-          Arguments.of("invalid discountPercent 1", -1),
-          Arguments.of("invalid discountPercent 2", 101));
+          Arguments.of("invalid discountPercent", -1),
+          Arguments.of("invalid discountPercent", 101));
     }
   }
 
@@ -480,7 +481,8 @@ class PrimitiveAnnotatedServiceTest {
     }
 
     static Stream<Arguments> invalidTransferInputs() {
-      return Stream.of(Arguments.of("invalid amount 1", 0, 1));
+      return Stream.of(
+          Arguments.of("invalid amount", 0, 1), Arguments.of("invalid targetLevel", 100, -1));
     }
   }
 }

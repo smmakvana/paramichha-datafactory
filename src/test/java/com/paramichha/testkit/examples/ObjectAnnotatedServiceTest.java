@@ -284,8 +284,8 @@ class ObjectAnnotatedServiceTest {
 
     static Stream<Arguments> invalidApplyTaxInputs() {
       return Stream.of(
-          Arguments.of("invalid taxRate 1", new BigDecimal("-1")),
-          Arguments.of("invalid taxRate 2", new BigDecimal("2")));
+          Arguments.of("invalid taxRate", new BigDecimal("-1")),
+          Arguments.of("invalid taxRate", new BigDecimal("2")));
     }
   }
 
@@ -329,7 +329,23 @@ class ObjectAnnotatedServiceTest {
 
     static Stream<Arguments> invalidCopyFromInputs() {
       return Stream.of(
-          Arguments.of("invalid source 1", null, "Perferendis labore expedita est fugit."));
+          Arguments.of("invalid source", null, "Perferendis labore expedita est fugit."),
+          Arguments.of(
+              "invalid reason",
+              new ObjectAnnotatedService(
+                  "Annabell Lynch",
+                  new BigDecimal("1.50"),
+                  LocalDate.of(2020, 6, 15),
+                  "don.thiel@yahoo.com"),
+              null),
+          Arguments.of(
+              "invalid reason",
+              new ObjectAnnotatedService(
+                  "Annabell Lynch",
+                  new BigDecimal("1.50"),
+                  LocalDate.of(2020, 6, 15),
+                  "don.thiel@yahoo.com"),
+              ""));
     }
   }
 
@@ -365,8 +381,7 @@ class ObjectAnnotatedServiceTest {
     }
 
     static Stream<Arguments> invalidFormatDisplayInputs() {
-      return Stream.of(
-          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
+      return Stream.of(Arguments.of("invalid prefix", null), Arguments.of("invalid prefix", ""));
     }
   }
 

@@ -140,6 +140,7 @@ class ObjectMixedServiceTest {
     }
 
     // TODO: add constraints to price then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidPrices")
     // @DisplayName("rejects invalid value")
@@ -221,6 +222,7 @@ class ObjectMixedServiceTest {
     }
 
     // TODO: add constraints to email then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidEmails")
     // @DisplayName("rejects invalid value")
@@ -275,7 +277,7 @@ class ObjectMixedServiceTest {
     }
 
     static Stream<Arguments> invalidCopyFromInputs() {
-      return Stream.of(Arguments.of("invalid source 1", null, (String) null));
+      return Stream.of(Arguments.of("invalid source", null, (String) null));
     }
   }
 
@@ -309,8 +311,7 @@ class ObjectMixedServiceTest {
     }
 
     static Stream<Arguments> invalidFormatDisplayInputs() {
-      return Stream.of(
-          Arguments.of("invalid prefix 1", null), Arguments.of("invalid prefix 2", ""));
+      return Stream.of(Arguments.of("invalid prefix", null), Arguments.of("invalid prefix", ""));
     }
   }
 

@@ -134,6 +134,7 @@ class PrimitiveMixedServiceTest {
     }
 
     // TODO: add constraints to price then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidPrices")
     // @DisplayName("rejects invalid value")
@@ -217,6 +218,7 @@ class PrimitiveMixedServiceTest {
     }
 
     // TODO: add constraints to level then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidLevels")
     // @DisplayName("rejects invalid value")
@@ -254,6 +256,7 @@ class PrimitiveMixedServiceTest {
     }
 
     // TODO: add constraints to active then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidActives")
     // @DisplayName("rejects invalid value")
@@ -301,8 +304,8 @@ class PrimitiveMixedServiceTest {
 
     static Stream<Arguments> invalidApplyDiscountInputs() {
       return Stream.of(
-          Arguments.of("invalid discountPercent 1", -1),
-          Arguments.of("invalid discountPercent 2", 101));
+          Arguments.of("invalid discountPercent", -1),
+          Arguments.of("invalid discountPercent", 101));
     }
   }
 
@@ -414,7 +417,7 @@ class PrimitiveMixedServiceTest {
     }
 
     static Stream<Arguments> invalidTransferInputs() {
-      return Stream.of(Arguments.of("invalid amount 1", 0, 0));
+      return Stream.of(Arguments.of("invalid amount", 0, 0));
     }
   }
 }

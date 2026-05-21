@@ -81,6 +81,7 @@ class ObjectPlainServiceTest {
     }
 
     // TODO: add constraints to name then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidNames")
     // @DisplayName("rejects invalid value")
@@ -124,6 +125,7 @@ class ObjectPlainServiceTest {
     }
 
     // TODO: add constraints to price then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidPrices")
     // @DisplayName("rejects invalid value")
@@ -164,6 +166,7 @@ class ObjectPlainServiceTest {
     }
 
     // TODO: add constraints to createdDate then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidCreatedDates")
     // @DisplayName("rejects invalid value")
@@ -204,6 +207,7 @@ class ObjectPlainServiceTest {
     }
 
     // TODO: add constraints to email then uncomment
+
     // @ParameterizedTest(name = "{0}")
     // @MethodSource("invalidEmails")
     // @DisplayName("rejects invalid value")
