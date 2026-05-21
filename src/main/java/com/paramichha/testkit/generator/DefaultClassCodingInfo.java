@@ -19,15 +19,13 @@ final class DefaultClassCodingInfo implements ClassCodingInfo {
     private final List<FieldCodingInfo>  fields;
     private final List<MethodCodingInfo> methods;
     private final List<ClassCodingInfo>  nestedClasses;
-    private final String               rawBody;       // nullable escape hatch
 
     DefaultClassCodingInfo(
             boolean nested, String header, String packageName, List<String> imports,
             String className, String displayName, List<String> modifiers, List<String> annotations,
             String extendsClass,
             List<FieldCodingInfo> fields, List<MethodCodingInfo> methods,
-            List<ClassCodingInfo> nestedClasses,
-            String rawBody) {
+            List<ClassCodingInfo> nestedClasses) {
         this.nested        = nested;
         this.header        = header;
         this.packageName   = packageName;
@@ -40,7 +38,6 @@ final class DefaultClassCodingInfo implements ClassCodingInfo {
         this.fields        = fields;
         this.methods       = methods;
         this.nestedClasses = nestedClasses;
-        this.rawBody       = rawBody;
     }
 
     public boolean               isNested()       { return nested;        }
@@ -55,5 +52,4 @@ final class DefaultClassCodingInfo implements ClassCodingInfo {
     public List<FieldCodingInfo>  fields()        { return fields;        }
     public List<MethodCodingInfo> methods()       { return methods;       }
     public List<ClassCodingInfo>  nestedClasses() { return nestedClasses; }
-    public String                rawBody()        { return rawBody;       }
 }

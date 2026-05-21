@@ -33,11 +33,4 @@ public interface ClassCodingInfo {
     List<FieldCodingInfo>   fields();
     List<MethodCodingInfo>  methods();
     List<ClassCodingInfo>   nestedClasses();
-
-    /**
-     * Escape hatch — when non-null, emitted directly as the class body.
-     * fields(), methods(), and nestedClasses() are ignored.
-     * Used for method nested classes until MethodClassBuilder is implemented.
-     */
-    String rawBody();
 }

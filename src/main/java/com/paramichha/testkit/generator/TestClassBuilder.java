@@ -129,7 +129,7 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
                     false));
         }
 
-        return nested(nestedClass, display, List.of(), methods, List.of(), null);
+        return nested(nestedClass, display, List.of(), methods, List.of());
     }
 
     // ── Field nested ──────────────────────────────────────────────────────
@@ -153,7 +153,7 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
                 .filter(LiteralConverter::canSerialize).collect(Collectors.toList());
 
         if (validValues.isEmpty() && invalidValues.isEmpty())
-            return nested(nestedClass, display, List.of(), List.of(), List.of(), null);
+            return nested(nestedClass, display, List.of(), List.of(), List.of());
 
         String constructorWithVar = ctx.instantiation.constructorCallWithVar(ctx.validParts, fieldIndex, memberName);
         String accessor = isRecord
@@ -232,7 +232,7 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
                     true));
         }
 
-        return nested(nestedClass, display, List.of(), methods, List.of(), null);
+        return nested(nestedClass, display, List.of(), methods, List.of());
     }
 
     // ── Method nested ─────────────────────────────────────────────────────
@@ -241,30 +241,29 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
         MethodPayload          payload    = MethodPayloadFactory.build(ctx, method);
         List<MethodCodingInfo> methods    = new CleanMethodCoder().code(payload);
         return nested(payload.nestedClassName, payload.displayName,
-                List.of(), methods, List.of(), null);
+                List.of(), methods, List.of());
     }
 
     // ── Factory helpers ───────────────────────────────────────────────────
 
     private static ClassCodingInfo topLevel(String header, String packageName, List<String> imports,
-                                             String className, String displayName,
-                                             List<FieldCodingInfo> fields,
-                                             List<MethodCodingInfo> methods,
-                                             List<ClassCodingInfo> nestedClasses) {
+                                            String className, String displayName,
+                                            List<FieldCodingInfo> fields,
+                                            List<MethodCodingInfo> methods,
+                                            List<ClassCodingInfo> nestedClasses) {
         return new DefaultClassCodingInfo(
                 false, header, packageName, imports,
                 className, displayName,
                 List.of("class"),
                 List.of("@DisplayName(\"" + displayName + "\")"),
                 null,
-                fields, methods, nestedClasses, null);
+                fields, methods, nestedClasses);
     }
 
     private static ClassCodingInfo nested(String className, String displayName,
-                                           List<String> extraAnnotations,
-                                           List<MethodCodingInfo> methods,
-                                           List<ClassCodingInfo> nestedClasses,
-                                           String rawBody) {
+                                          List<String> extraAnnotations,
+                                          List<MethodCodingInfo> methods,
+                                          List<ClassCodingInfo> nestedClasses) {
         List<String> annotations = new ArrayList<>();
         annotations.add("@Nested");
         annotations.add("@DisplayName(\"" + displayName + "\")");
@@ -275,12 +274,12 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
                 List.of("class"),
                 List.copyOf(annotations),
                 null,
-                List.of(), methods, nestedClasses, rawBody);
+                List.of(), methods, nestedClasses);
     }
 
     private static FieldCodingInfo field(String name, String typeName,
-                                          List<String> modifiers, List<String> annotations,
-                                          String initializer) {
+                                         List<String> modifiers, List<String> annotations,
+                                         String initializer) {
         return new FieldCodingInfo() {
             public String name()              { return name; }
             public String typeName()          { return typeName; }
@@ -291,9 +290,9 @@ public final class TestClassBuilder implements ClassCodingInfoBuilder {
     }
 
     private static MethodCodingInfo method(String name, String returnType,
-                                            List<String> modifiers, List<String> annotations,
-                                            List<ParameterCodingInfo> params,
-                                            String body, boolean isEmpty) {
+                                           List<String> modifiers, List<String> annotations,
+                                           List<ParameterCodingInfo> params,
+                                           String body, boolean isEmpty) {
         return new MethodCodingInfo() {
             public String name()                          { return name; }
             public String returnType()                    { return returnType; }

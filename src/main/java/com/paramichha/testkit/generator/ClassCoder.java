@@ -5,10 +5,9 @@ import java.util.stream.Collectors;
 
 /**
  * Produces source code for a complete Java class — top-level or nested.
- * Recurses for nested classes. Handles {@link ClassCodingInfo#rawBody()} escape hatch.
+ * Recurses for nested classes.
  *
  * Field ordering: static fields → methods → instance fields
- * This matches Java convention and the expected test output order:
  *   private static Validator validator;   (static field)
  *   @BeforeAll static void setup() {...}  (method)
  *   ObjectFoo objectFoo = new ObjectFoo(...)  (instance field)
@@ -53,40 +52,34 @@ public final class ClassCoder implements Coder<ClassCodingInfo> {
             sb.append(" extends ").append(spec.extendsClass());
         sb.append(" {\n\n");
 
-        // Body — rawBody takes priority
-        if (spec.rawBody() != null) {
-            sb.append(indent(spec.rawBody(), spec.isNested()));
-        } else {
-            // Static fields first
-            List<FieldCodingInfo> staticFields = spec.fields().stream()
-                    .filter(f -> f.modifiers().contains("static"))
-                    .collect(Collectors.toList());
-            List<FieldCodingInfo> instanceFields = spec.fields().stream()
-                    .filter(f -> !f.modifiers().contains("static"))
-                    .collect(Collectors.toList());
+        // Static fields first
+        List<FieldCodingInfo> staticFields = spec.fields().stream()
+                .filter(f -> f.modifiers().contains("static"))
+                .collect(Collectors.toList());
+        List<FieldCodingInfo> instanceFields = spec.fields().stream()
+                .filter(f -> !f.modifiers().contains("static"))
+                .collect(Collectors.toList());
 
-            for (FieldCodingInfo field : staticFields)
-                sb.append(indent(FIELD_CODER.code(field), spec.isNested()));
+        for (FieldCodingInfo field : staticFields)
+            sb.append(indent(FIELD_CODER.code(field), spec.isNested()));
 
-            // Methods (@BeforeAll etc)
-            for (MethodCodingInfo method : spec.methods())
-                sb.append(indent(METHOD_CODER.code(method), spec.isNested()));
+        // Methods (@BeforeAll etc)
+        for (MethodCodingInfo method : spec.methods())
+            sb.append(indent(METHOD_CODER.code(method), spec.isNested()));
 
-            // Instance fields
-            for (FieldCodingInfo field : instanceFields)
-                sb.append(indent(FIELD_CODER.code(field), spec.isNested()));
+        // Instance fields
+        for (FieldCodingInfo field : instanceFields)
+            sb.append(indent(FIELD_CODER.code(field), spec.isNested()));
 
-            // Nested classes — with section separator
-            List<ClassCodingInfo> nested = spec.nestedClasses();
-            for (ClassCodingInfo nestedClass : nested) {
-                if (!spec.isNested()) {
-                    sb.append(SECTION_LINE);
-                    sb.append("  // ").append(nestedClass.displayName()).append("\n");
-                    sb.append(SECTION_LINE);
-                    sb.append("\n");
-                }
-                sb.append(indent(code(nestedClass), spec.isNested()));
+        // Nested classes — with section separator on top level
+        for (ClassCodingInfo nested : spec.nestedClasses()) {
+            if (!spec.isNested()) {
+                sb.append(SECTION_LINE);
+                sb.append("  // ").append(nested.displayName()).append("\n");
+                sb.append(SECTION_LINE);
+                sb.append("\n");
             }
+            sb.append(indent(code(nested), spec.isNested()));
         }
 
         sb.append(prefix).append("}\n");
