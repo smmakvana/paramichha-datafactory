@@ -1,7 +1,7 @@
 package com.paramichha.datafactory.instantiation;
 
 import com.paramichha.datafactory.constraint.FieldDescriptor;
-import com.paramichha.testkit.utils.JavaNames;
+import com.paramichha.datafactory.utils.JavaNames;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
