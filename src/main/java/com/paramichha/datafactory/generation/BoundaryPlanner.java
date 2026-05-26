@@ -34,6 +34,15 @@ public final class BoundaryPlanner {
         if (field.hasTemporal())          return List.of(BoundaryTarget.semantic());
         if (field.fieldType() == java.util.UUID.class) return List.of(BoundaryTarget.semantic());
 
+        // Arrays and collections — use @Size bounds if present, else semantic
+        if (field.fieldType().isArray()
+                || java.util.Collection.class.isAssignableFrom(field.fieldType())
+                || java.util.Map.class.isAssignableFrom(field.fieldType())) {
+            return field.hasBounds()
+                    ? planCollectionBounds(field)
+                    : List.of(BoundaryTarget.semantic());
+        }
+
         return switch (field.bounds()) {
             case NumericBounds.Unbounded u ->
                 isNumeric(field.fieldType())
@@ -170,5 +179,20 @@ public final class BoundaryPlanner {
             || t == Double.class    || t == double.class
             || t == java.math.BigDecimal.class
             || t == java.math.BigInteger.class;
+    }
+
+    // ── Collection/array size planning ─────────────────────────────────
+
+    private static List<BoundaryTarget> planCollectionBounds(FieldConstraints field) {
+        if (!(field.bounds() instanceof NumericBounds.IntegerBounds b)) {
+            return List.of(BoundaryTarget.semantic());
+        }
+        List<BoundaryTarget> targets = new ArrayList<>();
+        if (field.nullable()) targets.add(BoundaryTarget.nullTarget());
+        targets.add(BoundaryTarget.atMin(b.min()));       // empty or min size — invalid
+        targets.add(BoundaryTarget.semantic());            // valid size
+        targets.add(BoundaryTarget.atMax(b.max()));       // max size — valid
+        targets.add(BoundaryTarget.Fixed("overMax", b.max() + 1)); // over max — invalid
+        return List.copyOf(targets);
     }
 }

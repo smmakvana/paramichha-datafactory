@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -311,6 +312,36 @@ public final class DataFactory {
                     "Cannot generate enum values — " + enumType.getSimpleName() + " has no constants");
         return IntStream.range(0, n)
                 .mapToObj(i -> constants[ThreadLocalRandom.current().nextInt(constants.length)])
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns a deterministic constant from the enum type for the given seed.
+     * Same seed always returns the same constant — useful for test data generation.
+     * <pre>
+     * Status status = DataFactory.enumOf(Status.class, 42L);
+     * </pre>
+     */
+    public static <E extends Enum<E>> E enumOf(Class<E> enumType, long seed) {
+        E[] constants = enumType.getEnumConstants();
+        if (constants == null || constants.length == 0)
+            throw new DataFactoryException(
+                    "Cannot generate enum value — " + enumType.getSimpleName() + " has no constants");
+        return constants[(int) (Math.abs(seed) % constants.length)];
+    }
+
+    /**
+     * Returns {@code n} deterministic constants from the enum type for the given seed.
+     * Same seed always returns the same sequence.
+     */
+    public static <E extends Enum<E>> List<E> enumOf(Class<E> enumType, int n, long seed) {
+        E[] constants = enumType.getEnumConstants();
+        if (constants == null || constants.length == 0)
+            throw new DataFactoryException(
+                    "Cannot generate enum values — " + enumType.getSimpleName() + " has no constants");
+        Random rng = new Random(seed);
+        return IntStream.range(0, n)
+                .mapToObj(i -> constants[rng.nextInt(constants.length)])
                 .collect(Collectors.toList());
     }
 

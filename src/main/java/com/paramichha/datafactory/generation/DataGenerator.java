@@ -16,6 +16,8 @@ public final class DataGenerator {
             TemporalDataCreator.INSTANCE,   // before Object
             NumericDataCreator.INSTANCE,    // before Object
             CharacterDataCreator.INSTANCE,  // before String
+            ArrayDataCreator.INSTANCE,      // before Object
+            CollectionDataCreator.INSTANCE, // before Object
             StringDataCreator.INSTANCE      // catch-all
     );
 

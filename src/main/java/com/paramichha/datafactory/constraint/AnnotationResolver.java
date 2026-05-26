@@ -48,8 +48,9 @@ public final class AnnotationResolver {
             if (classifier.isValid(a))     { b.cascadeValid(true); hasCascadeValid = true; }
             if (classifier.classifyQuantity(a) != null
                     && (fieldType == String.class
+                        || fieldType.isArray()
                         || java.util.Collection.class.isAssignableFrom(fieldType)
-                        || fieldType == java.util.List.class)) {
+                        || java.util.Map.class.isAssignableFrom(fieldType))) {
                 hasSizeConstraint = true;
             }
         }
