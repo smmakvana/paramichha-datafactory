@@ -192,7 +192,7 @@ public final class BoundaryPlanner {
         targets.add(BoundaryTarget.atMin(b.min()));       // empty or min size — invalid
         targets.add(BoundaryTarget.semantic());            // valid size
         targets.add(BoundaryTarget.atMax(b.max()));       // max size — valid
-        targets.add(BoundaryTarget.Fixed("overMax", b.max() + 1)); // over max — invalid
+        targets.add(new BoundaryTarget.Fixed("overMax", b.max() + 1)); // over max — invalid
         return List.copyOf(targets);
     }
 }
