@@ -25,6 +25,11 @@ public final class LombokObjectCreation implements ObjectCreation {
     private LombokObjectCreation() {
     }
 
+    /** #13 — call this after hot-reload or classloader swap to clear stale setter cache. */
+    public static void evictAll() {
+        SETTER_CACHE.clear();
+    }
+
     private static Method findSetter(Class<?> builderClass, String name, Class<?> fieldType) {
         try {
             return builderClass.getMethod(name, fieldType);
@@ -127,6 +132,9 @@ public final class LombokObjectCreation implements ObjectCreation {
             Object value = values.get(f.name());
             if (value == null && f.rawType().isPrimitive()) continue;
 
+            // #13 — use computeIfAbsent only for successful lookups;
+            //        absent Optional means "not found" and is cached, which is correct for
+            //        immutable compiled classes. For dynamic/reloaded classes call evictAll().
             Method setter = SETTER_CACHE
                     .computeIfAbsent(builderClass, c -> new ConcurrentHashMap<>())
                     .computeIfAbsent(f.name(), n -> Optional.ofNullable(

@@ -31,7 +31,10 @@ public final class DataGenerator {
                 return creator.shape(field, target, machine);
             }
         }
-        return null;
+        // #1 — no silent null: surface unsupported types immediately
+        throw new com.paramichha.datafactory.DataFactoryException(
+                "No DataCreator found for type: " + field.fieldType().getName()
+                + " (field: " + field.fieldName() + ")");
     }
 
     /**
@@ -48,7 +51,10 @@ public final class DataGenerator {
                 results.add(value);
             }
         }
-        results.removeIf(java.util.Objects::isNull);
+        // #2 — @Null fields must yield null; only strip nulls for non-null-constrained fields
+        if (!field.mustBeNull()) {
+            results.removeIf(java.util.Objects::isNull);
+        }
         return List.copyOf(results);
     }
 }

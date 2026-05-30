@@ -138,6 +138,9 @@ final class StringDataCreator implements DataCreator {
             String result = sb.toString();
             return result.isEmpty() ? "A" : result;
         } catch (Exception e) {
+            // #6 — don't swallow silently; log so callers know the pattern wasn't honoured
+            System.err.println("DataFactory [WARN] generateFromPattern failed for regexp='"
+                    + regexp + "': " + e.getMessage() + " — falling back to 'A'");
             return "A";
         }
     }

@@ -54,7 +54,12 @@ final class ArrayDataCreator implements DataCreator {
             Object element = DataGenerator.shape(componentField, componentTarget, machine);
             if (element != null) {
                 try { Array.set(arr, i, element); }
-                catch (IllegalArgumentException ignored) { /* skip incompatible */ }
+                catch (IllegalArgumentException e) {
+                    // #9 — don't swallow silently; log so the mismatch is visible
+                    System.err.println("DataFactory [WARN] ArrayDataCreator: cannot set element of type "
+                            + element.getClass().getSimpleName() + " into " + componentType.getSimpleName()
+                            + "[] for field '" + field.fieldName() + "' — slot left null. " + e.getMessage());
+                }
             }
         }
         return arr;

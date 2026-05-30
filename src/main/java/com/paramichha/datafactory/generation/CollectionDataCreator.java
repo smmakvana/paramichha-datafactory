@@ -45,6 +45,7 @@ final class CollectionDataCreator implements DataCreator {
         // Map types
         if (java.util.Map.class.isAssignableFrom(type)) {
             Map<Object, Object> map = new HashMap<>();
+            // #10 — raw Map has no generic info at runtime; String is an intentional safe default
             FieldConstraints keyField = FieldConstraints.builder(field.fieldName() + "Key", String.class).build();
             FieldConstraints valField = FieldConstraints.builder(field.fieldName() + "Value", String.class).build();
             for (int i = 0; i < size; i++) {
@@ -58,6 +59,7 @@ final class CollectionDataCreator implements DataCreator {
         // Set types
         if (java.util.Set.class.isAssignableFrom(type)) {
             Set<Object> set = new HashSet<>();
+            // #10 — raw Set has no generic info at runtime; String is an intentional safe default
             FieldConstraints elemField = FieldConstraints.builder(field.fieldName(), String.class).build();
             for (int i = 0; i < size; i++) {
                 Object elem = DataGenerator.shape(elemField, BoundaryTarget.semantic(), machine);
@@ -67,6 +69,7 @@ final class CollectionDataCreator implements DataCreator {
         }
 
         // List (default collection)
+        // #10 — raw List has no generic info at runtime; String is an intentional safe default
         List<Object> list = new ArrayList<>();
         FieldConstraints elemField = FieldConstraints.builder(field.fieldName(), String.class).build();
         for (int i = 0; i < size; i++) {

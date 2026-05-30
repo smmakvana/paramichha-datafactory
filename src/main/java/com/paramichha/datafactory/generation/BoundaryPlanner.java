@@ -189,10 +189,13 @@ public final class BoundaryPlanner {
         }
         List<BoundaryTarget> targets = new ArrayList<>();
         if (field.nullable()) targets.add(BoundaryTarget.nullTarget());
-        targets.add(BoundaryTarget.atMin(b.min()));       // empty or min size — invalid
-        targets.add(BoundaryTarget.semantic());            // valid size
-        targets.add(BoundaryTarget.atMax(b.max()));       // max size — valid
-        targets.add(new BoundaryTarget.Fixed("overMax", b.max() + 1)); // over max — invalid
+        // #12 — b.min() and b.max() can be null (e.g. only max declared); guard both
+        if (b.min() != null) targets.add(BoundaryTarget.atMin(b.min()));
+        targets.add(BoundaryTarget.semantic());
+        if (b.max() != null) {
+            targets.add(BoundaryTarget.atMax(b.max()));
+            targets.add(new BoundaryTarget.Fixed("overMax", b.max() + 1));
+        }
         return List.copyOf(targets);
     }
 }

@@ -59,10 +59,17 @@ public final class AnnotationResolver {
         FormatType fmt = FormatType.NONE;
         for (A a : annotations) {
             FormatType f = classifier.classifyFormat(a);
-            if (f != FormatType.NONE && fmt == FormatType.NONE) {
-                fmt = f;
-                String re = classifier.extractPatternRegexp(a);
-                if (re != null) b.patternRegexp(re);
+            if (f != FormatType.NONE) {
+                if (fmt == FormatType.NONE) {
+                    fmt = f;
+                    String re = classifier.extractPatternRegexp(a);
+                    if (re != null) b.patternRegexp(re);
+                } else if (f != fmt) {
+                    // #7 — warn instead of silently dropping the second format annotation
+                    System.err.println("DataFactory [WARN] field '" + fieldName
+                            + "' has conflicting format annotations: " + fmt + " and " + f
+                            + " — " + fmt + " takes precedence.");
+                }
             }
         }
         b.format(fmt);

@@ -30,13 +30,18 @@ public final class ObjectAssembler {
 
     public static <T> T instantiate(Class<T> type, List<FieldDescriptor> fields,
                                     Map<String, Object> values) throws Exception {
-        ObjectCreation strategy = STRATEGY_CACHE.computeIfAbsent(type,
-                t -> STRATEGIES.stream()
-                        .filter(s -> s.canCreate(t, fields))
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalStateException(
-                                "No instantiation strategy found for " + t.getSimpleName()
-                                        + ". Implement InstantiationStrategy and add it to ObjectAssembler.")));
+        // #3 — resolve outside computeIfAbsent to avoid caching a broken entry
+        //       when orElseThrow fires inside the lambda on some JVM versions
+        ObjectCreation strategy = STRATEGY_CACHE.get(type);
+        if (strategy == null) {
+            strategy = STRATEGIES.stream()
+                    .filter(s -> s.canCreate(type, fields))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException(
+                            "No instantiation strategy found for " + type.getSimpleName()
+                                    + ". Implement ObjectCreation and add it to ObjectAssembler."));
+            STRATEGY_CACHE.put(type, strategy);
+        }
         return strategy.create(type, fields, values);
     }
 }

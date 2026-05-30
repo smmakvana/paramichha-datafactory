@@ -24,6 +24,16 @@ public record FieldDescriptor(
                 t -> t.isRecord() ? extractRecord(t) : extractClass(t));
     }
 
+    /** #8 — evict a single class (e.g. after hot-reload in dev/test environments). */
+    public static void evict(Class<?> type) {
+        CACHE.remove(type);
+    }
+
+    /** #8 — evict the entire cache (e.g. after classloader reload or between test suites). */
+    public static void evictAll() {
+        CACHE.clear();
+    }
+
     /**
      * Extracts a single FieldDescriptor from a {@link java.lang.reflect.Field}.
      * This is the bridge for the public DataFactory.field(Field) entry point.
@@ -42,7 +52,21 @@ public record FieldDescriptor(
     private static List<FieldDescriptor> extractRecord(Class<?> type) {
         List<FieldDescriptor> result = new ArrayList<>();
         RecordComponent[] components = type.getRecordComponents();
-        Parameter[] params = type.getDeclaredConstructors()[0].getParameters();
+
+        // #15 — find the canonical constructor by matching component types exactly,
+        //        not by index 0 which can be wrong when compact constructors are present
+        Class<?>[] componentTypes = Arrays.stream(components)
+                .map(RecordComponent::getType)
+                .toArray(Class[]::new);
+        Parameter[] params = new Parameter[0];
+        try {
+            params = type.getDeclaredConstructor(componentTypes).getParameters();
+        } catch (NoSuchMethodException e) {
+            // fall back to first constructor if exact match fails
+            if (type.getDeclaredConstructors().length > 0) {
+                params = type.getDeclaredConstructors()[0].getParameters();
+            }
+        }
 
         for (int i = 0; i < components.length; i++) {
             RecordComponent rc = components[i];

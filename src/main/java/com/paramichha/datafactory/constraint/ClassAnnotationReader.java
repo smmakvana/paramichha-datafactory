@@ -81,6 +81,12 @@ final class ClassAnnotationReader implements AnnotationReader {
             Long max = l.max() < Integer.MAX_VALUE ? (long) l.max() : null;
             return (min != null || max != null) ? NumericBounds.of(min, max) : null;
         }
+        // #5 — @Range was completely unhandled
+        if (a instanceof Range r) {
+            Long min = r.min() != Long.MIN_VALUE ? r.min() : null;
+            Long max = r.max() != Long.MAX_VALUE ? r.max() : null;
+            return (min != null || max != null) ? NumericBounds.of(min, max) : null;
+        }
         if (a instanceof DecimalMin dm) {
             try {
                 // Round up — e.g. 0.01 → 1, so boundaries stay above minimum

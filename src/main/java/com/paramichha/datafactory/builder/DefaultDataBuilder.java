@@ -225,6 +225,10 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
                 if (seed != null) nested.seed(seed + Seeds.stableHash(field.name()));
                 return nested.valid();
             } catch (Exception e) {
+                // #11 — don't swallow silently; log so nested build failures are visible
+                System.err.println("DataFactory [WARN] resolveNested failed for field '"
+                        + field.name() + "' of type " + field.rawType().getSimpleName()
+                        + " — returning null. Cause: " + e.getMessage());
                 return null;
             } finally {
                 BUILDING.get().remove(field.rawType());

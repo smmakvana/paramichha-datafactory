@@ -73,6 +73,7 @@ final class TextAnnotationReader implements AnnotationReader {
         if (has(s, "CreditCardNumber")) return FormatType.CREDIT_CARD;
         if (has(s, "ISBN")) return FormatType.ISBN;
         if (has(s, "EAN")) return FormatType.EAN;
+        if (has(s, "UUID")) return FormatType.UUID_STRING;  // #4 — was missing
         return FormatType.NONE;
     }
 
@@ -108,6 +109,12 @@ final class TextAnnotationReader implements AnnotationReader {
             Long max = extractNamedLong(s, "max=");
             if (min != null && min == 0) min = null;
             if (max != null && max == Integer.MAX_VALUE) max = null;
+            if (min != null || max != null) return NumericBounds.of(min, max);
+        }
+        // #5 — @Range(min=X, max=Y) was completely unhandled
+        if (has(s, "Range")) {
+            Long min = extractNamedLong(s, "min=");
+            Long max = extractNamedLong(s, "max=");
             if (min != null || max != null) return NumericBounds.of(min, max);
         }
         return null;
