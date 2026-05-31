@@ -224,109 +224,99 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
                 DefaultDataBuilder<?> nested = new DefaultDataBuilder<>(field.rawType()).mode(mode);
                 if (seed != null) nested.seed(seed + Seeds.stableHash(field.name()));
                 return nested.valid();
+            } catch (DataFactoryException e) {
+                throw new DataFactoryException(
+                        "Failed to build nested field '" + field.name()
+                                + "' of type '" + field.rawType().getName() + "'", e);
             } catch (Exception e) {
-                // #11 — don't swallow silently; log so nested build failures are visible
-                System.err.println("DataFactory [WARN] resolveNested failed for field '"
-                        + field.name() + "' of type " + field.rawType().getSimpleName()
-                        + " — returning null. Cause: " + e.getMessage());
-                return null;
+                throw new DataFactoryException(
+                        "Failed to build nested field '" + field.name()
+                                + "' of type '" + field.rawType().getName() + "'", e);
             } finally {
                 BUILDING.get().remove(field.rawType());
             }
         }
+        // Circular reference — field already being built up the stack
         return null;
     }
 
     private Object resolveOptional(FieldDescriptor field, DataMachine m) {
-        try {
-            Class<?> elemType = field.listElementType();
-            if (!elemType.getPackageName().startsWith("java.")) {
-                if (BUILDING.get().contains(elemType)) return Optional.empty();
-                DefaultDataBuilder<?> ob = new DefaultDataBuilder<>(elemType).mode(mode);
-                if (seed != null) ob.seed(seed);
-                return Optional.of(ob.valid());
-            }
-            List<?> elemValid = ValueBuilderFactory.create(elemType, m).validList();
-            Object elem = elemValid.isEmpty() ? null : elemValid.get(0);
-            return elem != null ? Optional.of(elem) : Optional.empty();
-        } catch (Exception e) {
-            return Optional.empty();
+        Class<?> elemType = field.listElementType();
+        if (!elemType.getPackageName().startsWith("java.")) {
+            if (BUILDING.get().contains(elemType)) return Optional.empty();
+            DefaultDataBuilder<?> ob = new DefaultDataBuilder<>(elemType).mode(mode);
+            if (seed != null) ob.seed(seed);
+            return Optional.of(ob.valid());
         }
+        List<?> elemValid = ValueBuilderFactory.create(elemType, m).validList();
+        Object elem = elemValid.isEmpty() ? null : elemValid.get(0);
+        return elem != null ? Optional.of(elem) : Optional.empty();
     }
 
 
     private Object resolveSet(FieldDescriptor field, DataMachine m) {
-        try {
-            Class<?> elemType = field.listElementType();
-            Object elem = resolveElement(elemType, m);
-            return elem != null ? new LinkedHashSet<>(List.of(elem)) : new LinkedHashSet<>();
-        } catch (Exception e) {
-            return new LinkedHashSet<>();
-        }
+        Class<?> elemType = field.listElementType();
+        Object elem = resolveElement(elemType, field.name(), m);
+        return elem != null ? new LinkedHashSet<>(List.of(elem)) : new LinkedHashSet<>();
     }
 
     private Object resolveMap(FieldDescriptor field, DataMachine m) {
-        try {
-            Class<?> keyType   = field.mapKeyType();
-            Class<?> valueType = field.mapValueType();
-            Object key   = resolveElement(keyType, m);
-            Object value = resolveElement(valueType, m);
-            if (key == null || value == null) return new LinkedHashMap<>();
-            LinkedHashMap<Object, Object> map = new LinkedHashMap<>();
-            map.put(key, value);
-            return map;
-        } catch (Exception e) {
-            return new LinkedHashMap<>();
-        }
+        Class<?> keyType   = field.mapKeyType();
+        Class<?> valueType = field.mapValueType();
+        Object key   = resolveElement(keyType,   field.name() + ".key",   m);
+        Object value = resolveElement(valueType, field.name() + ".value", m);
+        if (key == null || value == null) return new LinkedHashMap<>();
+        LinkedHashMap<Object, Object> map = new LinkedHashMap<>();
+        map.put(key, value);
+        return map;
     }
 
     @SuppressWarnings("unchecked")
     private Object resolveArray(FieldDescriptor field, DataMachine m) {
-        try {
-            Class<?> elemType = field.rawType().getComponentType();
-            Object elem = resolveElement(elemType, m);
-            Object arr = Array.newInstance(elemType, 1);
-            if (elem != null) Array.set(arr, 0, elem);
-            return arr;
-        } catch (Exception e) {
-            return Array.newInstance(field.rawType().getComponentType(), 0);
+        Class<?> elemType = field.rawType().getComponentType();
+        Object elem = resolveElement(elemType, field.name(), m);
+        Object arr = Array.newInstance(elemType, 1);
+        if (elem != null) {
+            try {
+                Array.set(arr, 0, elem);
+            } catch (IllegalArgumentException e) {
+                throw new DataFactoryException(
+                        "Failed to set element of type '" + elem.getClass().getName()
+                                + "' into array '" + field.name() + "' of component type '"
+                                + elemType.getName() + "'", e);
+            }
         }
+        return arr;
     }
 
     private Object resolveQueue(FieldDescriptor field, DataMachine m) {
-        try {
-            Class<?> elemType = field.listElementType();
-            Object elem = resolveElement(elemType, m);
-            ArrayDeque<Object> queue = new ArrayDeque<>();
-            if (elem != null) queue.add(elem);
-            return queue;
-        } catch (Exception e) {
-            return new ArrayDeque<>();
-        }
+        Class<?> elemType = field.listElementType();
+        Object elem = resolveElement(elemType, field.name(), m);
+        ArrayDeque<Object> queue = new ArrayDeque<>();
+        if (elem != null) queue.add(elem);
+        return queue;
     }
 
     /** Resolves a single element — handles domain types, java types, and enums. */
-    private Object resolveElement(Class<?> elemType, DataMachine m) {
-        try {
-            if (!elemType.getPackageName().startsWith("java.") && !elemType.isEnum()) {
-                if (BUILDING.get().contains(elemType)) return null;
-                DefaultDataBuilder<?> eb = new DefaultDataBuilder<>(elemType).mode(mode);
-                if (seed != null) eb.seed(seed);
+    private Object resolveElement(Class<?> elemType, String fieldContext, DataMachine m) {
+        if (!elemType.getPackageName().startsWith("java.") && !elemType.isEnum()) {
+            if (BUILDING.get().contains(elemType)) return null; // circular ref
+            DefaultDataBuilder<?> eb = new DefaultDataBuilder<>(elemType).mode(mode);
+            if (seed != null) eb.seed(seed);
+            try {
                 return eb.valid();
+            } catch (DataFactoryException e) {
+                throw new DataFactoryException(
+                        "Failed to build element of type '" + elemType.getName()
+                                + "' for field '" + fieldContext + "'", e);
             }
-            List<?> values = ValueBuilderFactory.create(elemType, m).validList();
-            return values.isEmpty() ? null : values.get(0);
-        } catch (Exception e) {
-            return null;
         }
+        List<?> values = ValueBuilderFactory.create(elemType, m).validList();
+        return values.isEmpty() ? null : values.get(0);
     }
 
     private Object resolveList(FieldDescriptor field, DataMachine m) {
-        try {
-            Object elem = resolveElement(field.listElementType(), m);
-            return elem != null ? List.of(elem) : List.of();
-        } catch (Exception e) {
-            return List.of();
-        }
+        Object elem = resolveElement(field.listElementType(), field.name(), m);
+        return elem != null ? List.of(elem) : List.of();
     }
 }
