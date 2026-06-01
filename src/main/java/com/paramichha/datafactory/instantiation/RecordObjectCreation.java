@@ -18,6 +18,9 @@ public final class RecordObjectCreation implements ObjectCreation {
     private RecordObjectCreation() {
     }
 
+    private static Object defaultPrimitive(Class<?> type) {
+        return PrimitiveDefaults.of(type); // #14 — shared utility, no duplication
+    }
 
     @Override
     public boolean canCreate(Class<?> type, List<FieldDescriptor> fields) {
@@ -35,7 +38,7 @@ public final class RecordObjectCreation implements ObjectCreation {
         Object[] args = Arrays.stream(components)
                 .map(c -> {
                     Object v = values.get(c.getName());
-                    return (v == null && c.getType().isPrimitive()) ? PrimitiveDefaults.of(c.getType()) : v;
+                    return (v == null && c.getType().isPrimitive()) ? defaultPrimitive(c.getType()) : v;
                 })
                 .toArray();
         var ctor = type.getDeclaredConstructor(paramTypes);

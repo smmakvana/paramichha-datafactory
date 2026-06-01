@@ -227,11 +227,11 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
             } catch (DataFactoryException e) {
                 throw new DataFactoryException(
                         "Failed to build nested field '" + field.name()
-                                + "' of type '" + field.rawType().getName() + "'", e);
+                        + "' of type '" + field.rawType().getName() + "'", e);
             } catch (Exception e) {
                 throw new DataFactoryException(
                         "Failed to build nested field '" + field.name()
-                                + "' of type '" + field.rawType().getName() + "'", e);
+                        + "' of type '" + field.rawType().getName() + "'", e);
             } finally {
                 BUILDING.get().remove(field.rawType());
             }
@@ -282,8 +282,8 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
             } catch (IllegalArgumentException e) {
                 throw new DataFactoryException(
                         "Failed to set element of type '" + elem.getClass().getName()
-                                + "' into array '" + field.name() + "' of component type '"
-                                + elemType.getName() + "'", e);
+                        + "' into array '" + field.name() + "' of component type '"
+                        + elemType.getName() + "'", e);
             }
         }
         return arr;
@@ -308,7 +308,7 @@ public class DefaultDataBuilder<T> implements DataBuilder<T> {
             } catch (DataFactoryException e) {
                 throw new DataFactoryException(
                         "Failed to build element of type '" + elemType.getName()
-                                + "' for field '" + fieldContext + "'", e);
+                        + "' for field '" + fieldContext + "'", e);
             }
         }
         List<?> values = ValueBuilderFactory.create(elemType, m).validList();

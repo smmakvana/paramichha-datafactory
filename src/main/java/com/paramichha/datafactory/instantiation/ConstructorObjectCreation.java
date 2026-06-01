@@ -31,6 +31,9 @@ public final class ConstructorObjectCreation implements ObjectCreation {
                 .orElse(null);
     }
 
+    private static Object defaultPrimitive(Class<?> type) {
+        return PrimitiveDefaults.of(type); // #14 — shared utility, no duplication
+    }
 
     @Override
     public boolean canCreate(Class<?> type, List<FieldDescriptor> fields) {
@@ -46,7 +49,7 @@ public final class ConstructorObjectCreation implements ObjectCreation {
         Object[] args = fields.stream()
                 .map(f -> {
                     Object v = values.get(f.name());
-                    return (v == null && f.rawType().isPrimitive()) ? PrimitiveDefaults.of(f.rawType()) : v;
+                    return (v == null && f.rawType().isPrimitive()) ? defaultPrimitive(f.rawType()) : v;
                 })
                 .toArray();
         return (T) ctor.newInstance(args);

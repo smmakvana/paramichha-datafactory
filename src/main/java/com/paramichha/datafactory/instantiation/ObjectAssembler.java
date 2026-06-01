@@ -34,17 +34,17 @@ public final class ObjectAssembler {
         if (type.isInterface()) {
             throw new com.paramichha.datafactory.DataFactoryException(
                     "Cannot instantiate interface '" + type.getName()
-                            + "' — provide a concrete implementation via .with()");
+                    + "' — provide a concrete implementation via .with()");
         }
         if (java.lang.reflect.Modifier.isAbstract(type.getModifiers())) {
             throw new com.paramichha.datafactory.DataFactoryException(
                     "Cannot instantiate abstract class '" + type.getName()
-                            + "' — provide a concrete subclass via .with()");
+                    + "' — provide a concrete subclass via .with()");
         }
         if (type.isMemberClass() && !java.lang.reflect.Modifier.isStatic(type.getModifiers())) {
             throw new com.paramichha.datafactory.DataFactoryException(
                     "Cannot instantiate non-static inner class '" + type.getName()
-                            + "' — it requires an enclosing instance. Make it static or provide it via .with()");
+                    + "' — it requires an enclosing instance. Make it static or provide it via .with()");
         }
 
         // #3 — resolve outside computeIfAbsent to avoid caching a broken entry
@@ -56,7 +56,7 @@ public final class ObjectAssembler {
                     .findFirst()
                     .orElseThrow(() -> new com.paramichha.datafactory.DataFactoryException(
                             "No instantiation strategy found for '" + type.getName()
-                                    + "'. Supported: Lombok @Builder, Record, all-args constructor, no-args constructor + setters."));
+                            + "'. Supported: Lombok @Builder, Record, all-args constructor, no-args constructor + setters."));
             STRATEGY_CACHE.put(type, strategy);
         }
         return strategy.create(type, fields, values);
