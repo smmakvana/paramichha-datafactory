@@ -18,6 +18,9 @@ public enum ErrorType {
     /** The type cannot be instantiated — interface, abstract class, or non-static inner class. */
     NOT_INSTANTIABLE,
 
+    /** A field name passed to the builder (e.g. {@code invalidFor("x")}) does not exist on the class. */
+    UNKNOWN_FIELD,
+
     /** DataFactory failed internally. Check {@link DataFactoryResult#reason()} for details. */
     INTERNAL_ERROR
 }

@@ -33,16 +33,19 @@ public final class ObjectAssembler {
         // Early guards — surface unsupported types with clear messages before any reflection
         if (type.isInterface()) {
             throw new com.paramichha.datafactory.DataFactoryException(
+                    com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
                     "Cannot instantiate interface '" + type.getName()
                     + "' — provide a concrete implementation via .with()");
         }
         if (java.lang.reflect.Modifier.isAbstract(type.getModifiers())) {
             throw new com.paramichha.datafactory.DataFactoryException(
+                    com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
                     "Cannot instantiate abstract class '" + type.getName()
                     + "' — provide a concrete subclass via .with()");
         }
         if (type.isMemberClass() && !java.lang.reflect.Modifier.isStatic(type.getModifiers())) {
             throw new com.paramichha.datafactory.DataFactoryException(
+                    com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
                     "Cannot instantiate non-static inner class '" + type.getName()
                     + "' — it requires an enclosing instance. Make it static or provide it via .with()");
         }
@@ -55,6 +58,7 @@ public final class ObjectAssembler {
                     .filter(s -> s.canCreate(type, fields))
                     .findFirst()
                     .orElseThrow(() -> new com.paramichha.datafactory.DataFactoryException(
+                    com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
                             "No instantiation strategy found for '" + type.getName()
                             + "'. Supported: Lombok @Builder, Record, all-args constructor, no-args constructor + setters."));
             STRATEGY_CACHE.put(type, strategy);

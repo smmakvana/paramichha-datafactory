@@ -63,4 +63,17 @@ public interface DataBuilderV2<T> {
      * Each field maps to its own {@link DataFactoryResults}.
      */
     Map<String, DataFactoryResults<T>> validPerField();
+
+    // ── Per-field ─────────────────────────────────────────────────────────────
+
+    /**
+     * Valid and invalid values for every field, each generated independently — no
+     * instance of {@code T} is built. A field that cannot be generated (unsupported
+     * type, conflicting annotations) yields a failed result for that field only;
+     * every other field still succeeds.
+     *
+     * <p>Keys follow field declaration order. Seeded builders are deterministic per
+     * field: a field's values do not change when other fields are added or removed.
+     */
+    Map<String, DataFactoryResult<FieldCases>> fields();
 }

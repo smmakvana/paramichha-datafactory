@@ -33,6 +33,7 @@ public final class DataGenerator {
         }
         // #1 — no silent null: surface unsupported types immediately
         throw new com.paramichha.datafactory.DataFactoryException(
+                com.paramichha.datafactory.ErrorType.UNSUPPORTED_CLASS_TYPE,
                 "No DataCreator found for type: " + field.fieldType().getName()
                 + " (field: " + field.fieldName() + ")");
     }
@@ -55,6 +56,7 @@ public final class DataGenerator {
         if (!field.mustBeNull()) {
             results.removeIf(java.util.Objects::isNull);
         }
-        return List.copyOf(results);
+        // not List.copyOf — it rejects nulls, and @Null fields must yield null
+        return java.util.Collections.unmodifiableList(results);
     }
 }
