@@ -22,7 +22,7 @@ import java.util.Map;
  *
  * // Invalid per field
  * DataFactoryResults&lt;UserRequest&gt; invalid = DataFactory.of(UserRequest.class).invalidList();
- * if (invalid.isFailure() && invalid.failed().get(0).errorType() == ErrorType.UNSUPPORTED_ANNOTATION) ...
+ * if (invalid.isFailure() &amp;&amp; invalid.failed().get(0).errorType() == ErrorType.UNSUPPORTED_ANNOTATION) ...
  * </pre>
  *
  * @param <T> the type being built
