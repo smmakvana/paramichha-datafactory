@@ -527,13 +527,13 @@ class ShaperCoverageTest {
         }
 
         @Test
-        void shapeAll_removesNulls() {
-            // Unrecognised type → registry returns null → shapeAll filters it
+        void shapeAll_listIsFlattenedAndNullFree() {
+            // List is handled by CollectionDataCreator; shapeAll flattens the
+            // generated list into element values and strips nulls.
             var f = AnnotationResolver.analyzeFromStrings("tags", "List", List.of());
             var targets = List.of(BoundaryTarget.semantic());
             var result = DataGenerator.shapeAll(f, targets, DataMachines.random());
-            // null removed — result should be empty rather than throwing
-            assertThat(result).isEmpty();
+            assertThat(result).isNotEmpty().doesNotContainNull();
         }
 
         @Test
@@ -550,14 +550,16 @@ class ShaperCoverageTest {
     // ═══════════════════════════════════════════════════════════════════════
 
     @Nested
-    @DisplayName("TypeShaperRegistry — no match")
+    @DisplayName("TypeShaperRegistry — collection support")
     class RegistryCoverage {
 
         @Test
-        void unknownType_returnsNull() {
+        void listType_isSupported() {
+            // List used to have no creator; CollectionDataCreator now handles it.
+            // Truly unsupported types throw DataFactoryException ("no silent null").
             var f = AnnotationResolver.analyzeFromStrings("tags", "List", List.of());
             Object result = DataGenerator.shape(f, BoundaryTarget.semantic(), DataMachines.random());
-            assertThat(result).isNull();
+            assertThat(result).isNotNull();
         }
     }
 
