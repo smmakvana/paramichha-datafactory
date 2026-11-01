@@ -1,5 +1,6 @@
 package com.paramichha.datafactory.builder;
 
+import com.paramichha.datafactory.ConstraintCase;
 import com.paramichha.datafactory.FieldValue;
 import com.paramichha.datafactory.constraint.*;
 import com.paramichha.datafactory.generation.BoundaryPlanner;

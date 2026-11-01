@@ -1,4 +1,4 @@
-package com.paramichha.datafactory.builder;
+package com.paramichha.datafactory;
 
 /**
  * Represents one invalid value for a field that violates exactly one constraint.

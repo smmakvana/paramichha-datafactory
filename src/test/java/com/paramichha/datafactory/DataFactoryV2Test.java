@@ -5,8 +5,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import jakarta.validation.Valid;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +41,15 @@ class DataFactoryV2Test {
     record OneBadField(@NotBlank String name, @Min(10) @Max(1) int broken, @Email String email) {}
 
     interface NotAClass {}
+
+    record Inner(@NotBlank String city) {}
+    record Bag(
+            @Size(min = 2, max = 4) List<String> tags,
+            @NotEmpty Set<Integer> ids,
+            @Valid @NotNull Inner inner
+    ) {}
+
+    private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
     record JustName(@NotBlank String name) {}
     record NameAndMore(@NotBlank String name, @Min(1) int extra) {}
@@ -226,6 +241,93 @@ class DataFactoryV2Test {
             List<Object> alone = DataFactoryV2.of(JustName.class).seed(7).fields().get("name").get().validValues();
             List<Object> withMore = DataFactoryV2.of(NameAndMore.class).seed(7).fields().get("name").get().validValues();
             assertThat(alone).isEqualTo(withMore);
+        }
+    }
+
+    // ── collections and nested fields ─────────────────────────────────────────
+
+    @Nested
+    @DisplayName("collections and nested fields")
+    class CollectionsAndNested {
+
+        private final Map<String, DataFactoryResult<FieldCases>> fields =
+                DataFactoryV2.of(Bag.class).seed(11).fields();
+
+        @Test
+        void listValidValuesCoverSizeBoundaries() {
+            List<Integer> sizes = fields.get("tags").get().validValues().stream()
+                    .map(v -> ((Collection<?>) v).size()).toList();
+            assertThat(sizes).contains(2, 4).allSatisfy(n -> assertThat(n).isBetween(2, 4));
+        }
+
+        @Test
+        void listInvalidCasesAreOneTooFewAndOneTooMany() {
+            List<Integer> sizes = fields.get("tags").get().invalidCases().stream()
+                    .filter(c -> c.constraint().equals("Size"))
+                    .map(c -> ((Collection<?>) c.value()).size()).toList();
+            assertThat(sizes).containsExactlyInAnyOrder(1, 5);
+        }
+
+        @Test
+        void notEmptySetHasAnEmptyInvalidCaseAndNonEmptyValidValues() {
+            FieldCases ids = fields.get("ids").get();
+            assertThat(ids.validValues()).allSatisfy(v -> assertThat((Collection<?>) v).isNotEmpty());
+            assertThat(ids.invalidCases()).anySatisfy(c -> {
+                assertThat(c.constraint()).isEqualTo("NotEmpty");
+                assertThat((Collection<?>) c.value()).isEmpty();
+            });
+        }
+
+        @Test
+        void nestedFieldKeepsItsOwnNotNullCaseButNotTheInnerRules() {
+            List<ConstraintCase> cases = fields.get("inner").get().invalidCases();
+            assertThat(cases).extracting(ConstraintCase::constraint).containsExactly("NotNull");
+            assertThat(cases.get(0).value()).isNull();
+        }
+
+        @Test
+        void objectPathRespectsSizeMin() {
+            Bag bag = DataFactoryV2.valid(Bag.class).get();
+            assertThat(bag.tags()).hasSizeBetween(2, 4);
+        }
+    }
+
+    // ── checked against a real validator ──────────────────────────────────────
+
+    @Nested
+    @DisplayName("Hibernate Validator agrees")
+    class ValidatorAgrees {
+
+        @Test
+        void validInstancesHaveNoViolations() {
+            for (Class<?> c : List.of(Simple.class, Bag.class, NullAllowed.class, MustBeFalse.class)) {
+                Object v = DataFactoryV2.of(c).seed(3).valid().get();
+                assertThat(VALIDATOR.validate(v)).as(c.getSimpleName()).isEmpty();
+            }
+        }
+
+        @Test
+        void everyInvalidInstanceHasAtLeastOneViolation() {
+            for (Class<?> c : List.of(Simple.class, Bag.class)) {
+                DataFactoryResults<?> rs = DataFactoryV2.of(c).seed(3).invalidList();
+                assertThat(rs.isSuccess()).as(c.getSimpleName()).isTrue();
+                rs.results().forEach(r ->
+                        assertThat(VALIDATOR.validate(r.get())).as(c.getSimpleName() + " " + r.get()).isNotEmpty());
+            }
+        }
+
+        @Test
+        void everyFieldValidValuePassesAndEveryInvalidCaseFails() {
+            for (Class<?> c : List.of(Simple.class, Bag.class)) {
+                DataFactoryV2.of(c).seed(5).fields().forEach((name, r) -> {
+                    FieldCases fc = r.get();
+                    fc.validValues().forEach(v -> assertThat(VALIDATOR.validateValue(c, name, v))
+                            .as(c.getSimpleName() + "." + name + " valid " + v).isEmpty());
+                    // type-default probes (annotationDriven=false) are probes, not violations
+                    fc.invalidCases().stream().filter(ConstraintCase::annotationDriven).forEach(ic -> assertThat(VALIDATOR.validateValue(c, name, ic.value()))
+                            .as(c.getSimpleName() + "." + name + " " + ic.constraint() + " " + ic.value()).isNotEmpty());
+                });
+            }
         }
     }
 

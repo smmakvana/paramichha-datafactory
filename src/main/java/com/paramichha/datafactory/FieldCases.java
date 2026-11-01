@@ -1,6 +1,5 @@
 package com.paramichha.datafactory;
 
-import com.paramichha.datafactory.builder.ConstraintCase;
 
 import java.util.List;
 

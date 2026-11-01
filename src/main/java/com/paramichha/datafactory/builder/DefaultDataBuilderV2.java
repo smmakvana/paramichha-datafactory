@@ -11,6 +11,7 @@ import com.paramichha.datafactory.instantiation.ObjectAssembler;
 import com.paramichha.datafactory.constraint.ConstraintChecker;
 import com.paramichha.utils.Seeds;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.lang.reflect.Array;
@@ -114,7 +115,7 @@ public final class DefaultDataBuilderV2<T> implements DataBuilderV2<T> {
             List<DataFactoryResult<T>> results = new ArrayList<>();
             for (FieldDescriptor field : fields) {
                 if (overrides.containsKey(field.name())) continue;
-                for (Object invalidValue : ValueBuilderFactory.create(field, m).invalidList()) {
+                for (Object invalidValue : invalidCasesFor(field, m).stream().map(ConstraintCase::value).toList()) {
                     Map<String, Object> values = new LinkedHashMap<>(baseline.values());
                     values.put(field.name(), invalidValue);
                     results.add(instantiate(fields, values, "invalid case for field '" + field.name() + "'"));
@@ -205,13 +206,20 @@ public final class DefaultDataBuilderV2<T> implements DataBuilderV2<T> {
             List<Object> valid;
             if (overrides.containsKey(field.name())) {
                 valid = Collections.singletonList(overrides.get(field.name()));
+            } else if (isSizedCollection(field)) {
+                valid = collectionBoundaries(field, m);
             } else if (field.isComposite() || field.isArray() || field.rawType() == Optional.class) {
                 valid = Collections.singletonList(resolveField(field, m));
             } else {
                 valid = ValueBuilderFactory.create(field, m).validList();
             }
             FieldValueBuilder<?> fvb = (FieldValueBuilder<?>) ValueBuilderFactory.create(field, m);
-            List<ConstraintCase> invalid = field.isNested() ? List.of() : fvb.invalidCases();
+            List<ConstraintCase> invalid = overrides.containsKey(field.name())
+                    ? new ArrayList<>(fvb.invalidCases())
+                    : invalidCasesFor(field, m);
+            // A nested object's inner rules belong to its own fields(); keep only the
+            // field-level null case here (e.g. @NotNull on the reference itself).
+            if (field.isNested()) invalid.removeIf(c -> c.value() != null);
             return DataFactoryResult.success(new FieldCases(field.name(), field.rawType(), valid, invalid));
         } catch (Exception e) {
             return failure(e, "Failed to generate field '" + field.name() + "' on " + type.getSimpleName());
@@ -346,9 +354,131 @@ public final class DefaultDataBuilderV2<T> implements DataBuilderV2<T> {
         return elem != null ? Optional.of(elem) : Optional.empty();
     }
 
-    private Object resolveList(FieldDescriptor field, DataMachine m)  { Object e = resolveElement(field.listElementType(), field.name(), m); return e != null ? List.of(e) : List.of(); }
-    private Object resolveSet(FieldDescriptor field, DataMachine m)   { Object e = resolveElement(field.listElementType(), field.name(), m); return e != null ? new LinkedHashSet<>(List.of(e)) : new LinkedHashSet<>(); }
-    private Object resolveQueue(FieldDescriptor field, DataMachine m) { Object e = resolveElement(field.listElementType(), field.name(), m); ArrayDeque<Object> q = new ArrayDeque<>(); if (e != null) q.add(e); return q; }
+    private Object resolveList(FieldDescriptor field, DataMachine m)  { return resolveCollection(field, m); }
+    private Object resolveSet(FieldDescriptor field, DataMachine m)   { return resolveCollection(field, m); }
+    private Object resolveQueue(FieldDescriptor field, DataMachine m) { return resolveCollection(field, m); }
+
+    // ── Collection sizing ─────────────────────────────────────────────────────
+
+    /** Largest collection DataFactory will generate for a size boundary. */
+    private static final int MAX_GENERATED_SIZE = 100;
+
+    private static boolean isSizedCollection(FieldDescriptor field) {
+        return field.isList() || field.isSet() || field.isQueue();
+    }
+
+    private static Long sizeMin(FieldDescriptor field) {
+        Long lo = analyze(field).bounds().min();
+        boolean notEmpty = field.hasAnnotation(NotEmpty.class);
+        if (notEmpty && (lo == null || lo < 1)) return 1L;
+        return lo;
+    }
+
+    private static Long sizeMax(FieldDescriptor field) {
+        return analyze(field).bounds().max();
+    }
+
+    /** Size used for the canonical valid value: one element, moved inside any @Size range. */
+    private static int typicalSize(FieldDescriptor field) {
+        long size = 1;
+        Long lo = sizeMin(field), hi = sizeMax(field);
+        if (lo != null && size < lo) size = lo;
+        if (hi != null && size > hi) size = hi;
+        return (int) Math.min(Math.max(size, 0), MAX_GENERATED_SIZE);
+    }
+
+    /** Canonical valid collection — always the first entry of {@link #collectionBoundaries}. */
+    private Object resolveCollection(FieldDescriptor field, DataMachine m) {
+        Object c = buildCollection(field, typicalSize(field), m);
+        // Element type can't be generated (e.g. Object) — fall back to an empty container.
+        return c != null ? c : buildCollection(field, 0, m);
+    }
+
+    /** Valid collections at the typical size and at each declared @Size / @NotEmpty boundary. */
+    private List<Object> collectionBoundaries(FieldDescriptor field, DataMachine m) {
+        LinkedHashSet<Integer> sizes = new LinkedHashSet<>();
+        sizes.add(typicalSize(field));
+        Long lo = sizeMin(field), hi = sizeMax(field);
+        if (lo != null && lo <= MAX_GENERATED_SIZE) sizes.add(lo.intValue());
+        if (hi != null && hi <= MAX_GENERATED_SIZE) sizes.add(hi.intValue());
+        List<Object> values = new ArrayList<>();
+        for (int size : sizes) {
+            Object c = size == typicalSize(field) ? resolveCollection(field, m) : buildCollection(field, size, m);
+            if (c != null) values.add(c);
+        }
+        return values;
+    }
+
+    /**
+     * Invalid cases for a field: one per annotation, plus collection @Size/@NotEmpty
+     * cases. Type-default probes (e.g. null for an unannotated field) are used only
+     * when the field has no annotation-driven case at all.
+     */
+    private List<ConstraintCase> invalidCasesFor(FieldDescriptor field, DataMachine m) {
+        FieldValueBuilder<?> fvb = (FieldValueBuilder<?>) ValueBuilderFactory.create(field, m);
+        List<ConstraintCase> collection = collectionInvalidCases(field, m);
+        if (collection.isEmpty()) return new ArrayList<>(fvb.invalidCases());
+        List<ConstraintCase> cases = new ArrayList<>(fvb.annotationCases());
+        cases.addAll(collection);
+        return cases;
+    }
+
+    /** Invalid collections: one element too few / too many for @Size, and empty for @NotEmpty. */
+    private List<ConstraintCase> collectionInvalidCases(FieldDescriptor field, DataMachine m) {
+        if (!isSizedCollection(field)) return List.of();
+        List<ConstraintCase> cases = new ArrayList<>();
+        Long lo = analyze(field).bounds().min(), hi = sizeMax(field);
+        if (lo != null && lo > 0 && lo - 1 <= MAX_GENERATED_SIZE) {
+            Object c = buildCollection(field, (int) (lo - 1), m);
+            if (c != null) cases.add(ConstraintCase.of(field.name(), "Size", c));
+        }
+        if (hi != null && hi + 1 <= MAX_GENERATED_SIZE) {
+            Object c = buildCollection(field, (int) (hi + 1), m);
+            if (c != null) cases.add(ConstraintCase.of(field.name(), "Size", c));
+        }
+        if (field.hasAnnotation(NotEmpty.class)) {
+            cases.add(ConstraintCase.of(field.name(), "NotEmpty", buildCollection(field, 0, m)));
+        }
+        return cases;
+    }
+
+    /**
+     * A collection of the field's container type with {@code size} valid elements,
+     * or {@code null} when that many elements can't be produced (e.g. a Set that needs
+     * more distinct values than the element type offers, or an ungeneratable element).
+     */
+    private Object buildCollection(FieldDescriptor field, int size, DataMachine m) {
+        List<Object> elements = new ArrayList<>(size);
+        Class<?> elemType = field.listElementType();
+        if (size == 1) {
+            Object e = resolveElement(elemType, field.name(), m);
+            if (e == null) return null;
+            elements.add(e);
+        } else if (size > 1) {
+            boolean scalar = elemType.getPackageName().startsWith("java.") || elemType.isEnum();
+            if (scalar) {
+                if (elemType == Object.class) return null;
+                LinkedHashSet<Object> distinct = new LinkedHashSet<>();
+                for (int attempt = 0; attempt < size * 10 && distinct.size() < size; attempt++) {
+                    for (Object v : ValueBuilderFactory.create(elemType, m).stream(1)) {
+                        if (v == null) continue;
+                        if (field.isSet()) distinct.add(v); else elements.add(v);
+                    }
+                    if (!field.isSet() && elements.size() >= size) break;
+                }
+                if (field.isSet()) elements.addAll(distinct);
+                if (elements.size() < size) return null;
+                elements = new ArrayList<>(elements.subList(0, size));
+            } else {
+                Object e = resolveElement(elemType, field.name(), m);
+                if (e == null || field.isSet()) return null; // equal nested elements collapse in a Set
+                for (int i = 0; i < size; i++) elements.add(e);
+            }
+        }
+        if (field.isSet())   return new LinkedHashSet<>(elements);
+        if (field.isQueue()) return new ArrayDeque<>(elements);
+        return Collections.unmodifiableList(elements);
+    }
 
     private Object resolveMap(FieldDescriptor field, DataMachine m) {
         Object key   = resolveElement(field.mapKeyType(),   field.name() + ".key",   m);

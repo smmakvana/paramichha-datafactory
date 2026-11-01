@@ -1,6 +1,6 @@
 package com.paramichha.datafactory.constraint;
 
-import com.paramichha.datafactory.builder.ConstraintCase;
+import com.paramichha.datafactory.ConstraintCase;
 import com.paramichha.datafactory.builder.FieldValueBuilder;
 import com.paramichha.datafactory.builder.ValueBuilderFactory;
 import jakarta.validation.constraints.*;
