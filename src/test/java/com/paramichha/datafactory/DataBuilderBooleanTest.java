@@ -53,12 +53,12 @@ class DataBuilderBooleanTest {
     class ValidAssembly {
         @Test
         void primitive_boolean_valid_assembles() {
-            assertThat(DataFactory.of(PrimitiveBool.class).valid()).isNotNull();
+            assertThat(DataFactory.of(PrimitiveBool.class).valid().get()).isNotNull();
         }
 
         @Test
         void wrapper_boolean_valid_assembles() {
-            assertThat(DataFactory.of(WrapperBool.class).valid()).isNotNull();
+            assertThat(DataFactory.of(WrapperBool.class).valid().get()).isNotNull();
         }
     }
 }

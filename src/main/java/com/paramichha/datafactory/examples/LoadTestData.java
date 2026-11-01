@@ -35,7 +35,7 @@ public class LoadTestData {
     static void bulkObjects() {
         section("1000 valid orders in one line");
         long start = System.currentTimeMillis();
-        List<OrderRequest> orders = DataFactory.of(OrderRequest.class).validList(1000);
+        List<OrderRequest> orders = DataFactory.of(OrderRequest.class).validList(1000).getAll();
         long ms = System.currentTimeMillis() - start;
         long unique = orders.stream().map(OrderRequest::getCustomerEmail).distinct().count();
         System.out.println("  generated:     " + orders.size() + " orders in " + ms + "ms");
@@ -59,7 +59,7 @@ public class LoadTestData {
 
     static void distribution() {
         section("Data distribution — 500 orders");
-        List<OrderRequest> orders = DataFactory.of(OrderRequest.class).validList(500);
+        List<OrderRequest> orders = DataFactory.of(OrderRequest.class).validList(500).getAll();
         IntSummaryStatistics qty = orders.stream()
                 .mapToInt(OrderRequest::getQuantity).summaryStatistics();
         DoubleSummaryStatistics price = orders.stream()

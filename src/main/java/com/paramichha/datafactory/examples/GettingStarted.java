@@ -53,12 +53,12 @@ public class GettingStarted {
 
     static void levelThree() {
         section("Level 3 — object builders, reads your annotations");
-        UserRequest valid = DataFactory.of(UserRequest.class).valid();
+        UserRequest valid = DataFactory.of(UserRequest.class).valid().get();
         System.out.println("  email: " + valid.getEmail());
         System.out.println("  name:  " + valid.getName());
         System.out.println("  age:   " + valid.getAge());
 
-        List<UserRequest> bad = DataFactory.of(UserRequest.class).invalidList();
+        List<UserRequest> bad = DataFactory.of(UserRequest.class).invalidList().getAll();
         System.out.println();
         System.out.println("  " + bad.size() + " invalid users — one per constraint:");
         bad.forEach(u -> System.out.println(

@@ -16,8 +16,22 @@
   }, {
     "object" : {
       "name" : "Garnet VonRueden",
+      "roles" : [ ],
+      "scores" : [ 433 ]
+    },
+    "violations" : [ "roles" ]
+  }, {
+    "object" : {
+      "name" : "Garnet VonRueden",
       "roles" : [ "fugit" ],
       "scores" : null
+    },
+    "violations" : [ "scores" ]
+  }, {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "roles" : [ "fugit" ],
+      "scores" : [ ]
     },
     "violations" : [ "scores" ]
   } ],

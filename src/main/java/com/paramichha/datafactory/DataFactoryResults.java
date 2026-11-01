@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  *
  * <h2>Usage</h2>
  * <pre>
- * DataFactoryResults&lt;UserRequest&gt; bulk = DataFactoryV2.of(UserRequest.class).validList(1000);
+ * DataFactoryResults&lt;UserRequest&gt; bulk = DataFactory.of(UserRequest.class).validList(1000);
  *
  * bulk.status();                        // SUCCESS, PARTIAL, FAILED
  * bulk.succeeded();                     // all successful results
@@ -77,6 +77,19 @@ public final class DataFactoryResults<T> {
     }
 
     /** Count of successful results. */
+    /**
+     * All payloads, in order. Throws {@link DataFactoryException} naming the first
+     * failure if any result failed — the bulk counterpart of {@link DataFactoryResult#get()}.
+     */
+    public List<T> getAll() {
+        for (DataFactoryResult<T> r : results) {
+            if (r.isFailure()) throw new DataFactoryException(r.errorType(),
+                    "DataFactory [" + r.errorType() + "]: " + r.reason()
+                    + " (" + failureCount() + " of " + total() + " results failed)");
+        }
+        return results.stream().map(DataFactoryResult::get).toList();
+    }
+
     public int successCount() { return (int) results.stream().filter(DataFactoryResult::isSuccess).count(); }
 
     /** Count of failed results. */

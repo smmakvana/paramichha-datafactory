@@ -31,9 +31,16 @@
     "object" : {
       "name" : "Garnet VonRueden",
       "password" : "L^*M!q9i3bJm",
-      "tags" : null
+      "tags" : [ ]
     },
-    "violations" : [ ]
+    "violations" : [ "tags" ]
+  }, {
+    "object" : {
+      "name" : "Garnet VonRueden",
+      "password" : "L^*M!q9i3bJm",
+      "tags" : [ "corrupti", "ipsum", "blanditiis", "itaque", "qui", "voluptas", "atque", "perferendis", "dicta", "earum", "incidunt" ]
+    },
+    "violations" : [ "tags" ]
   } ],
   "valid" : {
     "object" : {

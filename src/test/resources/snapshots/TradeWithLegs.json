@@ -32,6 +32,13 @@
     "violations" : [ "legs" ]
   }, {
     "object" : {
+      "legs" : [ ],
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "legs" ]
+  }, {
+    "object" : {
       "legs" : [ {
         "instrument" : "eum",
         "price" : 1.50,

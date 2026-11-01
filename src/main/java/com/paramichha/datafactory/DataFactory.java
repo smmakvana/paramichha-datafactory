@@ -1,17 +1,12 @@
 package com.paramichha.datafactory;
 
 import com.paramichha.datafactory.builder.*;
-import com.paramichha.datafactory.builder.ValueBuilderFactory;
 
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Random;
-import java.util.Map;
-import java.util.UUID;
+import java.time.*;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -44,13 +39,17 @@ import java.util.stream.IntStream;
  *
  * <h2>Level 3 — object builders, full annotation-awareness</h2>
  * <p>When you have a Jakarta-annotated class and want DataFactory
- * to read the annotations and generate correct data automatically:
+ * to read the annotations and generate correct data automatically.
+ * Results are never thrown — check {@code isSuccess()} or call {@code get()}:
  * <pre>
- * UserRequest valid   = DataFactory.of(UserRequest.class).valid();
- * UserRequest noEmail = DataFactory.of(UserRequest.class).withNull("email").valid();
+ * UserRequest valid   = DataFactory.of(UserRequest.class).valid().get();
+ * UserRequest noEmail = DataFactory.of(UserRequest.class).withNull("email").valid().get();
  *
- * List&lt;UserRequest&gt; bad  = DataFactory.of(UserRequest.class).invalidList();
- * List&lt;UserRequest&gt; bulk = DataFactory.of(UserRequest.class).stream(1000);
+ * DataFactoryResults&lt;UserRequest&gt; bad  = DataFactory.of(UserRequest.class).invalidList();
+ * DataFactoryResults&lt;UserRequest&gt; bulk = DataFactory.of(UserRequest.class).validList(1000);
+ *
+ * // Per field, without building the object
+ * Map&lt;String, DataFactoryResult&lt;FieldCases&gt;&gt; f = DataFactory.of(UserRequest.class).fields();
  * </pre>
  *
  * @see DataBuilder
@@ -397,74 +396,66 @@ public final class DataFactory {
     // Level 3 — object builder
     // =========================================================================
 
+    /** DataFactory API version. */
+    public static final String VERSION = "2.0.0";
+
     /**
-     * Returns a {@link DataBuilder} for the given Jakarta-annotated class.
+     * Entry point for annotation-aware object generation. Every operation returns a
+     * {@link DataFactoryResult} or {@link DataFactoryResults} and never throws.
      *
-     * <p>DataFactory reads all field annotations and generates values that
-     * satisfy them — or violate each one individually.
      * <pre>
-     * UserRequest valid   = DataFactory.of(UserRequest.class).valid();
-     * UserRequest noEmail = DataFactory.of(UserRequest.class).withNull("email").valid();
-     *
-     * List&lt;UserRequest&gt; bad  = DataFactory.of(UserRequest.class).invalidList();
-     * List&lt;UserRequest&gt; bulk = DataFactory.of(UserRequest.class).stream(1000);
+     * DataFactoryResult&lt;UserRequest&gt; r = DataFactory.of(UserRequest.class).valid();
+     * if (r.isSuccess()) use(r.get());
+     * else log(r.errorType() + ": " + r.reason());
      * </pre>
-     *
-     * @see DataBuilder
      */
     public static <T> DataBuilder<T> of(Class<T> type) {
         return new DefaultDataBuilder<>(type);
     }
 
     // ── Object-level static shortcuts ────────────────────────────────────────
-    // Convenience wrappers for the most common single-call operations.
 
-    /**
-     * Builds one valid instance of the given type.
-     * Equivalent to {@code DataFactory.of(type).valid()}.
-     */
-    public static <T> T valid(Class<T> type) {
-        return of(type).valid();
+    public static <T> DataFactoryResult<T>               valid(Class<T> type)                    { return of(type).valid(); }
+    public static <T> DataFactoryResult<T>               invalid(Class<T> type)                  { return of(type).invalid(); }
+    public static <T> DataFactoryResult<T>               invalidFor(Class<T> type, String field) { return of(type).invalidFor(field); }
+    public static <T> DataFactoryResults<T>              validList(Class<T> type, int count)     { return of(type).validList(count); }
+    public static <T> DataFactoryResults<T>              invalidList(Class<T> type)              { return of(type).invalidList(); }
+    public static <T> Map<String, DataFactoryResults<T>> validPerField(Class<T> type)            { return of(type).validPerField(); }
+    public static Map<String, DataFactoryResult<FieldCases>> fields(Class<?> type)               { return of(type).fields(); }
+
+    // ── Discovery ────────────────────────────────────────────────────────────
+
+    /** Scalar types DataFactory can generate values for. */
+    public static Set<Class<?>> supportedTypes()       { return SUPPORTED_TYPES; }
+
+    /** Simple names of the constraint annotations DataFactory understands. */
+    public static Set<String>   supportedAnnotations() { return SUPPORTED_ANNOTATIONS; }
+
+    /** Whether DataFactory can generate a value of {@code type}. */
+    public static boolean canHandle(Class<?> type) {
+        if (type == null)                            return false;
+        if (type.isEnum())                           return true;
+        if (type.isArray())                          return canHandle(type.getComponentType());
+        if (Collection.class.isAssignableFrom(type)) return true;
+        if (Map.class.isAssignableFrom(type))        return true;
+        return SUPPORTED_TYPES.contains(type);
     }
 
-    /**
-     * Builds one invalid instance per constraint per field.
-     * Each object in the returned list violates exactly one constraint.
-     * Equivalent to {@code DataFactory.of(type).invalidList()}.
-     */
-    public static <T> List<T> invalidList(Class<T> type) {
-        return of(type).invalidList();
-    }
+    // ── Registries ────────────────────────────────────────────────────────────
 
-    /**
-     * Builds one invalid instance with the named field set to an invalid value.
-     * All other fields are valid.
-     * Equivalent to {@code DataFactory.of(type).invalidFor(fieldName)}.
-     */
-    public static <T> T invalidFor(Class<T> type, String fieldName) {
-        return of(type).invalidFor(fieldName);
-    }
+    private static final Set<Class<?>> SUPPORTED_TYPES = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(
+            boolean.class, char.class, byte.class, short.class, int.class, long.class, float.class, double.class,
+            Boolean.class, Character.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class,
+            String.class, BigDecimal.class, BigInteger.class, UUID.class,
+            Instant.class, LocalDate.class, LocalDateTime.class, LocalTime.class,
+            ZonedDateTime.class, OffsetDateTime.class, Date.class, Year.class, YearMonth.class
+    )));
 
-    /**
-     * Returns boundary-covering valid instances per field, keyed by field name.
-     * Equivalent to {@code DataFactory.of(type).validMap()}.
-     *
-     * <p>Each map entry is a field name mapped to a list of valid objects where
-     * that field covers its boundary values — minimum, midpoint, maximum, semantic.
-     * All other fields hold their canonical valid value.
-     */
-    public static <T> Map<String, List<T>> validMap(Class<T> type) {
-        return of(type).validPerField();
-    }
-
-    /**
-     * Builds {@code n} valid instances of the given type.
-     * Equivalent to {@code DataFactory.of(type).stream(n)}.
-     * <pre>
-     * List&lt;UserRequest&gt; users = DataFactory.stream(UserRequest.class, 1000);
-     * </pre>
-     */
-    public static <T> List<T> stream(Class<T> type, int n) {
-        return of(type).validList(n);
-    }
+    private static final Set<String> SUPPORTED_ANNOTATIONS = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(
+            "NotNull", "Null", "NotBlank", "NotEmpty", "Size", "Min", "Max",
+            "DecimalMin", "DecimalMax", "Digits", "Positive", "PositiveOrZero",
+            "Negative", "NegativeOrZero", "Pattern", "Email", "AssertTrue", "AssertFalse",
+            "Past", "PastOrPresent", "Future", "FutureOrPresent", "Valid",
+            "Length", "Range", "URL", "CreditCardNumber", "ISBN", "EAN", "UUID"
+    )));
 }

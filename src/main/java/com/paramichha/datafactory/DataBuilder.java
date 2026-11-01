@@ -1,181 +1,79 @@
 package com.paramichha.datafactory;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Fluent builder for generating valid and invalid instances of a Jakarta-annotated class.
  *
- * <p>Obtained via {@link DataFactory#of(Class)}. Configuration methods return
- * {@code this} so calls can be chained before calling a terminal method.
+ * <p>Single results return {@link DataFactoryResult}.
+ * Bulk results return {@link DataFactoryResults}.
+ * Neither ever throws.
  *
- * <h2>Common patterns</h2>
+ * <h2>Usage</h2>
  * <pre>
- * // One valid object — most common use case
- * UserRequest req = DataFactory.of(UserRequest.class).valid();
+ * // Single valid
+ * DataFactoryResult&lt;UserRequest&gt; result = DataFactory.of(UserRequest.class).valid();
+ * UserRequest req = result.get();
  *
- * // Override one field, keep everything else valid
- * UserRequest req = DataFactory.of(UserRequest.class)
- *                              .with("age", 17)
- *                              .valid();
+ * // Bulk valid — same processing every time
+ * DataFactoryResults&lt;UserRequest&gt; bulk = DataFactory.of(UserRequest.class).validList(1000);
+ * bulk.succeeded().forEach(r -> use(r.get()));
+ * bulk.failed().forEach(r -> log(r.errorType() + ": " + r.reason()));
  *
- * // Null one field
- * UserRequest req = DataFactory.of(UserRequest.class)
- *                              .withNull("address")
- *                              .valid();
- *
- * // All objects that violate constraints — one per constraint per field
- * List&lt;UserRequest&gt; bad = DataFactory.of(UserRequest.class).invalidList();
- *
- * // 1000 valid objects for load testing
- * List&lt;UserRequest&gt; bulk = DataFactory.of(UserRequest.class).validList(1000);
- *
- * // Boundary-covering valid objects per field — used by TestKit
- * Map&lt;String, List&lt;UserRequest&gt;&gt; edges = DataFactory.of(UserRequest.class).validPerField();
+ * // Invalid per field
+ * DataFactoryResults&lt;UserRequest&gt; invalid = DataFactory.of(UserRequest.class).invalidList();
+ * if (invalid.isFailure() && invalid.failed().get(0).errorType() == ErrorType.UNSUPPORTED_ANNOTATION) ...
  * </pre>
  *
  * @param <T> the type being built
- * @see DataFactory#of(Class)
- * @see GenerationMode
  */
 public interface DataBuilder<T> {
 
-    /**
-     * Overrides one field with the given value before building.
-     * The value bypasses all constraint checks — use it to set
-     * intentionally invalid values, or to pin a field to a specific value.
-     * <pre>
-     * // Force age to an invalid value
-     * UserRequest underage = DataFactory.of(UserRequest.class).with("age", 15).valid();
-     *
-     * // Pin email to a known value, generate everything else
-     * UserRequest req = DataFactory.of(UserRequest.class)
-     *                              .with("email", "test@mycompany.com")
-     *                              .valid();
-     * </pre>
-     */
+    // ── Configuration ─────────────────────────────────────────────────────────
+
     DataBuilder<T> with(String fieldName, Object value);
-
-    /**
-     * Overrides one field with {@code null}.
-     * Shorthand for {@code .with(fieldName, null)}.
-     * <pre>
-     * // Build with no address — useful for testing optional fields
-     * UserRequest req = DataFactory.of(UserRequest.class).withNull("address").valid();
-     * </pre>
-     */
     DataBuilder<T> withNull(String fieldName);
-
-    /**
-     * Sets the generation mode.
-     * Defaults to {@link GenerationMode#PRODUCTION} when not called.
-     *
-     * <p>In most cases you do not need to call this — PRODUCTION mode is
-     * the right default for tests. Switch to DEV when your class is still
-     * being annotated and you want to explore all technically-valid values.
-     *
-     * @see GenerationMode
-     */
     DataBuilder<T> mode(GenerationMode mode);
-
-    /**
-     * Seeds the random generator for deterministic output.
-     * Same seed on the same class always produces identical field values.
-     *
-     * <p>Useful for snapshot tests where you want the generated values
-     * to remain stable across runs, and for TestKit which seeds from
-     * the class's fully-qualified name so generated test files stay
-     * consistent in version control.
-     */
     DataBuilder<T> seed(long seed);
 
-    // ── Single object ─────────────────────────────────────────────────────
+    // ── Single result ─────────────────────────────────────────────────────────
 
-    /**
-     * Builds one valid instance satisfying all constraints.
-     *
-     * @throws DataFactoryException if the class cannot be instantiated,
-     *         no suitable constructor or builder was found, or a field
-     *         type has no registered value generator
-     */
-    T valid();
+    /** Builds one valid instance. Returns {@link ResultStatus#FAILED} on any error. */
+    DataFactoryResult<T> valid();
 
-    /**
-     * Builds one invalid instance — an object that violates at least one constraint.
-     * Returns {@link Optional#empty()} if the class has no constraints to violate.
-     *
-     * <pre>
-     * Optional&lt;UserRequest&gt; bad = DataFactory.of(UserRequest.class).invalid();
-     * bad.ifPresent(req -&gt; assertThat(validator.validate(req)).isNotEmpty());
-     * </pre>
-     *
-     * @throws DataFactoryException if the class cannot be instantiated
-     */
-    Optional<T> invalid();
+    /** Builds one invalid instance. Returns {@link ResultStatus#FAILED} with {@link ErrorType#INVALID_CONFIGURATION} if no constraints to violate. */
+    DataFactoryResult<T> invalid();
 
-    // ── Collections ───────────────────────────────────────────────────────
+    /** Builds one invalid instance for the named field only. */
+    DataFactoryResult<T> invalidFor(String fieldName);
 
-    /**
-     * Builds {@code count} valid instances.
-     * Each instance is independent — values vary between them.
-     *
-     * <pre>
-     * List&lt;UserRequest&gt; users = DataFactory.of(UserRequest.class).validList(1000);
-     * </pre>
-     *
-     * @throws DataFactoryException if any instance cannot be built
-     */
-    List<T> validList(int count);
+    // ── Bulk result ───────────────────────────────────────────────────────────
+
+    /** Builds {@code count} valid instances. {@link ResultStatus} is SUCCESS, PARTIAL, or FAILED. */
+    DataFactoryResults<T> validList(int count);
 
     /**
      * Builds one invalid instance per constraint per field.
-     * Each object in the returned list violates exactly one constraint and passes all others.
-     *
-     * <pre>
-     * {@literal @}ParameterizedTest
-     * {@literal @}MethodSource("invalidRequests")
-     * void each_invalid_request_fails_validation(UserRequest req) {
-     *     assertThat(validator.validate(req)).isNotEmpty();
-     * }
-     * static List&lt;UserRequest&gt; invalidRequests() {
-     *     return DataFactory.of(UserRequest.class).invalidList();
-     * }
-     * </pre>
-     *
-     * @throws DataFactoryException if the class cannot be instantiated
+     * Returns {@link ResultStatus#FAILED} with {@link ErrorType#INVALID_CONFIGURATION} if nothing to violate.
      */
-    List<T> invalidList();
-
-    // ── Per-field ─────────────────────────────────────────────────────────
-
-    /**
-     * Builds one invalid instance for the named field.
-     * All other fields hold valid values — only the named field is intentionally wrong.
-     *
-     * <pre>
-     * UserRequest badEmail = DataFactory.of(UserRequest.class).invalidFor("email");
-     * assertThat(validator.validate(badEmail))
-     *     .anyMatch(v -&gt; v.getPropertyPath().toString().equals("email"));
-     * </pre>
-     *
-     * @throws DataFactoryException if the field name does not exist on the class
-     */
-    T invalidFor(String fieldName);
-
-
+    DataFactoryResults<T> invalidList();
 
     /**
      * Returns boundary-covering valid instances keyed by field name.
-     * Replaces {@link #validPerField()}.
-     *
-     * <p>For each field the map contains valid objects where that field covers its
-     * boundary values — minimum, midpoint, maximum, and a semantically realistic value.
-     * All other fields hold their canonical valid value.
-     *
-     * <p>Primarily used by TestKit to generate parameterized boundary tests.
-     *
-     * @throws DataFactoryException if the class cannot be instantiated
+     * Each field maps to its own {@link DataFactoryResults}.
      */
-    Map<String, List<T>> validPerField();
+    Map<String, DataFactoryResults<T>> validPerField();
+
+    // ── Per-field ─────────────────────────────────────────────────────────────
+
+    /**
+     * Valid and invalid values for every field, each generated independently — no
+     * instance of {@code T} is built. A field that cannot be generated (unsupported
+     * type, conflicting annotations) yields a failed result for that field only;
+     * every other field still succeeds.
+     *
+     * <p>Keys follow field declaration order. Seeded builders are deterministic per
+     * field: a field's values do not change when other fields are added or removed.
+     */
+    Map<String, DataFactoryResult<FieldCases>> fields();
 }

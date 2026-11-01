@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DataFactoryV2Test {
+class DataFactoryResultApiTest {
 
     // ── fixtures ──────────────────────────────────────────────────────────────
 
@@ -62,7 +62,7 @@ class DataFactoryV2Test {
 
         @Test
         void validSucceeds() {
-            DataFactoryResult<Simple> r = DataFactoryV2.valid(Simple.class);
+            DataFactoryResult<Simple> r = DataFactory.valid(Simple.class);
             assertThat(r.isSuccess()).isTrue();
             assertThat(r.get().name()).isNotBlank().hasSizeLessThanOrEqualTo(20);
             assertThat(r.get().age()).isBetween(18, 120);
@@ -70,14 +70,14 @@ class DataFactoryV2Test {
 
         @Test
         void invalidListSucceedsWithOneCasePerConstraint() {
-            DataFactoryResults<Simple> rs = DataFactoryV2.invalidList(Simple.class);
+            DataFactoryResults<Simple> rs = DataFactory.invalidList(Simple.class);
             assertThat(rs.isSuccess()).isTrue();
             assertThat(rs.total()).isGreaterThanOrEqualTo(4); // NotBlank, Size, Min, Max
         }
 
         @Test
         void nullConstraintGeneratesNull() {
-            DataFactoryResult<NullAllowed> r = DataFactoryV2.valid(NullAllowed.class);
+            DataFactoryResult<NullAllowed> r = DataFactory.valid(NullAllowed.class);
             assertThat(r.isSuccess()).isTrue();
             assertThat(r.get().legacy()).isNull();
             assertThat(r.get().name()).isNotBlank();
@@ -85,7 +85,7 @@ class DataFactoryV2Test {
 
         @Test
         void assertFalseGeneratesFalse() {
-            DataFactoryResult<MustBeFalse> r = DataFactoryV2.valid(MustBeFalse.class);
+            DataFactoryResult<MustBeFalse> r = DataFactory.valid(MustBeFalse.class);
             assertThat(r.isSuccess()).isTrue();
             assertThat(r.get().deleted()).isFalse();
         }
@@ -99,42 +99,42 @@ class DataFactoryV2Test {
 
         @Test
         void minAboveMax() {
-            assertInvalidConfiguration(DataFactoryV2.valid(MinAboveMax.class), "quantity", "impossible range");
+            assertInvalidConfiguration(DataFactory.valid(MinAboveMax.class), "quantity", "impossible range");
         }
 
         @Test
         void sizeMinAboveMax() {
-            assertInvalidConfiguration(DataFactoryV2.valid(SizeAboveMax.class), "code", "impossible range");
+            assertInvalidConfiguration(DataFactory.valid(SizeAboveMax.class), "code", "impossible range");
         }
 
         @Test
         void positiveAndNegative() {
-            assertInvalidConfiguration(DataFactoryV2.valid(PositiveNegative.class), "amount", "impossible range");
+            assertInvalidConfiguration(DataFactory.valid(PositiveNegative.class), "amount", "impossible range");
         }
 
         @Test
         void decimalMinAboveMax() {
-            assertInvalidConfiguration(DataFactoryV2.valid(DecimalAboveMax.class), "rate", "impossible range");
+            assertInvalidConfiguration(DataFactory.valid(DecimalAboveMax.class), "rate", "impossible range");
         }
 
         @Test
         void nullWithNotNull() {
-            assertInvalidConfiguration(DataFactoryV2.valid(NullAndNotNull.class), "legacy", "@Null conflicts");
+            assertInvalidConfiguration(DataFactory.valid(NullAndNotNull.class), "legacy", "@Null conflicts");
         }
 
         @Test
         void nullOnPrimitive() {
-            assertInvalidConfiguration(DataFactoryV2.valid(NullPrimitive.class), "count", "primitive");
+            assertInvalidConfiguration(DataFactory.valid(NullPrimitive.class), "count", "primitive");
         }
 
         @Test
         void assertTrueWithAssertFalse() {
-            assertInvalidConfiguration(DataFactoryV2.valid(TrueAndFalse.class), "flag", "@AssertTrue conflicts");
+            assertInvalidConfiguration(DataFactory.valid(TrueAndFalse.class), "flag", "@AssertTrue conflicts");
         }
 
         @Test
         void everyEntryPointReportsTheConflict() {
-            var b = DataFactoryV2.of(MinAboveMax.class);
+            var b = DataFactory.of(MinAboveMax.class);
             assertThat(b.invalid().errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION);
             assertThat(b.invalidFor("name").errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION);
             assertThat(b.invalidList().failed()).allSatisfy(f ->
@@ -146,7 +146,7 @@ class DataFactoryV2Test {
 
         @Test
         void overridingTheConflictingFieldMakesTheClassBuildable() {
-            DataFactoryResult<MinAboveMax> r = DataFactoryV2.of(MinAboveMax.class).with("quantity", 4).valid();
+            DataFactoryResult<MinAboveMax> r = DataFactory.of(MinAboveMax.class).with("quantity", 4).valid();
             assertThat(r.isSuccess()).isTrue();
             assertThat(r.get().quantity()).isEqualTo(4);
         }
@@ -166,19 +166,19 @@ class DataFactoryV2Test {
 
         @Test
         void unsupportedFieldType() {
-            DataFactoryResult<WithUnsupported> r = DataFactoryV2.valid(WithUnsupported.class);
+            DataFactoryResult<WithUnsupported> r = DataFactory.valid(WithUnsupported.class);
             assertThat(r.errorType()).isEqualTo(ErrorType.UNSUPPORTED_CLASS_TYPE);
             assertThat(r.reason()).contains("counter");
         }
 
         @Test
         void interfaceIsNotInstantiable() {
-            assertThat(DataFactoryV2.valid(NotAClass.class).errorType()).isEqualTo(ErrorType.NOT_INSTANTIABLE);
+            assertThat(DataFactory.valid(NotAClass.class).errorType()).isEqualTo(ErrorType.NOT_INSTANTIABLE);
         }
 
         @Test
         void unknownFieldInInvalidFor() {
-            DataFactoryResult<Simple> r = DataFactoryV2.invalidFor(Simple.class, "nope");
+            DataFactoryResult<Simple> r = DataFactory.invalidFor(Simple.class, "nope");
             assertThat(r.errorType()).isEqualTo(ErrorType.UNKNOWN_FIELD);
         }
 
@@ -199,7 +199,7 @@ class DataFactoryV2Test {
 
         @Test
         void unsupportedFieldFailsAloneOthersSucceed() {
-            Map<String, DataFactoryResult<FieldCases>> fields = DataFactoryV2.fields(WithUnsupported.class);
+            Map<String, DataFactoryResult<FieldCases>> fields = DataFactory.fields(WithUnsupported.class);
 
             assertThat(fields).containsOnlyKeys("name", "age", "counter");
             assertThat(fields.get("counter").errorType()).isEqualTo(ErrorType.UNSUPPORTED_CLASS_TYPE);
@@ -215,7 +215,7 @@ class DataFactoryV2Test {
 
         @Test
         void conflictingFieldFailsAloneOthersSucceed() {
-            Map<String, DataFactoryResult<FieldCases>> fields = DataFactoryV2.fields(OneBadField.class);
+            Map<String, DataFactoryResult<FieldCases>> fields = DataFactory.fields(OneBadField.class);
             assertThat(fields.get("broken").errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION);
             assertThat(fields.get("name").isSuccess()).isTrue();
             assertThat(fields.get("email").isSuccess()).isTrue();
@@ -225,21 +225,21 @@ class DataFactoryV2Test {
         @Test
         void wholeObjectStillFailsHonestly() {
             // fields() isolates the bad field, but no valid instance exists — valid() must say so.
-            assertThat(DataFactoryV2.valid(OneBadField.class).errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION);
+            assertThat(DataFactory.valid(OneBadField.class).errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION);
         }
 
         @Test
         void seededFieldsAreDeterministic() {
-            var a = DataFactoryV2.of(Simple.class).seed(42).fields();
-            var b = DataFactoryV2.of(Simple.class).seed(42).fields();
+            var a = DataFactory.of(Simple.class).seed(42).fields();
+            var b = DataFactory.of(Simple.class).seed(42).fields();
             assertThat(a.get("name").get().validValues()).isEqualTo(b.get("name").get().validValues());
             assertThat(a.get("age").get().validValues()).isEqualTo(b.get("age").get().validValues());
         }
 
         @Test
         void fieldValuesDoNotDependOnOtherFields() {
-            List<Object> alone = DataFactoryV2.of(JustName.class).seed(7).fields().get("name").get().validValues();
-            List<Object> withMore = DataFactoryV2.of(NameAndMore.class).seed(7).fields().get("name").get().validValues();
+            List<Object> alone = DataFactory.of(JustName.class).seed(7).fields().get("name").get().validValues();
+            List<Object> withMore = DataFactory.of(NameAndMore.class).seed(7).fields().get("name").get().validValues();
             assertThat(alone).isEqualTo(withMore);
         }
     }
@@ -251,7 +251,7 @@ class DataFactoryV2Test {
     class CollectionsAndNested {
 
         private final Map<String, DataFactoryResult<FieldCases>> fields =
-                DataFactoryV2.of(Bag.class).seed(11).fields();
+                DataFactory.of(Bag.class).seed(11).fields();
 
         @Test
         void listValidValuesCoverSizeBoundaries() {
@@ -287,7 +287,7 @@ class DataFactoryV2Test {
 
         @Test
         void objectPathRespectsSizeMin() {
-            Bag bag = DataFactoryV2.valid(Bag.class).get();
+            Bag bag = DataFactory.valid(Bag.class).get();
             assertThat(bag.tags()).hasSizeBetween(2, 4);
         }
     }
@@ -301,7 +301,7 @@ class DataFactoryV2Test {
         @Test
         void validInstancesHaveNoViolations() {
             for (Class<?> c : List.of(Simple.class, Bag.class, NullAllowed.class, MustBeFalse.class)) {
-                Object v = DataFactoryV2.of(c).seed(3).valid().get();
+                Object v = DataFactory.of(c).seed(3).valid().get();
                 assertThat(VALIDATOR.validate(v)).as(c.getSimpleName()).isEmpty();
             }
         }
@@ -309,7 +309,7 @@ class DataFactoryV2Test {
         @Test
         void everyInvalidInstanceHasAtLeastOneViolation() {
             for (Class<?> c : List.of(Simple.class, Bag.class)) {
-                DataFactoryResults<?> rs = DataFactoryV2.of(c).seed(3).invalidList();
+                DataFactoryResults<?> rs = DataFactory.of(c).seed(3).invalidList();
                 assertThat(rs.isSuccess()).as(c.getSimpleName()).isTrue();
                 rs.results().forEach(r ->
                         assertThat(VALIDATOR.validate(r.get())).as(c.getSimpleName() + " " + r.get()).isNotEmpty());
@@ -319,7 +319,7 @@ class DataFactoryV2Test {
         @Test
         void everyFieldValidValuePassesAndEveryInvalidCaseFails() {
             for (Class<?> c : List.of(Simple.class, Bag.class)) {
-                DataFactoryV2.of(c).seed(5).fields().forEach((name, r) -> {
+                DataFactory.of(c).seed(5).fields().forEach((name, r) -> {
                     FieldCases fc = r.get();
                     fc.validValues().forEach(v -> assertThat(VALIDATOR.validateValue(c, name, v))
                             .as(c.getSimpleName() + "." + name + " valid " + v).isEmpty());
@@ -336,7 +336,7 @@ class DataFactoryV2Test {
     @Test
     @DisplayName("validPerField never invents an \"_error\" key for a class-level failure")
     void validPerFieldKeysAreRealFields() {
-        Map<String, DataFactoryResults<WithUnsupported>> m = DataFactoryV2.validPerField(WithUnsupported.class);
+        Map<String, DataFactoryResults<WithUnsupported>> m = DataFactory.validPerField(WithUnsupported.class);
         assertThat(m).doesNotContainKey("_error");
         assertThat(m.values()).allSatisfy(rs -> assertThat(rs.isFailure()).isTrue());
     }

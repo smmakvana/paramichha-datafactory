@@ -54,7 +54,7 @@ class GenerationModeTest {
         @DisplayName("fully annotated class produces valid object")
         void fullyAnnotated_valid() {
             var obj = DataFactory.of(FullyAnnotated.class)
-                    .mode(GenerationMode.PRODUCTION).valid();
+                    .mode(GenerationMode.PRODUCTION).valid().get();
             assertThat(obj).isNotNull();
             assertThat(validator.validate(obj)).isEmpty();
         }
@@ -63,7 +63,7 @@ class GenerationModeTest {
         @DisplayName("unannotated String is non-null")
         void unannotated_string_nonNull() {
             var obj = DataFactory.of(Unannotated.class)
-                    .mode(GenerationMode.PRODUCTION).valid();
+                    .mode(GenerationMode.PRODUCTION).valid().get();
             assertThat(obj.name()).isNotNull();
         }
 
@@ -71,7 +71,7 @@ class GenerationModeTest {
         @DisplayName("unannotated Integer is positive")
         void unannotated_integer_positive() {
             var obj = DataFactory.of(Unannotated.class)
-                    .mode(GenerationMode.PRODUCTION).valid();
+                    .mode(GenerationMode.PRODUCTION).valid().get();
             assertThat(obj.count()).isGreaterThan(0);
         }
 
@@ -79,7 +79,7 @@ class GenerationModeTest {
         @DisplayName("unannotated List is non-empty")
         void unannotated_list_nonEmpty() {
             var obj = DataFactory.of(Unannotated.class)
-                    .mode(GenerationMode.PRODUCTION).valid();
+                    .mode(GenerationMode.PRODUCTION).valid().get();
             assertThat(obj.items()).isNotEmpty();
         }
 
@@ -87,14 +87,14 @@ class GenerationModeTest {
         @DisplayName("violations() finds injected constraint violations")
         void violations_includesInjectedConstraints() {
             var violations = DataFactory.of(Unannotated.class)
-                    .mode(GenerationMode.PRODUCTION).invalidList();
+                    .mode(GenerationMode.PRODUCTION).invalidList().getAll();
             assertThat(violations).isNotEmpty();
         }
 
         @Test
         @DisplayName("default mode is PRODUCTION")
         void defaultModeIsProduction() {
-            var obj = DataFactory.of(Unannotated.class).valid();
+            var obj = DataFactory.of(Unannotated.class).valid().get();
             assertThat(obj.name()).isNotNull();
             assertThat(obj.count()).isGreaterThan(0);
         }
@@ -110,7 +110,7 @@ class GenerationModeTest {
         @DisplayName("fully annotated class still follows its annotations")
         void fullyAnnotated_followsAnnotations() {
             var obj = DataFactory.of(FullyAnnotated.class)
-                    .mode(GenerationMode.DEV).valid();
+                    .mode(GenerationMode.DEV).valid().get();
             assertThat(obj).isNotNull();
             assertThat(validator.validate(obj)).isEmpty();
         }
@@ -119,7 +119,7 @@ class GenerationModeTest {
         @DisplayName("valid() on unannotated class succeeds")
         void unannotated_valid_succeeds() {
             var obj = DataFactory.of(Unannotated.class)
-                    .mode(GenerationMode.DEV).valid();
+                    .mode(GenerationMode.DEV).valid().get();
             assertThat(obj).isNotNull();
         }
 
@@ -133,7 +133,7 @@ class GenerationModeTest {
 
             // Extract the Integer values from the variants
             List<Integer> values = all.get("value")
-                    .stream()
+                    .getAll().stream()
                     .map(n -> (Integer) ((NumericOnly) n).value())
                     .toList();
 
@@ -148,7 +148,7 @@ class GenerationModeTest {
             // valid() uses semantic (first) value — should be a reasonable number
             // not Integer.MIN_VALUE
             var obj = DataFactory.of(NumericOnly.class)
-                    .mode(GenerationMode.DEV).valid();
+                    .mode(GenerationMode.DEV).valid().get();
             // semantic value should not be the extreme boundary
             assertThat(obj.value()).isNotNull();
         }
@@ -157,7 +157,7 @@ class GenerationModeTest {
         @DisplayName("annotated violations still work in DEV")
         void annotatedViolationsWork() {
             var violations = DataFactory.of(FullyAnnotated.class)
-                    .mode(GenerationMode.DEV).invalidList();
+                    .mode(GenerationMode.DEV).invalidList().getAll();
             assertThat(violations).isNotEmpty();
         }
 
@@ -169,14 +169,14 @@ class GenerationModeTest {
             var devAll = DataFactory.of(NumericOnly.class)
                     .mode(GenerationMode.DEV).validPerField();
             List<Integer> devValues = devAll.get("value")
-                    .stream().map(n -> (Integer) ((NumericOnly) n).value()).toList();
+                    .getAll().stream().map(n -> (Integer) ((NumericOnly) n).value()).toList();
 
             // DEV range includes negative values
             assertThat(devValues).anyMatch(v -> v < 0);
 
             // PRODUCTION valid() is always positive
             var prodObj = DataFactory.of(NumericOnly.class)
-                    .mode(GenerationMode.PRODUCTION).valid();
+                    .mode(GenerationMode.PRODUCTION).valid().get();
             assertThat(prodObj.value()).isGreaterThan(0);
         }
     }
@@ -190,14 +190,14 @@ class GenerationModeTest {
         @Test
         @DisplayName("seeded object passes validation")
         void seeded_objectIsValid() {
-            var obj = DataFactory.of(FullyAnnotated.class).seed(12345L).valid();
+            var obj = DataFactory.of(FullyAnnotated.class).seed(12345L).valid().get();
             assertThat(validator.validate(obj)).isEmpty();
         }
 
         @Test
         @DisplayName("seeded object fields are populated")
         void seeded_fieldsPopulated() {
-            var obj = DataFactory.of(FullyAnnotated.class).seed(42L).valid();
+            var obj = DataFactory.of(FullyAnnotated.class).seed(42L).valid().get();
             assertThat(obj).isNotNull();
             assertThat(obj.email()).isNotBlank();
             assertThat(obj.age()).isPositive();
@@ -207,8 +207,8 @@ class GenerationModeTest {
         @Test
         @DisplayName("different seeds produce valid objects")
         void differentSeeds_bothValid() {
-            var a = DataFactory.of(FullyAnnotated.class).seed(1L).valid();
-            var b = DataFactory.of(FullyAnnotated.class).seed(999L).valid();
+            var a = DataFactory.of(FullyAnnotated.class).seed(1L).valid().get();
+            var b = DataFactory.of(FullyAnnotated.class).seed(999L).valid().get();
             assertThat(validator.validate(a)).isEmpty();
             assertThat(validator.validate(b)).isEmpty();
         }
