@@ -331,7 +331,15 @@ class DataFactoryResultApiTest {
         }
     }
 
-    // ── validPerField shape ───────────────────────────────────────────────────
+    @Test
+    @DisplayName("VERSION is the artifact version from the build, not a hard-coded string")
+    void versionComesFromTheBuild() {
+        assertThat(DataFactory.VERSION).isNotEqualTo("unknown").doesNotContain("${")
+                .matches("\\d+\\.\\d+\\.\\d+.*")
+                .isEqualTo(System.getProperty("project.version", DataFactory.VERSION));
+    }
+
+        // ── validPerField shape ───────────────────────────────────────────────────
 
     @Test
     @DisplayName("validPerField never invents an \"_error\" key for a class-level failure")

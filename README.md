@@ -197,7 +197,7 @@ other fields still succeed. Collections cover their `@Size` / `@NotEmpty` bounda
 #### Discovery
 
 ```java
-DataFactory.VERSION;                 // "2.0.0"
+DataFactory.VERSION;                 // the artifact version, e.g. "0.2.0"
 DataFactory.supportedTypes();        // scalar types with a generator
 DataFactory.supportedAnnotations();  // "NotNull", "Size", "Email", …
 DataFactory.canHandle(MyType.class);

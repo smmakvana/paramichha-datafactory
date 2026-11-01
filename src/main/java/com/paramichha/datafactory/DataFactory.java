@@ -396,8 +396,24 @@ public final class DataFactory {
     // Level 3 — object builder
     // =========================================================================
 
-    /** DataFactory API version. */
-    public static final String VERSION = "2.0.0";
+    /**
+     * The DataFactory artifact version, e.g. {@code "0.2.0"}. Read from the jar at build time
+     * (Maven resource filtering), so it always matches the published artifact.
+     * {@code "unknown"} if the version resource is missing.
+     */
+    public static final String VERSION = readVersion();
+
+    private static String readVersion() {
+        try (java.io.InputStream in = DataFactory.class.getResourceAsStream("datafactory-version.properties")) {
+            if (in == null) return "unknown";
+            Properties p = new Properties();
+            p.load(in);
+            String v = p.getProperty("version", "unknown").trim();
+            return v.isEmpty() || v.startsWith("${") ? "unknown" : v;
+        } catch (java.io.IOException e) {
+            return "unknown";
+        }
+    }
 
     /**
      * Entry point for annotation-aware object generation. Every operation returns a
