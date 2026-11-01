@@ -17,7 +17,7 @@ No hardcoded strings. No helper methods. No maintenance.
 </dependency>
 ```
 
-Requires Java 21 and Jakarta Validation 3.x. Lombok is supported but not required.
+Requires Java 21 and Jakarta Validation 3.x. Lombok-annotated classes are supported; Lombok itself is not required.
 
 ---
 
@@ -48,6 +48,28 @@ List<UserRequest> bad = DataFactory.of(UserRequest.class).invalidList().getAll()
 //   UserRequest[email=alice@..., age=17, name=Alice Smith]   ← @Min(18)
 //   ... one object per constraint per field
 ```
+
+---
+
+## Features
+
+- **Reads Jakarta Validation annotations** — `@NotNull`, `@NotBlank`, `@NotEmpty`, `@Size`, `@Min`/`@Max`,
+  `@DecimalMin`/`@DecimalMax`, `@Digits`, `@Positive*`/`@Negative*`, `@Email`, `@Pattern`, `@Past*`/`@Future*`,
+  `@AssertTrue`/`@AssertFalse`, `@Null`, `@Valid`, plus Hibernate's `@Length`, `@Range`, `@URL`,
+  `@CreditCardNumber`, `@ISBN`, `@EAN`, `@UUID`. The full list is `DataFactory.supportedAnnotations()`.
+- **Valid and invalid data** — one valid object, or one object per constraint that breaks exactly that rule.
+- **Boundary values** — min, max, midpoint and a realistic value per field; collections at their `@Size` bounds.
+- **Per-field generation** — `fields()` produces values for each field without building the object, so one
+  unsupported field doesn't block the rest.
+- **Never throws for object generation** — results carry `SUCCESS` / `PARTIAL` / `FAILED` and an `ErrorType`
+  (`INVALID_CONFIGURATION`, `UNSUPPORTED_CLASS_TYPE`, `NOT_INSTANTIABLE`, `UNKNOWN_FIELD`, …).
+- **Detects impossible constraints** — `@Min(5) @Max(3)`, `@Size(min = 5, max = 3)`, `@Positive @Negative`,
+  `@Null` with `@NotNull`, `@AssertTrue` with `@AssertFalse` are reported, not generated.
+- **Realistic values** — names, emails, cities, IBANs and more via DataFaker; field names act as hints.
+- **Deterministic** — `seed(n)` gives the same output every run; seeded per field, so adding a field doesn't
+  change the others.
+- **Records, Lombok, all-args constructors and JavaBeans** — nested `@Valid` objects, `List`/`Set`/`Queue`/`Map`,
+  arrays, `Optional`, enums and inherited fields.
 
 ---
 
@@ -290,6 +312,31 @@ DataFactory.of(OrderRequest.class)
            .getAll();
 // → [-2147483648, 0, 2147483647, 5]
 ```
+
+---
+
+## Limitations
+
+- **Requires Java 21+** and Jakarta Validation 3.x (`jakarta.*`, not `javax.*`).
+- **Custom constraints are not understood.** Annotations you define with `@Constraint` — and class-level or
+  cross-field rules (e.g. "end date after start date") — are ignored; generated data may violate them.
+- **Validation groups are ignored.** Every constraint is applied regardless of `groups`.
+- **Element annotations are not read.** In `List<@NotBlank String>`, `@NotBlank` on the element has no effect.
+- **`@Pattern` covers common shapes only** (character classes, fixed lengths, typical codes). For complex
+  expressions DataFactory falls back to a plausible value and logs a warning — check the output.
+- **Containers stay small.** Collections cover their `@Size` bounds up to 100 elements; arrays, maps and
+  `Optional` get one representative value and arrays have no `@Size` boundary cases. An element type with no
+  generator (e.g. `Map<String, Object>`) gives an empty container.
+- **Nested objects are tested one level at a time.** `fields()` reports the nested field's own `@NotNull`
+  case; the nested class's rules come from its own `fields()`.
+- **Circular references** are broken with `null` (or an empty collection) at the point the cycle repeats.
+- **Bounds at the type limit.** For `@Max(127) byte` there is no "one above max", so the extra invalid case
+  wraps to the type's minimum — still invalid, but for the `@Min`/range reason.
+- **Unannotated fields get type-default probes** (`null`, `""`, `-1`, `false`) marked
+  `annotationDriven = false`. They are suggestions, not guaranteed violations.
+- **Discovery lists are maintained by hand.** `supportedTypes()` / `supportedAnnotations()` describe what is
+  implemented; `canHandle()` accepts any collection without checking its element type.
+- **Interfaces and abstract classes** can't be instantiated — supply a concrete value with `with(...)`.
 
 ---
 
