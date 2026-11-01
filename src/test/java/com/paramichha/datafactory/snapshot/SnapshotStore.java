@@ -39,7 +39,7 @@ public final class SnapshotStore {
         try {
             Path path = resolveReadPath(fixtureName);
             if (path == null) return null;
-            return Files.readString(path);
+            return normalize(Files.readString(path));
         } catch (IOException e) {
             throw new RuntimeException("Failed to read snapshot: " + fixtureName, e);
         }
@@ -50,7 +50,7 @@ public final class SnapshotStore {
             Path dir = resolveWriteDir();
             Files.createDirectories(dir);
             Path file = dir.resolve(fixtureName + ".json");
-            Files.writeString(file, json);
+            Files.writeString(file, normalize(json));
         } catch (IOException e) {
             throw new RuntimeException("Failed to write snapshot: " + fixtureName, e);
         }
@@ -107,4 +107,13 @@ public final class SnapshotStore {
             throw new RuntimeException("Cannot resolve snapshot write path: " + e.getMessage(), e);
     }
 }
+
+    /**
+     * Snapshots are compared and stored with "\n" line endings on every OS. Every raw carriage
+     * return is dropped: valid JSON never contains one inside a value (it is escaped as \r), so
+     * this only removes line-ending differences from Windows checkouts or editors.
+     */
+    static String normalize(String text) {
+        return text.replace("\r", "");
+    }
 }

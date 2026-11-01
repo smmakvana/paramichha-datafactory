@@ -34,7 +34,7 @@ class DataFactorySnapshotTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("allFixtures")
     void contract(String label, Class<?> type) {
-        String actual = snapshot(type);
+        String actual = SnapshotStore.normalize(snapshot(type));
 
         if (SnapshotStore.isGenerateMode()) {
             SnapshotStore.write(type.getSimpleName(), actual);
