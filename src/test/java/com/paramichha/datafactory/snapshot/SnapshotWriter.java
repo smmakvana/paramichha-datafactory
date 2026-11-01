@@ -32,6 +32,11 @@ public final class SnapshotWriter {
 
     private static final ObjectMapper MAPPER = buildMapper();
 
+    private static final com.fasterxml.jackson.core.util.DefaultPrettyPrinter PRINTER =
+            new com.fasterxml.jackson.core.util.DefaultPrettyPrinter()
+                    // same layout as Jackson's default (arrays stay inline), only the line feed is fixed
+                    .withObjectIndenter(new com.fasterxml.jackson.core.util.DefaultIndenter("  ", "\n"));
+
     private SnapshotWriter() {}
 
     private static ObjectMapper buildMapper() {
@@ -55,7 +60,9 @@ public final class SnapshotWriter {
             root.put("valid",       toEntry(valid, validator));
             root.put("validMap",    toValidMapEntries(validMap, validator));
             root.put("invalidList", toInvalidEntries(invalidList, validator));
-            return MAPPER.writeValueAsString(root);
+            // Always "\n": Jackson's default pretty printer uses the OS line separator,
+            // which made snapshots written on Windows (\r\n) differ from Linux (\n).
+            return MAPPER.writer(PRINTER).writeValueAsString(root);
         } catch (Exception e) {
             throw new RuntimeException("Failed to serialize snapshot", e);
         }
