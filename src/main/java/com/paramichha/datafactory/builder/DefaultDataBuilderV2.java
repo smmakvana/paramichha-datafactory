@@ -150,6 +150,7 @@ public final class DefaultDataBuilderV2<T> implements DataBuilderV2<T> {
             for (FieldDescriptor field : fields) {
                 if (overrides.containsKey(field.name())) continue;
                 if (field.rawType() == Boolean.class || field.rawType() == boolean.class) continue;
+                if (field.isComposite()) continue;
                 List<Object> allValidValues = ValueBuilderFactory.create(field, m).validList();
                 if (allValidValues.size() <= 1) continue;
                 List<DataFactoryResult<T>> variants = new ArrayList<>();
@@ -283,6 +284,7 @@ public final class DefaultDataBuilderV2<T> implements DataBuilderV2<T> {
                     + "' for field '" + fieldContext + "': " + r.reason());
             return r.get();
         }
+        if (elemType == Object.class) return null; // no generator for an untyped element
         List<?> values = ValueBuilderFactory.create(elemType, m).validList();
         return values.isEmpty() ? null : values.get(0);
     }

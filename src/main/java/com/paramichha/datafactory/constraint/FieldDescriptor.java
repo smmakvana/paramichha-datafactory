@@ -179,6 +179,17 @@ public record FieldDescriptor(
         return String.class;
     }
 
+    /**
+     * True for fields whose value is a container or object graph rather than a
+     * single generated scalar: {@code Optional}, collections, maps and nested
+     * domain objects. Per-field boundary variation does not apply to these —
+     * their element values cannot be assigned to the field directly.
+     */
+    public boolean isComposite() {
+        return rawType == java.util.Optional.class
+            || isList() || isSet() || isMap() || isQueue() || isNested();
+    }
+
     public boolean isNested() {
         if (rawType == java.util.Optional.class) return false;
         String pkg = rawType.getPackageName();
