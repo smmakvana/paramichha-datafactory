@@ -19,11 +19,42 @@ package com.paramichha.datafactory;
  */
 public class DataFactoryException extends RuntimeException {
 
+    private final ErrorType errorType;
+
     public DataFactoryException(String message) {
-        super(message);
+        this(null, message, null);
     }
 
     public DataFactoryException(String message, Throwable cause) {
+        this(null, message, cause);
+    }
+
+    public DataFactoryException(ErrorType errorType, String message) {
+        this(errorType, message, null);
+    }
+
+    public DataFactoryException(ErrorType errorType, String message, Throwable cause) {
         super(message, cause);
+        this.errorType = errorType;
+    }
+
+    /**
+     * The failure category, or {@code null} when the thrower did not classify it.
+     * Use {@link #errorTypeInChain(Throwable)} to find the first classified cause.
+     */
+    public ErrorType errorType() {
+        return errorType;
+    }
+
+    /**
+     * Returns the error type of the first {@code DataFactoryException} in the
+     * cause chain that carries one, or {@code null} if none does.
+     */
+    public static ErrorType errorTypeInChain(Throwable t) {
+        for (Throwable c = t; c != null; c = c.getCause()) {
+            if (c instanceof DataFactoryException dfe && dfe.errorType != null) return dfe.errorType;
+            if (c.getCause() == c) break;
+        }
+        return null;
     }
 }

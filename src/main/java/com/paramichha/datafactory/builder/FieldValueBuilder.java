@@ -123,6 +123,14 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     @Override
     @SuppressWarnings("unchecked")
     public List<T> invalidList() {
+        return (List<T>) invalidCases().stream().map(ConstraintCase::value).toList();
+    }
+
+    /**
+     * The cases {@link #invalidList()} is built from: one per annotation on the field,
+     * or the type-default probes when the field has no annotations.
+     */
+    public List<ConstraintCase> invalidCases() {
         FieldConstraints rc = resolvedConstraints();
         List<ConstraintCase> cases = annotationCases(rc);
         if (cases.isEmpty()) {
@@ -130,14 +138,14 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
                     .filter(c -> !c.annotationDriven())
                     .toList();
         }
-        return (List<T>) cases.stream().map(ConstraintCase::value).toList();
+        return cases;
     }
 
     @Override
     public List<T> stream(int count) {
         List<T> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) result.add(valid());
-        return List.copyOf(result);
+        return java.util.Collections.unmodifiableList(result); // may hold nulls for @Null fields
     }
 
     public List<ConstraintCase> annotationCases() {

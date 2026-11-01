@@ -51,6 +51,7 @@ public final class DataFactoryV2 {
     public static <T> DataFactoryResults<T>             validList(Class<T> type, int count)       { return of(type).validList(count); }
     public static <T> DataFactoryResults<T>             invalidList(Class<T> type)                { return of(type).invalidList(); }
     public static <T> Map<String, DataFactoryResults<T>> validPerField(Class<T> type)             { return of(type).validPerField(); }
+    public static Map<String, DataFactoryResult<FieldCases>> fields(Class<?> type)                { return of(type).fields(); }
 
     // ── Discovery ─────────────────────────────────────────────────────────────
 
