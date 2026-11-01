@@ -80,7 +80,7 @@ public class HelloDataFactory {
     private static void levelThree() {
         title("Level 3 — object builders");
 
-        CustomerRequest valid = DataFactory.of(CustomerRequest.class).valid();
+        CustomerRequest valid = DataFactory.of(CustomerRequest.class).valid().get();
         System.out.println("  valid customer:");
         System.out.println("    email:   " + valid.getEmail());
         System.out.println("    name:    " + valid.getName());
@@ -91,18 +91,18 @@ public class HelloDataFactory {
         CustomerRequest pinned = DataFactory.of(CustomerRequest.class)
                 .with("email", "fixed@company.com")
                 .with("age", 25)
-                .valid();
+                .valid().get();
         System.out.println();
         System.out.println("  with overrides — email: " + pinned.getEmail()
                 + ", age: " + pinned.getAge());
 
-        List<CustomerRequest> bad = DataFactory.of(CustomerRequest.class).invalidList();
+        List<CustomerRequest> bad = DataFactory.of(CustomerRequest.class).invalidList().getAll();
         System.out.println();
         System.out.println("  " + bad.size() + " invalid customers — one per constraint:");
         bad.forEach(c -> System.out.println("    email=" + c.getEmail()
                 + " age=" + c.getAge()));
 
-        CustomerRequest badEmail = DataFactory.of(CustomerRequest.class).invalidFor("email");
+        CustomerRequest badEmail = DataFactory.of(CustomerRequest.class).invalidFor("email").get();
         System.out.println();
         System.out.println("  invalidFor(email) — email: " + badEmail.getEmail()
                 + "  (everything else valid)");
@@ -110,14 +110,14 @@ public class HelloDataFactory {
         var edges = DataFactory.of(CustomerRequest.class).validPerField();
         System.out.println();
         System.out.println("  age boundary values: "
-                + edges.get("age").stream().map(CustomerRequest::getAge).toList());
+                + edges.get("age").getAll().stream().map(CustomerRequest::getAge).toList());
 
-        List<CustomerRequest> bulk = DataFactory.of(CustomerRequest.class).validList(1000);
+        List<CustomerRequest> bulk = DataFactory.of(CustomerRequest.class).validList(1000).getAll();
         System.out.println();
         System.out.println("  generated " + bulk.size() + " customers");
 
-        CustomerRequest a = DataFactory.of(CustomerRequest.class).seed(42L).valid();
-        CustomerRequest b = DataFactory.of(CustomerRequest.class).seed(42L).valid();
+        CustomerRequest a = DataFactory.of(CustomerRequest.class).seed(42L).valid().get();
+        CustomerRequest b = DataFactory.of(CustomerRequest.class).seed(42L).valid().get();
         System.out.println();
         System.out.println("  seed 42: " + a.getEmail());
         System.out.println("  same:    " + b.getEmail());
@@ -127,7 +127,7 @@ public class HelloDataFactory {
         PaymentRequest payment = DataFactory.of(PaymentRequest.class)
                 .with("fromIban", DataFactory.string().iban().valid())
                 .with("toIban",   DataFactory.string().iban().valid())
-                .valid();
+                .valid().get();
         System.out.println("  from:   " + payment.getFromIban());
         System.out.println("  to:     " + payment.getToIban());
         System.out.println("  amount: " + payment.getAmount());

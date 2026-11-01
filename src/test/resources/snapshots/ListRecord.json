@@ -10,11 +10,27 @@
   }, {
     "object" : {
       "labels" : [ "fugit" ],
+      "roles" : [ ],
+      "scores" : [ 346 ],
+      "tags" : [ "qui" ]
+    },
+    "violations" : [ "roles" ]
+  }, {
+    "object" : {
+      "labels" : [ "fugit" ],
       "roles" : [ "eum" ],
       "scores" : [ 346 ],
-      "tags" : null
+      "tags" : [ ]
     },
-    "violations" : [ ]
+    "violations" : [ "tags" ]
+  }, {
+    "object" : {
+      "labels" : [ "fugit" ],
+      "roles" : [ "eum" ],
+      "scores" : [ 346 ],
+      "tags" : [ "rem", "itaque", "totam", "aliquam", "hic", "labore" ]
+    },
+    "violations" : [ "tags" ]
   }, {
     "object" : {
       "labels" : [ "fugit" ],

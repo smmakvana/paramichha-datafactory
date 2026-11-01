@@ -29,7 +29,7 @@ public class GenerationModes {
 
     static void productionMode() {
         section("PRODUCTION mode — safe defaults injected for unannotated fields");
-        var r = DataFactory.of(PartialRequest.class).mode(GenerationMode.PRODUCTION).valid();
+        var r = DataFactory.of(PartialRequest.class).mode(GenerationMode.PRODUCTION).valid().get();
         System.out.println("  email: " + r.getEmail() + "  count: " + r.getCount()
                 + "  label: " + r.getLabel());
         System.out.println("  all non-null, count is positive");
@@ -37,7 +37,7 @@ public class GenerationModes {
 
     static void devMode() {
         section("DEV mode — annotations as-is, no injection");
-        var r = DataFactory.of(PartialRequest.class).mode(GenerationMode.DEV).valid();
+        var r = DataFactory.of(PartialRequest.class).mode(GenerationMode.DEV).valid().get();
         System.out.println("  email: " + r.getEmail() + "  count: " + r.getCount()
                 + "  label: " + r.getLabel());
         System.out.println("  count and label may be null");
@@ -47,7 +47,7 @@ public class GenerationModes {
         section("DEV mode — validMap() exposes type extremes for unannotated Integer");
         var map = DataFactory.of(PartialRequest.class).mode(GenerationMode.DEV).validPerField();
         if (map.containsKey("count")) {
-            var counts = map.get("count").stream().map(PartialRequest::getCount).toList();
+            var counts = map.get("count").getAll().stream().map(PartialRequest::getCount).toList();
             System.out.println("  count boundaries: " + counts);
             System.out.println("  includes MIN_VALUE and MAX_VALUE");
             System.out.println("  → catches column overflow before production");

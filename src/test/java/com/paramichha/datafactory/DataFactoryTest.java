@@ -20,7 +20,7 @@
 // * Flagship test for DataFactory public API.
 // *
 // * Structure mirrors what TestKit generates for user classes:
-// *   Construction → DataFactory.valid() builds a real, valid object
+// *   Construction → DataFactory.valid().get() builds a real, valid object
 // *   Validation   → each field: valid values pass, violations detected correctly
 // *   Behaviour    → invalidList(), validMap(), mode(), seed()
 // *
@@ -83,19 +83,19 @@
 //        @Test
 //        @DisplayName("valid instance is created")
 //        void validInstanceIsCreated() {
-//            assertThat(DataFactory.of(UserRequest.class).valid()).isNotNull();
+//            assertThat(DataFactory.of(UserRequest.class).valid().get()).isNotNull();
 //        }
 //
 //        @Test
 //        @DisplayName("valid instance passes validation")
 //        void validInstancePassesValidation() {
-//            assertThat(validator.validate(DataFactory.of(UserRequest.class).valid())).isEmpty();
+//            assertThat(validator.validate(DataFactory.of(UserRequest.class).valid().get())).isEmpty();
 //        }
 //
 //        @Test
 //        @DisplayName("valid instance fields are all populated")
 //        void validInstanceFieldsPopulated() {
-//            var user = DataFactory.of(UserRequest.class).valid();
+//            var user = DataFactory.of(UserRequest.class).valid().get();
 //            assertThat(user.getEmail()).isNotBlank().contains("@");
 //            assertThat(user.getName()).isNotBlank();
 //            assertThat(user.getAge()).isBetween(18, 120);
@@ -106,7 +106,7 @@
 //        @Test
 //        @DisplayName("nested domain object is recursively built")
 //        void nestedObjectBuilt() {
-//            var order = DataFactory.of(OrderRequest.class).valid();
+//            var order = DataFactory.of(OrderRequest.class).valid().get();
 //            assertThat(order.getDeliveryAddress()).isNotNull();
 //            assertThat(order.getDeliveryAddress().getCity()).isNotBlank();
 //            assertThat(validator.validate(order)).isEmpty();
@@ -115,14 +115,14 @@
 //        @Test
 //        @DisplayName("List field gets one valid element")
 //        void listFieldPopulated() {
-//            var order = DataFactory.of(OrderRequest.class).valid();
+//            var order = DataFactory.of(OrderRequest.class).valid().get();
 //            assertThat(order.getItems()).isNotEmpty();
 //        }
 //
 //        @Test
 //        @DisplayName("with() overrides a specific field")
 //        void withOverridesField() {
-//            var user = DataFactory.of(UserRequest.class).with("age", 25).valid();
+//            var user = DataFactory.of(UserRequest.class).with("age", 25).valid().get();
 //            assertThat(user.getAge()).isEqualTo(25);
 //            assertThat(validator.validate(user)).isEmpty();
 //        }
@@ -130,7 +130,7 @@
 //        @Test
 //        @DisplayName("uninstantiable class throws DataFactoryException")
 //        void uninstantiableThrows() {
-//            assertThatThrownBy(() -> DataFactory.of(Uninstantiable.class).valid())
+//            assertThatThrownBy(() -> DataFactory.of(Uninstantiable.class).valid().get())
 //                    .isInstanceOf(DataFactoryException.class);
 //        }
 //    }
@@ -151,7 +151,7 @@
 //            @DisplayName("valid email passes")
 //            void shouldAcceptValidEmail() {
 //                DataFactory.string("email").email().stream(3).forEach(email -> {
-//                    var req = DataFactory.of(UserRequest.class).with("email", email).valid();
+//                    var req = DataFactory.of(UserRequest.class).with("email", email).valid().get();
 //                    assertThat(validator.validate(req))
 //                            .as("email '%s' should be valid", email).isEmpty();
 //                });
@@ -161,7 +161,7 @@
 //            @DisplayName("null email fails validation")
 //            void shouldRejectNullEmail() {
 //                assertThat(validator.validate(
-//                        DataFactory.of(UserRequest.class).with("email", null).valid()
+//                        DataFactory.of(UserRequest.class).with("email", null).valid().get()
 //                )).isNotEmpty();
 //            }
 //
@@ -169,7 +169,7 @@
 //            @DisplayName("blank email fails validation")
 //            void shouldRejectBlankEmail() {
 //                assertThat(validator.validate(
-//                        DataFactory.of(UserRequest.class).with("email", "").valid()
+//                        DataFactory.of(UserRequest.class).with("email", "").valid().get()
 //                )).isNotEmpty();
 //            }
 //
@@ -177,7 +177,7 @@
 //            @DisplayName("invalid format email fails validation")
 //            void shouldRejectInvalidFormatEmail() {
 //                assertThat(validator.validate(
-//                        DataFactory.of(UserRequest.class).with("email", "notanemail").valid()
+//                        DataFactory.of(UserRequest.class).with("email", "notanemail").valid().get()
 //                )).isNotEmpty();
 //            }
 //        }
@@ -190,7 +190,7 @@
 //            @DisplayName("null age fails validation")
 //            void shouldRejectNullAge() {
 //                assertThat(validator.validate(
-//                        DataFactory.of(UserRequest.class).with("age", null).valid()
+//                        DataFactory.of(UserRequest.class).with("age", null).valid().get()
 //                )).isNotEmpty();
 //            }
 //
@@ -198,7 +198,7 @@
 //            @DisplayName("below minimum age fails validation")
 //            void shouldRejectBelowMinimumAge() {
 //                assertThat(validator.validate(
-//                        DataFactory.of(UserRequest.class).with("age", 17).valid()
+//                        DataFactory.of(UserRequest.class).with("age", 17).valid().get()
 //                )).isNotEmpty();
 //            }
 //
@@ -206,7 +206,7 @@
 //            @DisplayName("above maximum age fails validation")
 //            void shouldRejectAboveMaximumAge() {
 //                assertThat(validator.validate(
-//                        DataFactory.of(UserRequest.class).with("age", 121).valid()
+//                        DataFactory.of(UserRequest.class).with("age", 121).valid().get()
 //                )).isNotEmpty();
 //            }
 //
@@ -214,7 +214,7 @@
 //            @DisplayName("boundary age 18 passes validation")
 //            void shouldAcceptMinimumAge() {
 //                assertThat(validator.validate(
-//                        DataFactory.of(UserRequest.class).with("age", 18).valid()
+//                        DataFactory.of(UserRequest.class).with("age", 18).valid().get()
 //                )).isEmpty();
 //            }
 //
@@ -222,7 +222,7 @@
 //            @DisplayName("boundary age 120 passes validation")
 //            void shouldAcceptMaximumAge() {
 //                assertThat(validator.validate(
-//                        DataFactory.of(UserRequest.class).with("age", 120).valid()
+//                        DataFactory.of(UserRequest.class).with("age", 120).valid().get()
 //                )).isEmpty();
 //            }
 //        }
@@ -243,13 +243,13 @@
 //            @Test
 //            @DisplayName("produces non-empty list")
 //            void producesViolations() {
-//                assertThat(DataFactory.of(UserRequest.class).invalidList()).isNotEmpty();
+//                assertThat(DataFactory.of(UserRequest.class).invalidList().getAll()).isNotEmpty();
 //            }
 //
 //            @Test
 //            @DisplayName("each violation object fails validation")
 //            void eachViolationFails() {
-//                DataFactory.of(UserRequest.class).invalidList().forEach(v ->
+//                DataFactory.of(UserRequest.class).invalidList().getAll().forEach(v ->
 //                        assertThat(validator.validate(v))
 //                                .as("violation object '%s' should fail", v)
 //                                .isNotEmpty());
@@ -258,7 +258,7 @@
 //            @Test
 //            @DisplayName("covers all constrained fields")
 //            void coversAllConstrainedFields() {
-//                var violations = DataFactory.of(UserRequest.class).invalidList();
+//                var violations = DataFactory.of(UserRequest.class).invalidList().getAll();
 //                assertThat(violations.size()).isGreaterThanOrEqualTo(5);
 //            }
 //        }
@@ -310,7 +310,7 @@
 //            @DisplayName("invalidFor(email) produces email violation")
 //            void emailViolation() {
 //                var violations = validator.validate(
-//                        DataFactory.of(UserRequest.class).invalidFor("email"));
+//                        DataFactory.of(UserRequest.class).invalidFor("email").get());
 //                assertThat(violations)
 //                        .anyMatch(v -> v.getPropertyPath().toString().equals("email"));
 //            }
@@ -319,7 +319,7 @@
 //            @DisplayName("invalidFor(age) produces age violation")
 //            void ageViolation() {
 //                var violations = validator.validate(
-//                        DataFactory.of(UserRequest.class).invalidFor("age"));
+//                        DataFactory.of(UserRequest.class).invalidFor("age").get());
 //                assertThat(violations)
 //                        .anyMatch(v -> v.getPropertyPath().toString().equals("age"));
 //            }
@@ -332,7 +332,7 @@
 //            @Test
 //            @DisplayName("PRODUCTION valid() produces positive numbers for unannotated numeric")
 //            void productionPositiveNumbers() {
-//                var obj = DataFactory.of(SimpleCount.class).mode(GenerationMode.PRODUCTION).valid();
+//                var obj = DataFactory.of(SimpleCount.class).mode(GenerationMode.PRODUCTION).valid().get();
 //                assertThat(obj.getCount()).isGreaterThan(0);
 //            }
 //
@@ -354,14 +354,14 @@
 //            @DisplayName("seeded object passes validation")
 //            void seededObjectIsValid() {
 //                assertThat(validator.validate(
-//                        DataFactory.of(UserRequest.class).seed(42L).valid()
+//                        DataFactory.of(UserRequest.class).seed(42L).valid().get()
 //                )).isEmpty();
 //            }
 //
 //            @Test
 //            @DisplayName("seeded object fields are all populated")
 //            void seededFieldsPopulated() {
-//                var user = DataFactory.of(UserRequest.class).seed(99L).valid();
+//                var user = DataFactory.of(UserRequest.class).seed(99L).valid().get();
 //                assertThat(user.getEmail()).isNotBlank();
 //                assertThat(user.getAge()).isBetween(18, 120);
 //            }
@@ -378,47 +378,47 @@
 //
 //        @Test @DisplayName("AnnotatedPrimitivesRequest — valid passes")
 //        void annotatedPrimitives() {
-//            var obj = DataFactory.of(AnnotatedPrimitivesRequest.class).valid();
+//            var obj = DataFactory.of(AnnotatedPrimitivesRequest.class).valid().get();
 //            assertThat(obj).isNotNull();
 //            assertThat(validator.validate(obj)).isEmpty();
 //        }
 //
 //        @Test @DisplayName("AnnotatedWrappersRequest — valid passes")
 //        void annotatedWrappers() {
-//            var obj = DataFactory.of(AnnotatedWrappersRequest.class).valid();
+//            var obj = DataFactory.of(AnnotatedWrappersRequest.class).valid().get();
 //            assertThat(obj).isNotNull();
 //            assertThat(validator.validate(obj)).isEmpty();
 //        }
 //
 //        @Test @DisplayName("AnnotatedTemporalRequest — valid passes")
 //        void annotatedTemporal() {
-//            var obj = DataFactory.of(AnnotatedTemporalRequest.class).valid();
+//            var obj = DataFactory.of(AnnotatedTemporalRequest.class).valid().get();
 //            assertThat(obj).isNotNull();
 //            assertThat(validator.validate(obj)).isEmpty();
 //        }
 //
 //        @Test @DisplayName("CollectionsRequest — valid passes")
 //        void collections() {
-//            var obj = DataFactory.of(CollectionsRequest.class).valid();
+//            var obj = DataFactory.of(CollectionsRequest.class).valid().get();
 //            assertThat(obj).isNotNull();
 //        }
 //
 //        @Test @DisplayName("PrimitivesRequest — valid passes")
 //        void primitives() {
-//            var obj = DataFactory.of(PrimitivesRequest.class).valid();
+//            var obj = DataFactory.of(PrimitivesRequest.class).valid().get();
 //            assertThat(obj).isNotNull();
 //        }
 //
 //        @Test @DisplayName("WrappersRequest — valid passes")
 //        void wrappers() {
-//            var obj = DataFactory.of(WrappersRequest.class).valid();
+//            var obj = DataFactory.of(WrappersRequest.class).valid().get();
 //            assertThat(obj).isNotNull();
 //        }
 //
 //        @Test @DisplayName("all fixtures — violations() non-empty for annotated")
 //        void annotatedFixturesHaveViolations() {
-//            assertThat(DataFactory.of(AnnotatedWrappersRequest.class).invalidList()).isNotEmpty();
-//            assertThat(DataFactory.of(AnnotatedPrimitivesRequest.class).invalidList()).isNotEmpty();
+//            assertThat(DataFactory.of(AnnotatedWrappersRequest.class).invalidList().getAll()).isNotEmpty();
+//            assertThat(DataFactory.of(AnnotatedPrimitivesRequest.class).invalidList().getAll()).isNotEmpty();
 //        }
 //    }
 //}

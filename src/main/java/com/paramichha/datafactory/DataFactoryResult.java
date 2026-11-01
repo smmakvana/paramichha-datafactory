@@ -11,7 +11,7 @@ import java.util.function.Function;
  *
  * <h2>Usage</h2>
  * <pre>
- * DataFactoryResult&lt;UserRequest&gt; result = DataFactoryV2.of(UserRequest.class).valid();
+ * DataFactoryResult&lt;UserRequest&gt; result = DataFactory.of(UserRequest.class).valid();
  *
  * // Safe checks
  * if (result.isSuccess())  UserRequest req = result.get();

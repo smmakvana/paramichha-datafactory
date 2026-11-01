@@ -243,15 +243,17 @@ class DataFactorySnapshotTest {
 
     @SuppressWarnings("unchecked")
     private String snapshot(Class<?> type) {
-        Object valid = DataFactory.of(type).seed(SEED).valid();
-        Map<String, List<?>> perField = (Map) DataFactory.of(type).seed(SEED).validPerField();
+        Object valid = DataFactory.of(type).seed(SEED).valid().get();
+        Map<String, List<?>> perField = new java.util.LinkedHashMap<>();
+        DataFactory.of(type).seed(SEED).validPerField()
+                .forEach((field, variants) -> perField.put(field, variants.getAll()));
         List<?> invalids = safeInvalidList(type);
         return SnapshotWriter.toJson(valid, perField, invalids, VALIDATOR);
     }
 
     private List<?> safeInvalidList(Class<?> type) {
         try {
-            return DataFactory.of(type).seed(SEED).invalidList();
+            return DataFactory.of(type).seed(SEED).invalidList().getAll();
         } catch (Exception e) {
             return List.of();
         }

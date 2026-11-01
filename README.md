@@ -35,11 +35,11 @@ public record UserRequest(
 
 ```java
 // One fully valid instance — real values, not "test1@test.com"
-UserRequest valid = DataFactory.of(UserRequest.class).valid();
+UserRequest valid = DataFactory.of(UserRequest.class).valid().get();
 // → UserRequest[email=alice.johnson@example.com, age=34, name=Alice Smith]
 
 // One invalid instance per constraint — each fails exactly one rule
-List<UserRequest> bad = DataFactory.of(UserRequest.class).invalidList();
+List<UserRequest> bad = DataFactory.of(UserRequest.class).invalidList().getAll();
 // → UserRequest[email=null, age=34, name=Alice Smith]        ← @NotNull on email
 //   UserRequest[email=, age=34, name=Alice Smith]            ← @NotBlank on email
 //   UserRequest[email=notanemail, age=34, name=Alice Smith]  ← @Email
@@ -105,38 +105,80 @@ List<Integer> ages   = DataFactory.integer().range(18, 65).stream(1000);
 
 ### Level 3 — object builders
 
-When you have an annotated class:
+When you have an annotated class. Object operations **never throw** — they return a
+`DataFactoryResult` (one object) or `DataFactoryResults` (many). Call `get()` / `getAll()`
+when you just want the value, or branch on the status:
 
 ```java
 // One valid object
-UserRequest req = DataFactory.of(UserRequest.class).valid();
+UserRequest req = DataFactory.of(UserRequest.class).valid().get();
 
 // Override specific fields
 UserRequest req = DataFactory.of(UserRequest.class)
                              .with("email", "fixed@company.com")
                              .with("age", 25)
-                             .valid();
+                             .valid().get();
 
 // Null a field
 UserRequest req = DataFactory.of(UserRequest.class)
                              .withNull("address")
-                             .valid();
+                             .valid().get();
 
-// All constraint violations
-List<UserRequest> bad = DataFactory.of(UserRequest.class).invalidList();
+// All constraint violations — one object per constraint
+List<UserRequest> bad = DataFactory.of(UserRequest.class).invalidList().getAll();
 
 // Violation for one specific field
-UserRequest badEmail = DataFactory.of(UserRequest.class).invalidFor("email");
+UserRequest badEmail = DataFactory.of(UserRequest.class).invalidFor("email").get();
 
 // Bulk — 1000 valid objects for load testing
-List<UserRequest> bulk = DataFactory.of(UserRequest.class).stream(1000);
+List<UserRequest> bulk = DataFactory.of(UserRequest.class).validList(1000).getAll();
 
 // Boundary variants per field — for parameterized tests
-Map<String, List<UserRequest>> edges = DataFactory.of(UserRequest.class).validMap();
-edges.get("age"); // → [18, 69, 120, 34]  (min, midpoint, max, semantic)
+Map<String, DataFactoryResults<UserRequest>> edges = DataFactory.of(UserRequest.class).validPerField();
+edges.get("age").getAll(); // → ages [18, 69, 120, 34]  (min, midpoint, max, semantic)
 
 // Deterministic — same seed always produces the same values
-UserRequest stable = DataFactory.of(UserRequest.class).seed(42L).valid();
+UserRequest stable = DataFactory.of(UserRequest.class).seed(42L).valid().get();
+```
+
+#### Handling failures
+
+```java
+DataFactoryResult<UserRequest> r = DataFactory.of(UserRequest.class).valid();
+if (r.isSuccess()) {
+    use(r.get());
+} else {
+    switch (r.errorType()) {
+        case INVALID_CONFIGURATION  -> fixAnnotations(r.reason()); // e.g. @Min(5) @Max(3)
+        case UNSUPPORTED_CLASS_TYPE -> skip(r.reason());           // no generator for a field type
+        case NOT_INSTANTIABLE       -> provideInstance();          // interface / abstract class
+        default                     -> fail(r.reason());
+    }
+}
+```
+
+`DataFactoryResults` reports `SUCCESS`, `PARTIAL` or `FAILED` overall, with `succeeded()` / `failed()`.
+
+#### Per field, without building the object
+
+```java
+Map<String, DataFactoryResult<FieldCases>> fields = DataFactory.of(UserRequest.class).fields();
+
+FieldCases age = fields.get("age").get();
+age.validValues();   // [18, 120, 69, 34]
+age.invalidCases();  // [Min → 17, Max → 121]
+```
+
+Each field is generated on its own: a field DataFactory can't handle fails alone and the
+other fields still succeed. Collections cover their `@Size` / `@NotEmpty` boundaries.
+
+#### Discovery
+
+```java
+DataFactory.VERSION;                 // "2.0.0"
+DataFactory.supportedTypes();        // scalar types with a generator
+DataFactory.supportedAnnotations();  // "NotNull", "Size", "Email", …
+DataFactory.canHandle(MyType.class);
 ```
 
 ---
@@ -159,7 +201,7 @@ class UserRequestTest {
 
     @Test
     void valid_request_passes_validation() {
-        assertThat(validator.validate(DataFactory.valid(UserRequest.class))).isEmpty();
+        assertThat(validator.validate(DataFactory.valid(UserRequest.class).get())).isEmpty();
     }
 
     @ParameterizedTest
@@ -169,7 +211,7 @@ class UserRequestTest {
     }
 
     static List<UserRequest> invalidRequests() {
-        return DataFactory.invalidList(UserRequest.class);
+        return DataFactory.invalidList(UserRequest.class).getAll();
     }
 }
 ```
@@ -179,14 +221,14 @@ class UserRequestTest {
 ```java
 @Test
 void register_user_with_valid_data() {
-    UserRequest req = DataFactory.of(UserRequest.class).valid();
+    UserRequest req = DataFactory.of(UserRequest.class).valid().get();
     Response response = given().body(req).post("/api/users");
     assertThat(response.statusCode()).isEqualTo(201);
 }
 
 @Test
 void register_user_with_invalid_email_returns_400() {
-    UserRequest req = DataFactory.of(UserRequest.class).invalidFor("email");
+    UserRequest req = DataFactory.of(UserRequest.class).invalidFor("email").get();
     Response response = given().body(req).post("/api/users");
     assertThat(response.statusCode()).isEqualTo(400);
 }
@@ -197,7 +239,7 @@ void register_user_with_invalid_email_returns_400() {
 ```java
 @Test
 void handles_concurrent_registrations() {
-    List<UserRequest> requests = DataFactory.stream(UserRequest.class, 10_000);
+    List<UserRequest> requests = DataFactory.validList(UserRequest.class, 10_000).getAll();
 
     List<CompletableFuture<Response>> futures = requests.stream()
             .map(req -> CompletableFuture.supplyAsync(() ->
@@ -235,16 +277,17 @@ Switch to `DEV` mode when a class is still being annotated:
 // DEV: no null constraint injection — generates all technically-valid values
 UserRequest req = DataFactory.of(UserRequest.class)
                              .mode(GenerationMode.DEV)
-                             .valid();
+                             .valid().get();
 ```
 
-In DEV mode, unannotated numeric fields get the full type range in `validList()`:
+In DEV mode, unannotated numeric fields get the full type range in `validPerField()`:
 
 ```java
 DataFactory.of(OrderRequest.class)
            .mode(GenerationMode.DEV)
-           .validMap()
-           .get("quantity");
+           .validPerField()
+           .get("quantity")
+           .getAll();
 // → [-2147483648, 0, 2147483647, 5]
 ```
 
@@ -253,9 +296,15 @@ DataFactory.of(OrderRequest.class)
 ## Architecture
 
 ```
-com.paramichha.datafactory         ← public API
-com.paramichha.datafactory.constraint  ← internals, not part of the public contract
+com.paramichha.datafactory                 ← public API: DataFactory, DataBuilder, results,
+                                             FieldCases, ConstraintCase, ErrorType, field builders
+com.paramichha.datafactory.builder         ← internals
+com.paramichha.datafactory.constraint      ← internals
+com.paramichha.datafactory.generation      ← internals
+com.paramichha.datafactory.instantiation   ← internals
 ```
+
+Only the root package is part of the public contract.
 
 ---
 

@@ -26,7 +26,7 @@ import java.util.Set;
  * }
  *
  * static List&lt;RegistrationRequest&gt; invalidRequests() {
- *     return DataFactory.of(RegistrationRequest.class).invalidList();
+ *     return DataFactory.of(RegistrationRequest.class).invalidList().getAll();
  * }
  * </pre>
  */
@@ -49,7 +49,7 @@ public class ValidationTesting {
 
     static void validObject(Validator validator) {
         section("Valid object — zero violations");
-        RegistrationRequest r = DataFactory.of(RegistrationRequest.class).valid();
+        RegistrationRequest r = DataFactory.of(RegistrationRequest.class).valid().get();
         System.out.println("  email:      " + r.getEmail());
         System.out.println("  name:       " + r.getFullName());
         System.out.println("  age:        " + r.getAge());
@@ -58,7 +58,7 @@ public class ValidationTesting {
 
     static void allViolations(Validator validator) {
         section("Each constraint tested — one invalid object per constraint");
-        List<RegistrationRequest> bad = DataFactory.of(RegistrationRequest.class).invalidList();
+        List<RegistrationRequest> bad = DataFactory.of(RegistrationRequest.class).invalidList().getAll();
         System.out.printf("  %-12s %-28s %-20s %s%n", "field", "value", "constraint", "violations");
         System.out.println("  " + "-".repeat(75));
         for (RegistrationRequest req : bad) {
@@ -77,7 +77,7 @@ public class ValidationTesting {
 
     static void targetOneField(Validator validator) {
         section("Target one field — useful for controller tests");
-        RegistrationRequest r = DataFactory.of(RegistrationRequest.class).invalidFor("email");
+        RegistrationRequest r = DataFactory.of(RegistrationRequest.class).invalidFor("email").get();
         Set<ConstraintViolation<RegistrationRequest>> v = validator.validate(r);
         System.out.println("  email:      " + r.getEmail() + "  ← invalid");
         System.out.println("  name:       " + r.getFullName() + "  ← valid");

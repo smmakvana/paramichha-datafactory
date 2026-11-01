@@ -598,7 +598,7 @@
 //
 ////            @Test @DisplayName("valid(Class) returns valid object")
 ////            void shouldReturnValidObject() {
-////                assertThat(DataFactory.valid(AnnotatedWrappersRequest.class)).isNotNull();
+////                assertThat(DataFactory.valid(AnnotatedWrappersRequest.class).get()).isNotNull();
 ////            }
 ////
 ////            @Test @DisplayName("violations(Class) returns non-empty list")
@@ -616,7 +616,7 @@
 ////            @Test @DisplayName("invalidFor(Class, field) returns object failing that field")
 ////            void shouldReturnInvalidForField() {
 ////                assertThat(DataFactory.invalidFor(
-////                        AnnotatedWrappersRequest.class, "email")).isNotNull();
+////                        AnnotatedWrappersRequest.class, "email").get()).isNotNull();
 ////            }
 //
 //            @Test
@@ -857,7 +857,7 @@
 //
 //            @Test @DisplayName("stream(type, n) returns n valid objects")
 //            void shouldStreamNObjects() {
-//                assertThat(DataFactory.stream(AnnotatedWrappersRequest.class, 5))
+//                assertThat(DataFactory.validList(AnnotatedWrappersRequest.class, 5).getAll())
 //                        .hasSize(5);
 //            }
 //
@@ -903,9 +903,9 @@
 //                assertThat(DataFactory.uuids(5)).hasSize(5);
 //            }
 //
-//            @Test @DisplayName("DataFactory.validMap(type) returns non-empty map")
+//            @Test @DisplayName("DataFactory.validPerField(type) returns non-empty map")
 //            void shouldReturnValidMap() {
-//                assertThat(DataFactory.validMap(AnnotatedWrappersRequest.class))
+//                assertThat(DataFactory.validPerField(AnnotatedWrappersRequest.class))
 //                        .isNotEmpty();
 //            }
 //        }

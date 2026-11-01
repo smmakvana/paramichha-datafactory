@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Valid and invalid values for one field, generated without building the whole object.
  *
- * <p>Returned by {@link DataBuilderV2#fields()}. Each field is resolved on its own,
+ * <p>Returned by {@link DataBuilder#fields()}. Each field is resolved on its own,
  * so a field DataFactory cannot handle does not prevent the others from being generated.
  *
  * @param fieldName    the field name

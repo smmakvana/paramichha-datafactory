@@ -27,16 +27,16 @@ public class SeedDeterminism {
 
     static void withoutSeed() {
         section("Without seed — different values every run");
-        System.out.println("  " + DataFactory.of(UserRequest.class).valid().getEmail());
-        System.out.println("  " + DataFactory.of(UserRequest.class).valid().getEmail());
-        System.out.println("  " + DataFactory.of(UserRequest.class).valid().getEmail());
+        System.out.println("  " + DataFactory.of(UserRequest.class).valid().get().getEmail());
+        System.out.println("  " + DataFactory.of(UserRequest.class).valid().get().getEmail());
+        System.out.println("  " + DataFactory.of(UserRequest.class).valid().get().getEmail());
         System.out.println("  (all different)");
     }
 
     static void withSeed() {
         section("With seed(42) — identical values every run");
-        UserRequest a = DataFactory.of(UserRequest.class).seed(42L).valid();
-        UserRequest b = DataFactory.of(UserRequest.class).seed(42L).valid();
+        UserRequest a = DataFactory.of(UserRequest.class).seed(42L).valid().get();
+        UserRequest b = DataFactory.of(UserRequest.class).seed(42L).valid().get();
         System.out.println("  run 1: " + a.getEmail() + " / " + a.getName() + " / " + a.getAge());
         System.out.println("  run 2: " + b.getEmail() + " / " + b.getName() + " / " + b.getAge());
         System.out.println("  same:  " + a.getEmail().equals(b.getEmail()));
@@ -44,9 +44,9 @@ public class SeedDeterminism {
 
     static void differentSeeds() {
         section("Different seeds — different data");
-        System.out.println("  seed 1: " + DataFactory.of(UserRequest.class).seed(1L).valid().getEmail());
-        System.out.println("  seed 2: " + DataFactory.of(UserRequest.class).seed(2L).valid().getEmail());
-        System.out.println("  seed 3: " + DataFactory.of(UserRequest.class).seed(3L).valid().getEmail());
+        System.out.println("  seed 1: " + DataFactory.of(UserRequest.class).seed(1L).valid().get().getEmail());
+        System.out.println("  seed 2: " + DataFactory.of(UserRequest.class).seed(2L).valid().get().getEmail());
+        System.out.println("  seed 3: " + DataFactory.of(UserRequest.class).seed(3L).valid().get().getEmail());
     }
 
     static void section(String t) {

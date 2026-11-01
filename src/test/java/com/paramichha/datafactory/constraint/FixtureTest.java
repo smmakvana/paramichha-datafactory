@@ -66,7 +66,7 @@
 //    @MethodSource("annotatedFixtures")
 //    @DisplayName("valid() passes Jakarta validation for every annotated fixture")
 //    void valid_passes_validation(String label, Class<?> type) {
-//        assertValid(DataFactory.of(type).valid());
+//        assertValid(DataFactory.of(type).valid().get());
 //    }
 //
 //    @ParameterizedTest(name = "{0}")
@@ -82,7 +82,7 @@
 //    @MethodSource("annotatedFixtures")
 //    @DisplayName("violations() — all scenarios are non-null")
 //    void violations_non_null(String label, Class<?> type) {
-//        DataFactory.of(type).invalidList()
+//        DataFactory.of(type).invalidList().getAll()
 //                .forEach(s -> assertThat(s).isNotNull());
 //    }
 //
@@ -106,7 +106,7 @@
 //    @MethodSource("unannotatedFixtures")
 //    @DisplayName("violations() — unannotated fixtures produce type-default invalids")
 //    void violations_unannotated_typeDefaultsProduced(String label, Class<?> type) {
-//        var violations = DataFactory.of(type).invalidList();
+//        var violations = DataFactory.of(type).invalidList().getAll();
 //        assertThat(violations).isNotEmpty();
 //        violations.forEach(v -> assertThat(v).isNotNull());
 //    }
@@ -139,13 +139,13 @@
 //    class PrimitivesFixture {
 //
 //        @Test void valid_assembles() {
-//            assertThat(DataFactory.of(PrimitivesRequest.class).valid()).isNotNull();
+//            assertThat(DataFactory.of(PrimitivesRequest.class).valid().get()).isNotNull();
 //        }
 //
 //        @ParameterizedTest(name = "with({0}, {1})")
 //        @MethodSource("overrides")
 //        void with_overrides_field(String field, Object value) {
-//            var req = DataFactory.of(PrimitivesRequest.class).with(field, value).valid();
+//            var req = DataFactory.of(PrimitivesRequest.class).with(field, value).valid().get();
 //            assertThat(req).isNotNull();
 //        }
 //
@@ -169,7 +169,7 @@
 //        @ParameterizedTest(name = "field {1} is a {0}")
 //        @MethodSource("fieldTypes")
 //        void valid_field_is_correct_type(Class<?> expectedType, String getter) throws Exception {
-//            var req = DataFactory.of(WrappersRequest.class).valid();
+//            var req = DataFactory.of(WrappersRequest.class).valid().get();
 //            var value = WrappersRequest.class.getMethod(getter).invoke(req);
 //            assertThat(value).isInstanceOf(expectedType);
 //        }
@@ -184,7 +184,7 @@
 //        }
 //
 //        @Test void with_overrides_intVal() {
-//            assertThat(DataFactory.of(WrappersRequest.class).with("intVal", 7).valid().getIntVal())
+//            assertThat(DataFactory.of(WrappersRequest.class).with("intVal", 7).valid().get().getIntVal())
 //                    .isEqualTo(7);
 //        }
 //    }
@@ -199,7 +199,7 @@
 //        @ParameterizedTest(name = "{1} is {0}")
 //        @MethodSource("temporalFields")
 //        void valid_temporal_field_populated(Class<?> expectedType, String getter) throws Exception {
-//            var req = DataFactory.of(TemporalRequest.class).valid();
+//            var req = DataFactory.of(TemporalRequest.class).valid().get();
 //            var value = TemporalRequest.class.getMethod(getter).invoke(req);
 //            assertThat(value).isInstanceOf(expectedType);
 //        }
@@ -228,7 +228,7 @@
 //        @ParameterizedTest(name = "invalidFor({0}) violates {0}")
 //        @MethodSource("fields")
 //        void invalidFor_produces_violation(String field) {
-//            assertViolationOn(DataFactory.of(AnnotatedPrimitivesRequest.class).invalidFor(field), field);
+//            assertViolationOn(DataFactory.of(AnnotatedPrimitivesRequest.class).invalidFor(field).get(), field);
 //        }
 //
 //        static Stream<String> fields() {
@@ -250,7 +250,7 @@
 //        @ParameterizedTest(name = "invalidFor({0}) violates {0}")
 //        @MethodSource("fields")
 //        void invalidFor_produces_violation(String field) {
-//            assertViolationOn(DataFactory.of(AnnotatedWrappersRequest.class).invalidFor(field), field);
+//            assertViolationOn(DataFactory.of(AnnotatedWrappersRequest.class).invalidFor(field).get(), field);
 //        }
 //
 //        static Stream<String> fields() {
@@ -274,7 +274,7 @@
 //        @ParameterizedTest(name = "invalidFor({0}) violates {0}")
 //        @MethodSource("fields")
 //        void invalidFor_produces_violation(String field) {
-//            assertViolationOn(DataFactory.of(AnnotatedTemporalRequest.class).invalidFor(field), field);
+//            assertViolationOn(DataFactory.of(AnnotatedTemporalRequest.class).invalidFor(field).get(), field);
 //        }
 //
 //        static Stream<String> fields() {
@@ -294,19 +294,19 @@
 //    class ComplexPrimitivesFixture {
 //
 //        @Test void nested_primitives_populated() {
-//            assertThat(DataFactory.of(ComplexPrimitivesRequest.class).valid().getPrimitives()).isNotNull();
+//            assertThat(DataFactory.of(ComplexPrimitivesRequest.class).valid().get().getPrimitives()).isNotNull();
 //        }
 //
 //        @Test void list_of_nested_populated() {
-//            assertThat(DataFactory.of(ComplexPrimitivesRequest.class).valid().getPrimitiveSets()).isNotEmpty();
+//            assertThat(DataFactory.of(ComplexPrimitivesRequest.class).valid().get().getPrimitiveSets()).isNotEmpty();
 //        }
 //
 //        @Test void invalidFor_name() {
-//            assertViolationOn(DataFactory.of(ComplexPrimitivesRequest.class).invalidFor("name"), "name");
+//            assertViolationOn(DataFactory.of(ComplexPrimitivesRequest.class).invalidFor("name").get(), "name");
 //        }
 //
 //        @Test void with_overrides_name() {
-//            assertThat(DataFactory.of(ComplexPrimitivesRequest.class).with("name", "override").valid().getName())
+//            assertThat(DataFactory.of(ComplexPrimitivesRequest.class).with("name", "override").valid().get().getName())
 //                    .isEqualTo("override");
 //        }
 //    }
@@ -319,17 +319,17 @@
 //    class ComplexWrappersFixture {
 //
 //        @Test void nested_wrappers_populated() {
-//            assertThat(DataFactory.of(ComplexWrappersRequest.class).valid().getWrappers()).isNotNull();
+//            assertThat(DataFactory.of(ComplexWrappersRequest.class).valid().get().getWrappers()).isNotNull();
 //        }
 //
 //        @Test void items_list_populated() {
-//            assertThat(DataFactory.of(ComplexWrappersRequest.class).valid().getItems()).isNotEmpty();
+//            assertThat(DataFactory.of(ComplexWrappersRequest.class).valid().get().getItems()).isNotEmpty();
 //        }
 //
 //        @ParameterizedTest(name = "invalidFor({0}) violates {0}")
 //        @MethodSource("fields")
 //        void invalidFor_produces_violation(String field) {
-//            assertViolationOn(DataFactory.of(ComplexWrappersRequest.class).invalidFor(field), field);
+//            assertViolationOn(DataFactory.of(ComplexWrappersRequest.class).invalidFor(field).get(), field);
 //        }
 //
 //        static Stream<String> fields() {
@@ -345,20 +345,20 @@
 //    class CollectionsFixture {
 //
 //        @Test void name_populated() {
-//            assertThat(DataFactory.of(CollectionsRequest.class).valid().getName()).isNotBlank();
+//            assertThat(DataFactory.of(CollectionsRequest.class).valid().get().getName()).isNotBlank();
 //        }
 //
 //        @Test void items_list_populated() {
-//            assertThat(DataFactory.of(CollectionsRequest.class).valid().getItems()).isNotEmpty();
+//            assertThat(DataFactory.of(CollectionsRequest.class).valid().get().getItems()).isNotEmpty();
 //        }
 //
 //        @Test void invalidFor_name() {
-//            assertViolationOn(DataFactory.of(CollectionsRequest.class).invalidFor("name"), "name");
+//            assertViolationOn(DataFactory.of(CollectionsRequest.class).invalidFor("name").get(), "name");
 //        }
 //
 //        @Test void with_overrides_tags() {
 //            var tags = List.of("a", "b");
-//            assertThat(DataFactory.of(CollectionsRequest.class).with("tags", tags).valid().getTags())
+//            assertThat(DataFactory.of(CollectionsRequest.class).with("tags", tags).valid().get().getTags())
 //                    .isEqualTo(tags);
 //        }
 //    }

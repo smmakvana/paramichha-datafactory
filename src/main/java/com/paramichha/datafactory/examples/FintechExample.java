@@ -45,7 +45,7 @@ public class FintechExample {
         PaymentRequest p = DataFactory.of(PaymentRequest.class)
                 .with("fromIban", DataFactory.string().iban().valid())
                 .with("toIban",   DataFactory.string().iban().valid())
-                .valid();
+                .valid().get();
         System.out.println("  from:      " + p.getFromIban());
         System.out.println("  to:        " + p.getToIban());
         System.out.println("  amount:    " + p.getAmount());
@@ -58,7 +58,7 @@ public class FintechExample {
                 .with("sortCode",      DataFactory.string().sortCode().valid())
                 .with("accountNumber", DataFactory.string().accountNumber().valid())
                 .with("bic",           DataFactory.string().bic().valid())
-                .valid();
+                .valid().get();
         System.out.println("  email:   " + a.getEmail());
         System.out.println("  sort:    " + a.getSortCode());
         System.out.println("  account: " + a.getAccountNumber());
@@ -77,7 +77,7 @@ public class FintechExample {
 
     static void bulk() {
         section("100 payments for load testing");
-        List<PaymentRequest> payments = DataFactory.of(PaymentRequest.class).validList(100);
+        List<PaymentRequest> payments = DataFactory.of(PaymentRequest.class).validList(100).getAll();
         long unique = payments.stream().map(PaymentRequest::getFromIban).distinct().count();
         System.out.println("  generated:    " + payments.size());
         System.out.println("  unique ibans: " + unique);
