@@ -27,7 +27,6 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
 
     private final Class<T> type;
     private final Map<String, Object> overrides = new LinkedHashMap<>();
-    private GenerationMode mode = GenerationMode.PRODUCTION;
     private Long seed = null;
     private DataMachine machine;
 
@@ -39,7 +38,6 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
 
     @Override public DefaultDataBuilder<T> with(String fieldName, Object value) { overrides.put(fieldName, value); return this; }
     @Override public DefaultDataBuilder<T> withNull(String fieldName)           { return with(fieldName, null); }
-    @Override public DefaultDataBuilder<T> mode(GenerationMode mode)            { this.mode = Objects.requireNonNull(mode); return this; }
     @Override public DefaultDataBuilder<T> seed(long seed)                      { this.seed = seed; this.machine = null; return this; }
 
     private DataMachine machine() {
@@ -53,7 +51,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
     public DataFactoryResult<T> valid() {
         try {
             List<FieldDescriptor> fields = FieldDescriptor.extract(type);
-            if (mode == GenerationMode.PRODUCTION) surfaceProductionWarnings(fields);
+            surfaceProductionWarnings(fields);
             Baseline baseline = baseline(fields, machine());
             if (baseline.failure() != null) return baseline.failure();
             return DataFactoryResult.success(ObjectAssembler.instantiate(type, fields, baseline.values()));
@@ -315,7 +313,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         if (field.rawType() == java.util.Optional.class) return resolveOptional(field, m);
         if (field.isNested() && field.hasAnnotation(Valid.class))   return resolveNested(field);
         if (field.isNested() && !field.isList() && field.hasAnnotation(NotNull.class)) return resolveNested(field);
-        if (field.isNested() && !field.isList() && mode == GenerationMode.PRODUCTION)  return resolveNested(field);
+        if (field.isNested() && !field.isList()) return resolveNested(field);
         if (field.isList())  return resolveList(field, m);
         if (field.isSet())   return resolveSet(field, m);
         if (field.isMap())   return resolveMap(field, m);
@@ -328,7 +326,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
     private Object resolveNested(FieldDescriptor field) {
         if (BUILDING.get().add(field.rawType())) {
             try {
-                DefaultDataBuilder<?> nested = new DefaultDataBuilder<>(field.rawType()).mode(mode);
+                DefaultDataBuilder<?> nested = new DefaultDataBuilder<>(field.rawType());
                 if (seed != null) nested.seed(seed + Seeds.stableHash(field.name()));
                 DataFactoryResult<?> r = nested.valid();
                 if (r.isFailure()) throw new DataFactoryException(r.errorType(), r.reason());
@@ -344,7 +342,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         Class<?> elemType = field.listElementType();
         if (!elemType.getPackageName().startsWith("java.")) {
             if (BUILDING.get().contains(elemType)) return Optional.empty();
-            DefaultDataBuilder<?> ob = new DefaultDataBuilder<>(elemType).mode(mode);
+            DefaultDataBuilder<?> ob = new DefaultDataBuilder<>(elemType);
             if (seed != null) ob.seed(seed);
             DataFactoryResult<?> r = ob.valid();
             return r.isSuccess() ? Optional.of(r.get()) : Optional.empty();
@@ -506,7 +504,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
     private Object resolveElement(Class<?> elemType, String fieldContext, DataMachine m) {
         if (!elemType.getPackageName().startsWith("java.") && !elemType.isEnum()) {
             if (BUILDING.get().contains(elemType)) return null;
-            DefaultDataBuilder<?> eb = new DefaultDataBuilder<>(elemType).mode(mode);
+            DefaultDataBuilder<?> eb = new DefaultDataBuilder<>(elemType);
             if (seed != null) eb.seed(seed);
             DataFactoryResult<?> r = eb.valid();
             if (r.isFailure()) throw new DataFactoryException(r.errorType(),

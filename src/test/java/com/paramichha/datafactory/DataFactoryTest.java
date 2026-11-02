@@ -22,7 +22,7 @@
 // * Structure mirrors what TestKit generates for user classes:
 // *   Construction → DataFactory.valid().get() builds a real, valid object
 // *   Validation   → each field: valid values pass, violations detected correctly
-// *   Behaviour    → invalidList(), validMap(), mode(), seed()
+// *   Behaviour    → invalidList(), validMap(), seed()
 // *
 // * Tests only via the public API — no engine internals.
 // */
@@ -229,7 +229,7 @@
 //    }
 //
 //    // =========================================================================
-//    // Behaviour — invalidList(), validMap(), mode(), seed()
+//    // Behaviour — invalidList(), validMap(), seed()
 //    // =========================================================================
 //
 //    @Nested
@@ -322,27 +322,6 @@
 //                        DataFactory.of(UserRequest.class).invalidFor("age").get());
 //                assertThat(violations)
 //                        .anyMatch(v -> v.getPropertyPath().toString().equals("age"));
-//            }
-//        }
-//
-//        @Nested
-//        @DisplayName("GenerationMode")
-//        class ModeMethod {
-//
-//            @Test
-//            @DisplayName("PRODUCTION valid() produces positive numbers for unannotated numeric")
-//            void productionPositiveNumbers() {
-//                var obj = DataFactory.of(SimpleCount.class).mode(GenerationMode.PRODUCTION).valid().get();
-//                assertThat(obj.getCount()).isGreaterThan(0);
-//            }
-//
-//            @Test
-//            @DisplayName("DEV validList() includes MIN and MAX for unannotated Integer")
-//            void devIncludesFullRange() {
-//                var all = DataFactory.of(SimpleValue.class).mode(GenerationMode.DEV).validMap();
-//                var values = all.get("value").stream()
-//                        .map(s -> ((SimpleValue) s).getValue()).toList();
-//                assertThat(values).contains(Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
 //            }
 //        }
 //
