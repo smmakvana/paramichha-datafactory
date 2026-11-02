@@ -33,7 +33,6 @@ public interface DataBuilder<T> {
 
     DataBuilder<T> with(String fieldName, Object value);
     DataBuilder<T> withNull(String fieldName);
-    DataBuilder<T> mode(GenerationMode mode);
     DataBuilder<T> seed(long seed);
 
     // ── Single result ─────────────────────────────────────────────────────────

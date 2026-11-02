@@ -289,29 +289,11 @@ Nested domain objects annotated with `@Valid` are built recursively.
 
 ---
 
-## Generation mode
+## What DataFactory uses
 
-DataFactory runs in `PRODUCTION` mode by default. It injects safe defaults for any field that lacks annotations: `@NotNull` on objects, `@Positive` on numbers, `@NotEmpty` on collections.
-
-Switch to `DEV` mode when a class is still being annotated:
-
-```java
-// DEV: no null constraint injection — generates all technically-valid values
-UserRequest req = DataFactory.of(UserRequest.class)
-                             .mode(GenerationMode.DEV)
-                             .valid().get();
-```
-
-In DEV mode, unannotated numeric fields get the full type range in `validPerField()`:
-
-```java
-DataFactory.of(OrderRequest.class)
-           .mode(GenerationMode.DEV)
-           .validPerField()
-           .get("quantity")
-           .getAll();
-// → [-2147483648, 0, 2147483647, 5]
-```
+DataFactory uses only the constraints you declare. It doesn't add `@NotNull`, `@Positive` or anything else
+to a field. A field with no annotations gets a plain value of its type, and DataFactory prints a warning
+that the constraint is missing, so you can decide whether it should have one.
 
 ---
 

@@ -10,9 +10,8 @@ import java.util.List;
  * Analyses a field's declared annotations and logs warnings when the contract
  * is incomplete for production use.
  *
- * <p>Warnings are surfaced when {@link com.paramichha.datafactory.GenerationMode#PRODUCTION}
- * is active. No annotations are injected — DataFactory only works with what the
- * developer declared.
+ * <p>Warnings are always surfaced. No annotations are injected — DataFactory only works with
+ * what the developer declared.
  *
  * <h2>Warning rules</h2>
  * <ul>
