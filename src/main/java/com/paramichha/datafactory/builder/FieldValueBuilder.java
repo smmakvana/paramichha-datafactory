@@ -219,9 +219,11 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
             cases.add(ConstraintCase.of(fn, "Size", "x".repeat((int) (intMin - 1))));
         if (intMax != null && type == String.class)
             cases.add(ConstraintCase.of(fn, "Size", "x".repeat((int) (intMax + 1))));
-        if (intMin != null && isNumeric(type))
+        // Only emit the value just outside a bound if it can be represented by the type:
+        // @Max(127) on a byte has no "127 + 1" (it would wrap to -128 and look like a valid min).
+        if (intMin != null && isNumeric(type) && fitsType(type, intMin - 1))
             cases.add(ConstraintCase.of(fn, "Min", castNumeric(type, intMin - 1)));
-        if (intMax != null && isNumeric(type))
+        if (intMax != null && isNumeric(type) && fitsType(type, intMax + 1))
             cases.add(ConstraintCase.of(fn, "Max", castNumeric(type, intMax + 1)));
         if (c.isPast())
             cases.add(ConstraintCase.of(fn, "Past", futureTemporal(type)));
@@ -261,6 +263,14 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
 
     private static boolean isBoolean(Class<?> t) {
         return t == Boolean.class || t == boolean.class;
+    }
+
+    /** Whether {@code value} is inside the range of an integral type; non-integral types always fit. */
+    static boolean fitsType(Class<?> type, long value) {
+        if (type == Byte.class || type == byte.class) return value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE;
+        if (type == Short.class || type == short.class) return value >= Short.MIN_VALUE && value <= Short.MAX_VALUE;
+        if (type == Integer.class || type == int.class) return value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE;
+        return true; // long, floating point, BigDecimal, BigInteger: no wrap for these bounds
     }
 
     private static Object castNumeric(Class<?> type, long value) {

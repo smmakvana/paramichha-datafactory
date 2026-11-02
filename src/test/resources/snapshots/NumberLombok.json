@@ -15,17 +15,6 @@
       "adjustment" : -1,
       "debt" : -2,
       "id" : 2,
-      "port" : 15000,
-      "quantity" : 1,
-      "score" : 5,
-      "tier" : -128
-    },
-    "violations" : [ "tier" ]
-  }, {
-    "object" : {
-      "adjustment" : -1,
-      "debt" : -2,
-      "id" : 2,
       "port" : -1,
       "quantity" : 1,
       "score" : 5,
