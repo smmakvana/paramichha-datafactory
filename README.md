@@ -6,6 +6,21 @@ No hardcoded strings. No helper methods. No maintenance.
 
 ---
 
+## The Paramichha libraries
+
+| Library | What it does | Maven coordinates |
+|---|---|---|
+| [paramichha-dev](https://github.com/smmakvana/paramichha-dev) | Parent POM: Java 21, shared versions, release setup | `com.paramichha:paramichha-dev` |
+| [paramichha-utils](https://github.com/smmakvana/paramichha-utils) | Dependency-free helpers: seeds, naming, token templates, guards | `com.paramichha:paramichha-utils` |
+| [datafactory-catalog](https://github.com/smmakvana/datafactory-catalog) | Test fixtures: 141 annotated classes in four styles, for testing DataFactory and TestKit | `com.paramichha:datafactory-catalog` (test scope) |
+| [DataFactory](https://github.com/smmakvana/paramichha-datafactory) | Generates valid and invalid test data from Jakarta validation annotations | `com.paramichha:datafactory` (test scope) |
+| [TestKit](https://github.com/smmakvana/paramichha-testkit) | Generates JUnit 5 tests for a class, using DataFactory for the data | `com.paramichha:testkit` |
+| [TestBuddy](https://github.com/smmakvana/paramichha-testbuddy) | IntelliJ IDEA plugin that runs TestKit from the IDE (Free and Pro) | JetBrains Marketplace |
+
+Dependencies flow downward: TestKit uses DataFactory, DataFactory and TestKit use utils, and the catalog is used only for testing.
+
+---
+
 ## Install
 
 ```xml
