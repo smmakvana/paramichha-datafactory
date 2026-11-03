@@ -17,7 +17,7 @@ No hardcoded strings. No helper methods. No maintenance.
 </dependency>
 ```
 
-Requires Java 21 and Jakarta Validation 3.x. Lombok-annotated classes are supported; Lombok itself is not required.
+Requires Java 21 or later and Jakarta Validation 3.x. Lombok-annotated classes are supported; Lombok itself is not required.
 
 ---
 
@@ -299,7 +299,7 @@ that the constraint is missing, so you can decide whether it should have one.
 
 ## Limitations
 
-- **Requires Java 21+** and Jakarta Validation 3.x (`jakarta.*`, not `javax.*`).
+- **Requires Java 21 or later** and Jakarta Validation 3.x (`jakarta.*`, not `javax.*`).
 - **Custom constraints are not understood.** Annotations you define with `@Constraint` — and class-level or
   cross-field rules (e.g. "end date after start date") — are ignored; generated data may violate them.
 - **Validation groups are ignored.** Every constraint is applied regardless of `groups`.
