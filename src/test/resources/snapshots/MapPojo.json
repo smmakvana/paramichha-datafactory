@@ -10,13 +10,43 @@
     "violations" : [ "headers" ]
   }, {
     "object" : {
+      "headers" : { },
+      "metadata" : { },
+      "scores" : {
+        "modi" : 200
+      }
+    },
+    "violations" : [ "headers" ]
+  }, {
+    "object" : {
       "headers" : {
         "eum" : "qui"
       },
       "metadata" : { },
-      "scores" : null
+      "scores" : { }
     },
-    "violations" : [ ]
+    "violations" : [ "scores" ]
+  }, {
+    "object" : {
+      "headers" : {
+        "eum" : "qui"
+      },
+      "metadata" : { },
+      "scores" : {
+        "aliquam" : 739,
+        "distinctio" : 739,
+        "exercitationem" : 739,
+        "hic" : 739,
+        "labore" : 739,
+        "natus" : 739,
+        "optio" : 739,
+        "perspiciatis" : 739,
+        "quam" : 739,
+        "quidem" : 739,
+        "reiciendis" : 739
+      }
+    },
+    "violations" : [ "scores" ]
   }, {
     "object" : {
       "headers" : {
