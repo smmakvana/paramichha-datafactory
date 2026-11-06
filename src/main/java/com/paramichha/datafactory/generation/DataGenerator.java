@@ -40,13 +40,14 @@ public final class DataGenerator {
 
     /**
      * Produces all values for a field — one per boundary target.
-     * Enum creators return a {@code List} of constants expanded inline.
+     * Enum creators return a {@code List} of constants expanded inline. A List-typed field's
+     * value is a list too, but it is one value and is kept whole.
      */
     public static List<Object> shapeAll(FieldConstraints field, List<BoundaryTarget> targets, DataMachine machine) {
         List<Object> results = new ArrayList<>();
         for (BoundaryTarget target : targets) {
             Object value = shape(field, target, machine);
-            if (value instanceof List<?> list) {
+            if (value instanceof List<?> list && field.fieldType().isEnum()) {
                 results.addAll(list);
             } else {
                 results.add(value);
