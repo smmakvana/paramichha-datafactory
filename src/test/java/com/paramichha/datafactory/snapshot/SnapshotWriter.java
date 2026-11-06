@@ -40,14 +40,16 @@ public final class SnapshotWriter {
     private SnapshotWriter() {}
 
     private static ObjectMapper buildMapper() {
-        return new ObjectMapper()
+        // MapperFeature is set on the builder: ObjectMapper.configure(MapperFeature, ...) is deprecated
+        return com.fasterxml.jackson.databind.json.JsonMapper.builder()
+                .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
+                .build()
                 .registerModule(new JavaTimeModule())
                 .registerModule(new Jdk8Module())
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS)
                 .enable(SerializationFeature.INDENT_OUTPUT)
-                .setSerializationInclusion(JsonInclude.Include.ALWAYS)
-                .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
+                .setSerializationInclusion(JsonInclude.Include.ALWAYS);
     }
 
     public static String toJson(

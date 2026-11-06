@@ -25,14 +25,14 @@ class StringShaperEdgeCaseTest {
         @Test
         void isbn_format() {
             var fc = AnnotationResolver.analyzeFromStrings("isbn", "String", List.of("@ISBN"));
-            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v).isNotBlank();
         }
 
         @Test
         void ean_format() {
             var fc = AnnotationResolver.analyzeFromStrings("ean", "String", List.of("@EAN"));
-            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v).isNotBlank();
         }
     }
@@ -71,7 +71,7 @@ class StringShaperEdgeCaseTest {
         void url_exceeds_max_trimmed() {
             var fc = AnnotationResolver.analyzeFromStrings("site", "String",
                     List.of("@URL", "@Size(min=5, max=20)"));
-            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v.length()).isLessThanOrEqualTo(20);
         }
 
@@ -79,7 +79,7 @@ class StringShaperEdgeCaseTest {
         void url_below_min_padded() {
             var fc = AnnotationResolver.analyzeFromStrings("site", "String",
                     List.of("@URL", "@Size(min=50, max=200)"));
-            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v.length()).isGreaterThanOrEqualTo(50);
         }
     }

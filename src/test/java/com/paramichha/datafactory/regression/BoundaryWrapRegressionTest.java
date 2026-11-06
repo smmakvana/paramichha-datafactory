@@ -24,8 +24,8 @@ class BoundaryWrapRegressionTest {
     record IntMax(@Max(10) int level) {}
 
     private static List<ConstraintCase> cases(Class<?> type, String field) {
-        Map<String, ?> fields = DataFactory.fields(type);
-        return ((com.paramichha.datafactory.DataFactoryResult<FieldCases>) fields.get(field)).get().invalidCases();
+        Map<String, com.paramichha.datafactory.DataFactoryResult<FieldCases>> fields = DataFactory.fields(type);
+        return fields.get(field).get().invalidCases();
     }
 
     @Test

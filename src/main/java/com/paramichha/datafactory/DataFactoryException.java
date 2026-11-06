@@ -19,6 +19,8 @@ package com.paramichha.datafactory;
  */
 public class DataFactoryException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     private final ErrorType errorType;
 
     public DataFactoryException(String message) {

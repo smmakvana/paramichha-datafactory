@@ -72,11 +72,11 @@ class TypedValuesTest {
         void hintKeepsEarlierConstraintsAndSeed() {
             StringValue shortEmail = DataFactory.string().maxLength(12);
             shortEmail.seed(3L);
-            String a = ((StringValue) shortEmail).email().valid();
+            String a = (shortEmail).email().valid();
             assertThat(a).hasSizeLessThanOrEqualTo(12);
             StringValue again = DataFactory.string().maxLength(12);
             again.seed(3L);
-            assertThat(((StringValue) again).email().valid()).isEqualTo(a);
+            assertThat((again).email().valid()).isEqualTo(a);
         }
 
         @Test

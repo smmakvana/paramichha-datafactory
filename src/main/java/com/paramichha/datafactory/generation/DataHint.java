@@ -49,7 +49,7 @@ enum DataHint {
     PRODUCT      (f -> f.commerce().productName()),
     DEPARTMENT   (f -> f.commerce().department()),
     PRICE        (f -> f.commerce().price()),
-    CURRENCY     (f -> f.currency().code()),
+    CURRENCY     (f -> Currencies.CODES.get(f.random().nextInt(Currencies.CODES.size()))),
     ORDER_ID     (f -> f.numerify("ORD-######")),
 
     // ── Finance ───────────────────────────────────────────────────────────
@@ -152,5 +152,17 @@ enum DataHint {
             case "nationality"                            -> NATIONALITY;
             default                                       -> WORD;
         };
+    }
+
+    /**
+     * Common ISO 4217 codes, picked with the seeded random so the same seed always gives the
+     * same code. (DataFaker's currency().code() is marked for removal, and money().currencyCode()
+     * was not stable across runs inside DataFactory.)
+     */
+    private static final class Currencies {
+        static final java.util.List<String> CODES = java.util.List.of(
+                "AED", "AUD", "BRL", "CAD", "CHF", "CNY", "CZK", "DKK", "EUR", "GBP",
+                "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK",
+                "NZD", "PHP", "PLN", "SAR", "SEK", "SGD", "THB", "TRY", "USD", "ZAR");
     }
 }

@@ -23,7 +23,7 @@ public final class AnnotationProxyFactory {
                                                   Map<String, Object> attrs) {
         return (T) Proxy.newProxyInstance(
                 type.getClassLoader(),
-                new Class[]{type},
+                new Class<?>[]{type},
                 (proxy, method, args) -> {
                     String name = method.getName();
                     switch (name) {

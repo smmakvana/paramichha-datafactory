@@ -385,7 +385,6 @@ public final class DataFactory {
      * List&lt;String&gt; validEmails = fb.validList();
      * </pre>
      */
-    @SuppressWarnings("unchecked")
     public static <T> FieldValue<T> field(String name, Class<T> type,
                                           List<Annotation> annotations) {
         return ValueBuilderFactory.create(name, type, annotations);

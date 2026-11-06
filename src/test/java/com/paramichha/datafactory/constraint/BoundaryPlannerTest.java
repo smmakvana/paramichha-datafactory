@@ -25,10 +25,6 @@ class BoundaryPlannerTest {
         return FieldConstraints.builder(name, Integer.class).bounds(bounds).integerOnly(true).build();
     }
 
-    private FieldConstraints longField(String name, NumericBounds bounds) {
-        return FieldConstraints.builder(name, Long.class).bounds(bounds).integerOnly(true).build();
-    }
-
     private List<String> labels(List<BoundaryTarget> targets) {
         return targets.stream().map(BoundaryTarget::label).toList();
     }
