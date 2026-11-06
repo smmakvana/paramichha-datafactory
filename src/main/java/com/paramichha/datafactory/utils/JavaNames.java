@@ -106,7 +106,7 @@ public final class JavaNames {
     public static String packageName(String value) {
         if (Texts.isBlank(value)) return value;
         return value.trim()
-                .replaceAll("[^a-zA-Z0-9. ]", "")
+                .replaceAll("[^a-zA-Z0-9. \\-]", "") // keep '-': it becomes a '.' below
                 .replaceAll("[\\s-]+", ".")
                 .toLowerCase();
     }

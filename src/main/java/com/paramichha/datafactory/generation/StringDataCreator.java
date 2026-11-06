@@ -219,6 +219,10 @@ final class StringDataCreator implements DataCreator {
         if (n.contains("city")) return machine.text("city");
         if (n.contains("country") && n.contains("code")) return machine.text("countrycode");
         if (n.contains("country")) return machine.text("country");
+        // Before "address": ipAddress / macAddress are network addresses, not street addresses.
+        // (Not a bare contains("ip"): "shippingAddress" is a street address.)
+        if (n.contains("ipaddress") || n.contains("ipv4") || n.contains("ipv6") || n.equals("ip")
+                || n.contains("macaddress")) return machine.text("ip");
         if (n.contains("address")) return machine.text("street");
         if (n.contains("postcode") || n.contains("zip") || n.contains("postal")) return machine.text("zipcode");
         if (n.contains("currency") || n.equals("ccy")) return machine.text("currency");
