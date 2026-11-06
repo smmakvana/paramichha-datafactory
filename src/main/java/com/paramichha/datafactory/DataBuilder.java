@@ -59,7 +59,8 @@ public interface DataBuilder<T> {
 
     /**
      * Returns boundary-covering valid instances keyed by field name.
-     * Each field maps to its own {@link DataFactoryResults}.
+     * Each field maps to its own {@link DataFactoryResults}. A field with only one valid value
+     * (nothing to vary, e.g. a plain {@code @NotBlank String}) is left out.
      */
     Map<String, DataFactoryResults<T>> validPerField();
 

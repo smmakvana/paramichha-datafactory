@@ -32,6 +32,9 @@ import java.util.List;
 public final class DefaultStringValue implements StringValue {
 
     private FieldValue<String> delegate;
+    /** Constraints applied so far, and the seed: replayed when hint() starts a new builder. */
+    private final java.util.List<java.util.function.UnaryOperator<FieldValue<String>>> applied = new java.util.ArrayList<>();
+    private Long seed;
 
     public DefaultStringValue(FieldValue<String> delegate) {
         this.delegate = delegate;
@@ -50,7 +53,17 @@ public final class DefaultStringValue implements StringValue {
      * @param hint a DataFaker-compatible field name hint
      */
     public DefaultStringValue hint(String hint) {
-        this.delegate = ValueBuilderFactory.create(String.class, hint);
+        // Keep constraints and a seed set before the hint: string().maxLength(10).email() stays short.
+        FieldValue<String> next = ValueBuilderFactory.create(String.class, hint);
+        for (var op : applied) next = op.apply(next);
+        if (seed != null) next = next.seed(seed);
+        this.delegate = next;
+        return this;
+    }
+
+    private DefaultStringValue apply(java.util.function.UnaryOperator<FieldValue<String>> op) {
+        applied.add(op);
+        delegate = op.apply(delegate);
         return this;
     }
 
@@ -131,8 +144,7 @@ public final class DefaultStringValue implements StringValue {
      * Equivalent to adding {@code @NotBlank}.
      */
     public DefaultStringValue notBlank() {
-        delegate = delegate.with(NotBlank.class);
-        return this;
+        return apply(d -> d.with(NotBlank.class));
     }
 
     /**
@@ -172,8 +184,7 @@ public final class DefaultStringValue implements StringValue {
      * @param annotation the annotation type to add
      */
     public DefaultStringValue with(Class<? extends Annotation> annotation) {
-        delegate = delegate.with(annotation);
-        return this;
+        return apply(d -> d.with(annotation));
     }
 
     /**
@@ -183,8 +194,7 @@ public final class DefaultStringValue implements StringValue {
      * @throws AnnotationParseException if the string cannot be parsed
      */
     public DefaultStringValue with(String annotation) {
-        delegate = delegate.with(annotation);
-        return this;
+        return apply(d -> d.with(annotation));
     }
 
     /**
@@ -195,6 +205,7 @@ public final class DefaultStringValue implements StringValue {
      */
     @Override
     public FieldValue<String> seed(long seed) {
+        this.seed = seed;
         delegate = delegate.seed(seed);
         return this;
     }
