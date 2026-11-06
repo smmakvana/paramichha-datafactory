@@ -100,19 +100,6 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
         return (T) (cases.isEmpty() ? null : cases.getFirst().value());
     }
 
-    /**
-     * Returns the first invalid value wrapped in Optional, or empty if no invalid cases exist.
-     * Distinguishes between "null is the violation" (Optional.of(null) via wrapper) and "no cases".
-     */
-    public Optional<Object> firstInvalidValue() {
-        FieldConstraints rc = resolvedConstraints();
-        List<ConstraintCase> cases = annotationCases(rc);
-        if (cases.isEmpty()) cases = constraintCases(rc);
-        if (cases.isEmpty()) return Optional.empty();
-        // Use a holder since Optional cannot wrap null
-        return Optional.of(new Object[]{cases.getFirst().value()});
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public List<T> invalidList() {
@@ -306,8 +293,7 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
         if (type == Double.class || type == double.class) return (double) value;
         if (type == Float.class || type == float.class) return (float) value;
         if (type == BigDecimal.class) return BigDecimal.valueOf(value);
-        if (type == BigInteger.class) return BigInteger.valueOf(value);
-        return value;
+        return BigInteger.valueOf(value); // the only other type isNumeric allows
     }
 
     private static Object futureTemporal(Class<?> type) {

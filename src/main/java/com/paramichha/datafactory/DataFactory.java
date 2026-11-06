@@ -399,10 +399,11 @@ public final class DataFactory {
      * (Maven resource filtering), so it always matches the published artifact.
      * {@code "unknown"} if the version resource is missing.
      */
-    public static final String VERSION = readVersion();
+    public static final String VERSION =
+            readVersion(DataFactory.class.getResourceAsStream("datafactory-version.properties"));
 
-    private static String readVersion() {
-        try (java.io.InputStream in = DataFactory.class.getResourceAsStream("datafactory-version.properties")) {
+    static String readVersion(java.io.InputStream resource) {
+        try (java.io.InputStream in = resource) {
             if (in == null) return "unknown";
             Properties p = new Properties();
             p.load(in);

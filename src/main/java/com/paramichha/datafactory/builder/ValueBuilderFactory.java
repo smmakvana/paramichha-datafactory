@@ -29,13 +29,6 @@ public final class ValueBuilderFactory {
                 DataMachines.random());
     }
 
-    public static <T> FieldValue<T> create(FieldDescriptor descriptor) {
-        return new FieldValueBuilder<>(
-                AnnotationResolver.analyze(
-                        descriptor.name(), descriptor.rawType(), descriptor.validations()),
-                DataMachines.random());
-    }
-
     public static <T> FieldValue<T> create(String name, Class<T> type, List<Annotation> annotations) {
         return new FieldValueBuilder<>(
                 AnnotationResolver.analyze(name, type, annotations),

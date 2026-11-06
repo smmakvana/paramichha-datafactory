@@ -3,7 +3,6 @@ package com.paramichha.datafactory.generation;
 import com.paramichha.datafactory.constraint.FieldConstraints;
 
 import java.lang.reflect.Array;
-import java.util.List;
 
 /**
  * Produces typed array values — {@code int[]}, {@code String[]}, {@code MyClass[]}.
@@ -41,24 +40,15 @@ final class ArrayDataCreator implements DataCreator {
         FieldConstraints componentField = FieldConstraints.builder(
                 field.fieldName() + "Element", componentType).build();
 
-        List<BoundaryTarget> componentTargets = BoundaryPlanner.plan(componentField);
-        BoundaryTarget componentTarget = componentTargets.isEmpty()
-                ? BoundaryTarget.semantic()
-                : componentTargets.get(0);
+        // plan() always returns at least one target
+        BoundaryTarget componentTarget = BoundaryPlanner.plan(componentField).getFirst();
 
         // Fill array
         Object arr = Array.newInstance(componentType, size);
         for (int i = 0; i < size; i++) {
             Object element = DataGenerator.shape(componentField, componentTarget, machine);
-            if (element != null) {
-                try { Array.set(arr, i, element); }
-                catch (IllegalArgumentException e) {
-                    // #9 — don't swallow silently; log so the mismatch is visible
-                    System.err.println("DataFactory [WARN] ArrayDataCreator: cannot set element of type "
-                            + element.getClass().getSimpleName() + " into " + componentType.getSimpleName()
-                            + "[] for field '" + field.fieldName() + "' — slot left null. " + e.getMessage());
-                }
-            }
+            // The element is generated for componentType, so it always fits the slot.
+            if (element != null) Array.set(arr, i, element);
         }
         return arr;
     }

@@ -35,15 +35,6 @@ public record FieldDescriptor(
     }
 
     /**
-     * Extracts a single FieldDescriptor from a {@link java.lang.reflect.Field}.
-     * This is the bridge for the public DataFactory.field(Field) entry point.
-     */
-    static List<FieldDescriptor> extractField(java.lang.reflect.Field field) {
-        return List.of(build(field.getName(), field.getType(),
-                field.getGenericType(), field.getAnnotations()));
-    }
-
-    /**
      * Collects annotations from all four locations where Jakarta annotations can appear
      * on a record component. The Java compiler distributes them differently depending on
      * the annotation's {@code @Target}: the component declaration, the backing field,
@@ -54,33 +45,25 @@ public record FieldDescriptor(
         RecordComponent[] components = type.getRecordComponents();
 
         // #15 — find the canonical constructor by matching component types exactly,
-        //        not by index 0 which can be wrong when compact constructors are present
+        //        not by index 0 which can be wrong when other constructors are declared
         Class<?>[] componentTypes = Arrays.stream(components)
                 .map(RecordComponent::getType)
-                .toArray(Class[]::new);
-        Parameter[] params = new Parameter[0];
-        try {
-            params = type.getDeclaredConstructor(componentTypes).getParameters();
-        } catch (NoSuchMethodException e) {
-            // fall back to first constructor if exact match fails
-            if (type.getDeclaredConstructors().length > 0) {
-                params = type.getDeclaredConstructors()[0].getParameters();
-            }
-        }
+                .toArray(Class<?>[]::new);
+        Parameter[] params = Arrays.stream(type.getDeclaredConstructors())
+                .filter(c -> Arrays.equals(c.getParameterTypes(), componentTypes))
+                .findFirst()
+                .map(Constructor::getParameters)
+                .orElse(new Parameter[0]);
 
         for (int i = 0; i < components.length; i++) {
             RecordComponent rc = components[i];
             List<Annotation> all = new ArrayList<>();
 
             all.addAll(Arrays.asList(rc.getAnnotations()));
-            try {
-                all.addAll(Arrays.asList(type.getDeclaredField(rc.getName()).getAnnotations()));
-            } catch (NoSuchFieldException ignored) {
+            for (Field f : type.getDeclaredFields()) {   // the component's private backing field
+                if (f.getName().equals(rc.getName())) all.addAll(Arrays.asList(f.getAnnotations()));
             }
-            try {
-                all.addAll(Arrays.asList(rc.getAccessor().getAnnotations()));
-            } catch (Exception ignored) {
-            }
+            all.addAll(Arrays.asList(rc.getAccessor().getAnnotations()));
             if (i < params.length) {
                 all.addAll(Arrays.asList(params[i].getAnnotations()));
             }
@@ -117,14 +100,6 @@ public record FieldDescriptor(
             }
         }
         return new FieldDescriptor(name, rawType, genericType, Collections.unmodifiableList(validations));
-    }
-
-    public boolean hasValidations() {
-        return !validations.isEmpty();
-    }
-
-    public boolean isEnum() {
-        return rawType.isEnum();
     }
 
     public boolean isList() {

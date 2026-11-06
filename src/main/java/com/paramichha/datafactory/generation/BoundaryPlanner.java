@@ -5,6 +5,7 @@ import com.paramichha.datafactory.constraint.NumericBounds;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -136,18 +137,12 @@ public final class BoundaryPlanner {
 
     // ── deduplication ─────────────────────────────────────────────────────
 
+    /** Keeps the first target per value: close bounds (e.g. 1..3) put several targets on one value. */
     private static List<BoundaryTarget> deduplicateFixed(List<BoundaryTarget> in) {
-        List<BoundaryTarget> out = new ArrayList<>();
-        Set<Long> seenValues = new LinkedHashSet<>();
-        boolean seenSemantic = false;
-        for (BoundaryTarget t : in) {
-            switch (t) {
-                case BoundaryTarget.Semantic s -> { if (!seenSemantic) { seenSemantic = true; out.add(t); } }
-                case BoundaryTarget.Fixed f    -> { if (seenValues.add(f.value())) out.add(t); }
-                default                        -> out.add(t);
-            }
-        }
-        return List.copyOf(out);
+        Set<Long> seenValues = new HashSet<>();
+        return in.stream()
+                .filter(t -> !(t instanceof BoundaryTarget.Fixed f) || seenValues.add(f.value()))
+                .toList();
     }
 
     private static List<BoundaryTarget> deduplicateDecimal(List<BoundaryTarget> in) {
