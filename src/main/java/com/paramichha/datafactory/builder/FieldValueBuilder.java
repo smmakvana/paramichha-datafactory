@@ -219,6 +219,14 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
             cases.add(ConstraintCase.of(fn, "Size", "x".repeat((int) (intMin - 1))));
         if (intMax != null && type == String.class)
             cases.add(ConstraintCase.of(fn, "Size", "x".repeat((int) (intMax + 1))));
+        // @Size on a collection or map counts elements. Null is valid for @Size (only @NotNull
+        // rejects it), so the violations are one element too few and one too many.
+        if (isSized(type)) {
+            if (intMin != null && intMin > 0)
+                cases.add(ConstraintCase.of(fn, "Size", sizedOf(type, (int) (intMin - 1))));
+            if (intMax != null && intMax < MAX_SIZE_PROBE)
+                cases.add(ConstraintCase.of(fn, "Size", sizedOf(type, (int) (intMax + 1))));
+        }
         // Only emit the value just outside a bound if it can be represented by the type:
         // @Max(127) on a byte has no "127 + 1" (it would wrap to -128 and look like a valid min).
         if (intMin != null && isNumeric(type) && fitsType(type, intMin - 1))
@@ -259,6 +267,31 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
 
     private static boolean isList(Class<?> t) {
         return Collection.class.isAssignableFrom(t);
+    }
+
+    /** Above this @Size(max), a "one too many" probe is not worth building. */
+    private static final long MAX_SIZE_PROBE = 10_000;
+
+    private static boolean isSized(Class<?> t) {
+        return Collection.class.isAssignableFrom(t) || Map.class.isAssignableFrom(t);
+    }
+
+    /**
+     * A collection or map of the field's type with exactly {@code size} distinct String elements
+     * (keys for a map). Raw types carry no element type at runtime, so String is used, as in
+     * CollectionDataCreator; @Size only counts elements.
+     */
+    static Object sizedOf(Class<?> type, int size) {
+        if (Map.class.isAssignableFrom(type)) {
+            Map<Object, Object> map = new LinkedHashMap<>();
+            for (int i = 0; i < size; i++) map.put("k" + i, "v" + i);
+            return map;
+        }
+        Collection<Object> collection = Set.class.isAssignableFrom(type) ? new LinkedHashSet<>()
+                : Queue.class.isAssignableFrom(type) ? new ArrayDeque<>()
+                : new ArrayList<>();
+        for (int i = 0; i < size; i++) collection.add("x" + i);
+        return collection;
     }
 
     private static boolean isBoolean(Class<?> t) {

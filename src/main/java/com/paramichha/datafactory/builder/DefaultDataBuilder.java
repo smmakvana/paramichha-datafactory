@@ -416,26 +416,32 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         FieldValueBuilder<?> fvb = (FieldValueBuilder<?>) ValueBuilderFactory.create(field, m);
         List<ConstraintCase> collection = collectionInvalidCases(field, m);
         if (collection.isEmpty()) return new ArrayList<>(fvb.invalidCases());
-        List<ConstraintCase> cases = new ArrayList<>(fvb.annotationCases());
+        // The field-level builder only knows the raw type, so its @Size probes use String
+        // elements; here the element type is known, so collectionInvalidCases builds better ones.
+        List<ConstraintCase> cases = new ArrayList<>(fvb.annotationCases().stream()
+                .filter(c -> !"Size".equals(c.constraint())).toList());
         cases.addAll(collection);
         return cases;
     }
 
-    /** Invalid collections: one element too few / too many for @Size, and empty for @NotEmpty. */
+    /**
+     * Invalid collections and maps: one element too few / too many for @Size, and empty for
+     * {@code @NotEmpty}. Null is valid for @Size, so it is not one of them.
+     */
     private List<ConstraintCase> collectionInvalidCases(FieldDescriptor field, DataMachine m) {
-        if (!isSizedCollection(field)) return List.of();
+        if (!isSizedCollection(field) && !field.isMap()) return List.of();
         List<ConstraintCase> cases = new ArrayList<>();
         Long lo = analyze(field).bounds().min(), hi = sizeMax(field);
         if (lo != null && lo > 0 && lo - 1 <= MAX_GENERATED_SIZE) {
-            Object c = buildCollection(field, (int) (lo - 1), m);
+            Object c = buildSized(field, (int) (lo - 1), m);
             if (c != null) cases.add(ConstraintCase.of(field.name(), "Size", c));
         }
         if (hi != null && hi + 1 <= MAX_GENERATED_SIZE) {
-            Object c = buildCollection(field, (int) (hi + 1), m);
+            Object c = buildSized(field, (int) (hi + 1), m);
             if (c != null) cases.add(ConstraintCase.of(field.name(), "Size", c));
         }
         if (field.hasAnnotation(NotEmpty.class)) {
-            cases.add(ConstraintCase.of(field.name(), "NotEmpty", buildCollection(field, 0, m)));
+            cases.add(ConstraintCase.of(field.name(), "NotEmpty", buildSized(field, 0, m)));
         }
         return cases;
     }
@@ -476,6 +482,29 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         if (field.isSet())   return new LinkedHashSet<>(elements);
         if (field.isQueue()) return new ArrayDeque<>(elements);
         return Collections.unmodifiableList(elements);
+    }
+
+    private Object buildSized(FieldDescriptor field, int size, DataMachine m) {
+        return field.isMap() ? buildMap(field, size, m) : buildCollection(field, size, m);
+    }
+
+    /**
+     * A map with {@code size} entries: distinct keys of the key type, values of the value type.
+     * {@code null} when that many distinct keys can't be produced (e.g. Boolean keys).
+     */
+    private Object buildMap(FieldDescriptor field, int size, DataMachine m) {
+        LinkedHashMap<Object, Object> map = new LinkedHashMap<>();
+        if (size == 0) return map;
+        Class<?> keyType = field.mapKeyType();
+        if (keyType == Object.class) return null;
+        Object value = resolveElement(field.mapValueType(), field.name() + ".value", m);
+        if (value == null) return null;
+        for (int attempt = 0; attempt < size * 10 && map.size() < size; attempt++) {
+            for (Object k : ValueBuilderFactory.create(keyType, m).stream(1)) {
+                if (k != null) map.putIfAbsent(k, value);
+            }
+        }
+        return map.size() == size ? map : null;
     }
 
     private Object resolveMap(FieldDescriptor field, DataMachine m) {
