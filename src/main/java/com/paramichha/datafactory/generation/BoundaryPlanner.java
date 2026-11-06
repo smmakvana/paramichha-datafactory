@@ -192,10 +192,8 @@ public final class BoundaryPlanner {
         // #12 — b.min() and b.max() can be null (e.g. only max declared); guard both
         if (b.min() != null) targets.add(BoundaryTarget.atMin(b.min()));
         targets.add(BoundaryTarget.semantic());
-        if (b.max() != null) {
-            targets.add(BoundaryTarget.atMax(b.max()));
-            targets.add(new BoundaryTarget.Fixed("overMax", b.max() + 1));
-        }
+        // Valid targets only: max + 1 violates @Size and belongs to the invalid cases.
+        if (b.max() != null) targets.add(BoundaryTarget.atMax(b.max()));
         return List.copyOf(targets);
     }
 }

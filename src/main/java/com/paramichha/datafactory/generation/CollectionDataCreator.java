@@ -68,6 +68,16 @@ final class CollectionDataCreator implements DataCreator {
             return set;
         }
 
+        // Queue / Deque: keep the container type (an ArrayList is not a Queue)
+        if (java.util.Queue.class.isAssignableFrom(type)) {
+            java.util.ArrayDeque<Object> queue = new java.util.ArrayDeque<>();
+            FieldConstraints elemField = FieldConstraints.builder(field.fieldName(), String.class).build();
+            for (int i = 0; i < size; i++) {
+                Object elem = DataGenerator.shape(elemField, BoundaryTarget.semantic(), machine);
+                if (elem != null) queue.add(elem);
+            }
+            return queue;
+        }
         // List (default collection)
         // #10 — raw List has no generic info at runtime; String is an intentional safe default
         List<Object> list = new ArrayList<>();
