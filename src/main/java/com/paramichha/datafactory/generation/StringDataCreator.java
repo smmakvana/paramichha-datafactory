@@ -222,7 +222,8 @@ final class StringDataCreator implements DataCreator {
         // Before "address": ipAddress / macAddress are network addresses, not street addresses.
         // (Not a bare contains("ip"): "shippingAddress" is a street address.)
         if (n.contains("ipaddress") || n.contains("ipv4") || n.contains("ipv6") || n.equals("ip")
-                || n.contains("macaddress")) return machine.text("ip");
+                || n.contains("macaddress") || (n.contains("mac") && n.contains("address")))
+            return machine.text("ip");
         if (n.contains("address")) return machine.text("street");
         if (n.contains("postcode") || n.contains("zip") || n.contains("postal")) return machine.text("zipcode");
         if (n.contains("currency") || n.equals("ccy")) return machine.text("currency");
@@ -242,7 +243,6 @@ final class StringDataCreator implements DataCreator {
             return machine.text("creditcard");
         if (n.contains("bic") || n.contains("swift")) return machine.text("bic");
         if (n.contains("ip") && !n.contains("zip")) return machine.text("ip");
-        if (n.contains("mac") && n.contains("address")) return machine.text("ip");
         if (n.contains("colour") || n.contains("color")) return machine.text("color");
         if (n.contains("job") || n.contains("role") || n.contains("position")) return machine.text("jobtitle");
         if (n.contains("department")) return machine.text("department");
@@ -250,8 +250,6 @@ final class StringDataCreator implements DataCreator {
         if (n.contains("price") || n.contains("amount") || n.contains("cost"))
             return machine.text("price");
         if (n.contains("username") || n.contains("user_name")) return machine.text("username");
-        if (n.contains("firstname") || (n.contains("first") && n.contains("name")))
-            return machine.text("firstname");
         if (n.contains("prefix") || n.contains("salutation")) return machine.text("prefix");
         if (n.contains("suffix")) return machine.text("suffix");
         if (n.contains("nationality")) return machine.text("nationality");

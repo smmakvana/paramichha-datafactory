@@ -67,7 +67,7 @@ public final class DataFactoryResult<T> {
      * @throws DataFactoryException if this result is a failure
      */
     public T get() {
-        if (isFailure()) throw new DataFactoryException(
+        if (isFailure()) throw new DataFactoryException(errorType,
                 "DataFactory [" + errorType + "]: " + reason);
         return payload;
     }

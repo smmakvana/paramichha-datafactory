@@ -23,8 +23,7 @@ final class NumericDataCreator implements DataCreator {
         if (type == Double.class || type == double.class) return shapeDouble(field, target, machine);
         if (type == Float.class || type == float.class) return (float) shapeDouble(field, target, machine);
         if (type == BigDecimal.class) return shapeBigDecimal(field, target, machine);
-        if (type == BigInteger.class) return BigInteger.valueOf(value);
-        return value;
+        return BigInteger.valueOf(value); // the only other type supports() allows
     }
 
     private static long resolveValue(FieldConstraints field, BoundaryTarget target, DataMachine machine) {

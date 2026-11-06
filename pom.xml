@@ -28,9 +28,9 @@
     </scm>
     <properties>
         <datafactory-catalog.version>0.2.0-SNAPSHOT</datafactory-catalog.version>
-        <!-- Line-coverage floor checked by `mvn verify` (rule in paramichha-dev). Set just below
-             current coverage (94.6%); raise it as tests are added, never lower it. -->
-        <jacoco.line.minimum>0.94</jacoco.line.minimum>
+        <!-- Line-coverage floor checked by `mvn verify` (rule in paramichha-dev). Every line is
+             covered: new code needs a test, or the build fails. Never lower it. -->
+        <jacoco.line.minimum>1.00</jacoco.line.minimum>
     </properties>
 
     <dependencies>

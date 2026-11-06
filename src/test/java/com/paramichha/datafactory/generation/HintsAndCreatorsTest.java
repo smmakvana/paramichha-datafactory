@@ -72,4 +72,10 @@ class HintsAndCreatorsTest {
         assertThat(CollectionDataCreator.INSTANCE.supports(List.class)).isTrue();
         assertThat(CollectionDataCreator.INSTANCE.supports(String.class)).isFalse();
     }
+
+    @Test
+    void aPatternTheGeneratorCannotReadFallsBackToA() {
+        // "|" splits into no alternatives at all
+        assertThat(StringDataCreator.generateFromPattern("|")).isEqualTo("A");
+    }
 }

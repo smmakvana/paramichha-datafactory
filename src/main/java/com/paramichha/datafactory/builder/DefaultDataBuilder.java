@@ -132,18 +132,13 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
      * {@inheritDoc}
      *
      * <p>When the class itself cannot be built, every field maps to that same failure.
-     * Only when field extraction itself fails is the single key {@code "_error"} used.
+     * Only when an unexpected error stops the whole call (e.g. reading the fields fails)
+     * is the single key {@code "_error"} used.
      */
     @Override
     public Map<String, DataFactoryResults<T>> validPerField() {
-        List<FieldDescriptor> fields;
         try {
-            fields = FieldDescriptor.extract(type);
-        } catch (Exception e) {
-            return Map.of("_error", DataFactoryResults.of(List.of(
-                    failure(e, "Failed to read fields of " + type.getSimpleName()))));
-        }
-        try {
+            List<FieldDescriptor> fields = FieldDescriptor.extract(type);
             DataMachine m = machine();
             Baseline<T> baseline = baseline(fields, m);
             Map<String, DataFactoryResults<T>> result = new LinkedHashMap<>();
@@ -167,11 +162,8 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
             }
             return Collections.unmodifiableMap(result);
         } catch (Exception e) {
-            DataFactoryResults<T> f = DataFactoryResults.of(List.of(
-                    failure(e, "Failed to build validPerField for " + type.getSimpleName())));
-            Map<String, DataFactoryResults<T>> result = new LinkedHashMap<>();
-            for (FieldDescriptor field : fields) result.put(field.name(), f);
-            return Collections.unmodifiableMap(result);
+            return Map.of("_error", DataFactoryResults.of(List.of(
+                    failure(e, "Failed to build validPerField for " + type.getSimpleName()))));
         }
     }
 
@@ -226,9 +218,9 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
     // ── Classification ────────────────────────────────────────────────────────
 
     private static <R> DataFactoryResult<R> failure(Exception e, String context) {
+        // Every DataFactoryException carries its ErrorType; anything else is unexpected.
         ErrorType typed = DataFactoryException.errorTypeInChain(e);
-        ErrorType errorType = typed != null ? typed
-                : e instanceof DataFactoryException dfe ? classifyByMessage(dfe) : ErrorType.INTERNAL_ERROR;
+        ErrorType errorType = typed != null ? typed : ErrorType.INTERNAL_ERROR;
         String detail = rootMessage(e);
         return DataFactoryResult.failure(errorType, detail == null ? context : context + ": " + detail);
     }
@@ -239,15 +231,6 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
             if (c.getMessage() != null) msg = c.getMessage();
         }
         return msg;
-    }
-
-    /** Fallback for untyped exceptions — kept until every throw site carries an ErrorType. */
-    private static ErrorType classifyByMessage(DataFactoryException e) {
-        String msg = e.getMessage() == null ? "" : e.getMessage();
-        if (msg.contains("No DataCreator found"))                   return ErrorType.UNSUPPORTED_CLASS_TYPE;
-        if (msg.contains("not supported"))                          return ErrorType.UNSUPPORTED_ANNOTATION;
-        if (msg.contains("No instantiation strategy") || msg.contains("Cannot instantiate")) return ErrorType.NOT_INSTANTIABLE;
-        return ErrorType.INTERNAL_ERROR;
     }
 
     // ── Internal resolution ───────────────────────────────────────────────────
@@ -339,11 +322,16 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
     private Object resolveOptional(FieldDescriptor field, DataMachine m) {
         Class<?> elemType = field.listElementType();
         if (!elemType.getPackageName().startsWith("java.")) {
-            if (BUILDING.get().contains(elemType)) return Optional.empty();
-            DefaultDataBuilder<?> ob = new DefaultDataBuilder<>(elemType);
-            if (seed != null) ob.seed(seed);
-            DataFactoryResult<?> r = ob.valid();
-            return r.isSuccess() ? Optional.of(r.get()) : Optional.empty();
+            // Mark the type as in progress, so Optional<Self> stops one level down.
+            if (!BUILDING.get().add(elemType)) return Optional.empty();
+            try {
+                DefaultDataBuilder<?> ob = new DefaultDataBuilder<>(elemType);
+                if (seed != null) ob.seed(seed);
+                DataFactoryResult<?> r = ob.valid();
+                return r.isSuccess() ? Optional.of(r.get()) : Optional.empty();
+            } finally {
+                BUILDING.get().remove(elemType);
+            }
         }
         List<?> elemValid = ValueBuilderFactory.create(elemType, m).validList();
         Object elem = elemValid.isEmpty() ? null : elemValid.get(0);
@@ -518,26 +506,26 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         Class<?> elemType = field.rawType().getComponentType();
         Object elem = resolveElement(elemType, field.name(), m);
         Object arr = Array.newInstance(elemType, 1);
-        if (elem != null) {
-            try { Array.set(arr, 0, elem); }
-            catch (IllegalArgumentException e) {
-                throw new DataFactoryException("Failed to set element of type '" + elem.getClass().getName()
-                        + "' into array '" + field.name() + "' of component type '" + elemType.getName() + "'", e);
-            }
-        }
+        // The element is generated for elemType, so it always fits the slot.
+        if (elem != null) Array.set(arr, 0, elem);
         return arr;
     }
 
     private Object resolveElement(Class<?> elemType, String fieldContext, DataMachine m) {
         if (!elemType.getPackageName().startsWith("java.") && !elemType.isEnum()) {
-            if (BUILDING.get().contains(elemType)) return null;
-            DefaultDataBuilder<?> eb = new DefaultDataBuilder<>(elemType);
-            if (seed != null) eb.seed(seed);
-            DataFactoryResult<?> r = eb.valid();
-            if (r.isFailure()) throw new DataFactoryException(r.errorType(),
-                    "Failed to build element of type '" + elemType.getName()
-                    + "' for field '" + fieldContext + "': " + r.reason());
-            return r.get();
+            // Mark the type as in progress, so List<Self> (a tree) stops one level down.
+            if (!BUILDING.get().add(elemType)) return null;
+            try {
+                DefaultDataBuilder<?> eb = new DefaultDataBuilder<>(elemType);
+                if (seed != null) eb.seed(seed);
+                DataFactoryResult<?> r = eb.valid();
+                if (r.isFailure()) throw new DataFactoryException(r.errorType(),
+                        "Failed to build element of type '" + elemType.getName()
+                        + "' for field '" + fieldContext + "': " + r.reason());
+                return r.get();
+            } finally {
+                BUILDING.get().remove(elemType);
+            }
         }
         if (elemType == Object.class) return null; // no generator for an untyped element
         List<?> values = ValueBuilderFactory.create(elemType, m).validList();

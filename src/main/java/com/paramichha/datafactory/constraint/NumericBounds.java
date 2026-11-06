@@ -44,20 +44,13 @@ public sealed interface NumericBounds
 
     // ── interface-level convenience accessors ─────────────────────────────
 
+    // IntegerBounds' record components override min() and max(); a decimal bound is truncated.
     default Long min() {
-        return switch (this) {
-            case IntegerBounds b -> b.min();
-            case DecimalBounds b -> b.decMin() != null ? b.decMin().longValue() : null;
-            case Unbounded ignored -> null;
-        };
+        return this instanceof DecimalBounds b && b.decMin() != null ? b.decMin().longValue() : null;
     }
 
     default Long max() {
-        return switch (this) {
-            case IntegerBounds b -> b.max();
-            case DecimalBounds b -> b.decMax() != null ? b.decMax().longValue() : null;
-            case Unbounded ignored -> null;
-        };
+        return this instanceof DecimalBounds b && b.decMax() != null ? b.decMax().longValue() : null;
     }
 
     default boolean hasMin()       { return min() != null; }
@@ -65,12 +58,9 @@ public sealed interface NumericBounds
     default boolean hasBoth()      { return min() != null && max() != null; }
     default boolean isUnbounded()  { return this instanceof Unbounded; }
 
+    /** False for {@link Unbounded}; {@link IntegerBounds} and {@link DecimalBounds} override this. */
     default boolean isContradictory() {
-        return switch (this) {
-            case IntegerBounds b -> b.isContradictory();
-            case DecimalBounds b -> b.isContradictory();
-            case Unbounded ignored -> false;
-        };
+        return false;
     }
 
     // ── factories ─────────────────────────────────────────────────────────
