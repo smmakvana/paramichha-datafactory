@@ -21,16 +21,8 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     private final DataMachine machine;
     private final Long seed;
 
-    FieldValueBuilder(FieldConstraints constraints) {
-        this(constraints, List.of(), DataMachines.random(), null);
-    }
-
     FieldValueBuilder(FieldConstraints constraints, DataMachine machine) {
         this(constraints, List.of(), machine, null);
-    }
-
-    FieldValueBuilder(FieldConstraints constraints, DataMachine machine, Long seed) {
-        this(constraints, List.of(), machine, seed);
     }
 
     private FieldValueBuilder(FieldConstraints constraints, List<Annotation> extraAnnotations, DataMachine machine, Long seed) {

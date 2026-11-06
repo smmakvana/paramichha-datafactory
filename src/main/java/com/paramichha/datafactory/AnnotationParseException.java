@@ -18,6 +18,8 @@ package com.paramichha.datafactory;
  */
 public class AnnotationParseException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public AnnotationParseException(String message) {
         super(message);
     }

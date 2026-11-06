@@ -16,7 +16,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.lang.reflect.Array;
 import java.util.*;
-import java.util.stream.IntStream;
 
 /**
  * Implementation of {@link DataBuilder}.
@@ -52,7 +51,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         try {
             List<FieldDescriptor> fields = FieldDescriptor.extract(type);
             surfaceProductionWarnings(fields);
-            Baseline baseline = baseline(fields, machine());
+            Baseline<T> baseline = baseline(fields, machine());
             if (baseline.failure() != null) return baseline.failure();
             return DataFactoryResult.success(ObjectAssembler.instantiate(type, fields, baseline.values()));
         } catch (Exception e) {
@@ -76,7 +75,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
                     .filter(f -> f.name().equals(fieldName)).findFirst().orElse(null);
             if (target == null) return DataFactoryResult.failure(ErrorType.UNKNOWN_FIELD,
                     "Field '" + fieldName + "' does not exist on " + type.getSimpleName());
-            Baseline baseline = baseline(fields, m);
+            Baseline<T> baseline = baseline(fields, m);
             if (baseline.failure() != null) return baseline.failure();
             List<Object> inv = ValueBuilderFactory.create(target, m).invalidList();
             if (inv.isEmpty()) return DataFactoryResult.failure(ErrorType.INVALID_CONFIGURATION,
@@ -108,7 +107,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         try {
             DataMachine m = machine();
             List<FieldDescriptor> fields = FieldDescriptor.extract(type);
-            Baseline baseline = baseline(fields, m);
+            Baseline<T> baseline = baseline(fields, m);
             if (baseline.failure() != null) return DataFactoryResults.of(List.of(baseline.failure()));
             List<DataFactoryResult<T>> results = new ArrayList<>();
             for (FieldDescriptor field : fields) {
@@ -146,7 +145,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         }
         try {
             DataMachine m = machine();
-            Baseline baseline = baseline(fields, m);
+            Baseline<T> baseline = baseline(fields, m);
             Map<String, DataFactoryResults<T>> result = new LinkedHashMap<>();
             for (FieldDescriptor field : fields) {
                 if (overrides.containsKey(field.name())) continue;
@@ -264,36 +263,35 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
      * Conflicts are checked first for all fields; then each field is resolved on its
      * own so the failure names every field that blocks the object, not just the first.
      */
-    private record Baseline(Map<String, Object> values, DataFactoryResult failure) {}
+    private record Baseline<R>(Map<String, Object> values, DataFactoryResult<R> failure) {}
 
-    @SuppressWarnings("unchecked")
-    private Baseline baseline(List<FieldDescriptor> fields, DataMachine m) {
+    private Baseline<T> baseline(List<FieldDescriptor> fields, DataMachine m) {
         List<String> conflicts = new ArrayList<>();
         for (FieldDescriptor field : fields) {
             if (overrides.containsKey(field.name())) continue;
             conflicts.addAll(ConstraintConflicts.find(analyze(field)));
         }
         if (!conflicts.isEmpty()) {
-            return new Baseline(Map.of(), DataFactoryResult.failure(ErrorType.INVALID_CONFIGURATION,
+            return new Baseline<>(Map.of(), DataFactoryResult.failure(ErrorType.INVALID_CONFIGURATION,
                     type.getSimpleName() + " has impossible constraints — " + String.join("; ", conflicts)));
         }
         Map<String, Object> values = new LinkedHashMap<>();
         List<String> failedFields = new ArrayList<>();
-        DataFactoryResult firstFailure = null;
+        DataFactoryResult<T> firstFailure = null;
         for (FieldDescriptor field : fields) {
             try {
                 values.put(field.name(), resolveField(field, m));
             } catch (Exception e) {
-                DataFactoryResult f = failure(e, "field '" + field.name() + "'");
+                DataFactoryResult<T> f = failure(e, "field '" + field.name() + "'");
                 if (firstFailure == null) firstFailure = f;
                 failedFields.add(f.reason());
             }
         }
         if (firstFailure != null) {
-            return new Baseline(values, DataFactoryResult.failure(firstFailure.errorType(),
+            return new Baseline<>(values, DataFactoryResult.failure(firstFailure.errorType(),
                     "Cannot build " + type.getSimpleName() + " — " + String.join("; ", failedFields)));
         }
-        return new Baseline(values, null);
+        return new Baseline<>(values, null);
     }
 
     private static FieldConstraints analyze(FieldDescriptor field) {

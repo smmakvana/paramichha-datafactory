@@ -30,14 +30,8 @@ public sealed interface BoundaryTarget
 
     // ── common queries ────────────────────────────────────────────────────
 
-    default String label() {
-        return switch (this) {
-            case Semantic s     -> s.label();
-            case Fixed f        -> f.label();
-            case DecimalFixed d -> d.label();
-            case Special s      -> s.label();
-        };
-    }
+    /** Every target record carries its label as a component. */
+    String label();
 
     default Long targetQuantity() {
         return switch (this) {

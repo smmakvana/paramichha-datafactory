@@ -81,7 +81,7 @@ class NumericStringRemainingTest {
             // Plain string with max bound exceeded — hits default arm in max switch
             var fc = AnnotationResolver.analyzeFromStrings("desc", "String",
                     List.of("@Size(min=2, max=5)"));
-            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v.length()).isLessThanOrEqualTo(5);
         }
 
@@ -90,7 +90,7 @@ class NumericStringRemainingTest {
         void fitToBounds_default_min_pad() {
             var fc = AnnotationResolver.analyzeFromStrings("code", "String",
                     List.of("@Size(min=20, max=50)"));
-            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v.length()).isGreaterThanOrEqualTo(20);
         }
 
@@ -99,7 +99,7 @@ class NumericStringRemainingTest {
         void fitToBounds_url_max_trim() {
             var fc = AnnotationResolver.analyzeFromStrings("site", "String",
                     List.of("@URL", "@Size(min=5, max=15)"));
-            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v.length()).isLessThanOrEqualTo(15);
         }
 
@@ -108,7 +108,7 @@ class NumericStringRemainingTest {
         void fitToBounds_url_min_pad() {
             var fc = AnnotationResolver.analyzeFromStrings("link", "String",
                     List.of("@URL", "@Size(min=40, max=200)"));
-            var v = (String) StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
+            var v = StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v.length()).isGreaterThanOrEqualTo(40);
         }
     }

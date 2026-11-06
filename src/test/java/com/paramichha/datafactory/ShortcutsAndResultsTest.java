@@ -23,6 +23,8 @@ class ShortcutsAndResultsTest {
 
     enum Status { NEW, ACTIVE, CLOSED }
 
+    enum Empty { }
+
     record Person(@NotBlank String name, @NotNull @Email String email, @Min(18) @Max(99) int age) {}
 
     static class Holder {
@@ -59,6 +61,10 @@ class ShortcutsAndResultsTest {
             assertThat(DataFactory.enumOf(Status.class, 5)).hasSize(5).allSatisfy(s -> assertThat(s).isIn((Object[]) Status.values()));
             assertThat(DataFactory.enumOf(Status.class, 7L)).isEqualTo(DataFactory.enumOf(Status.class, 7L));
             assertThat(DataFactory.enumOf(Status.class, 4, 7L)).isEqualTo(DataFactory.enumOf(Status.class, 4, 7L)).hasSize(4);
+            assertThatThrownBy(() -> DataFactory.enumOf(Empty.class)).hasMessageContaining("Empty has no constants");
+            assertThatThrownBy(() -> DataFactory.enumOf(Empty.class, 2)).hasMessageContaining("no constants");
+            assertThatThrownBy(() -> DataFactory.enumOf(Empty.class, 1L)).hasMessageContaining("no constants");
+            assertThatThrownBy(() -> DataFactory.enumOf(Empty.class, 2, 1L)).hasMessageContaining("no constants");
         }
 
         @Test

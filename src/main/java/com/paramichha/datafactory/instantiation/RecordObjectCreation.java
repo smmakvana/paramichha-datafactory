@@ -28,7 +28,6 @@ public final class RecordObjectCreation implements ObjectCreation {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T> T create(Class<T> type, List<FieldDescriptor> fields,
                         Map<String, Object> values) throws Exception {
         java.lang.reflect.RecordComponent[] components = type.getRecordComponents();
@@ -43,6 +42,6 @@ public final class RecordObjectCreation implements ObjectCreation {
                 .toArray();
         var ctor = type.getDeclaredConstructor(paramTypes);
         ctor.setAccessible(true);
-        return (T) ctor.newInstance(args);
+        return ctor.newInstance(args);
     }
 }

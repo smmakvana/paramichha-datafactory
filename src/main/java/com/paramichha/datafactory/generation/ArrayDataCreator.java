@@ -1,10 +1,8 @@
 package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
-import com.paramichha.datafactory.constraint.FieldDescriptor;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

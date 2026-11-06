@@ -241,7 +241,6 @@ class DataFactorySnapshotTest {
         return arguments(type.getSimpleName(), type);
     }
 
-    @SuppressWarnings("unchecked")
     private String snapshot(Class<?> type) {
         Object valid = DataFactory.of(type).seed(SEED).valid().get();
         Map<String, List<?>> perField = new java.util.LinkedHashMap<>();

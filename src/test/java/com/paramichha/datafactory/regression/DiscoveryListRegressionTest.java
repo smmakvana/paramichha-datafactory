@@ -3,7 +3,6 @@ package com.paramichha.datafactory.regression;
 import com.paramichha.datafactory.DataFactory;
 import org.junit.jupiter.api.Test;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 

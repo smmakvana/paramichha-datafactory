@@ -151,11 +151,11 @@ class AnnotationResolverTest {
             }
 
             public Class<?>[] groups() {
-                return new Class[0];
+                return new Class<?>[0];
             }
 
             public Class<? extends jakarta.validation.Payload>[] payload() {
-                return new Class[0];
+                return noPayload();
             }
 
             public Class<? extends Annotation> annotationType() {
@@ -175,11 +175,11 @@ class AnnotationResolverTest {
             }
 
             public Class<?>[] groups() {
-                return new Class[0];
+                return new Class<?>[0];
             }
 
             public Class<? extends jakarta.validation.Payload>[] payload() {
-                return new Class[0];
+                return noPayload();
             }
 
             public Class<? extends Annotation> annotationType() {
@@ -203,11 +203,11 @@ class AnnotationResolverTest {
             }
 
             public Class<?>[] groups() {
-                return new Class[0];
+                return new Class<?>[0];
             }
 
             public Class<? extends jakarta.validation.Payload>[] payload() {
-                return new Class[0];
+                return noPayload();
             }
 
             public Class<? extends Annotation> annotationType() {
@@ -231,11 +231,11 @@ class AnnotationResolverTest {
             }
 
             public Class<?>[] groups() {
-                return new Class[0];
+                return new Class<?>[0];
             }
 
             public Class<? extends jakarta.validation.Payload>[] payload() {
-                return new Class[0];
+                return noPayload();
             }
 
             public Class<? extends Annotation> annotationType() {
@@ -259,11 +259,11 @@ class AnnotationResolverTest {
             }
 
             public Class<?>[] groups() {
-                return new Class[0];
+                return new Class<?>[0];
             }
 
             public Class<? extends jakarta.validation.Payload>[] payload() {
-                return new Class[0];
+                return noPayload();
             }
 
             public Class<? extends Annotation> annotationType() {
@@ -275,11 +275,11 @@ class AnnotationResolverTest {
     @SuppressWarnings("unchecked")
     private <A extends Annotation> A proxy(Class<A> type) {
         return (A) java.lang.reflect.Proxy.newProxyInstance(
-                type.getClassLoader(), new Class[]{type},
+                type.getClassLoader(), new Class<?>[]{type},
                 (proxy, method, args) -> switch (method.getName()) {
                     case "annotationType" -> type;
-                    case "groups" -> new Class[0];
-                    case "payload" -> new Class[0];
+                    case "groups" -> new Class<?>[0];
+                    case "payload" -> new Class<?>[0];
                     case "message" -> "";
                     default -> method.getDefaultValue();
                 });
@@ -585,5 +585,11 @@ class AnnotationResolverTest {
                     List.of("@Past"));
             assertThat(f.temporal()).isEqualTo(TemporalDirection.PAST);
         }
+    }
+
+    /** An empty payload array: Java can't create a generic array without this one unchecked cast. */
+    @SuppressWarnings("unchecked")
+    private static Class<? extends jakarta.validation.Payload>[] noPayload() {
+        return (Class<? extends jakarta.validation.Payload>[]) new Class<?>[0];
     }
 }

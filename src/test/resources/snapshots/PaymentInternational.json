@@ -3,7 +3,7 @@
     "object" : {
       "amount" : 1.50,
       "bic" : "CDVBXJWQ",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : null,
       "reference" : "REF-770953",
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -13,7 +13,7 @@
     "object" : {
       "amount" : 1.50,
       "bic" : "CDVBXJWQ",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "",
       "reference" : "REF-770953",
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -23,7 +23,7 @@
     "object" : {
       "amount" : 1.50,
       "bic" : "CDVBXJWQ",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "VA98384055893226262603",
       "reference" : "REF-770953",
       "toIban" : null
@@ -33,7 +33,7 @@
     "object" : {
       "amount" : 1.50,
       "bic" : "CDVBXJWQ",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "VA98384055893226262603",
       "reference" : "REF-770953",
       "toIban" : ""
@@ -43,7 +43,7 @@
     "object" : {
       "amount" : 1.50,
       "bic" : null,
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "VA98384055893226262603",
       "reference" : "REF-770953",
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -53,7 +53,7 @@
     "object" : {
       "amount" : 1.50,
       "bic" : "",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "VA98384055893226262603",
       "reference" : "REF-770953",
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -63,7 +63,7 @@
     "object" : {
       "amount" : null,
       "bic" : "CDVBXJWQ",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "VA98384055893226262603",
       "reference" : "REF-770953",
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -73,7 +73,7 @@
     "object" : {
       "amount" : 0,
       "bic" : "CDVBXJWQ",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "VA98384055893226262603",
       "reference" : "REF-770953",
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -103,7 +103,7 @@
     "object" : {
       "amount" : 1.50,
       "bic" : "CDVBXJWQ",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "VA98384055893226262603",
       "reference" : null,
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -113,7 +113,7 @@
     "object" : {
       "amount" : 1.50,
       "bic" : "CDVBXJWQ",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "VA98384055893226262603",
       "reference" : "",
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -123,7 +123,7 @@
     "object" : {
       "amount" : 1.50,
       "bic" : "CDVBXJWQ",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "VA98384055893226262603",
       "reference" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -134,7 +134,7 @@
     "object" : {
       "amount" : 1.50,
       "bic" : "CDVBXJWQ",
-      "currency" : "VND",
+      "currency" : "NZD",
       "fromIban" : "VA98384055893226262603",
       "reference" : "REF-770953",
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -146,7 +146,7 @@
       "object" : {
         "amount" : 1.50,
         "bic" : "CDVBXJWQ",
-        "currency" : "VND",
+        "currency" : "NZD",
         "fromIban" : "VA98384055893226262603",
         "reference" : "REF-770953",
         "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -156,7 +156,7 @@
       "object" : {
         "amount" : 1.00,
         "bic" : "CDVBXJWQ",
-        "currency" : "VND",
+        "currency" : "NZD",
         "fromIban" : "VA98384055893226262603",
         "reference" : "REF-770953",
         "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -166,7 +166,7 @@
       "object" : {
         "amount" : 2.00,
         "bic" : "CDVBXJWQ",
-        "currency" : "VND",
+        "currency" : "NZD",
         "fromIban" : "VA98384055893226262603",
         "reference" : "REF-770953",
         "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -177,7 +177,7 @@
       "object" : {
         "amount" : 1.50,
         "bic" : "CDVBXJWQ",
-        "currency" : "VND",
+        "currency" : "NZD",
         "fromIban" : "VA98384055893226262603",
         "reference" : "REF-002799",
         "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -187,7 +187,7 @@
       "object" : {
         "amount" : 1.50,
         "bic" : "CDVBXJWQ",
-        "currency" : "VND",
+        "currency" : "NZD",
         "fromIban" : "VA98384055893226262603",
         "reference" : "REF-542489xxxxxxxxxxxxxxxxxxxxxxxx",
         "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
@@ -197,7 +197,7 @@
       "object" : {
         "amount" : 1.50,
         "bic" : "CDVBXJWQ",
-        "currency" : "VND",
+        "currency" : "NZD",
         "fromIban" : "VA98384055893226262603",
         "reference" : "REF-623371xxxxxxxxxxxxxxxxxxxxxxxxx",
         "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"

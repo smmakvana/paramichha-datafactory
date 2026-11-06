@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FieldValueTest {
 
     // ── helper — returns DefaultFieldBuilder so constraintCases() is accessible ──
-    @SuppressWarnings("unchecked")
     private static <T> FieldValueBuilder<T> dfb(Class<T> type) {
         return (FieldValueBuilder<T>) ValueBuilderFactory.create(type);
     }
