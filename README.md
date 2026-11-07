@@ -1,10 +1,8 @@
 # DataFactory
 
-Test data generation for Java. Reads your Jakarta validation annotations and generates data that satisfies them — or violates each one individually.
+[![Java 21+](https://img.shields.io/badge/Java-21%2B-blue)](https://openjdk.org/) [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-green)](LICENSE)
 
-No hardcoded strings. No helper methods. No maintenance.
-
----
+DataFactory generates valid and invalid test data from Jakarta validation annotations. Each annotated field is tested at its boundaries, and each constraint gets a value that breaks it.
 
 ## The Paramichha libraries
 
@@ -351,6 +349,10 @@ com.paramichha.datafactory.instantiation   ← internals
 Only the root package is part of the public contract.
 
 ---
+
+## Contributing
+
+Open an issue to discuss a change, then send a pull request. Run `mvn test` before you submit. Snapshot tests pin the generated output, so re-record them only when the change is intended.
 
 ## License
 
