@@ -99,7 +99,7 @@ class DataFactoryIntegrationTest {
     @Nested @DisplayName("DataFactory.of()")
     class FactoryOf {
         @Test void returns_non_null_DataBuilder() {
-            assertThat(DataFactory.of(SimpleRequest.class)).isNotNull();
+            assertThat(DataFactory.of(SimpleRequest.class)).isInstanceOf(DataBuilder.class);
         }
         @Test void returns_DefaultDataBuilder() {
             assertThat(DataFactory.of(SimpleRequest.class)).isInstanceOf(DefaultDataBuilder.class);
@@ -142,10 +142,10 @@ class DataFactoryIntegrationTest {
 
         @Test void all_fields_populated() {
             var req = DataFactory.of(RegisterRequest.class).valid().get();
-            assertThat(req.getEmail()).isNotBlank();
-            assertThat(req.getFirstName()).isNotBlank();
+            assertThat(req.getEmail()).matches("[\\w.+-]+@[\\w.-]+\\.\\w+").hasSizeBetween(8, 100);
+            assertThat(req.getFirstName()).hasSizeBetween(2, 50);
             assertThat(req.getAge()).isBetween(18, 120);
-            assertThat(req.getDateOfBirth()).isNotNull();
+            assertThat(req.getDateOfBirth()).isBefore(LocalDate.now());
             assertThat(req.getAcceptedTerms()).isNotNull();
         }
 
@@ -280,7 +280,7 @@ class DataFactoryIntegrationTest {
         }
 
         @Test void unannotated_field_falls_back_to_type_defaults() {
-            assertThat(DataFactory.of(BoolPrimitiveRequest.class).invalidFor("active").get()).isNotNull();
+            assertThat(DataFactory.of(BoolPrimitiveRequest.class).invalidFor("active").get().active).isFalse();
         }
 
         @Test void nonexistent_field_is_reported_as_unknown() {
