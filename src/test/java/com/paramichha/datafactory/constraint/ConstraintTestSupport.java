@@ -12,14 +12,21 @@ final class ConstraintTestSupport {
 
     static List<Annotation> annotationsOf(Class<?> record, String field) {
         return FieldDescriptor.extract(record).stream()
-                .filter(f -> f.name().equals(field)).findFirst().orElseThrow().validations();
+                .filter(f -> f.name().equals(field))
+                .findFirst()
+                .orElseThrow()
+                .validations();
     }
 
     static String stdout(Runnable r) {
         PrintStream original = System.out;
         ByteArrayOutputStream buf = new ByteArrayOutputStream();
         System.setOut(new PrintStream(buf, true));
-        try { r.run(); } finally { System.setOut(original); }
+        try {
+            r.run();
+        } finally {
+            System.setOut(original);
+        }
         return buf.toString();
     }
 
@@ -27,7 +34,11 @@ final class ConstraintTestSupport {
         PrintStream original = System.err;
         ByteArrayOutputStream buf = new ByteArrayOutputStream();
         System.setErr(new PrintStream(buf, true));
-        try { r.run(); } finally { System.setErr(original); }
+        try {
+            r.run();
+        } finally {
+            System.setErr(original);
+        }
         return buf.toString();
     }
 }

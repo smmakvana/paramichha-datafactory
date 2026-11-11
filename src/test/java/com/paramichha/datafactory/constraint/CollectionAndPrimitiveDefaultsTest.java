@@ -1,18 +1,16 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.builder.FieldValueBuilder;
 import com.paramichha.datafactory.builder.ValueBuilderFactory;
 import com.paramichha.datafactory.instantiation.ConstructorObjectCreation;
 import com.paramichha.datafactory.instantiation.RecordObjectCreation;
-import jakarta.validation.constraints.*;
 import java.util.Collection;
 import java.util.List;
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Collection types and primitive defaults in the field builder. */
 @DisplayName("DefaultFieldBuilder — collections and primitive defaults")
@@ -40,8 +38,7 @@ class CollectionAndPrimitiveDefaultsTest {
             var values = new java.util.LinkedHashMap<String, Object>();
             fields.forEach(f -> values.put(f.name(), null));
 
-            var obj = ConstructorObjectCreation.INSTANCE.create(
-                    AllArgsClass.class, fields, values);
+            var obj = ConstructorObjectCreation.INSTANCE.create(AllArgsClass.class, fields, values);
             assertThat(obj.boolV).isFalse();
             assertThat(obj.charV).isEqualTo('\0');
             assertThat(obj.byteV).isEqualTo((byte) 0);
@@ -58,8 +55,7 @@ class CollectionAndPrimitiveDefaultsTest {
             var values = new java.util.LinkedHashMap<String, Object>();
             fields.forEach(f -> values.put(f.name(), null));
 
-            var obj = RecordObjectCreation.INSTANCE.create(
-                    AllArgsRecord.class, fields, values);
+            var obj = RecordObjectCreation.INSTANCE.create(AllArgsRecord.class, fields, values);
             assertThat(obj.boolV()).isFalse();
             assertThat(obj.charV()).isEqualTo('\0');
             assertThat(obj.byteV()).isEqualTo((byte) 0);
@@ -80,8 +76,15 @@ class CollectionAndPrimitiveDefaultsTest {
             final float floatV;
             final double doubleV;
 
-            AllArgsClass(boolean boolV, char charV, byte byteV, short shortV,
-                         int intV, long longV, float floatV, double doubleV) {
+            AllArgsClass(
+                    boolean boolV,
+                    char charV,
+                    byte byteV,
+                    short shortV,
+                    int intV,
+                    long longV,
+                    float floatV,
+                    double doubleV) {
                 this.boolV = boolV;
                 this.charV = charV;
                 this.byteV = byteV;
@@ -93,8 +96,14 @@ class CollectionAndPrimitiveDefaultsTest {
             }
         }
 
-        record AllArgsRecord(boolean boolV, char charV, byte byteV, short shortV,
-                             int intV, long longV, float floatV, double doubleV) {
-        }
+        record AllArgsRecord(
+                boolean boolV,
+                char charV,
+                byte byteV,
+                short shortV,
+                int intV,
+                long longV,
+                float floatV,
+                double doubleV) {}
     }
 }

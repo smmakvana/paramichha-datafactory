@@ -1,7 +1,6 @@
 package com.paramichha.datafactory.instantiation;
 
 import com.paramichha.datafactory.constraint.FieldDescriptor;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,35 +18,32 @@ public final class ObjectAssembler {
             LombokObjectCreation.INSTANCE,
             RecordObjectCreation.INSTANCE,
             ConstructorObjectCreation.INSTANCE,
-            PojoObjectCreation.INSTANCE
-    );
+            PojoObjectCreation.INSTANCE);
 
-    private static final ConcurrentHashMap<Class<?>, ObjectCreation> STRATEGY_CACHE
-            = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<?>, ObjectCreation> STRATEGY_CACHE = new ConcurrentHashMap<>();
 
-    private ObjectAssembler() {
-    }
+    private ObjectAssembler() {}
 
-    public static <T> T instantiate(Class<T> type, List<FieldDescriptor> fields,
-                                    Map<String, Object> values) throws Exception {
+    public static <T> T instantiate(Class<T> type, List<FieldDescriptor> fields, Map<String, Object> values)
+            throws Exception {
         // Early guards — surface unsupported types with clear messages before any reflection
         if (type.isInterface()) {
             throw new com.paramichha.datafactory.DataFactoryException(
                     com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
                     "Cannot instantiate interface '" + type.getName()
-                    + "' — provide a concrete implementation via .with()");
+                            + "' — provide a concrete implementation via .with()");
         }
         if (java.lang.reflect.Modifier.isAbstract(type.getModifiers())) {
             throw new com.paramichha.datafactory.DataFactoryException(
                     com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
                     "Cannot instantiate abstract class '" + type.getName()
-                    + "' — provide a concrete subclass via .with()");
+                            + "' — provide a concrete subclass via .with()");
         }
         if (type.isMemberClass() && !java.lang.reflect.Modifier.isStatic(type.getModifiers())) {
             throw new com.paramichha.datafactory.DataFactoryException(
                     com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
                     "Cannot instantiate non-static inner class '" + type.getName()
-                    + "' — it requires an enclosing instance. Make it static or provide it via .with()");
+                            + "' — it requires an enclosing instance. Make it static or provide it via .with()");
         }
 
         // #3 — resolve outside computeIfAbsent to avoid caching a broken entry
@@ -57,10 +53,11 @@ public final class ObjectAssembler {
             strategy = STRATEGIES.stream()
                     .filter(s -> s.canCreate(type, fields))
                     .findFirst()
-                    .orElseThrow(() -> new com.paramichha.datafactory.DataFactoryException(
-                    com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
-                            "No instantiation strategy found for '" + type.getName()
-                            + "'. Supported: Lombok @Builder, Record, all-args constructor, no-args constructor + setters."));
+                    .orElseThrow(
+                            () -> new com.paramichha.datafactory.DataFactoryException(
+                                    com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
+                                    "No instantiation strategy found for '" + type.getName()
+                                            + "'. Supported: Lombok @Builder, Record, all-args constructor, no-args constructor + setters."));
             STRATEGY_CACHE.put(type, strategy);
         }
         return strategy.create(type, fields, values);

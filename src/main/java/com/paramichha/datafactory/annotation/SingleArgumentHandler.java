@@ -51,11 +51,19 @@ class SingleArgumentHandler implements AnnotationCreator {
     }
 
     private String stripQuotes(String s) {
-        if (s.length() < 2) return s;
+        if (s.length() < 2) {
+            return s;
+        }
         char first = s.charAt(0);
-        if (first != s.charAt(s.length() - 1)) return s;
-        if (first == '"')  return s.substring(1, s.length() - 1);
-        if (first == '\'') return s.substring(1, s.length() - 1);
+        if (first != s.charAt(s.length() - 1)) {
+            return s;
+        }
+        if (first == '"') {
+            return s.substring(1, s.length() - 1);
+        }
+        if (first == '\'') {
+            return s.substring(1, s.length() - 1);
+        }
         return s;
     }
 }

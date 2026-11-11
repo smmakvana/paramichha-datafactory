@@ -34,11 +34,11 @@ import java.util.Objects;
 public final class DataFactoryResults<T> {
 
     private final List<DataFactoryResult<T>> results;
-    private final ResultStatus               status;
+    private final ResultStatus status;
 
     private DataFactoryResults(List<DataFactoryResult<T>> results) {
         this.results = Collections.unmodifiableList(results);
-        this.status  = deriveStatus(results);
+        this.status = deriveStatus(results);
     }
 
     // ── Factory ───────────────────────────────────────────────────────────────
@@ -54,16 +54,28 @@ public final class DataFactoryResults<T> {
      * Overall status derived from individual results:
      * all success → SUCCESS, all failed → FAILED, mixed → PARTIAL.
      */
-    public ResultStatus status() { return status; }
+    public ResultStatus status() {
+        return status;
+    }
 
-    public boolean isSuccess() { return status == ResultStatus.SUCCESS; }
-    public boolean isPartial() { return status == ResultStatus.PARTIAL; }
-    public boolean isFailure() { return status == ResultStatus.FAILED;  }
+    public boolean isSuccess() {
+        return status == ResultStatus.SUCCESS;
+    }
+
+    public boolean isPartial() {
+        return status == ResultStatus.PARTIAL;
+    }
+
+    public boolean isFailure() {
+        return status == ResultStatus.FAILED;
+    }
 
     // ── Access ────────────────────────────────────────────────────────────────
 
     /** Every result — both successful and failed. */
-    public List<DataFactoryResult<T>> results() { return results; }
+    public List<DataFactoryResult<T>> results() {
+        return results;
+    }
 
     /** Only successful results. */
     public List<DataFactoryResult<T>> succeeded() {
@@ -82,28 +94,44 @@ public final class DataFactoryResults<T> {
      */
     public List<T> getAll() {
         for (DataFactoryResult<T> r : results) {
-            if (r.isFailure()) throw new DataFactoryException(r.errorType(),
-                    "DataFactory [" + r.errorType() + "]: " + r.reason()
-                    + " (" + failureCount() + " of " + total() + " results failed)");
+            if (r.isFailure()) {
+                throw new DataFactoryException(
+                        r.errorType(),
+                        "DataFactory [" + r.errorType() + "]: " + r.reason() + " (" + failureCount() + " of " + total()
+                                + " results failed)");
+            }
         }
         return results.stream().map(DataFactoryResult::get).toList();
     }
 
-    public int successCount() { return (int) results.stream().filter(DataFactoryResult::isSuccess).count(); }
+    public int successCount() {
+        return (int) results.stream().filter(DataFactoryResult::isSuccess).count();
+    }
 
     /** Count of failed results. */
-    public int failureCount() { return (int) results.stream().filter(DataFactoryResult::isFailure).count(); }
+    public int failureCount() {
+        return (int) results.stream().filter(DataFactoryResult::isFailure).count();
+    }
 
     /** Total results — succeeded + failed. */
-    public int total() { return results.size(); }
+    public int total() {
+        return results.size();
+    }
 
     // ── Internal ──────────────────────────────────────────────────────────────
 
     private static <T> ResultStatus deriveStatus(List<DataFactoryResult<T>> results) {
-        if (results.isEmpty()) return ResultStatus.FAILED;
-        long successCount = results.stream().filter(DataFactoryResult::isSuccess).count();
-        if (successCount == results.size()) return ResultStatus.SUCCESS;
-        if (successCount == 0)             return ResultStatus.FAILED;
+        if (results.isEmpty()) {
+            return ResultStatus.FAILED;
+        }
+        long successCount =
+                results.stream().filter(DataFactoryResult::isSuccess).count();
+        if (successCount == results.size()) {
+            return ResultStatus.SUCCESS;
+        }
+        if (successCount == 0) {
+            return ResultStatus.FAILED;
+        }
         return ResultStatus.PARTIAL;
     }
 

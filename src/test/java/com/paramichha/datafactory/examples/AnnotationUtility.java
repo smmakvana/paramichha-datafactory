@@ -2,7 +2,6 @@ package com.paramichha.datafactory.examples;
 
 import com.paramichha.datafactory.DataFactory;
 import com.paramichha.datafactory.annotation.AnnotationUtils;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class AnnotationUtility {
         section("Validate annotation strings from YAML schema");
         String[] candidates = {
             "@NotBlank", "@Email", "@Min(18)", "@Size(max=100)",
-            "@Emal",     "@Min",   "NotBlank", "@Min(abc)"
+            "@Emal", "@Min", "NotBlank", "@Min(abc)"
         };
         System.out.printf("  %-28s %s%n", "annotation", "valid?");
         System.out.println("  " + "-".repeat(38));
@@ -49,8 +48,7 @@ public class AnnotationUtility {
 
     static void fieldFromStrings() {
         section("parse then build — parse strings, pass to DataFactory.field()");
-        List<Annotation> annotations = AnnotationUtils.parseAll(
-                List.of("@NotBlank", "@Email", "@Size(max=100)"));
+        List<Annotation> annotations = AnnotationUtils.parseAll(List.of("@NotBlank", "@Email", "@Size(max=100)"));
         var fb = DataFactory.field("email", String.class, annotations);
         System.out.println("  valid:       " + fb.valid());
         System.out.println("  invalid:     " + fb.invalid());

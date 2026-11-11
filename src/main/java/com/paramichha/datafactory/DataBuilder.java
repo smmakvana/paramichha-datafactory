@@ -32,7 +32,9 @@ public interface DataBuilder<T> {
     // ── Configuration ─────────────────────────────────────────────────────────
 
     DataBuilder<T> with(String fieldName, Object value);
+
     DataBuilder<T> withNull(String fieldName);
+
     DataBuilder<T> seed(long seed);
 
     // ── Single result ─────────────────────────────────────────────────────────

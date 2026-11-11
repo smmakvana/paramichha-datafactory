@@ -1,7 +1,6 @@
 package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
-
 import java.lang.reflect.Array;
 
 /**
@@ -24,9 +23,11 @@ final class ArrayDataCreator implements DataCreator {
 
     @Override
     public Object shape(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
-        if ("null".equals(target.label())) return null;
+        if ("null".equals(target.label())) {
+            return null;
+        }
 
-        Class<?> arrayType     = field.fieldType();
+        Class<?> arrayType = field.fieldType();
         Class<?> componentType = arrayType.getComponentType();
 
         // Determine size from @Size bounds or default to 2
@@ -37,8 +38,8 @@ final class ArrayDataCreator implements DataCreator {
         }
 
         // Build component FieldConstraints — same name, component type, no annotations
-        FieldConstraints componentField = FieldConstraints.builder(
-                field.fieldName() + "Element", componentType).build();
+        FieldConstraints componentField = FieldConstraints.builder(field.fieldName() + "Element", componentType)
+                .build();
 
         // plan() always returns at least one target
         BoundaryTarget componentTarget = BoundaryPlanner.plan(componentField).getFirst();
@@ -48,7 +49,9 @@ final class ArrayDataCreator implements DataCreator {
         for (int i = 0; i < size; i++) {
             Object element = DataGenerator.shape(componentField, componentTarget, machine);
             // The element is generated for componentType, so it always fits the slot.
-            if (element != null) Array.set(arr, i, element);
+            if (element != null) {
+                Array.set(arr, i, element);
+            }
         }
         return arr;
     }

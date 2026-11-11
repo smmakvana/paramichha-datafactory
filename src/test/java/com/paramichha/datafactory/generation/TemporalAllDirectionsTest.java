@@ -1,13 +1,23 @@
 package com.paramichha.datafactory.generation;
 
+import static com.paramichha.datafactory.generation.ShaperTestSupport.field;
+import static com.paramichha.datafactory.generation.ShaperTestSupport.fieldOf;
+import static com.paramichha.datafactory.generation.ShaperTestSupport.semantic;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.constraint.AnnotationResolver;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static com.paramichha.datafactory.generation.ShaperTestSupport.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Exhaustively covers every TemporalDirection arm for every temporal type.
@@ -304,15 +314,13 @@ class TemporalAllDirectionsTest {
         @Test
         void yearPast() {
             var f = field("y", Year.class, "@Past");
-            assertThat((Year) TemporalDataCreator.getTemporal(f, semantic()))
-                    .isLessThan(Year.now());
+            assertThat((Year) TemporalDataCreator.getTemporal(f, semantic())).isLessThan(Year.now());
         }
 
         @Test
         void yearFuture() {
             var f = field("y", Year.class, "@Future");
-            assertThat((Year) TemporalDataCreator.getTemporal(f, semantic()))
-                    .isGreaterThan(Year.now());
+            assertThat((Year) TemporalDataCreator.getTemporal(f, semantic())).isGreaterThan(Year.now());
         }
 
         @Test
@@ -362,7 +370,8 @@ class TemporalAllDirectionsTest {
         void datePastOrNow() {
             var f = field("dt", java.util.Date.class, "@PastOrPresent");
             assertThat(((java.util.Date) TemporalDataCreator.getTemporal(f, semantic()))
-                    .before(new java.util.Date(System.currentTimeMillis() + 1000))).isTrue();
+                            .before(new java.util.Date(System.currentTimeMillis() + 1000)))
+                    .isTrue();
         }
 
         @Test
@@ -374,14 +383,16 @@ class TemporalAllDirectionsTest {
         @Test
         void yearMonth_pastOrNow() {
             var f = field("ym", YearMonth.class, "@PastOrPresent");
-            assertThat((YearMonth) TemporalDataCreator.getTemporal(f, semantic())).isLessThanOrEqualTo(YearMonth.now());
+            assertThat((YearMonth) TemporalDataCreator.getTemporal(f, semantic()))
+                    .isLessThanOrEqualTo(YearMonth.now());
         }
 
         @Test
         void dateFutureOrNow() {
             var f = field("dt", java.util.Date.class, "@FutureOrPresent");
             assertThat(((java.util.Date) TemporalDataCreator.getTemporal(f, semantic()))
-                    .after(new java.util.Date(System.currentTimeMillis() - 1000))).isTrue();
+                            .after(new java.util.Date(System.currentTimeMillis() - 1000)))
+                    .isTrue();
         }
 
         @Test
@@ -393,7 +404,8 @@ class TemporalAllDirectionsTest {
         @Test
         void yearMonth_futureOrNow() {
             var f = field("ym", YearMonth.class, "@FutureOrPresent");
-            assertThat((YearMonth) TemporalDataCreator.getTemporal(f, semantic())).isGreaterThanOrEqualTo(YearMonth.now());
+            assertThat((YearMonth) TemporalDataCreator.getTemporal(f, semantic()))
+                    .isGreaterThanOrEqualTo(YearMonth.now());
         }
 
         @Test
@@ -419,7 +431,8 @@ class TemporalAllDirectionsTest {
 
         @Test
         void supportsLocalDateTime() {
-            assertThat(TemporalDataCreator.INSTANCE.supports(LocalDateTime.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(LocalDateTime.class))
+                    .isTrue();
         }
 
         @Test
@@ -429,17 +442,20 @@ class TemporalAllDirectionsTest {
 
         @Test
         void supportsZonedDateTime() {
-            assertThat(TemporalDataCreator.INSTANCE.supports(ZonedDateTime.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(ZonedDateTime.class))
+                    .isTrue();
         }
 
         @Test
         void supportsOffsetDateTime() {
-            assertThat(TemporalDataCreator.INSTANCE.supports(OffsetDateTime.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(OffsetDateTime.class))
+                    .isTrue();
         }
 
         @Test
         void supportsDate() {
-            assertThat(TemporalDataCreator.INSTANCE.supports(java.util.Date.class)).isTrue();
+            assertThat(TemporalDataCreator.INSTANCE.supports(java.util.Date.class))
+                    .isTrue();
         }
 
         @Test
@@ -460,7 +476,8 @@ class TemporalAllDirectionsTest {
         @Test
         void shapeDelegates() {
             var f = field("dt", LocalDate.class, "@Past");
-            assertThat(TemporalDataCreator.INSTANCE.shape(f, semantic(), DataMachines.random())).isInstanceOf(LocalDate.class);
+            assertThat(TemporalDataCreator.INSTANCE.shape(f, semantic(), DataMachines.random()))
+                    .isInstanceOf(LocalDate.class);
         }
     }
 }

@@ -2,23 +2,17 @@ package com.paramichha.datafactory.annotation;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.Length;
-
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.hibernate.validator.constraints.Length;
 
 class MultipleArgumentHandler implements AnnotationCreator {
 
-    private static final Set<Class<? extends Annotation>> RANGE_ANNOTATIONS = Set.of(
-            Size.class,
-            Length.class
-    );
+    private static final Set<Class<? extends Annotation>> RANGE_ANNOTATIONS = Set.of(Size.class, Length.class);
 
-    private static final Set<Class<? extends Annotation>> DIGITS_ANNOTATIONS = Set.of(
-            Digits.class
-    );
+    private static final Set<Class<? extends Annotation>> DIGITS_ANNOTATIONS = Set.of(Digits.class);
     public static final String MIN = "min";
     public static final String MAX = "max";
     public static final String INTEGER = "integer";
@@ -46,8 +40,12 @@ class MultipleArgumentHandler implements AnnotationCreator {
             String[] kv = part.split("=");
             String key = kv[0].trim();
             String value = kv[1].trim();
-            if (MIN.equals(key)) min = Integer.parseInt(value);
-            if (MAX.equals(key)) max = Integer.parseInt(value);
+            if (MIN.equals(key)) {
+                min = Integer.parseInt(value);
+            }
+            if (MAX.equals(key)) {
+                max = Integer.parseInt(value);
+            }
         }
 
         attrs.put(MIN, min);
@@ -61,8 +59,12 @@ class MultipleArgumentHandler implements AnnotationCreator {
             String[] kv = part.split("=");
             String key = kv[0].trim();
             String value = kv[1].trim();
-            if (INTEGER.equals(key)) integer = Integer.parseInt(value);
-            if (FRACTION.equals(key)) fraction = Integer.parseInt(value);
+            if (INTEGER.equals(key)) {
+                integer = Integer.parseInt(value);
+            }
+            if (FRACTION.equals(key)) {
+                fraction = Integer.parseInt(value);
+            }
         }
 
         attrs.put(INTEGER, integer);

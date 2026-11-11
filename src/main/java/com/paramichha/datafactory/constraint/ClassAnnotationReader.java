@@ -1,13 +1,35 @@
 package com.paramichha.datafactory.constraint;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.AssertFalse;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Negative;
+import jakarta.validation.constraints.NegativeOrZero;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import org.hibernate.validator.constraints.*;
-
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import java.lang.annotation.Annotation;
+import org.hibernate.validator.constraints.CreditCardNumber;
+import org.hibernate.validator.constraints.EAN;
+import org.hibernate.validator.constraints.ISBN;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.URL;
 
 /**
  * Classifies real {@code java.lang.annotation.Annotation} instances obtained via reflection.
@@ -16,8 +38,7 @@ final class ClassAnnotationReader implements AnnotationReader {
 
     public static final ClassAnnotationReader INSTANCE = new ClassAnnotationReader();
 
-    private ClassAnnotationReader() {
-    }
+    private ClassAnnotationReader() {}
 
     @Override
     public boolean isNotNull(Object a) {
@@ -47,13 +68,27 @@ final class ClassAnnotationReader implements AnnotationReader {
     @Override
     public FormatType classifyFormat(Object raw) {
         Annotation a = (Annotation) raw;
-        if (a instanceof Email) return FormatType.EMAIL;
-        if (a instanceof URL) return FormatType.URL;
-        if (a instanceof Pattern) return FormatType.PATTERN;
-        if (a instanceof CreditCardNumber) return FormatType.CREDIT_CARD;
-        if (a instanceof ISBN) return FormatType.ISBN;
-        if (a instanceof EAN) return FormatType.EAN;
-        if (a instanceof org.hibernate.validator.constraints.UUID) return FormatType.UUID_STRING;
+        if (a instanceof Email) {
+            return FormatType.EMAIL;
+        }
+        if (a instanceof URL) {
+            return FormatType.URL;
+        }
+        if (a instanceof Pattern) {
+            return FormatType.PATTERN;
+        }
+        if (a instanceof CreditCardNumber) {
+            return FormatType.CREDIT_CARD;
+        }
+        if (a instanceof ISBN) {
+            return FormatType.ISBN;
+        }
+        if (a instanceof EAN) {
+            return FormatType.EAN;
+        }
+        if (a instanceof org.hibernate.validator.constraints.UUID) {
+            return FormatType.UUID_STRING;
+        }
         return FormatType.NONE;
     }
 
@@ -65,12 +100,24 @@ final class ClassAnnotationReader implements AnnotationReader {
     @Override
     public NumericBounds classifyQuantity(Object raw) {
         Annotation a = (Annotation) raw;
-        if (a instanceof Min m) return NumericBounds.atLeast(m.value());
-        if (a instanceof Max m) return NumericBounds.atMost(m.value());
-        if (a instanceof Positive) return NumericBounds.atLeast(1L);
-        if (a instanceof PositiveOrZero) return NumericBounds.atLeast(0L);
-        if (a instanceof Negative) return NumericBounds.atMost(-1L);
-        if (a instanceof NegativeOrZero) return NumericBounds.atMost(0L);
+        if (a instanceof Min m) {
+            return NumericBounds.atLeast(m.value());
+        }
+        if (a instanceof Max m) {
+            return NumericBounds.atMost(m.value());
+        }
+        if (a instanceof Positive) {
+            return NumericBounds.atLeast(1L);
+        }
+        if (a instanceof PositiveOrZero) {
+            return NumericBounds.atLeast(0L);
+        }
+        if (a instanceof Negative) {
+            return NumericBounds.atMost(-1L);
+        }
+        if (a instanceof NegativeOrZero) {
+            return NumericBounds.atMost(0L);
+        }
         if (a instanceof Size s) {
             Long min = s.min() > 0 ? (long) s.min() : null;
             Long max = s.max() < Integer.MAX_VALUE ? (long) s.max() : null;
@@ -119,10 +166,18 @@ final class ClassAnnotationReader implements AnnotationReader {
     @Override
     public TemporalDirection classifyTemporal(Object raw) {
         Annotation a = (Annotation) raw;
-        if (a instanceof Past) return TemporalDirection.PAST;
-        if (a instanceof PastOrPresent) return TemporalDirection.PAST_OR_NOW;
-        if (a instanceof Future) return TemporalDirection.FUTURE;
-        if (a instanceof FutureOrPresent) return TemporalDirection.FUTURE_OR_NOW;
+        if (a instanceof Past) {
+            return TemporalDirection.PAST;
+        }
+        if (a instanceof PastOrPresent) {
+            return TemporalDirection.PAST_OR_NOW;
+        }
+        if (a instanceof Future) {
+            return TemporalDirection.FUTURE;
+        }
+        if (a instanceof FutureOrPresent) {
+            return TemporalDirection.FUTURE_OR_NOW;
+        }
         return TemporalDirection.NONE;
     }
 

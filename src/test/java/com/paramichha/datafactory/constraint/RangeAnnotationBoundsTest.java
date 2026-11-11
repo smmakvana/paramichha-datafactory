@@ -1,13 +1,12 @@
 package com.paramichha.datafactory.constraint;
 
+import static com.paramichha.datafactory.constraint.ConstraintTestSupport.annotationsOf;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.lang.annotation.Annotation;
 import org.hibernate.validator.constraints.Range;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.lang.annotation.Annotation;
-
-import static com.paramichha.datafactory.constraint.ConstraintTestSupport.annotationsOf;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** A Hibernate @Range gives integer bounds, whether read from the annotation or from its text. */
 @DisplayName("@Range bounds")

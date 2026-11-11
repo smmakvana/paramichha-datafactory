@@ -4,7 +4,6 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import java.util.Collections;
@@ -19,31 +18,28 @@ public final class AnnotationProxyFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Annotation> T create(Class<T> type,
-                                                  Map<String, Object> attrs) {
-        return (T) Proxy.newProxyInstance(
-                type.getClassLoader(),
-                new Class<?>[]{type},
-                (proxy, method, args) -> {
-                    String name = method.getName();
-                    switch (name) {
-                        case "annotationType" -> {
-                            return type;
-                        }
-                        case "toString" -> {
-                            return "@" + type.getSimpleName() + attrs;
-                        }
-                        case "hashCode" -> {
-                            return attrs.hashCode();
-                        }
-                        case "equals" -> {
-                            return proxy == args[0];
-                        }
-                    }
-                    if (attrs.containsKey(name)) return attrs.get(name);
-                    return method.getDefaultValue();
+    public static <T extends Annotation> T create(Class<T> type, Map<String, Object> attrs) {
+        return (T) Proxy.newProxyInstance(type.getClassLoader(), new Class<?>[] {type}, (proxy, method, args) -> {
+            String name = method.getName();
+            switch (name) {
+                case "annotationType" -> {
+                    return type;
                 }
-        );
+                case "toString" -> {
+                    return "@" + type.getSimpleName() + attrs;
+                }
+                case "hashCode" -> {
+                    return attrs.hashCode();
+                }
+                case "equals" -> {
+                    return proxy == args[0];
+                }
+            }
+            if (attrs.containsKey(name)) {
+                return attrs.get(name);
+            }
+            return method.getDefaultValue();
+        });
     }
 
     /** Creates a synthetic {@code @Min(value)} annotation. */

@@ -71,8 +71,7 @@ public final class SnapshotStore {
         try {
             // Strategy 1: find an existing snapshot and write next to it
             // Most reliable — navigates from a file we know exists
-            URL existing = SnapshotStore.class.getClassLoader()
-                    .getResource(SNAPSHOT_DIR + "/");
+            URL existing = SnapshotStore.class.getClassLoader().getResource(SNAPSHOT_DIR + "/");
             if (existing != null) {
                 Path dir = Paths.get(existing.toURI());
                 // This is target/test-classes/snapshots/ — walk up to find src/
@@ -87,9 +86,11 @@ public final class SnapshotStore {
                 }
             }
             // Strategy 2: navigate from code source location
-            Path codeSource = Paths.get(
-                    SnapshotStore.class.getProtectionDomain()
-                            .getCodeSource().getLocation().toURI());
+            Path codeSource = Paths.get(SnapshotStore.class
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .toURI());
             // codeSource = target/test-classes
             // go up to project root and find src/test/resources/snapshots
             Path p = codeSource;
@@ -99,14 +100,14 @@ public final class SnapshotStore {
                     java.nio.file.Files.createDirectories(candidate);
                     System.out.println("  [SnapshotStore] Writing to: " + candidate);
                     return candidate;
-        }
+                }
                 p = p.getParent();
             }
             throw new RuntimeException("Cannot find src/test/resources directory");
         } catch (Exception e) {
             throw new RuntimeException("Cannot resolve snapshot write path: " + e.getMessage(), e);
+        }
     }
-}
 
     /**
      * Snapshots are compared and stored with "\n" line endings on every OS. Every raw carriage

@@ -1,10 +1,22 @@
 package com.paramichha.datafactory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.paramichha.datafactory.builder.DefaultDataBuilder;
 import jakarta.validation.Valid;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.Value;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,13 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Integration tests for DefaultDataBuilder — covers all methods and branches.
@@ -43,52 +48,69 @@ class DataFactoryIntegrationTest {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
-    @Value @Builder
+    @Value
+    @Builder
     static class RegisterRequest {
         @NotBlank @Email @Size(min = 8, max = 100) String email;
-        @NotBlank @Size(min = 2, max = 50)         String firstName;
-        @NotNull @Min(18) @Max(120)                Integer age;
-        @NotNull @Past                             LocalDate dateOfBirth;
-        @NotNull                                   Boolean acceptedTerms;
+
+        @NotBlank @Size(min = 2, max = 50) String firstName;
+
+        @NotNull @Min(18) @Max(120) Integer age;
+
+        @NotNull @Past LocalDate dateOfBirth;
+
+        @NotNull Boolean acceptedTerms;
     }
 
-    @Value @Builder
+    @Value
+    @Builder
     static class SimpleRequest {
-        @NotBlank               String name;
+        @NotBlank String name;
+
         @NotNull @Min(1) @Max(5) Integer rating;
     }
 
-    @Value @Builder
+    @Value
+    @Builder
     static class ParentRequest {
         @NotBlank String name;
+
         @NotNull @Valid AddressRequest address;
     }
 
-    @Value @Builder
+    @Value
+    @Builder
     static class AddressRequest {
         @NotBlank String city;
     }
 
-    @Value @Builder
+    @Value
+    @Builder
     static class ContainerRequest {
         @NotBlank String title;
+
         List<AddressRequest> addresses;
     }
 
-    @Value @Builder
+    @Value
+    @Builder
     static class TagsRequest {
         @NotBlank String name;
+
         List<String> tags;
     }
 
-    @Value @Builder
+    @Value
+    @Builder
     static class BoolPrimitiveRequest {
-        boolean active;      // unannotated — type-default violation: false
+        boolean active; // unannotated — type-default violation: false
+
         @NotBlank String label;
     }
 
-    static abstract class Broken {
+    abstract static class Broken {
         @NotBlank String value;
+
         @Min(1) @Max(10) Integer score;
     }
 
@@ -96,25 +118,29 @@ class DataFactoryIntegrationTest {
     // DataFactory.of() and DataFactoryException
     // ═══════════════════════════════════════════════════════════════════════
 
-    @Nested @DisplayName("DataFactory.of()")
+    @Nested
+    @DisplayName("DataFactory.of()")
     class FactoryOf {
-        @Test void returns_non_null_DataBuilder() {
+        @Test
+        void returns_non_null_DataBuilder() {
             assertThat(DataFactory.of(SimpleRequest.class)).isInstanceOf(DataBuilder.class);
         }
-        @Test void returns_DefaultDataBuilder() {
+
+        @Test
+        void returns_DefaultDataBuilder() {
             assertThat(DataFactory.of(SimpleRequest.class)).isInstanceOf(DefaultDataBuilder.class);
         }
     }
 
-    @Nested @DisplayName("DataFactoryException")
+    @Nested
+    @DisplayName("DataFactoryException")
     class ExceptionTest {
 
         @ParameterizedTest(name = "{0}")
         @MethodSource("constructors")
         void constructors_set_message_and_cause(String label, String msg, Throwable cause) {
-            DataFactoryException ex = cause != null
-                    ? new DataFactoryException(msg, cause)
-                    : new DataFactoryException(msg);
+            DataFactoryException ex =
+                    cause != null ? new DataFactoryException(msg, cause) : new DataFactoryException(msg);
             assertThat(ex.getMessage()).isEqualTo(msg);
             assertThat(ex.getCause()).isEqualTo(cause);
             assertThat(ex).isInstanceOf(RuntimeException.class);
@@ -123,9 +149,8 @@ class DataFactoryIntegrationTest {
         static Stream<Arguments> constructors() {
             RuntimeException cause = new RuntimeException("root");
             return Stream.of(
-                Arguments.of("message only",      "just message", null),
-                Arguments.of("message and cause", "msg",          cause)
-            );
+                    Arguments.of("message only", "just message", null),
+                    Arguments.of("message and cause", "msg", cause));
         }
     }
 
@@ -133,14 +158,19 @@ class DataFactoryIntegrationTest {
     // valid()
     // ═══════════════════════════════════════════════════════════════════════
 
-    @Nested @DisplayName("valid()")
+    @Nested
+    @DisplayName("valid()")
     class ValidMethod {
 
-        @Test void passes_jakarta_validation() {
-            assertThat(validator.validate(DataFactory.of(RegisterRequest.class).valid().get())).isEmpty();
+        @Test
+        void passes_jakarta_validation() {
+            assertThat(validator.validate(
+                            DataFactory.of(RegisterRequest.class).valid().get()))
+                    .isEmpty();
         }
 
-        @Test void all_fields_populated() {
+        @Test
+        void all_fields_populated() {
             var req = DataFactory.of(RegisterRequest.class).valid().get();
             assertThat(req.getEmail()).matches("[\\w.+-]+@[\\w.-]+\\.\\w+").hasSizeBetween(8, 100);
             assertThat(req.getFirstName()).hasSizeBetween(2, 50);
@@ -149,24 +179,35 @@ class DataFactoryIntegrationTest {
             assertThat(req.getAcceptedTerms()).isNotNull();
         }
 
-        @Test void email_contains_at_sign() {
-            assertThat(DataFactory.of(RegisterRequest.class).valid().get().getEmail()).contains("@");
+        @Test
+        void email_contains_at_sign() {
+            assertThat(DataFactory.of(RegisterRequest.class).valid().get().getEmail())
+                    .contains("@");
         }
 
-        @Test void with_single_override() {
-            var req = DataFactory.of(RegisterRequest.class).with("age", 25).valid().get();
+        @Test
+        void with_single_override() {
+            var req = DataFactory.of(RegisterRequest.class)
+                    .with("age", 25)
+                    .valid()
+                    .get();
             assertThat(req.getAge()).isEqualTo(25);
             assertThat(validator.validate(req)).isEmpty();
         }
 
-        @Test void with_multiple_overrides() {
+        @Test
+        void with_multiple_overrides() {
             var req = DataFactory.of(RegisterRequest.class)
-                    .with("age", 30).with("firstName", "Custom").valid().get();
+                    .with("age", 30)
+                    .with("firstName", "Custom")
+                    .valid()
+                    .get();
             assertThat(req.getAge()).isEqualTo(30);
             assertThat(req.getFirstName()).isEqualTo("Custom");
         }
 
-        @Test void wraps_exception_as_DataFactoryException() {
+        @Test
+        void wraps_exception_as_DataFactoryException() {
             assertThatThrownBy(() -> DataFactory.of(Broken.class).valid().get())
                     .isInstanceOf(DataFactoryException.class)
                     .hasMessageContaining("Broken");
@@ -177,25 +218,31 @@ class DataFactoryIntegrationTest {
     // resolveAllValid() structural branches
     // ═══════════════════════════════════════════════════════════════════════
 
-    @Nested @DisplayName("resolveAllValid() — structural branches")
+    @Nested
+    @DisplayName("resolveAllValid() — structural branches")
     class ResolveAllValid {
 
-        @Test void nested_valid_field_recursed() {
+        @Test
+        void nested_valid_field_recursed() {
             var req = DataFactory.of(ParentRequest.class).valid().get();
             assertThat(req.getAddress()).isNotNull();
             assertThat(req.getAddress().getCity()).isNotBlank();
             assertThat(validator.validate(req)).isEmpty();
         }
 
-        @Test void list_of_nested_produces_one_element() {
+        @Test
+        void list_of_nested_produces_one_element() {
             var req = DataFactory.of(ContainerRequest.class).valid().get();
             assertThat(req.getAddresses()).isNotNull().hasSize(1);
             assertThat(req.getAddresses().get(0).getCity()).isNotBlank();
         }
 
-        @Test void list_of_java_type_gets_one_element() {
+        @Test
+        void list_of_java_type_gets_one_element() {
             // List<String> now generates one element so @NotEmpty / @NotNull constraints are satisfiable
-            assertThat(DataFactory.of(TagsRequest.class).valid().get().getTags()).isNotNull().hasSize(1);
+            assertThat(DataFactory.of(TagsRequest.class).valid().get().getTags())
+                    .isNotNull()
+                    .hasSize(1);
         }
     }
 
@@ -203,46 +250,61 @@ class DataFactoryIntegrationTest {
     // validAll()
     // ═══════════════════════════════════════════════════════════════════════
 
-    @Nested @DisplayName("validAll()")
+    @Nested
+    @DisplayName("validAll()")
     class ValidAllMethod {
 
-        @Test void returns_map_keyed_by_field_name() {
+        @Test
+        void returns_map_keyed_by_field_name() {
             assertThat(DataFactory.of(RegisterRequest.class).validPerField())
-                    .containsKey("email").containsKey("age");
+                    .containsKey("email")
+                    .containsKey("age");
         }
 
-        @Test void single_value_fields_omitted() {
+        @Test
+        void single_value_fields_omitted() {
             assertThat(DataFactory.of(RegisterRequest.class).validPerField())
                     .doesNotContainKey("dateOfBirth")
                     .doesNotContainKey("acceptedTerms");
         }
 
-        @Test void overridden_field_skipped() {
+        @Test
+        void overridden_field_skipped() {
             var all = DataFactory.of(RegisterRequest.class).with("age", 30).validPerField();
             assertThat(all).doesNotContainKey("age");
             assertThat(all).containsKey("email");
         }
 
-        @Test void age_includes_boundary_values() {
-            var ages = DataFactory.of(RegisterRequest.class).validPerField()
-                    .get("age").getAll().stream().map(RegisterRequest::getAge).toList();
+        @Test
+        void age_includes_boundary_values() {
+            var ages = DataFactory.of(RegisterRequest.class).validPerField().get("age").getAll().stream()
+                    .map(RegisterRequest::getAge)
+                    .toList();
             assertThat(ages).contains(18, 120);
         }
 
-        @Test void all_variants_pass_validation() {
-            DataFactory.of(RegisterRequest.class).validPerField()
-                    .forEach((field, variants) ->
-                            variants.getAll().forEach(req ->
-                                    assertThat(validator.validate(req))
-                                            .as("field '%s'", field).isEmpty()));
+        @Test
+        void all_variants_pass_validation() {
+            DataFactory.of(RegisterRequest.class)
+                    .validPerField()
+                    .forEach((field, variants) -> variants.getAll()
+                            .forEach(req -> assertThat(validator.validate(req))
+                                    .as("field '%s'", field)
+                                    .isEmpty()));
         }
 
-        @Test void email_variants_only_email_varies() {
+        @Test
+        void email_variants_only_email_varies() {
             var variants = DataFactory.of(RegisterRequest.class).validPerField().get("email");
-            assertThat(variants.getAll().stream().map(RegisterRequest::getAge).distinct().count()).isEqualTo(1);
+            assertThat(variants.getAll().stream()
+                            .map(RegisterRequest::getAge)
+                            .distinct()
+                            .count())
+                    .isEqualTo(1);
         }
 
-        @Test void reports_failure_instead_of_throwing() {
+        @Test
+        void reports_failure_instead_of_throwing() {
             var perField = DataFactory.of(Broken.class).validPerField();
             assertThat(perField).isNotEmpty().doesNotContainKey("_error");
             assertThat(perField.values()).allSatisfy(rs -> {
@@ -256,7 +318,8 @@ class DataFactoryIntegrationTest {
     // invalidFor()
     // ═══════════════════════════════════════════════════════════════════════
 
-    @Nested @DisplayName("invalidFor()")
+    @Nested
+    @DisplayName("invalidFor()")
     class InvalidForMethod {
 
         @ParameterizedTest(name = "field={0}")
@@ -273,24 +336,33 @@ class DataFactoryIntegrationTest {
             return Stream.of("email", "age", "firstName");
         }
 
-        @Test void only_named_field_fails() {
+        @Test
+        void only_named_field_fails() {
             var violations = validator.validate(
                     DataFactory.of(RegisterRequest.class).invalidFor("age").get());
             assertThat(violations).allMatch(v -> v.getPropertyPath().toString().equals("age"));
         }
 
-        @Test void unannotated_field_falls_back_to_type_defaults() {
-            assertThat(DataFactory.of(BoolPrimitiveRequest.class).invalidFor("active").get().active).isFalse();
+        @Test
+        void unannotated_field_falls_back_to_type_defaults() {
+            assertThat(DataFactory.of(BoolPrimitiveRequest.class)
+                            .invalidFor("active")
+                            .get()
+                            .active)
+                    .isFalse();
         }
 
-        @Test void nonexistent_field_is_reported_as_unknown() {
+        @Test
+        void nonexistent_field_is_reported_as_unknown() {
             var r = DataFactory.of(SimpleRequest.class).invalidFor("nonExistentField");
             assertThat(r.isFailure()).isTrue();
             assertThat(r.errorType()).isEqualTo(ErrorType.UNKNOWN_FIELD);
         }
 
-        @Test void wraps_exception() {
-            assertThatThrownBy(() -> DataFactory.of(Broken.class).invalidFor("value").get())
+        @Test
+        void wraps_exception() {
+            assertThatThrownBy(() ->
+                            DataFactory.of(Broken.class).invalidFor("value").get())
                     .isInstanceOf(DataFactoryException.class)
                     .hasMessageContaining("Broken");
         }
@@ -300,33 +372,44 @@ class DataFactoryIntegrationTest {
     // violations()
     // ═══════════════════════════════════════════════════════════════════════
 
-    @Nested @DisplayName("violations()")
+    @Nested
+    @DisplayName("violations()")
     class ViolationsMethod {
 
-        @Test void produces_non_empty_list() {
-            assertThat(DataFactory.of(RegisterRequest.class).invalidList().getAll()).isNotEmpty();
+        @Test
+        void produces_non_empty_list() {
+            assertThat(DataFactory.of(RegisterRequest.class).invalidList().getAll())
+                    .isNotEmpty();
         }
 
-        @Test void each_scenario_fails_validation() {
-            DataFactory.of(RegisterRequest.class).invalidList().getAll().forEach(scenario ->
-                    assertThat(validator.validate(scenario))
+        @Test
+        void each_scenario_fails_validation() {
+            DataFactory.of(RegisterRequest.class)
+                    .invalidList()
+                    .getAll()
+                    .forEach(scenario -> assertThat(validator.validate(scenario))
                             .as("scenario '%s' should have at least one violation", scenario)
                             .isNotEmpty());
         }
 
-        @Test void all_constrained_fields_covered() {
+        @Test
+        void all_constrained_fields_covered() {
             // SimpleRequest: name(@NotBlank) + rating(@Min,@Max) → at least 4 scenarios
-            assertThat(DataFactory.of(SimpleRequest.class).invalidList().getAll()).hasSizeGreaterThanOrEqualTo(4);
+            assertThat(DataFactory.of(SimpleRequest.class).invalidList().getAll())
+                    .hasSizeGreaterThanOrEqualTo(4);
         }
 
-        @Test void unannotated_field_produces_type_default_violations() {
+        @Test
+        void unannotated_field_produces_type_default_violations() {
             // active (boolean, no annotation) → false (type-default)
             // label (@NotBlank) → null + ""
             // total: 3
-            assertThat(DataFactory.of(BoolPrimitiveRequest.class).invalidList().getAll()).hasSize(3);
+            assertThat(DataFactory.of(BoolPrimitiveRequest.class).invalidList().getAll())
+                    .hasSize(3);
         }
 
-        @Test void wraps_exception() {
+        @Test
+        void wraps_exception() {
             assertThatThrownBy(() -> DataFactory.of(Broken.class).invalidList().getAll())
                     .isInstanceOf(DataFactoryException.class)
                     .hasMessageContaining("Broken");

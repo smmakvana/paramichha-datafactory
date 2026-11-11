@@ -1,15 +1,18 @@
 package com.paramichha.datafactory.generation;
 
+import static com.paramichha.datafactory.generation.ShaperTestSupport.atMin;
+import static com.paramichha.datafactory.generation.ShaperTestSupport.field;
+import static com.paramichha.datafactory.generation.ShaperTestSupport.fieldOf;
+import static com.paramichha.datafactory.generation.ShaperTestSupport.semantic;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.*;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static com.paramichha.datafactory.generation.ShaperTestSupport.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** The numeric shaper: bounded values, midpoints, and the quantity hint. */
 @DisplayName("NumericShaper")
@@ -23,8 +26,7 @@ class NumericShaperTest {
         // This path is hit when NO field-name hint matches AND both bounds present
         @Test
         void bothBoundsGiveTheMidpointWithoutAHint() {
-            var fc = AnnotationResolver.analyzeFromStrings("zzz", "Integer",
-                    List.of("@Min(10)", "@Max(20)"));
+            var fc = AnnotationResolver.analyzeFromStrings("zzz", "Integer", List.of("@Min(10)", "@Max(20)"));
             var v = (Integer) NumericDataCreator.getNumber(fc, BoundaryTarget.semantic(), DataMachines.random());
             assertThat(v).isEqualTo(15); // (10+20)/2
         }
@@ -221,97 +223,113 @@ class NumericShaperTest {
         @Test
         void ageHint() {
             var f = fieldOf("age", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(30);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(30);
         }
 
         @Test
         void yearHint() {
             var f = fieldOf("year", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(2024);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(2024);
         }
 
         @Test
         void countHint() {
             var f = fieldOf("count", Integer.class);
-            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isGreaterThan(0);
-        }
-
-        @Test
-        void totalHint() {
-            var f = fieldOf("total", Integer.class);
-            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isGreaterThan(0);
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isGreaterThan(0);
         }
 
         @Test
         void pageHint() {
             var f = fieldOf("page", Integer.class);
-            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isPositive();
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isPositive();
+        }
+
+        @Test
+        void totalHint() {
+            var f = fieldOf("total", Integer.class);
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isGreaterThan(0);
         }
 
         @Test
         void retryHint() {
             var f = fieldOf("retryCount", Integer.class);
-            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNegative();
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isNotNegative();
         }
 
         @Test
         void attemptHint() {
             var f = fieldOf("attempts", Integer.class);
-            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNegative();
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isNotNegative();
         }
 
         @Test
         void ratingHint() {
             var f = fieldOf("rating", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(5);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(5);
         }
 
         @Test
         void scoreHint() {
             var f = fieldOf("score", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(5);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(5);
         }
 
         @Test
         void priceHint() {
             var f = fieldOf("price", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(100);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(100);
         }
 
         @Test
         void amountHint() {
             var f = fieldOf("amount", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(100);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(100);
         }
 
         @Test
         void quantityHint() {
             var f = fieldOf("quantity", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(1);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(1);
         }
 
         @Test
         void qtyHint() {
             var f = fieldOf("qty", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(1);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(1);
         }
 
         @Test
         void minOnly_returnsMinPlusOne() {
             var f = field("n", Integer.class, "@Min(10)");
-            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(11);
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(11);
         }
 
         @Test
         void maxOnly_returnsMaxMinusOne() {
             var f = field("n", Integer.class, "@Max(100)");
-            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isEqualTo(99);
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(99);
         }
 
         @Test
         void noBounds_noHint_returnsFakerValue() {
             var f = fieldOf("value", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isInstanceOf(Integer.class);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isInstanceOf(Integer.class);
         }
 
         @Test
@@ -338,13 +356,14 @@ class NumericShaperTest {
         @Test
         void doubleNoBoundsFaker() {
             var f = fieldOf("n", Double.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isInstanceOf(Double.class);
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isInstanceOf(Double.class);
         }
 
         @Test
         void bigDecimal_fractionDigits() {
-            var f = AnnotationResolver.analyzeFromStrings("price", "BigDecimal",
-                    List.of("@Digits(integer=5, fraction=2)"));
+            var f = AnnotationResolver.analyzeFromStrings(
+                    "price", "BigDecimal", List.of("@Digits(integer=5, fraction=2)"));
             var v = (BigDecimal) NumericDataCreator.getNumber(f, semantic(), DataMachines.random());
             assertThat(v.scale()).isEqualTo(2);
         }
@@ -370,8 +389,8 @@ class NumericShaperTest {
 
         @Test
         void bigDecimal_withDigits_atMin() {
-            var f = AnnotationResolver.analyzeFromStrings("price", "BigDecimal",
-                    List.of("@Digits(integer=5, fraction=2)"));
+            var f = AnnotationResolver.analyzeFromStrings(
+                    "price", "BigDecimal", List.of("@Digits(integer=5, fraction=2)"));
             var v = (java.math.BigDecimal) NumericDataCreator.getNumber(f, atMin(5), DataMachines.random());
             assertThat(v.scale()).isEqualTo(2);
         }
@@ -428,7 +447,8 @@ class NumericShaperTest {
         @Test
         void shapeDelegates() {
             var f = field("n", Integer.class, "@Min(1)");
-            assertThat(NumericDataCreator.INSTANCE.shape(f, atMin(1), DataMachines.random())).isEqualTo(1);
+            assertThat(NumericDataCreator.INSTANCE.shape(f, atMin(1), DataMachines.random()))
+                    .isEqualTo(1);
         }
     }
 }

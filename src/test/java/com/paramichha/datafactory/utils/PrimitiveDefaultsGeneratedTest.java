@@ -2,6 +2,8 @@
 // Regenerate: TestKit.of(PrimitiveDefaults.class).generateTest().writeTo(...)
 package com.paramichha.datafactory.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -11,27 +13,26 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("PrimitiveDefaults")
 class PrimitiveDefaultsGeneratedTest {
 
-  @Nested
-  @DisplayName("PrimitiveDefaults Method of()")
-  @Tag("method")
-  @TestMethodOrder(MethodOrderer.MethodName.class)
-  class PrimitiveDefaultsMethodOfTest {
+    @Nested
+    @DisplayName("PrimitiveDefaults Method of()")
+    @Tag("method")
+    @TestMethodOrder(MethodOrderer.MethodName.class)
+    class PrimitiveDefaultsMethodOfTest {
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validOfInputs")
-    @DisplayName("of accepts valid input")
-    void testAcceptsValidInput(String description, Class type) {
-      Object result = PrimitiveDefaults.of(type);
-      assertThat(result).isNotNull();
-    }
+        @ParameterizedTest(name = "{0}")
+        @MethodSource("validOfInputs")
+        @DisplayName("of accepts valid input")
+        void testAcceptsValidInput(String description, Class type) {
+            Object result = PrimitiveDefaults.of(type);
+            assertThat(result).isNotNull();
+        }
 
-    static Stream<Arguments> validOfInputs() {
-      return Stream.of(Arguments.of("valid of", int.class));
+        static Stream<Arguments> validOfInputs() {
+            return Stream.of(Arguments.of("valid of", int.class));
+        }
     }
-  }
 }

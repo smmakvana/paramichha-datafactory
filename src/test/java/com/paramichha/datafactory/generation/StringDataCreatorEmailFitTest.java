@@ -1,9 +1,9 @@
 package com.paramichha.datafactory.generation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Fitting an email to a target length: the local part grows first, then the domain. */
 @DisplayName("StringDataCreator — fitting an email to a length")

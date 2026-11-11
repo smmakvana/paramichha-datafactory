@@ -2,7 +2,6 @@ package com.paramichha.datafactory.annotation;
 
 import com.paramichha.datafactory.AnnotationParseException;
 import com.paramichha.datafactory.builder.StringAnnotationParser;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +37,9 @@ public final class AnnotationUtils {
      * @return {@code true} if recognised, {@code false} otherwise
      */
     public static boolean isValid(String annotationString) {
-        if (annotationString == null || !annotationString.startsWith("@")) return false;
+        if (annotationString == null || !annotationString.startsWith("@")) {
+            return false;
+        }
         try {
             return StringAnnotationParser.INSTANCE.parse(annotationString) != null;
         } catch (AnnotationParseException e) {

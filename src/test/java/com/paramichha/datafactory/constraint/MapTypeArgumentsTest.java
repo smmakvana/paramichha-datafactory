@@ -1,12 +1,11 @@
 package com.paramichha.datafactory.constraint;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /** Map key and value types: a raw map, or a value that is not a plain class, falls back to String. */
 @DisplayName("Map key and value types")

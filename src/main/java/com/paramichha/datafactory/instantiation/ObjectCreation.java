@@ -1,7 +1,6 @@
 package com.paramichha.datafactory.instantiation;
 
 import com.paramichha.datafactory.constraint.FieldDescriptor;
-
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +25,5 @@ interface ObjectCreation {
     /**
      * Instantiates the type using the provided field values.
      */
-    <T> T create(Class<T> type, List<FieldDescriptor> fields,
-                 Map<String, Object> values) throws Exception;
+    <T> T create(Class<T> type, List<FieldDescriptor> fields, Map<String, Object> values) throws Exception;
 }

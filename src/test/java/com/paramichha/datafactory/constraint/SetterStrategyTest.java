@@ -1,14 +1,15 @@
 package com.paramichha.datafactory.constraint;
 
-import java.util.Map;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.instantiation.PojoObjectCreation;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 /** Setter strategy: a field that no class in the hierarchy declares is skipped. */
 @DisplayName("Setter strategy")
@@ -23,8 +24,7 @@ class SetterStrategyTest {
             // "ghost" not in ChildBean or ParentBean -> loop exhausts -> c becomes Object -> exits -> null
             var fields = List.of(
                     new FieldDescriptor("childField", String.class, String.class, Collections.emptyList()),
-                    new FieldDescriptor("ghost", String.class, String.class, Collections.emptyList())
-            );
+                    new FieldDescriptor("ghost", String.class, String.class, Collections.emptyList()));
             var values = new LinkedHashMap<String, Object>();
             values.put("childField", "child");
             values.put("ghost", "ignored");
@@ -50,8 +50,7 @@ class SetterStrategyTest {
             // "ghost" field does not exist in SimpleBean — findField returns null, skip
             var fields = List.of(
                     new FieldDescriptor("real", String.class, String.class, Collections.emptyList()),
-                    new FieldDescriptor("ghost", String.class, String.class, Collections.emptyList())
-            );
+                    new FieldDescriptor("ghost", String.class, String.class, Collections.emptyList()));
             var values = new LinkedHashMap<String, Object>();
             values.put("real", "ok");
             values.put("ghost", "ignored");
@@ -84,7 +83,7 @@ class SetterStrategyTest {
         void nullPrimitiveFieldIsSkipped() throws Exception {
             var fields = FieldDescriptor.extract(WithPrimitive.class);
             var values = new LinkedHashMap<String, Object>();
-            values.put("count", null);  // primitive int — must be skipped
+            values.put("count", null); // primitive int — must be skipped
             values.put("name", "test");
             var result = PojoObjectCreation.INSTANCE.create(WithPrimitive.class, fields, values);
             assertThat(result.count).isEqualTo(0);
@@ -95,8 +94,7 @@ class SetterStrategyTest {
         void missingFieldIsSkippedGracefully() throws Exception {
             var fields = List.of(
                     new FieldDescriptor("real", String.class, String.class, Collections.emptyList()),
-                    new FieldDescriptor("ghost", String.class, String.class, Collections.emptyList())
-            );
+                    new FieldDescriptor("ghost", String.class, String.class, Collections.emptyList()));
             var values = Map.of("real", (Object) "ok", "ghost", (Object) "ignored");
             var result = PojoObjectCreation.INSTANCE.create(FieldNotFound.class, fields, values);
             assertThat(result.real).isEqualTo("ok");

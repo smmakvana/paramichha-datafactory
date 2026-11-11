@@ -1,12 +1,11 @@
 package com.paramichha.datafactory.regression;
 
-import com.paramichha.datafactory.DataFactory;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.paramichha.datafactory.DataFactory;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 /**
  * The discovery lists are typed by hand, so keep them honest: every name must be a real
@@ -15,9 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DiscoveryListRegressionTest {
 
     private static final String[] PACKAGES = {
-            "jakarta.validation.constraints.",
-            "jakarta.validation.",            // @Valid: the cascade annotation, not a constraint
-            "org.hibernate.validator.constraints."
+        "jakarta.validation.constraints.",
+        "jakarta.validation.", // @Valid: the cascade annotation, not a constraint
+        "org.hibernate.validator.constraints."
     };
 
     @Test

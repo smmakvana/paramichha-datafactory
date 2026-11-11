@@ -1,10 +1,11 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** How AnnotationAnalyzer maps field types to their value kinds. */
 @DisplayName("AnnotationAnalyzer type mappings")

@@ -1,14 +1,13 @@
 package com.paramichha.datafactory.regression;
 
-import com.paramichha.datafactory.DataFactory;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.paramichha.datafactory.DataFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 /**
  * Regression: a type that contains itself through an Optional or a collection
@@ -18,21 +17,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 class RecursiveTypesRegressionTest {
 
     record Category(String name, List<Category> children) {}
+
     record Reply(String text, Optional<Reply> parent) {}
+
     record Tag(String label, Set<Tag> related) {}
+
     record Folder(String name, Map<String, Folder> subfolders) {}
 
     @Test
     void aTreeHasOneLevelOfChildren() {
         Category root = DataFactory.of(Category.class).valid().get();
-        assertThat(root.children()).singleElement()
+        assertThat(root.children())
+                .singleElement()
                 .satisfies(child -> assertThat(child.children()).isEmpty());
     }
 
     @Test
     void anOptionalSelfReferenceIsEmptyOneLevelDown() {
         Reply reply = DataFactory.of(Reply.class).valid().get();
-        assertThat(reply.parent()).hasValueSatisfying(p -> assertThat(p.parent()).isEmpty());
+        assertThat(reply.parent())
+                .hasValueSatisfying(p -> assertThat(p.parent()).isEmpty());
     }
 
     @Test

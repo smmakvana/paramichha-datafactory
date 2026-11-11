@@ -1,12 +1,11 @@
 package com.paramichha.datafactory.generation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.constraint.AnnotationResolver;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Strings that must have an ISBN or EAN format. */
 @DisplayName("StringDataCreator — identifier formats")

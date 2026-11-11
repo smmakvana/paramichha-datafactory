@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface AnnotationParser {
 
-    Annotation parse(String annotationString) ;
+    Annotation parse(String annotationString);
 
-    default List<Annotation> parseAll(List<String> annotationStrings)  {
+    default List<Annotation> parseAll(List<String> annotationStrings) {
         List<Annotation> result = new ArrayList<>();
         for (String s : annotationStrings) {
             result.add(parse(s));

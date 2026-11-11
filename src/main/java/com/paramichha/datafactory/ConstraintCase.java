@@ -13,12 +13,7 @@ package com.paramichha.datafactory;
  * @param annotationDriven {@code true} if the violation is driven by a Jakarta annotation;
  *                         {@code false} if it is a type-default probe (e.g. null for an unannotated reference)
  */
-public record ConstraintCase(
-        String  fieldName,
-        String  constraint,
-        Object  value,
-        boolean annotationDriven
-) {
+public record ConstraintCase(String fieldName, String constraint, Object value, boolean annotationDriven) {
 
     /**
      * Creates an annotation-driven constraint case.

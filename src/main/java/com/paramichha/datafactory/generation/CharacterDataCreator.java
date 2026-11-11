@@ -21,7 +21,9 @@ final class CharacterDataCreator implements DataCreator {
 
     @Override
     public Object shape(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
-        if ("null".equals(target.label())) return null;
+        if ("null".equals(target.label())) {
+            return null;
+        }
 
         // Pattern constraint — pick first char from a simple [abc] class
         if (field.patternRegexp() != null) {
@@ -37,9 +39,15 @@ final class CharacterDataCreator implements DataCreator {
 
         // Semantic — field name hints
         String name = field.fieldName().toLowerCase();
-        if (name.contains("gender")) return machine.number(0, 1) == 0 ? 'M' : 'F';
-        if (name.contains("grade"))  return (char) ('A' + machine.number(0, 4));
-        if (name.contains("flag"))   return machine.number(0, 1) == 0 ? 'Y' : 'N';
+        if (name.contains("gender")) {
+            return machine.number(0, 1) == 0 ? 'M' : 'F';
+        }
+        if (name.contains("grade")) {
+            return (char) ('A' + machine.number(0, 4));
+        }
+        if (name.contains("flag")) {
+            return machine.number(0, 1) == 0 ? 'Y' : 'N';
+        }
 
         // Default — random printable ASCII letter
         return (char) ('A' + machine.number(0, 25));

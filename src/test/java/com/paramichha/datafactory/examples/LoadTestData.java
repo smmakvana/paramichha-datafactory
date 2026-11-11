@@ -1,28 +1,38 @@
 package com.paramichha.datafactory.examples;
 
 import com.paramichha.datafactory.DataFactory;
-import jakarta.validation.constraints.*;
-import lombok.Builder;
-import lombok.Value;
-
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.DoubleSummaryStatistics;
 import java.util.IntSummaryStatistics;
 import java.util.List;
+import lombok.Builder;
+import lombok.Value;
 
 /**
  * Load Test Data — generating thousands of realistic objects in milliseconds.
  */
 public class LoadTestData {
 
-    @Value @Builder
+    @Value
+    @Builder
     static class OrderRequest {
-        @NotBlank @Email           String customerEmail;
-        @NotBlank                  String productSku;
+        @NotBlank @Email String customerEmail;
+
+        @NotBlank String productSku;
+
         @NotNull @Min(1) @Max(999) Integer quantity;
-        @NotNull @Positive         BigDecimal unitPrice;
-        @NotNull @Past             LocalDate orderDate;
+
+        @NotNull @Positive BigDecimal unitPrice;
+
+        @NotNull @Past LocalDate orderDate;
     }
 
     public static void main(String[] args) {
@@ -35,13 +45,15 @@ public class LoadTestData {
     static void bulkObjects() {
         section("1000 valid orders in one line");
         long start = System.currentTimeMillis();
-        List<OrderRequest> orders = DataFactory.of(OrderRequest.class).validList(1000).getAll();
+        List<OrderRequest> orders =
+                DataFactory.of(OrderRequest.class).validList(1000).getAll();
         long ms = System.currentTimeMillis() - start;
-        long unique = orders.stream().map(OrderRequest::getCustomerEmail).distinct().count();
+        long unique =
+                orders.stream().map(OrderRequest::getCustomerEmail).distinct().count();
         System.out.println("  generated:     " + orders.size() + " orders in " + ms + "ms");
         System.out.println("  unique emails: " + unique);
-        System.out.println("  sample:        " + orders.get(0).getCustomerEmail()
-                + "  qty=" + orders.get(0).getQuantity());
+        System.out.println("  sample:        " + orders.get(0).getCustomerEmail() + "  qty="
+                + orders.get(0).getQuantity());
     }
 
     static void bulkStrings() {
@@ -59,15 +71,15 @@ public class LoadTestData {
 
     static void distribution() {
         section("Data distribution — 500 orders");
-        List<OrderRequest> orders = DataFactory.of(OrderRequest.class).validList(500).getAll();
-        IntSummaryStatistics qty = orders.stream()
-                .mapToInt(OrderRequest::getQuantity).summaryStatistics();
-        DoubleSummaryStatistics price = orders.stream()
-                .mapToDouble(o -> o.getUnitPrice().doubleValue()).summaryStatistics();
-        System.out.println("  qty   min=" + qty.getMin() + " max=" + qty.getMax()
-                + String.format(" avg=%.1f", qty.getAverage()));
-        System.out.printf("  price min=%.2f max=%.2f avg=%.2f%n",
-                price.getMin(), price.getMax(), price.getAverage());
+        List<OrderRequest> orders =
+                DataFactory.of(OrderRequest.class).validList(500).getAll();
+        IntSummaryStatistics qty =
+                orders.stream().mapToInt(OrderRequest::getQuantity).summaryStatistics();
+        DoubleSummaryStatistics price =
+                orders.stream().mapToDouble(o -> o.getUnitPrice().doubleValue()).summaryStatistics();
+        System.out.println(
+                "  qty   min=" + qty.getMin() + " max=" + qty.getMax() + String.format(" avg=%.1f", qty.getAverage()));
+        System.out.printf("  price min=%.2f max=%.2f avg=%.2f%n", price.getMin(), price.getMax(), price.getAverage());
     }
 
     static void section(String t) {

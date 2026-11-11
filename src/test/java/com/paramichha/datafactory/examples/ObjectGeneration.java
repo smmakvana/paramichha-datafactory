@@ -1,13 +1,19 @@
 package com.paramichha.datafactory.examples;
 
 import com.paramichha.datafactory.DataFactory;
-import jakarta.validation.constraints.*;
-import lombok.Builder;
-import lombok.Value;
-
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import lombok.Builder;
+import lombok.Value;
 
 /**
  * Object Generation — DataFactory reads your Jakarta annotations and generates
@@ -15,13 +21,18 @@ import java.util.List;
  */
 public class ObjectGeneration {
 
-    @Value @Builder
+    @Value
+    @Builder
     static class CustomerRequest {
         @NotBlank @Email @Size(max = 100) String email;
+
         @NotBlank @Size(min = 2, max = 50) String fullName;
-        @NotNull @Min(18) @Max(120)        Integer age;
-        @NotNull @Past                     LocalDate dateOfBirth;
-        @NotNull @Positive                 BigDecimal accountBalance;
+
+        @NotNull @Min(18) @Max(120) Integer age;
+
+        @NotNull @Past LocalDate dateOfBirth;
+
+        @NotNull @Positive BigDecimal accountBalance;
     }
 
     public static void main(String[] args) {
@@ -50,7 +61,8 @@ public class ObjectGeneration {
         CustomerRequest r = DataFactory.of(CustomerRequest.class)
                 .with("email", "fixed@mycompany.com")
                 .with("age", 25)
-                .valid().get();
+                .valid()
+                .get();
         System.out.println("  email: " + r.getEmail() + "  age: " + r.getAge());
         System.out.println("  name still generated: " + r.getFullName());
     }
@@ -59,23 +71,24 @@ public class ObjectGeneration {
         section("Null a specific field");
         CustomerRequest r = DataFactory.of(CustomerRequest.class)
                 .withNull("dateOfBirth")
-                .valid().get();
+                .valid()
+                .get();
         System.out.println("  dob:     " + r.getDateOfBirth() + "  (null)");
         System.out.println("  balance: " + r.getAccountBalance() + "  (still generated)");
     }
 
     static void allViolations() {
         section("All constraint violations — one object per constraint");
-        List<CustomerRequest> bad = DataFactory.of(CustomerRequest.class).invalidList().getAll();
+        List<CustomerRequest> bad =
+                DataFactory.of(CustomerRequest.class).invalidList().getAll();
         System.out.println("  " + bad.size() + " invalid customers:");
-        bad.forEach(c -> System.out.println(
-                "    email=" + shorten(c.getEmail(), 22)
-                + "  age=" + c.getAge()));
+        bad.forEach(c -> System.out.println("    email=" + shorten(c.getEmail(), 22) + "  age=" + c.getAge()));
     }
 
     static void invalidForField() {
         section("Invalid for one specific field");
-        CustomerRequest r = DataFactory.of(CustomerRequest.class).invalidFor("email").get();
+        CustomerRequest r =
+                DataFactory.of(CustomerRequest.class).invalidFor("email").get();
         System.out.println("  email:   " + r.getEmail() + "  ← invalid");
         System.out.println("  name:    " + r.getFullName() + "  ← valid");
         System.out.println("  age:     " + r.getAge() + "  ← valid");
@@ -87,14 +100,17 @@ public class ObjectGeneration {
         map.forEach((field, variants) -> {
             if (field.equals("age")) {
                 System.out.println("  age boundaries: "
-                        + variants.getAll().stream().map(c -> String.valueOf(c.getAge())).toList());
+                        + variants.getAll().stream()
+                                .map(c -> String.valueOf(c.getAge()))
+                                .toList());
             }
         });
     }
 
     static void bulkGeneration() {
         section("1000 customers in one line");
-        List<CustomerRequest> bulk = DataFactory.of(CustomerRequest.class).validList(1000).getAll();
+        List<CustomerRequest> bulk =
+                DataFactory.of(CustomerRequest.class).validList(1000).getAll();
         long unique = bulk.stream().map(CustomerRequest::getEmail).distinct().count();
         System.out.println("  generated:    " + bulk.size());
         System.out.println("  unique emails: " + unique);
@@ -102,8 +118,10 @@ public class ObjectGeneration {
 
     static void deterministicSeed() {
         section("Deterministic — same seed, same data");
-        CustomerRequest a = DataFactory.of(CustomerRequest.class).seed(42L).valid().get();
-        CustomerRequest b = DataFactory.of(CustomerRequest.class).seed(42L).valid().get();
+        CustomerRequest a =
+                DataFactory.of(CustomerRequest.class).seed(42L).valid().get();
+        CustomerRequest b =
+                DataFactory.of(CustomerRequest.class).seed(42L).valid().get();
         System.out.println("  run 1: " + a.getEmail());
         System.out.println("  run 2: " + b.getEmail());
         System.out.println("  same:  " + a.getEmail().equals(b.getEmail()));

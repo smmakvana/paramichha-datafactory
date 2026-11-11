@@ -1,12 +1,40 @@
 package com.paramichha.datafactory;
 
-import com.paramichha.datafactory.builder.*;
-
+import com.paramichha.datafactory.builder.DefaultBigDecimalValue;
+import com.paramichha.datafactory.builder.DefaultBooleanValue;
+import com.paramichha.datafactory.builder.DefaultByteValue;
+import com.paramichha.datafactory.builder.DefaultDataBuilder;
+import com.paramichha.datafactory.builder.DefaultDoubleValue;
+import com.paramichha.datafactory.builder.DefaultFloatValue;
+import com.paramichha.datafactory.builder.DefaultIntegerValue;
+import com.paramichha.datafactory.builder.DefaultLocalDateTimeValue;
+import com.paramichha.datafactory.builder.DefaultLocalDateValue;
+import com.paramichha.datafactory.builder.DefaultLongValue;
+import com.paramichha.datafactory.builder.DefaultShortValue;
+import com.paramichha.datafactory.builder.DefaultStringValue;
+import com.paramichha.datafactory.builder.ValueBuilderFactory;
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.*;
-import java.util.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -64,61 +92,93 @@ public final class DataFactory {
     // =========================================================================
 
     /** A realistic email address. Example: {@code alice.johnson@example.com} */
-    public static String email()       { return string("email").valid(); }
+    public static String email() {
+        return string("email").valid();
+    }
 
     /** A realistic full name. Example: {@code Alice Johnson} */
-    public static String name()        { return string("name").valid(); }
+    public static String name() {
+        return string("name").valid();
+    }
 
     /** A realistic first name. Example: {@code Alice} */
-    public static String firstName()   { return string("firstName").valid(); }
+    public static String firstName() {
+        return string("firstName").valid();
+    }
 
     /** A realistic last name. Example: {@code Johnson} */
-    public static String lastName()    { return string("lastName").valid(); }
+    public static String lastName() {
+        return string("lastName").valid();
+    }
 
     /** A realistic phone number. Example: {@code +44 7700 900123} */
-    public static String phone()       { return string("phone").valid(); }
+    public static String phone() {
+        return string("phone").valid();
+    }
 
     /** A realistic city name. Example: {@code London} */
-    public static String city()        { return string("city").valid(); }
+    public static String city() {
+        return string("city").valid();
+    }
 
     /** A realistic country name. Example: {@code United Kingdom} */
-    public static String country()     { return string("country").valid(); }
+    public static String country() {
+        return string("country").valid();
+    }
 
     /** A realistic postcode. Example: {@code SW1A 1AA} */
-    public static String postcode()    { return string("postcode").valid(); }
+    public static String postcode() {
+        return string("postcode").valid();
+    }
 
     /** A realistic URL. Example: {@code https://example.com} */
-    public static String url()         { return string("url").valid(); }
+    public static String url() {
+        return string("url").valid();
+    }
 
     /** A realistic company name. Example: {@code Acme Corp} */
-    public static String company()     { return string("company").valid(); }
+    public static String company() {
+        return string("company").valid();
+    }
 
     /** A realistic sentence or description. */
-    public static String description() { return string("description").valid(); }
+    public static String description() {
+        return string("description").valid();
+    }
 
     /** A random UUID string. Example: {@code 550e8400-e29b-41d4-a716-446655440000} */
-    public static String uuid()        { return UUID.randomUUID().toString(); }
+    public static String uuid() {
+        return UUID.randomUUID().toString();
+    }
 
     /** {@code n} realistic email addresses. */
-    public static List<String> emails(int n)    { return string("email").stream(n); }
+    public static List<String> emails(int n) {
+        return string("email").stream(n);
+    }
 
     /** {@code n} realistic full names. */
-    public static List<String> names(int n)     { return string("name").stream(n); }
+    public static List<String> names(int n) {
+        return string("name").stream(n);
+    }
 
     /** {@code n} realistic phone numbers. */
-    public static List<String> phones(int n)    { return string("phone").stream(n); }
+    public static List<String> phones(int n) {
+        return string("phone").stream(n);
+    }
 
     /** {@code n} realistic city names. */
-    public static List<String> cities(int n)    { return string("city").stream(n); }
+    public static List<String> cities(int n) {
+        return string("city").stream(n);
+    }
 
     /** {@code n} realistic company names. */
-    public static List<String> companies(int n) { return string("company").stream(n); }
+    public static List<String> companies(int n) {
+        return string("company").stream(n);
+    }
 
     /** {@code n} random UUID strings. */
     public static List<String> uuids(int n) {
-        return IntStream.range(0, n)
-                .mapToObj(i -> UUID.randomUUID().toString())
-                .collect(Collectors.toList());
+        return IntStream.range(0, n).mapToObj(i -> UUID.randomUUID().toString()).collect(Collectors.toList());
     }
 
     // =========================================================================
@@ -288,9 +348,10 @@ public final class DataFactory {
      */
     public static <E extends Enum<E>> E enumOf(Class<E> enumType) {
         E[] constants = enumType.getEnumConstants();
-        if (constants == null || constants.length == 0)
+        if (constants == null || constants.length == 0) {
             throw new DataFactoryException(
                     "Cannot generate enum value — " + enumType.getSimpleName() + " has no constants");
+        }
         return constants[ThreadLocalRandom.current().nextInt(constants.length)];
     }
 
@@ -305,9 +366,10 @@ public final class DataFactory {
      */
     public static <E extends Enum<E>> List<E> enumOf(Class<E> enumType, int n) {
         E[] constants = enumType.getEnumConstants();
-        if (constants == null || constants.length == 0)
+        if (constants == null || constants.length == 0) {
             throw new DataFactoryException(
                     "Cannot generate enum values — " + enumType.getSimpleName() + " has no constants");
+        }
         return IntStream.range(0, n)
                 .mapToObj(i -> constants[ThreadLocalRandom.current().nextInt(constants.length)])
                 .collect(Collectors.toList());
@@ -322,9 +384,10 @@ public final class DataFactory {
      */
     public static <E extends Enum<E>> E enumOf(Class<E> enumType, long seed) {
         E[] constants = enumType.getEnumConstants();
-        if (constants == null || constants.length == 0)
+        if (constants == null || constants.length == 0) {
             throw new DataFactoryException(
                     "Cannot generate enum value — " + enumType.getSimpleName() + " has no constants");
+        }
         return constants[(int) (Math.abs(seed) % constants.length)];
     }
 
@@ -334,9 +397,10 @@ public final class DataFactory {
      */
     public static <E extends Enum<E>> List<E> enumOf(Class<E> enumType, int n, long seed) {
         E[] constants = enumType.getEnumConstants();
-        if (constants == null || constants.length == 0)
+        if (constants == null || constants.length == 0) {
             throw new DataFactoryException(
                     "Cannot generate enum values — " + enumType.getSimpleName() + " has no constants");
+        }
         Random rng = new Random(seed);
         return IntStream.range(0, n)
                 .mapToObj(i -> constants[rng.nextInt(constants.length)])
@@ -385,8 +449,7 @@ public final class DataFactory {
      * List&lt;String&gt; validEmails = fb.validList();
      * </pre>
      */
-    public static <T> FieldValue<T> field(String name, Class<T> type,
-                                          List<Annotation> annotations) {
+    public static <T> FieldValue<T> field(String name, Class<T> type, List<Annotation> annotations) {
         return ValueBuilderFactory.create(name, type, annotations);
     }
 
@@ -404,7 +467,9 @@ public final class DataFactory {
 
     static String readVersion(java.io.InputStream resource) {
         try (java.io.InputStream in = resource) {
-            if (in == null) return "unknown";
+            if (in == null) {
+                return "unknown";
+            }
             Properties p = new Properties();
             p.load(in);
             String v = p.getProperty("version", "unknown").trim();
@@ -430,47 +495,129 @@ public final class DataFactory {
 
     // ── Object-level static shortcuts ────────────────────────────────────────
 
-    public static <T> DataFactoryResult<T>               valid(Class<T> type)                    { return of(type).valid(); }
-    public static <T> DataFactoryResult<T>               invalid(Class<T> type)                  { return of(type).invalid(); }
-    public static <T> DataFactoryResult<T>               invalidFor(Class<T> type, String field) { return of(type).invalidFor(field); }
-    public static <T> DataFactoryResults<T>              validList(Class<T> type, int count)     { return of(type).validList(count); }
-    public static <T> DataFactoryResults<T>              invalidList(Class<T> type)              { return of(type).invalidList(); }
-    public static <T> Map<String, DataFactoryResults<T>> validPerField(Class<T> type)            { return of(type).validPerField(); }
-    public static Map<String, DataFactoryResult<FieldCases>> fields(Class<?> type)               { return of(type).fields(); }
+    public static <T> DataFactoryResult<T> valid(Class<T> type) {
+        return of(type).valid();
+    }
+
+    public static <T> DataFactoryResult<T> invalid(Class<T> type) {
+        return of(type).invalid();
+    }
+
+    public static <T> DataFactoryResult<T> invalidFor(Class<T> type, String field) {
+        return of(type).invalidFor(field);
+    }
+
+    public static <T> DataFactoryResults<T> validList(Class<T> type, int count) {
+        return of(type).validList(count);
+    }
+
+    public static <T> DataFactoryResults<T> invalidList(Class<T> type) {
+        return of(type).invalidList();
+    }
+
+    public static <T> Map<String, DataFactoryResults<T>> validPerField(Class<T> type) {
+        return of(type).validPerField();
+    }
+
+    public static Map<String, DataFactoryResult<FieldCases>> fields(Class<?> type) {
+        return of(type).fields();
+    }
 
     // ── Discovery ────────────────────────────────────────────────────────────
 
     /** Scalar types DataFactory can generate values for. */
-    public static Set<Class<?>> supportedTypes()       { return SUPPORTED_TYPES; }
+    public static Set<Class<?>> supportedTypes() {
+        return SUPPORTED_TYPES;
+    }
 
     /** Simple names of the constraint annotations DataFactory understands. */
-    public static Set<String>   supportedAnnotations() { return SUPPORTED_ANNOTATIONS; }
+    public static Set<String> supportedAnnotations() {
+        return SUPPORTED_ANNOTATIONS;
+    }
 
     /** Whether DataFactory can generate a value of {@code type}. */
     public static boolean canHandle(Class<?> type) {
-        if (type == null)                            return false;
-        if (type.isEnum())                           return true;
-        if (type.isArray())                          return canHandle(type.getComponentType());
-        if (Collection.class.isAssignableFrom(type)) return true;
-        if (Map.class.isAssignableFrom(type))        return true;
+        if (type == null) {
+            return false;
+        }
+        if (type.isEnum()) {
+            return true;
+        }
+        if (type.isArray()) {
+            return canHandle(type.getComponentType());
+        }
+        if (Collection.class.isAssignableFrom(type)) {
+            return true;
+        }
+        if (Map.class.isAssignableFrom(type)) {
+            return true;
+        }
         return SUPPORTED_TYPES.contains(type);
     }
 
     // ── Registries ────────────────────────────────────────────────────────────
 
     private static final Set<Class<?>> SUPPORTED_TYPES = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(
-            boolean.class, char.class, byte.class, short.class, int.class, long.class, float.class, double.class,
-            Boolean.class, Character.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class,
-            String.class, BigDecimal.class, BigInteger.class, UUID.class,
-            Instant.class, LocalDate.class, LocalDateTime.class, LocalTime.class,
-            ZonedDateTime.class, OffsetDateTime.class, Date.class, Year.class, YearMonth.class
-    )));
+            boolean.class,
+            char.class,
+            byte.class,
+            short.class,
+            int.class,
+            long.class,
+            float.class,
+            double.class,
+            Boolean.class,
+            Character.class,
+            Byte.class,
+            Short.class,
+            Integer.class,
+            Long.class,
+            Float.class,
+            Double.class,
+            String.class,
+            BigDecimal.class,
+            BigInteger.class,
+            UUID.class,
+            Instant.class,
+            LocalDate.class,
+            LocalDateTime.class,
+            LocalTime.class,
+            ZonedDateTime.class,
+            OffsetDateTime.class,
+            Date.class,
+            Year.class,
+            YearMonth.class)));
 
-    private static final Set<String> SUPPORTED_ANNOTATIONS = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(
-            "NotNull", "Null", "NotBlank", "NotEmpty", "Size", "Min", "Max",
-            "DecimalMin", "DecimalMax", "Digits", "Positive", "PositiveOrZero",
-            "Negative", "NegativeOrZero", "Pattern", "Email", "AssertTrue", "AssertFalse",
-            "Past", "PastOrPresent", "Future", "FutureOrPresent", "Valid",
-            "Length", "Range", "URL", "CreditCardNumber", "ISBN", "EAN", "UUID"
-    )));
+    private static final Set<String> SUPPORTED_ANNOTATIONS =
+            Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(
+                    "NotNull",
+                    "Null",
+                    "NotBlank",
+                    "NotEmpty",
+                    "Size",
+                    "Min",
+                    "Max",
+                    "DecimalMin",
+                    "DecimalMax",
+                    "Digits",
+                    "Positive",
+                    "PositiveOrZero",
+                    "Negative",
+                    "NegativeOrZero",
+                    "Pattern",
+                    "Email",
+                    "AssertTrue",
+                    "AssertFalse",
+                    "Past",
+                    "PastOrPresent",
+                    "Future",
+                    "FutureOrPresent",
+                    "Valid",
+                    "Length",
+                    "Range",
+                    "URL",
+                    "CreditCardNumber",
+                    "ISBN",
+                    "EAN",
+                    "UUID")));
 }

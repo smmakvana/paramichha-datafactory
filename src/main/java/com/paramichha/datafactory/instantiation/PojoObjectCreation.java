@@ -2,7 +2,6 @@ package com.paramichha.datafactory.instantiation;
 
 import com.paramichha.datafactory.constraint.FieldDescriptor;
 import com.paramichha.datafactory.utils.JavaNames;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -15,8 +14,7 @@ public final class PojoObjectCreation implements ObjectCreation {
 
     public static final PojoObjectCreation INSTANCE = new PojoObjectCreation();
 
-    private PojoObjectCreation() {
-    }
+    private PojoObjectCreation() {}
 
     private static Field findField(Class<?> type, String name) {
         for (Class<?> c = type; c != null && c != Object.class; c = c.getSuperclass()) {
@@ -40,15 +38,16 @@ public final class PojoObjectCreation implements ObjectCreation {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T create(Class<T> type, List<FieldDescriptor> fields,
-                        Map<String, Object> values) throws Exception {
+    public <T> T create(Class<T> type, List<FieldDescriptor> fields, Map<String, Object> values) throws Exception {
         Constructor<?> noArgs = type.getDeclaredConstructor();
         noArgs.setAccessible(true);
         T instance = (T) noArgs.newInstance();
 
         for (FieldDescriptor f : fields) {
             Object value = values.get(f.name());
-            if (value == null && f.rawType().isPrimitive()) continue;
+            if (value == null && f.rawType().isPrimitive()) {
+                continue;
+            }
 
             String setter = JavaNames.setterName(f.name());
             try {

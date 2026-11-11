@@ -1,10 +1,11 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** The convenience methods on FieldConstraints. */
 @DisplayName("FieldConstraints")
@@ -70,22 +71,30 @@ class FieldConstraintsTest {
 
         @Test
         void hasFormat_true() {
-            assertThat(AnnotationResolver.analyzeFromStrings("e", "String", List.of("@Email")).hasFormat()).isTrue();
+            assertThat(AnnotationResolver.analyzeFromStrings("e", "String", List.of("@Email"))
+                            .hasFormat())
+                    .isTrue();
         }
 
         @Test
         void hasFormat_false() {
-            assertThat(AnnotationResolver.analyzeFromStrings("n", "String", List.of()).hasFormat()).isFalse();
+            assertThat(AnnotationResolver.analyzeFromStrings("n", "String", List.of())
+                            .hasFormat())
+                    .isFalse();
         }
 
         @Test
         void hasBounds_true() {
-            assertThat(AnnotationResolver.analyzeFromStrings("n", "Integer", List.of("@Min(1)")).hasBounds()).isTrue();
+            assertThat(AnnotationResolver.analyzeFromStrings("n", "Integer", List.of("@Min(1)"))
+                            .hasBounds())
+                    .isTrue();
         }
 
         @Test
         void hasBounds_false() {
-            assertThat(AnnotationResolver.analyzeFromStrings("n", "Integer", List.of()).hasBounds()).isFalse();
+            assertThat(AnnotationResolver.analyzeFromStrings("n", "Integer", List.of())
+                            .hasBounds())
+                    .isFalse();
         }
 
         @Test
@@ -95,7 +104,9 @@ class FieldConstraintsTest {
 
         @Test
         void hasTemporal_false() {
-            assertThat(AnnotationResolver.analyzeFromStrings("n", "String", List.of()).hasTemporal()).isFalse();
+            assertThat(AnnotationResolver.analyzeFromStrings("n", "String", List.of())
+                            .hasTemporal())
+                    .isFalse();
         }
     }
 }

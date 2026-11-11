@@ -8,5 +8,6 @@ import com.paramichha.datafactory.constraint.FieldConstraints;
  */
 interface DataCreator {
     boolean supports(Class<?> fieldType);
+
     Object shape(FieldConstraints field, BoundaryTarget target, DataMachine machine);
 }

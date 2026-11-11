@@ -1,7 +1,6 @@
 package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,22 +9,23 @@ import java.util.List;
  */
 public final class DataGenerator {
     private static final List<DataCreator> creators = List.of(
-            BooleanDataCreator.INSTANCE,    // before String
-            EnumDataCreator.INSTANCE,       // before Object
-            UuidDataCreator.INSTANCE,       // before String
-            TemporalDataCreator.INSTANCE,   // before Object
-            NumericDataCreator.INSTANCE,    // before Object
-            CharacterDataCreator.INSTANCE,  // before String
-            ArrayDataCreator.INSTANCE,      // before Object
+            BooleanDataCreator.INSTANCE, // before String
+            EnumDataCreator.INSTANCE, // before Object
+            UuidDataCreator.INSTANCE, // before String
+            TemporalDataCreator.INSTANCE, // before Object
+            NumericDataCreator.INSTANCE, // before Object
+            CharacterDataCreator.INSTANCE, // before String
+            ArrayDataCreator.INSTANCE, // before Object
             CollectionDataCreator.INSTANCE, // before Object
-            StringDataCreator.INSTANCE      // catch-all
-    );
+            StringDataCreator.INSTANCE // catch-all
+            );
 
-    private DataGenerator() {
-    }
+    private DataGenerator() {}
 
     public static Object shape(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
-        if ("null".equals(target.label())) return null;
+        if ("null".equals(target.label())) {
+            return null;
+        }
         for (DataCreator creator : creators) {
             if (creator.supports(field.fieldType())) {
                 return creator.shape(field, target, machine);
@@ -34,8 +34,8 @@ public final class DataGenerator {
         // #1 — no silent null: surface unsupported types immediately
         throw new com.paramichha.datafactory.DataFactoryException(
                 com.paramichha.datafactory.ErrorType.UNSUPPORTED_CLASS_TYPE,
-                "No DataCreator found for type: " + field.fieldType().getName()
-                + " (field: " + field.fieldName() + ")");
+                "No DataCreator found for type: " + field.fieldType().getName() + " (field: " + field.fieldName()
+                        + ")");
     }
 
     /**

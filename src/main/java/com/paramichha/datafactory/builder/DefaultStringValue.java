@@ -1,8 +1,11 @@
 package com.paramichha.datafactory.builder;
 
-import com.paramichha.datafactory.*;
+import com.paramichha.datafactory.AnnotationParseException;
+import com.paramichha.datafactory.DataFactory;
+import com.paramichha.datafactory.DataFactoryException;
+import com.paramichha.datafactory.FieldValue;
+import com.paramichha.datafactory.StringValue;
 import jakarta.validation.constraints.NotBlank;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -33,7 +36,9 @@ public final class DefaultStringValue implements StringValue {
 
     private FieldValue<String> delegate;
     /** Constraints applied so far, and the seed: replayed when hint() starts a new builder. */
-    private final java.util.List<java.util.function.UnaryOperator<FieldValue<String>>> applied = new java.util.ArrayList<>();
+    private final java.util.List<java.util.function.UnaryOperator<FieldValue<String>>> applied =
+            new java.util.ArrayList<>();
+
     private Long seed;
 
     public DefaultStringValue(FieldValue<String> delegate) {
@@ -55,8 +60,12 @@ public final class DefaultStringValue implements StringValue {
     public DefaultStringValue hint(String hint) {
         // Keep constraints and a seed set before the hint: string().maxLength(10).email() stays short.
         FieldValue<String> next = ValueBuilderFactory.create(String.class, hint);
-        for (var op : applied) next = op.apply(next);
-        if (seed != null) next = next.seed(seed);
+        for (var op : applied) {
+            next = op.apply(next);
+        }
+        if (seed != null) {
+            next = next.seed(seed);
+        }
         this.delegate = next;
         return this;
     }
@@ -68,76 +77,124 @@ public final class DefaultStringValue implements StringValue {
     }
 
     /** Generates a realistic email address. Example: {@code alice.johnson@example.com} */
-    public DefaultStringValue email()         { return hint("email"); }
+    public DefaultStringValue email() {
+        return hint("email");
+    }
 
     /** Generates a realistic phone number. Example: {@code +44 7700 900123} */
-    public DefaultStringValue phone()         { return hint("phone"); }
+    public DefaultStringValue phone() {
+        return hint("phone");
+    }
 
     /** Generates a realistic full name. Example: {@code Alice Johnson} */
-    public DefaultStringValue name()          { return hint("name"); }
+    public DefaultStringValue name() {
+        return hint("name");
+    }
 
     /** Generates a realistic first name. Example: {@code Alice} */
-    public DefaultStringValue firstName()     { return hint("firstName"); }
+    public DefaultStringValue firstName() {
+        return hint("firstName");
+    }
 
     /** Generates a realistic last name. Example: {@code Johnson} */
-    public DefaultStringValue lastName()      { return hint("lastName"); }
+    public DefaultStringValue lastName() {
+        return hint("lastName");
+    }
 
     /** Generates a realistic credit card number. */
-    public DefaultStringValue creditCard()    { return hint("creditCard"); }
+    public DefaultStringValue creditCard() {
+        return hint("creditCard");
+    }
 
     /** Generates a realistic IBAN. Example: {@code GB29NWBK60161331926819} */
-    public DefaultStringValue iban()          { return hint("iban"); }
+    public DefaultStringValue iban() {
+        return hint("iban");
+    }
 
     /** Generates a realistic BIC/SWIFT code. Example: {@code NWBKGB2L} */
-    public DefaultStringValue bic()           { return hint("bic"); }
+    public DefaultStringValue bic() {
+        return hint("bic");
+    }
 
     /** Generates a realistic postcode. Example: {@code SW1A 1AA} */
-    public DefaultStringValue postcode()      { return hint("postcode"); }
+    public DefaultStringValue postcode() {
+        return hint("postcode");
+    }
 
     /** Generates a realistic street address. */
-    public DefaultStringValue address()       { return hint("address"); }
+    public DefaultStringValue address() {
+        return hint("address");
+    }
 
     /** Generates a realistic city name. Example: {@code London} */
-    public DefaultStringValue city()          { return hint("city"); }
+    public DefaultStringValue city() {
+        return hint("city");
+    }
 
     /** Generates a realistic country name. Example: {@code United Kingdom} */
-    public DefaultStringValue country()       { return hint("country"); }
+    public DefaultStringValue country() {
+        return hint("country");
+    }
 
     /** Generates a realistic company name. Example: {@code Acme Corp} */
-    public DefaultStringValue company()       { return hint("company"); }
+    public DefaultStringValue company() {
+        return hint("company");
+    }
 
     /** Generates a realistic URL. Example: {@code https://example.com} */
-    public DefaultStringValue url()           { return hint("url"); }
+    public DefaultStringValue url() {
+        return hint("url");
+    }
 
     /** Generates a random UUID string. */
-    public DefaultStringValue uuid()          { return hint("uuid"); }
+    public DefaultStringValue uuid() {
+        return hint("uuid");
+    }
 
     /** Generates a realistic IP address. Example: {@code 192.168.1.1} */
-    public DefaultStringValue ipAddress()     { return hint("ipAddress"); }
+    public DefaultStringValue ipAddress() {
+        return hint("ipAddress");
+    }
 
     /** Generates a realistic colour name. Example: {@code Cerulean} */
-    public DefaultStringValue colour()        { return hint("colour"); }
+    public DefaultStringValue colour() {
+        return hint("colour");
+    }
 
     /** Generates a realistic username. Example: {@code alice_j42} */
-    public DefaultStringValue username()      { return hint("username"); }
+    public DefaultStringValue username() {
+        return hint("username");
+    }
 
     /** Generates a realistic sentence or description. */
-    public DefaultStringValue description()   { return hint("description"); }
+    public DefaultStringValue description() {
+        return hint("description");
+    }
 
     /** Generates a realistic password string. */
-    public DefaultStringValue password()      { return hint("password"); }
+    public DefaultStringValue password() {
+        return hint("password");
+    }
 
     /** Generates a realistic sort code. Example: {@code 60-16-13} */
-    public DefaultStringValue sortCode()      { return hint("sortCode"); }
+    public DefaultStringValue sortCode() {
+        return hint("sortCode");
+    }
 
     /** Generates a realistic bank account number. */
-    public DefaultStringValue accountNumber() { return hint("accountNumber"); }
+    public DefaultStringValue accountNumber() {
+        return hint("accountNumber");
+    }
 
     /** Generates a realistic product name. */
-    public DefaultStringValue product()       { return hint("product"); }
+    public DefaultStringValue product() {
+        return hint("product");
+    }
 
     /** Generates a realistic department name. Example: {@code Engineering} */
-    public DefaultStringValue department()    { return hint("department"); }
+    public DefaultStringValue department() {
+        return hint("department");
+    }
 
     /**
      * The generated value must not be blank.

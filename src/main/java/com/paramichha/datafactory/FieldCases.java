@@ -1,6 +1,5 @@
 package com.paramichha.datafactory;
 
-
 import java.util.List;
 
 /**
@@ -18,13 +17,9 @@ import java.util.List;
  *                     constraint; type-default probes when the field has no annotations
  */
 public record FieldCases(
-        String fieldName,
-        Class<?> fieldType,
-        List<Object> validValues,
-        List<ConstraintCase> invalidCases
-) {
+        String fieldName, Class<?> fieldType, List<Object> validValues, List<ConstraintCase> invalidCases) {
     public FieldCases {
-        validValues  = java.util.Collections.unmodifiableList(new java.util.ArrayList<>(validValues));
+        validValues = java.util.Collections.unmodifiableList(new java.util.ArrayList<>(validValues));
         invalidCases = List.copyOf(invalidCases);
     }
 }

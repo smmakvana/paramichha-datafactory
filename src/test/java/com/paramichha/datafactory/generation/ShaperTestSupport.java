@@ -2,7 +2,6 @@ package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import com.paramichha.datafactory.constraint.FieldConstraints;
-
 import java.util.List;
 
 /** Helpers shared by the shaper tests: building field constraints and boundary targets. */

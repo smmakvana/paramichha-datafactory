@@ -28,16 +28,16 @@ import java.util.function.Function;
  */
 public final class DataFactoryResult<T> {
 
-    private final T           payload;
+    private final T payload;
     private final ResultStatus status;
-    private final ErrorType   errorType;
-    private final String      reason;
+    private final ErrorType errorType;
+    private final String reason;
 
     private DataFactoryResult(T payload, ResultStatus status, ErrorType errorType, String reason) {
-        this.payload   = payload;
-        this.status    = status;
+        this.payload = payload;
+        this.status = status;
         this.errorType = errorType;
-        this.reason    = reason;
+        this.reason = reason;
     }
 
     // ── Factory methods ───────────────────────────────────────────────────────
@@ -51,14 +51,19 @@ public final class DataFactoryResult<T> {
     /** Creates a failed result. Payload will be null. */
     public static <T> DataFactoryResult<T> failure(ErrorType errorType, String reason) {
         Objects.requireNonNull(errorType, "errorType must not be null");
-        Objects.requireNonNull(reason,    "reason must not be null");
+        Objects.requireNonNull(reason, "reason must not be null");
         return new DataFactoryResult<>(null, ResultStatus.FAILED, errorType, reason);
     }
 
     // ── State checks ──────────────────────────────────────────────────────────
 
-    public boolean isSuccess() { return status == ResultStatus.SUCCESS; }
-    public boolean isFailure() { return !isSuccess(); }
+    public boolean isSuccess() {
+        return status == ResultStatus.SUCCESS;
+    }
+
+    public boolean isFailure() {
+        return !isSuccess();
+    }
 
     // ── Payload access ────────────────────────────────────────────────────────
 
@@ -67,13 +72,16 @@ public final class DataFactoryResult<T> {
      * @throws DataFactoryException if this result is a failure
      */
     public T get() {
-        if (isFailure()) throw new DataFactoryException(errorType,
-                "DataFactory [" + errorType + "]: " + reason);
+        if (isFailure()) {
+            throw new DataFactoryException(errorType, "DataFactory [" + errorType + "]: " + reason);
+        }
         return payload;
     }
 
     /** Returns the payload, or {@code null} if failed. */
-    public T getOrNull() { return payload; }
+    public T getOrNull() {
+        return payload;
+    }
 
     /** Returns the payload if successful, or {@code defaultValue} if failed. */
     public T getOrElse(T defaultValue) {
@@ -84,12 +92,13 @@ public final class DataFactoryResult<T> {
     /** Maps the payload if successful, propagates failure otherwise. */
     public <U> DataFactoryResult<U> map(Function<T, U> mapper) {
         Objects.requireNonNull(mapper, "mapper must not be null");
-        if (isFailure()) return DataFactoryResult.failure(errorType, reason);
+        if (isFailure()) {
+            return DataFactoryResult.failure(errorType, reason);
+        }
         U mapped = mapper.apply(payload);
         return mapped != null
                 ? DataFactoryResult.success(mapped)
-                : DataFactoryResult.failure(ErrorType.INTERNAL_ERROR,
-                        "mapper returned null for payload: " + payload);
+                : DataFactoryResult.failure(ErrorType.INTERNAL_ERROR, "mapper returned null for payload: " + payload);
     }
 
     /** Bridges to {@link Optional}. */
@@ -100,13 +109,19 @@ public final class DataFactoryResult<T> {
     // ── Status ────────────────────────────────────────────────────────────────
 
     /** Always present. {@link ResultStatus#SUCCESS} or {@link ResultStatus#FAILED}. */
-    public ResultStatus status()    { return status; }
+    public ResultStatus status() {
+        return status;
+    }
 
     /** Null on success. Classification of why generation failed. */
-    public ErrorType errorType()    { return errorType; }
+    public ErrorType errorType() {
+        return errorType;
+    }
 
     /** Null on success. Human readable explanation of the failure. */
-    public String reason()          { return reason; }
+    public String reason() {
+        return reason;
+    }
 
     // ── Standard overrides ────────────────────────────────────────────────────
 
@@ -119,12 +134,16 @@ public final class DataFactoryResult<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DataFactoryResult<?> other)) return false;
-        return status    == other.status
-            && errorType == other.errorType
-            && Objects.equals(payload, other.payload)
-            && Objects.equals(reason,  other.reason);
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DataFactoryResult<?> other)) {
+            return false;
+        }
+        return status == other.status
+                && errorType == other.errorType
+                && Objects.equals(payload, other.payload)
+                && Objects.equals(reason, other.reason);
     }
 
     @Override

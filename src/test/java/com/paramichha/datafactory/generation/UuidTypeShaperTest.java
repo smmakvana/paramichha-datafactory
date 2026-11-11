@@ -1,12 +1,13 @@
 package com.paramichha.datafactory.generation;
 
-import java.time.*;
+import static com.paramichha.datafactory.generation.ShaperTestSupport.fieldOf;
+import static com.paramichha.datafactory.generation.ShaperTestSupport.semantic;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static com.paramichha.datafactory.generation.ShaperTestSupport.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** UUID values: which fields the UUID shaper supports and what it shapes. */
 @DisplayName("UuidTypeShaper")
@@ -28,7 +29,8 @@ class UuidTypeShaperTest {
         @Test
         void shapeReturnsUUID() {
             var f = fieldOf("id", UUID.class);
-            assertThat(UuidDataCreator.INSTANCE.shape(f, semantic(), DataMachines.random())).isInstanceOf(UUID.class);
+            assertThat(UuidDataCreator.INSTANCE.shape(f, semantic(), DataMachines.random()))
+                    .isInstanceOf(UUID.class);
         }
     }
 }

@@ -1,9 +1,13 @@
 package com.paramichha.datafactory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import jakarta.validation.constraints.AssertFalse;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import java.util.Map;
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.Value;
 import org.junit.jupiter.api.DisplayName;
@@ -13,11 +17,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Map;
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * Boolean fields in validList() — primitive and wrapper, @AssertTrue and @AssertFalse.
  * All four combinations must be excluded from the boundary map.
@@ -25,10 +24,37 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("DataBuilder — boolean field exclusion from validList()")
 class DataBuilderBooleanTest {
 
-    @Value @Builder static class PrimitiveBool { boolean active; @Min(1) @Max(10) int count; }
-    @Value @Builder static class WrapperBool   { Boolean active; @Min(1) @Max(10) int count; }
-    @Value @Builder static class AssertTrueReq { @AssertTrue Boolean active; @Min(1) @Max(10) Integer count; }
-    @Value @Builder static class AssertFalseReq{ @AssertFalse Boolean deleted; @Min(1) @Max(10) Integer count; }
+    @Value
+    @Builder
+    static class PrimitiveBool {
+        boolean active;
+
+        @Min(1) @Max(10) int count;
+    }
+
+    @Value
+    @Builder
+    static class WrapperBool {
+        Boolean active;
+
+        @Min(1) @Max(10) int count;
+    }
+
+    @Value
+    @Builder
+    static class AssertTrueReq {
+        @AssertTrue Boolean active;
+
+        @Min(1) @Max(10) Integer count;
+    }
+
+    @Value
+    @Builder
+    static class AssertFalseReq {
+        @AssertFalse Boolean deleted;
+
+        @Min(1) @Max(10) Integer count;
+    }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("booleanFieldCases")
@@ -41,11 +67,10 @@ class DataBuilderBooleanTest {
 
     static Stream<Arguments> booleanFieldCases() {
         return Stream.of(
-            Arguments.of("boolean primitive",  PrimitiveBool.class,  "active",  "count"),
-            Arguments.of("Boolean wrapper",    WrapperBool.class,    "active",  "count"),
-            Arguments.of("@AssertTrue Boolean",AssertTrueReq.class,  "active",  "count"),
-            Arguments.of("@AssertFalse Boolean",AssertFalseReq.class,"deleted", "count")
-        );
+                Arguments.of("boolean primitive", PrimitiveBool.class, "active", "count"),
+                Arguments.of("Boolean wrapper", WrapperBool.class, "active", "count"),
+                Arguments.of("@AssertTrue Boolean", AssertTrueReq.class, "active", "count"),
+                Arguments.of("@AssertFalse Boolean", AssertFalseReq.class, "deleted", "count"));
     }
 
     @Nested

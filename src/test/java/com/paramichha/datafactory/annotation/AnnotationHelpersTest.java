@@ -1,5 +1,7 @@
 package com.paramichha.datafactory.annotation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.builder.StringAnnotationParser;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -7,13 +9,10 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.junit.jupiter.api.Test;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 /** Annotation strings and annotation proxies. */
 class AnnotationHelpersTest {
@@ -22,9 +21,12 @@ class AnnotationHelpersTest {
     void utilsParseAndValidate() {
         assertThat(AnnotationUtils.isValid("@Size(min=1, max=3)")).isTrue();
         assertThat(AnnotationUtils.isValid("@NoSuchThing(")).isFalse();
+        assertThat(AnnotationUtils.isValid(null)).isFalse();
+        assertThat(AnnotationUtils.isValid("NotBlank")).isFalse();
         assertThat(AnnotationUtils.parse("@NotBlank")).isInstanceOf(NotBlank.class);
         assertThat(AnnotationUtils.parseAll(List.of("@NotBlank", "@Size(max=4)")))
-                .extracting(Annotation::annotationType).containsExactly(NotBlank.class, Size.class);
+                .extracting(Annotation::annotationType)
+                .containsExactly(NotBlank.class, Size.class);
     }
 
     @Test

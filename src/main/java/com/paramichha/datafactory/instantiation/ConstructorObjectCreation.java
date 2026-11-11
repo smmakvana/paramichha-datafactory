@@ -1,9 +1,7 @@
 package com.paramichha.datafactory.instantiation;
 
 import com.paramichha.datafactory.constraint.FieldDescriptor;
-
 import com.paramichha.datafactory.utils.PrimitiveDefaults;
-
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
@@ -16,8 +14,7 @@ public final class ConstructorObjectCreation implements ObjectCreation {
 
     public static final ConstructorObjectCreation INSTANCE = new ConstructorObjectCreation();
 
-    private ConstructorObjectCreation() {
-    }
+    private ConstructorObjectCreation() {}
 
     private static Constructor<?> findConstructor(Class<?> type, List<FieldDescriptor> fields) {
         try {
@@ -42,8 +39,7 @@ public final class ConstructorObjectCreation implements ObjectCreation {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T create(Class<T> type, List<FieldDescriptor> fields,
-                        Map<String, Object> values) throws Exception {
+    public <T> T create(Class<T> type, List<FieldDescriptor> fields, Map<String, Object> values) throws Exception {
         Constructor<?> ctor = findConstructor(type, fields);
         ctor.setAccessible(true);
         Object[] args = fields.stream()

@@ -1,19 +1,18 @@
 package com.paramichha.datafactory.generation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.DataFactory;
 import com.paramichha.datafactory.constraint.FieldConstraints;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Name hints and the char, array and map creators. */
 class HintsAndCreatorsTest {
@@ -29,10 +28,11 @@ class HintsAndCreatorsTest {
 
     @ParameterizedTest(name = "{0} -> {1}")
     @CsvSource({
-            "nickname, USERNAME", "salutation, PREFIX", "suffix, SUFFIX", "totalAmount, PRICE",
-            "transactionId, ORDER_ID", "bankCode, ACCOUNT_CODE", "kind, TAG", "otp, CODE",
-            "voucherCode, REFERENCE", "bio, PARAGRAPH", "lang, LANGUAGE", "nationality, NATIONALITY",
-            "somethingElse, WORD", "Email, EMAIL", "ipAddress, IP_ADDRESS"})
+        "nickname, USERNAME", "salutation, PREFIX", "suffix, SUFFIX", "totalAmount, PRICE",
+        "transactionId, ORDER_ID", "bankCode, ACCOUNT_CODE", "kind, TAG", "otp, CODE",
+        "voucherCode, REFERENCE", "bio, PARAGRAPH", "lang, LANGUAGE", "nationality, NATIONALITY",
+        "somethingElse, WORD", "Email, EMAIL", "ipAddress, IP_ADDRESS"
+    })
     @DisplayName("names map to hints, case-insensitively, with WORD as the fallback")
     void namesMapToHints(String name, DataHint expected) {
         assertThat(DataHint.fromVariableName(name)).isEqualTo(expected);
@@ -48,22 +48,23 @@ class HintsAndCreatorsTest {
     @DisplayName("a char with a [abc] pattern picks one of those characters")
     void characterFromPatternClass() {
         assertThat(DataFactory.character().with("@Pattern(regexp=\"[xyz]\")").validList())
-                .isNotEmpty().allSatisfy(c -> assertThat(c).isIn('x', 'y', 'z'));
+                .isNotEmpty()
+                .allSatisfy(c -> assertThat(c).isIn('x', 'y', 'z'));
     }
 
     @Test
     @DisplayName("an array under @Size stays within its bounds")
     void arrayRespectsSize() {
         assertThat(DataFactory.field(String[].class).with("@Size(min=2, max=3)").validList())
-                .isNotEmpty().allSatisfy(a -> assertThat(a.length).isBetween(2, 3));
+                .isNotEmpty()
+                .allSatisfy(a -> assertThat(a.length).isBetween(2, 3));
     }
 
     @Test
     @DisplayName("a raw map field gets String keys and values")
     void mapCreator() {
         FieldConstraints field = FieldConstraints.builder("headers", Map.class).build();
-        Object value = CollectionDataCreator.INSTANCE.shape(field, BoundaryTarget.semantic(),
-                DataMachines.seeded(3L));
+        Object value = CollectionDataCreator.INSTANCE.shape(field, BoundaryTarget.semantic(), DataMachines.seeded(3L));
         assertThat(value).isInstanceOf(Map.class);
         assertThat((Map<?, ?>) value).isNotEmpty().allSatisfy((k, v) -> {
             assertThat(k).isInstanceOf(String.class);
@@ -77,5 +78,17 @@ class HintsAndCreatorsTest {
     void aPatternTheGeneratorCannotReadFallsBackToA() {
         // "|" splits into no alternatives at all
         assertThat(StringDataCreator.generateFromPattern("|")).isEqualTo("A");
+    }
+
+    @Test
+    @DisplayName("an array or collection field that must be null gets null")
+    void nullTargetGivesNullForArraysAndCollections() {
+        FieldConstraints array =
+                FieldConstraints.builder("tags", String[].class).build();
+        FieldConstraints list = FieldConstraints.builder("items", List.class).build();
+        assertThat(ArrayDataCreator.INSTANCE.shape(array, BoundaryTarget.nullTarget(), DataMachines.seeded(3L)))
+                .isNull();
+        assertThat(CollectionDataCreator.INSTANCE.shape(list, BoundaryTarget.nullTarget(), DataMachines.seeded(3L)))
+                .isNull();
     }
 }
