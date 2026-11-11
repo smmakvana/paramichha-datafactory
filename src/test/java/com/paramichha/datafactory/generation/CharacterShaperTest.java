@@ -1,13 +1,13 @@
 package com.paramichha.datafactory.generation;
 
-import com.paramichha.datafactory.generation.DataMachines;
-
 import com.paramichha.datafactory.constraint.AnnotationResolver;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
+import com.paramichha.datafactory.generation.DataMachines;
+import java.time.*;
 import java.util.List;
-
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import static com.paramichha.datafactory.generation.ShaperTestSupport.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -45,5 +45,30 @@ class CharacterShaperTest {
         var result = DataGenerator.shapeAll(fc, targets, DataMachines.random());
         assertThat(result).hasSize(1);
         assertThat(result.get(0)).isInstanceOf(Character.class);
+    }
+
+    @Nested
+    @DisplayName("CharacterTypeShaper")
+    class CharacterValues {
+        @Test
+        void supportsCharacter() {
+            assertThat(CharacterDataCreator.INSTANCE.supports(Character.class)).isTrue();
+        }
+
+        @Test
+        void supportsCharPrimitive() {
+            assertThat(CharacterDataCreator.INSTANCE.supports(char.class)).isTrue();
+        }
+
+        @Test
+        void supportsStringFalse() {
+            assertThat(CharacterDataCreator.INSTANCE.supports(String.class)).isFalse();
+        }
+
+        @Test
+        void shapeReturnsChar() {
+            var f = fieldOf("c", Character.class);
+            assertThat(CharacterDataCreator.INSTANCE.shape(f, semantic(), DataMachines.random())).isInstanceOf(Character.class);
+        }
     }
 }

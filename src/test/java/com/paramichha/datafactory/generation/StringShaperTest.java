@@ -1,11 +1,12 @@
 package com.paramichha.datafactory.generation;
 
-import java.util.List;
 import com.paramichha.datafactory.constraint.AnnotationResolver;
+import java.time.*;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
+import static com.paramichha.datafactory.generation.ShaperTestSupport.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("StringShaper — format-aware fitting")
@@ -233,6 +234,291 @@ class StringShaperTest {
             String url = "http://x.io";
             String result = StringDataCreator.fitUrl(url, 20);
             assertThat(result).hasSize(20);
+        }
+    }
+
+    @Nested
+    @DisplayName("StringTypeShaper")
+    class TypeShaperDelegation {
+        @Test
+        void supportsString() {
+            assertThat(StringDataCreator.INSTANCE.supports(String.class)).isTrue();
+        }
+
+        @Test
+        void supportsIntFalse() {
+            assertThat(StringDataCreator.INSTANCE.supports(int.class)).isFalse();
+        }
+
+        @Test
+        void shapeDelegates() {
+            var f = field("name", String.class, "@NotBlank");
+            assertThat(StringDataCreator.INSTANCE.shape(f, semantic(), DataMachines.random())).isInstanceOf(String.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("StringShaper.shape() — format branches")
+    class FormatBranches {
+
+        @Test
+        void emailSemanticFitsBounds() {
+            // @Email with @Size bounds — semantic path calls fitToBounds
+            var f = field("email", String.class, "@Email", "@NotBlank", "@Size(min=8, max=100)");
+            String v = StringDataCreator.getString(f, semantic(), DataMachines.random());
+            assertThat(v).contains("@");
+        }
+
+        @Test
+        void urlSemantic() {
+            var f = field("site", String.class, "@URL");
+            String v = StringDataCreator.getString(f, semantic(), DataMachines.random());
+            assertThat(v).isNotBlank();
+        }
+
+        @Test
+        void urlWithTarget() {
+            var f = field("site", String.class, "@URL");
+            String v = StringDataCreator.getString(f, atMin(30), DataMachines.random());
+            assertThat(v).hasSizeGreaterThanOrEqualTo(20);
+        }
+
+        @Test
+        void patternSemantic() {
+            // @Pattern — best-effort, returns base value
+            var f = field("code", String.class, "@Pattern(regexp=\"^[A-Z]+$\")");
+            String v = StringDataCreator.getString(f, semantic(), DataMachines.random());
+            assertThat(v).isNotNull();
+        }
+
+        @Test
+        void plainWithTarget() {
+            var f = field("name", String.class, "@NotBlank", "@Size(min=2, max=50)");
+            String v = StringDataCreator.getString(f, atMin(5), DataMachines.random());
+            assertThat(v).hasSize(5);
+        }
+
+        @Test
+        void semanticByName_phone() {
+            var f = fieldOf("phone", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_mobile() {
+            var f = fieldOf("mobile", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_firstName() {
+            var f = fieldOf("firstName", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_lastName() {
+            var f = fieldOf("lastName", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_name() {
+            var f = fieldOf("name", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_password() {
+            var f = fieldOf("password", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_url() {
+            var f = fieldOf("url", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_city() {
+            var f = fieldOf("city", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_countryCode() {
+            var f = fieldOf("countryCode", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_country() {
+            var f = fieldOf("country", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_address() {
+            var f = fieldOf("address", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_postcode() {
+            var f = fieldOf("postcode", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_zip() {
+            var f = fieldOf("zip", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_currency() {
+            var f = fieldOf("currency", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_description() {
+            var f = fieldOf("description", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_title() {
+            var f = fieldOf("title", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_company() {
+            var f = fieldOf("company", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_token() {
+            var f = fieldOf("token", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_reference() {
+            var f = fieldOf("reference", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_id() {
+            var f = fieldOf("userId", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_code() {
+            var f = fieldOf("productCode", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_status() {
+            var f = fieldOf("status", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_type() {
+            var f = fieldOf("type", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_message() {
+            var f = fieldOf("message", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void semanticByName_fallback_word() {
+            var f = fieldOf("zzz", String.class);
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void fitToBounds_tooLong_email() {
+            // semantic email longer than @Size max → fitToBounds trims via fitEmail
+            var f = field("email", String.class, "@Email", "@Size(min=8, max=20)");
+            String v = StringDataCreator.getString(f, semantic(), DataMachines.random());
+            assertThat(v.length()).isLessThanOrEqualTo(20);
+        }
+
+        @Test
+        void fitToBounds_tooShort_email() {
+            // semantic email shorter than @Size min → fitToBounds pads via fitEmail
+            var f = field("email", String.class, "@Email", "@Size(min=30, max=80)");
+            String v = StringDataCreator.getString(f, semantic(), DataMachines.random());
+            assertThat(v.length()).isGreaterThanOrEqualTo(30);
+        }
+
+        @Test
+        void fitToBounds_url_tooLong() {
+            var f = field("site", String.class, "@URL", "@Size(min=5, max=15)");
+            String v = StringDataCreator.getString(f, semantic(), DataMachines.random());
+            assertThat(v.length()).isLessThanOrEqualTo(15);
+        }
+    }
+
+    @Nested
+    @DisplayName("StringShaper.shape() — additional hint branches")
+    class AdditionalHints {
+
+        @Test
+        void linkHint() {
+            assertThat(StringDataCreator.getString(fieldOf("link", String.class), semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void websiteHint() {
+            assertThat(StringDataCreator.getString(fieldOf("website", String.class), semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void postalHint() {
+            assertThat(StringDataCreator.getString(fieldOf("postalCode", String.class), semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void ccyHint() {
+            assertThat(StringDataCreator.getString(fieldOf("ccy", String.class), semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void noteHint() {
+            assertThat(StringDataCreator.getString(fieldOf("note", String.class), semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void commentHint() {
+            assertThat(StringDataCreator.getString(fieldOf("comment", String.class), semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void organisationHint() {
+            assertThat(StringDataCreator.getString(fieldOf("organisation", String.class), semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void refHint() {
+            assertThat(StringDataCreator.getString(fieldOf("ref", String.class), semantic(), DataMachines.random())).isNotBlank();
+        }
+
+        @Test
+        void reasonHint() {
+            assertThat(StringDataCreator.getString(fieldOf("reason", String.class), semantic(), DataMachines.random())).isNotBlank();
         }
     }
 }
