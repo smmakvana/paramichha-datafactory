@@ -1,5 +1,6 @@
 package com.paramichha.datafactory.generation;
 
+import org.junit.jupiter.api.Nested;
 import com.paramichha.datafactory.constraint.AnnotationResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -120,5 +121,40 @@ class TemporalAllDirectionsTest {
     void offsetDateTime_futureOrNow() {
         var result = (OffsetDateTime) shape("OffsetDateTime", "@FutureOrPresent");
         assertThat(result).isAfter(OffsetDateTime.now().minusSeconds(1));
+    }
+
+    @Nested
+    @DisplayName("TemporalShaper — NONE direction (no annotation)")
+    class WithoutADirection {
+
+        private Object shape(String type) {
+            var fc = AnnotationResolver.analyzeFromStrings("f", type, List.of());
+            return TemporalDataCreator.getTemporal(fc, BoundaryTarget.semantic());
+        }
+
+        @Test
+        void instantWithoutADirection() {
+            assertThat(shape("Instant")).isInstanceOf(Instant.class);
+        }
+
+        @Test
+        void localDateWithoutADirection() {
+            assertThat(shape("LocalDate")).isInstanceOf(LocalDate.class);
+        }
+
+        @Test
+        void localDateTimeWithoutADirection() {
+            assertThat(shape("LocalDateTime")).isInstanceOf(LocalDateTime.class);
+        }
+
+        @Test
+        void zonedDateTimeWithoutADirection() {
+            assertThat(shape("ZonedDateTime")).isInstanceOf(ZonedDateTime.class);
+        }
+
+        @Test
+        void offsetDateTimeWithoutADirection() {
+            assertThat(shape("OffsetDateTime")).isInstanceOf(OffsetDateTime.class);
+        }
     }
 }
