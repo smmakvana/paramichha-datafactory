@@ -35,6 +35,7 @@ public final class DefaultShortValue implements ShortValue {
      * @param min inclusive minimum
      * @param max inclusive maximum
      */
+    @Override
     public DefaultShortValue range(short min, short max) {
         return with("@Min(" + min + ")").with("@Max(" + max + ")");
     }
@@ -45,6 +46,7 @@ public final class DefaultShortValue implements ShortValue {
      *
      * @param min inclusive minimum
      */
+    @Override
     public DefaultShortValue min(short min) {
         return with("@Min(" + min + ")");
     }
@@ -55,6 +57,7 @@ public final class DefaultShortValue implements ShortValue {
      *
      * @param max inclusive maximum
      */
+    @Override
     public DefaultShortValue max(short max) {
         return with("@Max(" + max + ")");
     }
@@ -63,6 +66,7 @@ public final class DefaultShortValue implements ShortValue {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
+    @Override
     public DefaultShortValue positive() {
         return with(Positive.class);
     }
@@ -71,6 +75,7 @@ public final class DefaultShortValue implements ShortValue {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
+    @Override
     public DefaultShortValue negative() {
         return with(Negative.class);
     }
@@ -80,6 +85,7 @@ public final class DefaultShortValue implements ShortValue {
      *
      * @param annotation the annotation type to add
      */
+    @Override
     public DefaultShortValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -91,6 +97,7 @@ public final class DefaultShortValue implements ShortValue {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
+    @Override
     public DefaultShortValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -102,6 +109,7 @@ public final class DefaultShortValue implements ShortValue {
      * @return a valid short
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
     public short toShort() {
         return delegate.valid();
     }
@@ -118,6 +126,7 @@ public final class DefaultShortValue implements ShortValue {
         return this;
     }
 
+    @Override
     public Short valid() {
         return delegate.valid();
     }
@@ -127,6 +136,7 @@ public final class DefaultShortValue implements ShortValue {
      *
      * @return list of valid boundary values
      */
+    @Override
     public List<Short> validList() {
         return delegate.validList();
     }
@@ -136,6 +146,7 @@ public final class DefaultShortValue implements ShortValue {
      *
      * @return a value that violates at least one constraint
      */
+    @Override
     public Short invalid() {
         return delegate.invalid();
     }
@@ -145,6 +156,7 @@ public final class DefaultShortValue implements ShortValue {
      *
      * @return list of invalid values
      */
+    @Override
     public List<Short> invalidList() {
         return delegate.invalidList();
     }
@@ -155,6 +167,7 @@ public final class DefaultShortValue implements ShortValue {
      * @param count the number of values to generate
      * @return list of valid values
      */
+    @Override
     public List<Short> stream(int count) {
         return delegate.stream(count);
     }

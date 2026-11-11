@@ -1,6 +1,7 @@
 package com.paramichha.datafactory.utils;
 
 import com.paramichha.utils.Texts;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -148,7 +149,7 @@ public final class JavaNames {
         if (Texts.isBlank(value)) {
             return value;
         }
-        return Texts.snakeCase(clean(value)).toUpperCase();
+        return Texts.snakeCase(clean(value)).toUpperCase(Locale.ROOT);
     }
 
     /** "com.example My Package" → "com.example.my.package" */
@@ -159,13 +160,14 @@ public final class JavaNames {
         return value.trim()
                 .replaceAll("[^a-zA-Z0-9. \\-]", "") // keep '-': it becomes a '.' below
                 .replaceAll("[\\s-]+", ".")
-                .toLowerCase();
+                .toLowerCase(Locale.ROOT);
     }
 
     // =========================================================================
     // Identifier validation and safe naming
     // =========================================================================
 
+    /** Whether the value can be used as a Java identifier: well-formed and not a keyword. */
     public static boolean isValidIdentifier(String value) {
         if (Texts.isBlank(value)) {
             return false;

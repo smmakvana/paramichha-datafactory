@@ -17,7 +17,12 @@ public final class AnnotationProxyFactory {
         return create(type, Collections.emptyMap());
     }
 
-    @SuppressWarnings("unchecked")
+    // Identity on purpose: a proxy equals only itself.
+    /**
+     * An annotation instance of the given type with the given attribute values; other attributes
+     * return their declared defaults.
+     */
+    @SuppressWarnings({"unchecked", "PMD.CompareObjectsWithEquals"})
     public static <T extends Annotation> T create(Class<T> type, Map<String, Object> attrs) {
         return (T) Proxy.newProxyInstance(type.getClassLoader(), new Class<?>[] {type}, (proxy, method, args) -> {
             String name = method.getName();
@@ -33,6 +38,9 @@ public final class AnnotationProxyFactory {
                 }
                 case "equals" -> {
                     return proxy == args[0];
+                }
+                default -> {
+                    // an attribute of the annotation, answered below
                 }
             }
             if (attrs.containsKey(name)) {

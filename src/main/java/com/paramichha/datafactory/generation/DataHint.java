@@ -1,5 +1,6 @@
 package com.paramichha.datafactory.generation;
 
+import java.util.Locale;
 import java.util.function.Function;
 import net.datafaker.Faker;
 
@@ -93,7 +94,7 @@ enum DataHint {
         if (name == null || name.isBlank()) {
             return WORD;
         }
-        return switch (name.toLowerCase()) {
+        return switch (name.toLowerCase(Locale.ROOT)) {
             case "name", "fullname", "displayname", "realname", "contactname" -> FULL_NAME;
             case "firstname", "givenname", "forename" -> FIRST_NAME;
             case "lastname", "surname", "familyname" -> LAST_NAME;

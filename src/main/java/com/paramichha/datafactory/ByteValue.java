@@ -14,8 +14,10 @@ public interface ByteValue extends FieldValue<Byte> {
 
     ByteValue negative();
 
+    @Override
     ByteValue with(Class<? extends Annotation> annotation);
 
+    @Override
     ByteValue with(String annotation);
 
     byte toByte();

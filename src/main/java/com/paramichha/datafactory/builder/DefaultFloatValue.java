@@ -37,6 +37,7 @@ public final class DefaultFloatValue implements FloatValue {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
+    @Override
     public DefaultFloatValue positive() {
         return with(Positive.class);
     }
@@ -45,6 +46,7 @@ public final class DefaultFloatValue implements FloatValue {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
+    @Override
     public DefaultFloatValue negative() {
         return with(Negative.class);
     }
@@ -54,6 +56,7 @@ public final class DefaultFloatValue implements FloatValue {
      *
      * @param annotation the annotation type to add
      */
+    @Override
     public DefaultFloatValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -65,6 +68,7 @@ public final class DefaultFloatValue implements FloatValue {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
+    @Override
     public DefaultFloatValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -82,6 +86,7 @@ public final class DefaultFloatValue implements FloatValue {
      * @return a valid float
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
     public float toFloat() {
         return delegate.valid();
     }
@@ -92,6 +97,7 @@ public final class DefaultFloatValue implements FloatValue {
      * @return a valid Float
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
     public Float valid() {
         return delegate.valid();
     }
@@ -101,6 +107,7 @@ public final class DefaultFloatValue implements FloatValue {
      *
      * @return list of valid boundary values
      */
+    @Override
     public List<Float> validList() {
         return delegate.validList();
     }
@@ -110,6 +117,7 @@ public final class DefaultFloatValue implements FloatValue {
      *
      * @return a value that violates at least one constraint
      */
+    @Override
     public Float invalid() {
         return delegate.invalid();
     }
@@ -119,6 +127,7 @@ public final class DefaultFloatValue implements FloatValue {
      *
      * @return list of invalid values
      */
+    @Override
     public List<Float> invalidList() {
         return delegate.invalidList();
     }
@@ -129,6 +138,7 @@ public final class DefaultFloatValue implements FloatValue {
      * @param count the number of values to generate
      * @return list of valid values
      */
+    @Override
     public List<Float> stream(int count) {
         return delegate.stream(count);
     }

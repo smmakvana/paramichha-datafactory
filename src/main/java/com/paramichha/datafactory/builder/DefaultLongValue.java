@@ -37,6 +37,7 @@ public final class DefaultLongValue implements LongValue {
      * @param min inclusive minimum
      * @param max inclusive maximum
      */
+    @Override
     public DefaultLongValue range(long min, long max) {
         return with("@Min(" + min + ")").with("@Max(" + max + ")");
     }
@@ -47,6 +48,7 @@ public final class DefaultLongValue implements LongValue {
      *
      * @param min inclusive minimum
      */
+    @Override
     public DefaultLongValue min(long min) {
         return with("@Min(" + min + ")");
     }
@@ -57,6 +59,7 @@ public final class DefaultLongValue implements LongValue {
      *
      * @param max inclusive maximum
      */
+    @Override
     public DefaultLongValue max(long max) {
         return with("@Max(" + max + ")");
     }
@@ -65,6 +68,7 @@ public final class DefaultLongValue implements LongValue {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
+    @Override
     public DefaultLongValue positive() {
         return with(Positive.class);
     }
@@ -73,6 +77,7 @@ public final class DefaultLongValue implements LongValue {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
+    @Override
     public DefaultLongValue negative() {
         return with(Negative.class);
     }
@@ -82,6 +87,7 @@ public final class DefaultLongValue implements LongValue {
      *
      * @param annotation the annotation type to add
      */
+    @Override
     public DefaultLongValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -93,6 +99,7 @@ public final class DefaultLongValue implements LongValue {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
+    @Override
     public DefaultLongValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -104,6 +111,7 @@ public final class DefaultLongValue implements LongValue {
      * @return a valid long
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
     public long toLong() {
         return delegate.valid();
     }
@@ -120,6 +128,7 @@ public final class DefaultLongValue implements LongValue {
         return this;
     }
 
+    @Override
     public Long valid() {
         return delegate.valid();
     }
@@ -129,6 +138,7 @@ public final class DefaultLongValue implements LongValue {
      *
      * @return list of valid boundary values
      */
+    @Override
     public List<Long> validList() {
         return delegate.validList();
     }
@@ -138,6 +148,7 @@ public final class DefaultLongValue implements LongValue {
      *
      * @return a value that violates at least one constraint
      */
+    @Override
     public Long invalid() {
         return delegate.invalid();
     }
@@ -147,6 +158,7 @@ public final class DefaultLongValue implements LongValue {
      *
      * @return list of invalid values
      */
+    @Override
     public List<Long> invalidList() {
         return delegate.invalidList();
     }
@@ -157,6 +169,7 @@ public final class DefaultLongValue implements LongValue {
      * @param count the number of values to generate
      * @return list of valid values
      */
+    @Override
     public List<Long> stream(int count) {
         return delegate.stream(count);
     }

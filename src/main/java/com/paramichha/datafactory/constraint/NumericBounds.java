@@ -25,36 +25,44 @@ public sealed interface NumericBounds
     record Unbounded() implements NumericBounds {}
 
     record IntegerBounds(Long min, Long max) implements NumericBounds {
+        @Override
         public boolean hasMin() {
             return min != null;
         }
 
+        @Override
         public boolean hasMax() {
             return max != null;
         }
 
+        @Override
         public boolean hasBoth() {
             return min != null && max != null;
         }
 
+        @Override
         public boolean isContradictory() {
             return min != null && max != null && min > max;
         }
     }
 
     record DecimalBounds(BigDecimal decMin, BigDecimal decMax) implements NumericBounds {
+        @Override
         public boolean hasMin() {
             return decMin != null;
         }
 
+        @Override
         public boolean hasMax() {
             return decMax != null;
         }
 
+        @Override
         public boolean hasBoth() {
             return decMin != null && decMax != null;
         }
 
+        @Override
         public boolean isContradictory() {
             return decMin != null && decMax != null && decMin.compareTo(decMax) > 0;
         }
@@ -128,6 +136,7 @@ public sealed interface NumericBounds
 
     // ── intersection ─────────────────────────────────────────────────────
 
+    /** The bounds that satisfy both this and {@code other}. */
     default NumericBounds intersect(NumericBounds other) {
         return switch (this) {
             case Unbounded ignored -> other;

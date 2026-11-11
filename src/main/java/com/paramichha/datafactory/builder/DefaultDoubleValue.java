@@ -37,6 +37,7 @@ public final class DefaultDoubleValue implements DoubleValue {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
+    @Override
     public DefaultDoubleValue positive() {
         return with(Positive.class);
     }
@@ -45,6 +46,7 @@ public final class DefaultDoubleValue implements DoubleValue {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
+    @Override
     public DefaultDoubleValue negative() {
         return with(Negative.class);
     }
@@ -54,6 +56,7 @@ public final class DefaultDoubleValue implements DoubleValue {
      *
      * @param annotation the annotation type to add
      */
+    @Override
     public DefaultDoubleValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -65,6 +68,7 @@ public final class DefaultDoubleValue implements DoubleValue {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
+    @Override
     public DefaultDoubleValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -76,6 +80,7 @@ public final class DefaultDoubleValue implements DoubleValue {
      * @return a valid double
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
     public double toDouble() {
         return delegate.valid();
     }
@@ -92,6 +97,7 @@ public final class DefaultDoubleValue implements DoubleValue {
         return this;
     }
 
+    @Override
     public Double valid() {
         return delegate.valid();
     }
@@ -101,6 +107,7 @@ public final class DefaultDoubleValue implements DoubleValue {
      *
      * @return list of valid boundary values
      */
+    @Override
     public List<Double> validList() {
         return delegate.validList();
     }
@@ -110,6 +117,7 @@ public final class DefaultDoubleValue implements DoubleValue {
      *
      * @return a value that violates at least one constraint
      */
+    @Override
     public Double invalid() {
         return delegate.invalid();
     }
@@ -119,6 +127,7 @@ public final class DefaultDoubleValue implements DoubleValue {
      *
      * @return list of invalid values
      */
+    @Override
     public List<Double> invalidList() {
         return delegate.invalidList();
     }
@@ -129,6 +138,7 @@ public final class DefaultDoubleValue implements DoubleValue {
      * @param count the number of values to generate
      * @return list of valid values
      */
+    @Override
     public List<Double> stream(int count) {
         return delegate.stream(count);
     }

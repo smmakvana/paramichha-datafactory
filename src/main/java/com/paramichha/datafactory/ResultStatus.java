@@ -13,6 +13,9 @@ public enum ResultStatus {
     /** Generation partially succeeded — some items built, some failed. Bulk only. */
     PARTIAL,
 
-    /** Generation failed. Payload is absent. Check {@link DataFactoryResult#errorType()} and {@link DataFactoryResult#reason()}. */
+    /**
+     * Generation failed. Payload is absent. Check {@link DataFactoryResult#errorType()} and
+     * {@link DataFactoryResult#reason()}.
+     */
     FAILED
 }

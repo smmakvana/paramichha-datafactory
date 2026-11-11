@@ -4,6 +4,7 @@ import com.paramichha.datafactory.constraint.FieldDescriptor;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Assembles an instance of any class from a field-value map by delegating to the first
@@ -20,10 +21,16 @@ public final class ObjectAssembler {
             ConstructorObjectCreation.INSTANCE,
             PojoObjectCreation.INSTANCE);
 
-    private static final ConcurrentHashMap<Class<?>, ObjectCreation> STRATEGY_CACHE = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<?>, ObjectCreation> STRATEGY_CACHE = new ConcurrentHashMap<>();
 
     private ObjectAssembler() {}
 
+    /**
+     * Creates an instance of {@code type} with the given field values, using the first way that fits
+     * the class: Lombok builder, record, all-args constructor, or no-args constructor with setters.
+     *
+     * @throws com.paramichha.datafactory.DataFactoryException when the class cannot be instantiated
+     */
     public static <T> T instantiate(Class<T> type, List<FieldDescriptor> fields, Map<String, Object> values)
             throws Exception {
         // Early guards — surface unsupported types with clear messages before any reflection
@@ -53,11 +60,11 @@ public final class ObjectAssembler {
             strategy = STRATEGIES.stream()
                     .filter(s -> s.canCreate(type, fields))
                     .findFirst()
-                    .orElseThrow(
-                            () -> new com.paramichha.datafactory.DataFactoryException(
-                                    com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
-                                    "No instantiation strategy found for '" + type.getName()
-                                            + "'. Supported: Lombok @Builder, Record, all-args constructor, no-args constructor + setters."));
+                    .orElseThrow(() -> new com.paramichha.datafactory.DataFactoryException(
+                            com.paramichha.datafactory.ErrorType.NOT_INSTANTIABLE,
+                            "No instantiation strategy found for '" + type.getName()
+                                    + "'. Supported: Lombok @Builder, Record, all-args constructor,"
+                                    + " no-args constructor + setters."));
             STRATEGY_CACHE.put(type, strategy);
         }
         return strategy.create(type, fields, values);

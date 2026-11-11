@@ -42,7 +42,10 @@ public interface DataBuilder<T> {
     /** Builds one valid instance. Returns {@link ResultStatus#FAILED} on any error. */
     DataFactoryResult<T> valid();
 
-    /** Builds one invalid instance. Returns {@link ResultStatus#FAILED} with {@link ErrorType#INVALID_CONFIGURATION} if no constraints to violate. */
+    /**
+     * Builds one invalid instance. Returns {@link ResultStatus#FAILED} with
+     * {@link ErrorType#INVALID_CONFIGURATION} if no constraints to violate.
+     */
     DataFactoryResult<T> invalid();
 
     /** Builds one invalid instance for the named field only. */

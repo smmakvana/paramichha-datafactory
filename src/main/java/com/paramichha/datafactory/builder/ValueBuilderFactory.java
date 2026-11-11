@@ -28,6 +28,7 @@ public final class ValueBuilderFactory {
         return new FieldValueBuilder<>(AnnotationResolver.analyze(name, type, annotations), DataMachines.random());
     }
 
+    /** Values for a declared field, following its annotations, from a random source. */
     @SuppressWarnings("unchecked")
     public static <T> FieldValue<T> create(Field field) {
         List<Annotation> annotations = Arrays.asList(field.getAnnotations());

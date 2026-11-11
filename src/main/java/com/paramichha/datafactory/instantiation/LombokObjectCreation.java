@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Instantiates a class via its Lombok {@code @Builder} static {@code builder()} method.
@@ -18,7 +19,7 @@ public final class LombokObjectCreation implements ObjectCreation {
 
     public static final LombokObjectCreation INSTANCE = new LombokObjectCreation();
 
-    private static final ConcurrentHashMap<Class<?>, ConcurrentHashMap<String, Optional<Method>>> SETTER_CACHE =
+    private static final ConcurrentMap<Class<?>, ConcurrentMap<String, Optional<Method>>> SETTER_CACHE =
             new ConcurrentHashMap<>();
 
     private LombokObjectCreation() {}
@@ -32,6 +33,7 @@ public final class LombokObjectCreation implements ObjectCreation {
         try {
             return builderClass.getMethod(name, fieldType);
         } catch (NoSuchMethodException ignored) {
+            // no setter with this parameter type: try the next one
         }
 
         Class<?> primitive = toPrimitive(fieldType);
@@ -39,6 +41,7 @@ public final class LombokObjectCreation implements ObjectCreation {
             try {
                 return builderClass.getMethod(name, primitive);
             } catch (NoSuchMethodException ignored) {
+                // no setter with this parameter type: try the next one
             }
         }
 
@@ -47,6 +50,7 @@ public final class LombokObjectCreation implements ObjectCreation {
             try {
                 return builderClass.getMethod(name, wrapper);
             } catch (NoSuchMethodException ignored) {
+                // no setter with this parameter type: try the next one
             }
         }
 

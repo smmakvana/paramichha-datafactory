@@ -8,6 +8,10 @@ public final class PrimitiveDefaults {
 
     private PrimitiveDefaults() {}
 
+    /**
+     * The default value of a primitive type, as Java gives an unset field: 0, false or the null
+     * character. Null for any other type.
+     */
     public static Object of(Class<?> type) {
         if (type == boolean.class) {
             return false;

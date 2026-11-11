@@ -10,8 +10,10 @@ public interface FloatValue extends FieldValue<Float> {
 
     FloatValue negative();
 
+    @Override
     FloatValue with(Class<? extends Annotation> annotation);
 
+    @Override
     FloatValue with(String annotation);
 
     float toFloat();

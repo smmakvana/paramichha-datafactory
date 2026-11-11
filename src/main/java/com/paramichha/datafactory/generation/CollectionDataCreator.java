@@ -77,7 +77,7 @@ final class CollectionDataCreator implements DataCreator {
 
         // Queue / Deque: keep the container type (an ArrayList is not a Queue)
         if (java.util.Queue.class.isAssignableFrom(type)) {
-            java.util.ArrayDeque<Object> queue = new java.util.ArrayDeque<>();
+            java.util.Queue<Object> queue = new java.util.ArrayDeque<>();
             FieldConstraints elemField =
                     FieldConstraints.builder(field.fieldName(), String.class).build();
             for (int i = 0; i < size; i++) {

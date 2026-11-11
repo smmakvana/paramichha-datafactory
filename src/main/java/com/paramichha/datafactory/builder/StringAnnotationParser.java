@@ -50,6 +50,7 @@ public final class StringAnnotationParser implements AnnotationParser, Annotatio
         this(new AnnotationCreatorRegistry());
     }
 
+    /** A parser that creates annotations with the handlers of the given registry. */
     public StringAnnotationParser(AnnotationCreatorRegistry handlerRegistry) {
         this.handlerRegistry = handlerRegistry;
 

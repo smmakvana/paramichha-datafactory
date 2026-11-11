@@ -113,6 +113,8 @@ final class TextAnnotationReader implements AnnotationReader {
         return s.substring(q1 + 1, q2).replace("\\\\", "\\");
     }
 
+    // Null means "no bound on this side".
+    @SuppressWarnings("PMD.NullAssignment")
     @Override
     public NumericBounds classifyQuantity(Object raw) {
         String s = s(raw);

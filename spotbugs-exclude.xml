@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SpotBugs findings that are not defects, with the reason for each. -->
+<FindBugsFilter>
+    <!-- "case Unbounded ignored ->" binds a pattern variable that is not read. Java 21 has no
+         unnamed pattern, so the binding is required; SpotBugs reports it as a dead store. -->
+    <Match>
+        <Class name="com.paramichha.datafactory.constraint.NumericBounds"/>
+        <Method name="intersect"/>
+        <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
+    </Match>
+</FindBugsFilter>

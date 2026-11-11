@@ -140,6 +140,7 @@ final class ClassAnnotationReader implements AnnotationReader {
                 java.math.BigDecimal dec = new java.math.BigDecimal(dm.value());
                 return NumericBounds.atLeastDecimal(dec);
             } catch (NumberFormatException ignored) {
+                // not a number: this annotation gives no bound
             }
         }
         if (a instanceof DecimalMax dm) {
@@ -148,6 +149,7 @@ final class ClassAnnotationReader implements AnnotationReader {
                 java.math.BigDecimal dec = new java.math.BigDecimal(dm.value());
                 return NumericBounds.atMostDecimal(dec);
             } catch (NumberFormatException ignored) {
+                // not a number: this annotation gives no bound
             }
         }
         return null;

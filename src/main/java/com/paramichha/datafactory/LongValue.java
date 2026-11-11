@@ -14,8 +14,10 @@ public interface LongValue extends FieldValue<Long> {
 
     LongValue negative();
 
+    @Override
     LongValue with(Class<? extends Annotation> annotation);
 
+    @Override
     LongValue with(String annotation);
 
     long toLong();

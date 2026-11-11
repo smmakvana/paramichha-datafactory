@@ -8,7 +8,7 @@ import java.util.List;
  * Never changes — add a new type by implementing {@link DataCreator}.
  */
 public final class DataGenerator {
-    private static final List<DataCreator> creators = List.of(
+    private static final List<DataCreator> CREATORS = List.of(
             BooleanDataCreator.INSTANCE, // before String
             EnumDataCreator.INSTANCE, // before Object
             UuidDataCreator.INSTANCE, // before String
@@ -22,11 +22,16 @@ public final class DataGenerator {
 
     private DataGenerator() {}
 
+    /**
+     * Generates one value for the field at the given target.
+     *
+     * @throws com.paramichha.datafactory.DataFactoryException when no creator supports the field's type
+     */
     public static Object shape(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
         if ("null".equals(target.label())) {
             return null;
         }
-        for (DataCreator creator : creators) {
+        for (DataCreator creator : CREATORS) {
             if (creator.supports(field.fieldType())) {
                 return creator.shape(field, target, machine);
             }
@@ -40,7 +45,7 @@ public final class DataGenerator {
 
     /**
      * Produces all values for a field — one per boundary target.
-     * Enum creators return a {@code List} of constants expanded inline. A List-typed field's
+     * Enum CREATORS return a {@code List} of constants expanded inline. A List-typed field's
      * value is a list too, but it is one value and is kept whole.
      */
     public static List<Object> shapeAll(FieldConstraints field, List<BoundaryTarget> targets, DataMachine machine) {

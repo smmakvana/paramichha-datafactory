@@ -19,8 +19,10 @@ public interface BigDecimalValue extends FieldValue<BigDecimal> {
 
     BigDecimalValue digits(int integer, int fraction);
 
+    @Override
     BigDecimalValue with(Class<? extends Annotation> annotation);
 
+    @Override
     BigDecimalValue with(String annotation);
 
     BigDecimal toBigDecimal();

@@ -31,7 +31,7 @@ class SingleArgumentHandler implements AnnotationCreator {
                 }
             }
         } catch (Exception e) {
-            throw new AnnotationParseException(e.getMessage());
+            throw new AnnotationParseException(e.getMessage(), e);
         }
         throw new AnnotationParseException(clazz.getSimpleName() + " could not parse");
     }

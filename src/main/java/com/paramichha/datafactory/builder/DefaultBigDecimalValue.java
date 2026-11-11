@@ -42,6 +42,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      * @param min inclusive minimum as a string, e.g. {@code "0.01"}
      * @param max inclusive maximum as a string, e.g. {@code "999.99"}
      */
+    @Override
     public DefaultBigDecimalValue range(String min, String max) {
         return with("@DecimalMin(value=\"" + min + "\")").with("@DecimalMax(value=\"" + max + "\")");
     }
@@ -52,6 +53,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      *
      * @param min inclusive minimum as a string
      */
+    @Override
     public DefaultBigDecimalValue min(String min) {
         return with("@DecimalMin(value=\"" + min + "\")");
     }
@@ -62,6 +64,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      *
      * @param max inclusive maximum as a string
      */
+    @Override
     public DefaultBigDecimalValue max(String max) {
         return with("@DecimalMax(value=\"" + max + "\")");
     }
@@ -70,6 +73,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
+    @Override
     public DefaultBigDecimalValue positive() {
         return with(Positive.class);
     }
@@ -78,6 +82,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
+    @Override
     public DefaultBigDecimalValue negative() {
         return with(Negative.class);
     }
@@ -88,6 +93,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      *
      * @param scale number of decimal places, e.g. {@code 2} for currency
      */
+    @Override
     public DefaultBigDecimalValue scale(int scale) {
         this.scale = scale;
         return this;
@@ -101,6 +107,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      * @param integer  maximum number of integer digits
      * @param fraction maximum number of fraction digits (also sets the scale)
      */
+    @Override
     public DefaultBigDecimalValue digits(int integer, int fraction) {
         this.scale = fraction;
         return with("@Digits(integer=" + integer + ", fraction=" + fraction + ")");
@@ -111,6 +118,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      *
      * @param annotation the annotation type to add
      */
+    @Override
     public DefaultBigDecimalValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -122,6 +130,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
+    @Override
     public DefaultBigDecimalValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -139,6 +148,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
         return this;
     }
 
+    @Override
     public BigDecimal valid() {
         return applyScale(delegate.valid());
     }
@@ -149,6 +159,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      *
      * @return a valid BigDecimal
      */
+    @Override
     public BigDecimal toBigDecimal() {
         return valid();
     }
@@ -158,6 +169,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      *
      * @return list of valid boundary values
      */
+    @Override
     public List<BigDecimal> validList() {
         return delegate.validList().stream().map(this::applyScale).collect(Collectors.toList());
     }
@@ -167,6 +179,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      *
      * @return a value that violates at least one constraint
      */
+    @Override
     public BigDecimal invalid() {
         return delegate.invalid();
     }
@@ -176,6 +189,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      *
      * @return list of invalid values
      */
+    @Override
     public List<BigDecimal> invalidList() {
         return delegate.invalidList();
     }
@@ -186,6 +200,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      * @param count the number of values to generate
      * @return list of valid values
      */
+    @Override
     public List<BigDecimal> stream(int count) {
         return delegate.stream(count).stream().map(this::applyScale).collect(Collectors.toList());
     }

@@ -57,6 +57,7 @@ public final class DefaultStringValue implements StringValue {
      *
      * @param hint a DataFaker-compatible field name hint
      */
+    @Override
     public DefaultStringValue hint(String hint) {
         // Keep constraints and a seed set before the hint: string().maxLength(10).email() stays short.
         FieldValue<String> next = ValueBuilderFactory.create(String.class, hint);
@@ -77,121 +78,145 @@ public final class DefaultStringValue implements StringValue {
     }
 
     /** Generates a realistic email address. Example: {@code alice.johnson@example.com} */
+    @Override
     public DefaultStringValue email() {
         return hint("email");
     }
 
     /** Generates a realistic phone number. Example: {@code +44 7700 900123} */
+    @Override
     public DefaultStringValue phone() {
         return hint("phone");
     }
 
     /** Generates a realistic full name. Example: {@code Alice Johnson} */
+    @Override
     public DefaultStringValue name() {
         return hint("name");
     }
 
     /** Generates a realistic first name. Example: {@code Alice} */
+    @Override
     public DefaultStringValue firstName() {
         return hint("firstName");
     }
 
     /** Generates a realistic last name. Example: {@code Johnson} */
+    @Override
     public DefaultStringValue lastName() {
         return hint("lastName");
     }
 
     /** Generates a realistic credit card number. */
+    @Override
     public DefaultStringValue creditCard() {
         return hint("creditCard");
     }
 
     /** Generates a realistic IBAN. Example: {@code GB29NWBK60161331926819} */
+    @Override
     public DefaultStringValue iban() {
         return hint("iban");
     }
 
     /** Generates a realistic BIC/SWIFT code. Example: {@code NWBKGB2L} */
+    @Override
     public DefaultStringValue bic() {
         return hint("bic");
     }
 
     /** Generates a realistic postcode. Example: {@code SW1A 1AA} */
+    @Override
     public DefaultStringValue postcode() {
         return hint("postcode");
     }
 
     /** Generates a realistic street address. */
+    @Override
     public DefaultStringValue address() {
         return hint("address");
     }
 
     /** Generates a realistic city name. Example: {@code London} */
+    @Override
     public DefaultStringValue city() {
         return hint("city");
     }
 
     /** Generates a realistic country name. Example: {@code United Kingdom} */
+    @Override
     public DefaultStringValue country() {
         return hint("country");
     }
 
     /** Generates a realistic company name. Example: {@code Acme Corp} */
+    @Override
     public DefaultStringValue company() {
         return hint("company");
     }
 
     /** Generates a realistic URL. Example: {@code https://example.com} */
+    @Override
     public DefaultStringValue url() {
         return hint("url");
     }
 
     /** Generates a random UUID string. */
+    @Override
     public DefaultStringValue uuid() {
         return hint("uuid");
     }
 
     /** Generates a realistic IP address. Example: {@code 192.168.1.1} */
+    @Override
     public DefaultStringValue ipAddress() {
         return hint("ipAddress");
     }
 
     /** Generates a realistic colour name. Example: {@code Cerulean} */
+    @Override
     public DefaultStringValue colour() {
         return hint("colour");
     }
 
     /** Generates a realistic username. Example: {@code alice_j42} */
+    @Override
     public DefaultStringValue username() {
         return hint("username");
     }
 
     /** Generates a realistic sentence or description. */
+    @Override
     public DefaultStringValue description() {
         return hint("description");
     }
 
     /** Generates a realistic password string. */
+    @Override
     public DefaultStringValue password() {
         return hint("password");
     }
 
     /** Generates a realistic sort code. Example: {@code 60-16-13} */
+    @Override
     public DefaultStringValue sortCode() {
         return hint("sortCode");
     }
 
     /** Generates a realistic bank account number. */
+    @Override
     public DefaultStringValue accountNumber() {
         return hint("accountNumber");
     }
 
     /** Generates a realistic product name. */
+    @Override
     public DefaultStringValue product() {
         return hint("product");
     }
 
     /** Generates a realistic department name. Example: {@code Engineering} */
+    @Override
     public DefaultStringValue department() {
         return hint("department");
     }
@@ -200,6 +225,7 @@ public final class DefaultStringValue implements StringValue {
      * The generated value must not be blank.
      * Equivalent to adding {@code @NotBlank}.
      */
+    @Override
     public DefaultStringValue notBlank() {
         return apply(d -> d.with(NotBlank.class));
     }
@@ -211,6 +237,7 @@ public final class DefaultStringValue implements StringValue {
      * @param min minimum length, inclusive
      * @param max maximum length, inclusive
      */
+    @Override
     public DefaultStringValue length(int min, int max) {
         return with("@Size(min=" + min + ", max=" + max + ")");
     }
@@ -221,6 +248,7 @@ public final class DefaultStringValue implements StringValue {
      *
      * @param max maximum length, inclusive
      */
+    @Override
     public DefaultStringValue maxLength(int max) {
         return with("@Size(max=" + max + ")");
     }
@@ -231,6 +259,7 @@ public final class DefaultStringValue implements StringValue {
      *
      * @param min minimum length, inclusive
      */
+    @Override
     public DefaultStringValue minLength(int min) {
         return with("@Size(min=" + min + ")");
     }
@@ -240,6 +269,7 @@ public final class DefaultStringValue implements StringValue {
      *
      * @param annotation the annotation type to add
      */
+    @Override
     public DefaultStringValue with(Class<? extends Annotation> annotation) {
         return apply(d -> d.with(annotation));
     }
@@ -250,6 +280,7 @@ public final class DefaultStringValue implements StringValue {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
+    @Override
     public DefaultStringValue with(String annotation) {
         return apply(d -> d.with(annotation));
     }
@@ -267,6 +298,7 @@ public final class DefaultStringValue implements StringValue {
         return this;
     }
 
+    @Override
     public String valid() {
         return delegate.valid();
     }
@@ -276,6 +308,7 @@ public final class DefaultStringValue implements StringValue {
      *
      * @return list of valid boundary strings
      */
+    @Override
     public List<String> validList() {
         return delegate.validList();
     }
@@ -285,6 +318,7 @@ public final class DefaultStringValue implements StringValue {
      *
      * @return a string that violates at least one constraint
      */
+    @Override
     public String invalid() {
         return delegate.invalid();
     }
@@ -294,6 +328,7 @@ public final class DefaultStringValue implements StringValue {
      *
      * @return list of invalid strings
      */
+    @Override
     public List<String> invalidList() {
         return delegate.invalidList();
     }
@@ -304,6 +339,7 @@ public final class DefaultStringValue implements StringValue {
      * @param count the number of values to generate
      * @return list of valid strings
      */
+    @Override
     public List<String> stream(int count) {
         return delegate.stream(count);
     }

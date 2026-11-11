@@ -21,11 +21,14 @@ public final class PojoObjectCreation implements ObjectCreation {
             try {
                 return c.getDeclaredField(name);
             } catch (NoSuchFieldException ignored) {
+                // not declared here: look in the superclass
             }
         }
         return null;
     }
 
+    // Called for its NoSuchMethodException: the question is whether the constructor exists.
+    @SuppressWarnings("PMD.UselessPureMethodCall")
     @Override
     public boolean canCreate(Class<?> type, List<FieldDescriptor> fields) {
         try {

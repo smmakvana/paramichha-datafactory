@@ -13,7 +13,9 @@ public interface LocalDateValue extends FieldValue<LocalDate> {
 
     LocalDateValue futureOrPresent();
 
+    @Override
     LocalDateValue with(Class<? extends Annotation> annotation);
 
+    @Override
     LocalDateValue with(String annotation);
 }
