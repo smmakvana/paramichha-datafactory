@@ -36,7 +36,7 @@ class ShortcutsAndResultsTest {
     class Level1 {
         @Test
         void singleValues() {
-            assertThat(DataFactory.email()).contains("@");
+            assertThat(DataFactory.email()).matches("[\\w.+-]+@[\\w.-]+\\.\\w+");
             assertThat(List.of(DataFactory.name(), DataFactory.firstName(), DataFactory.lastName(), DataFactory.phone(),
                     DataFactory.city(), DataFactory.country(), DataFactory.postcode(), DataFactory.company(),
                     DataFactory.description())).allSatisfy(v -> assertThat(v).isNotBlank());
@@ -122,7 +122,7 @@ class ShortcutsAndResultsTest {
             assertThat(DataFactory.canHandle(java.util.Map.class)).isTrue();
             assertThat(DataFactory.canHandle(Thread.class)).isFalse();
             assertThat(DataFactory.canHandle(null)).isFalse();
-            assertThat(DataFactory.VERSION).isNotBlank();
+            assertThat(DataFactory.VERSION).matches("\\d+\\.\\d+\\.\\d+.*");
         }
     }
 
