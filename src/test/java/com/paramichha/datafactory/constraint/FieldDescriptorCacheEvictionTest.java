@@ -3,17 +3,19 @@ package com.paramichha.datafactory.constraint;
 import com.paramichha.datafactory.DataFactory;
 import com.paramichha.datafactory.instantiation.LombokObjectCreation;
 import jakarta.validation.constraints.NotBlank;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/** The hot-reload helpers clear the caches, and generation keeps working afterwards. */
-class CacheEvictionTest {
+/** Evicting the descriptor and creation caches (used by hot reload) leaves generation working. */
+class FieldDescriptorCacheEvictionTest {
 
     record Item(@NotBlank String name) {}
 
     @Test
-    void evictingTheCachesKeepsGenerationWorking() {
+    @DisplayName("generation still works after the caches are evicted")
+    void generationStillWorksAfterEviction() {
         assertThat(FieldDescriptor.extract(Item.class)).hasSize(1);
         FieldDescriptor.evict(Item.class);
         assertThat(FieldDescriptor.extract(Item.class)).hasSize(1);
