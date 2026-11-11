@@ -56,6 +56,10 @@ final class NumericDataCreator implements DataCreator {
         Long max = intMax(field.bounds());
         String name = field.fieldName().toLowerCase(Locale.ROOT);
 
+        // Before "age": "page" contains it.
+        if (name.contains("page")) {
+            return bounded(0L, min, max);
+        }
         if (name.contains("age")) {
             return bounded(30L, min, max);
         }

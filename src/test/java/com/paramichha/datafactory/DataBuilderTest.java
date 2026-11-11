@@ -209,9 +209,17 @@ class DataBuilderTest {
 
     record ShapeValues(@Size(min = 1, max = 1) Map<String, Shape> shapes) {}
 
-    record ObjectValues(@Size(min = 1, max = 1) Map<String, Object> entries) {}
+    record ObjectValues(@Size(max = 1) Map<String, Object> entries) {}
+
+    record ObjectKeysAtMostOne(@Size(max = 1) Map<Object, String> entries) {}
 
     enum NoConstants {}
+
+    record LooseBag(List<Object> things) {}
+
+    record TwoEntries(@Size(min = 2, max = 2) Map<String, Integer> entries) {}
+
+    record ThreeFlagMap(@Size(min = 3, max = 3) Map<Boolean, String> entries) {}
 
     record NoChoices(@Size(min = 2, max = 2) List<NoConstants> choices) {}
 
@@ -275,31 +283,48 @@ class DataBuilderTest {
             assertThat(DataFactory.of(EmptyBag.class).valid().get().items()).isEmpty();
         }
 
-        // Known limitation: when the elements a @Size needs cannot be produced, the valid object
-        // carries an empty collection instead, which does not satisfy the @Size.
         @Test
-        @DisplayName("an element type that cannot be generated leaves the collection empty")
-        void ungeneratableElementsLeaveTheCollectionEmpty() {
-            assertThat(DataFactory.of(ObjectPair.class).valid().get().things()).isEmpty();
-            assertThat(DataFactory.of(ObjectKeys.class).valid().get().entries()).isEmpty();
-            assertThat(DataFactory.of(NoChoices.class).valid().get().choices()).isEmpty();
+        @DisplayName("a @Size that needs elements of an undeclared type fails, naming the field")
+        void undeclaredElementTypeFails() {
+            DataFactoryResult<ObjectPair> list =
+                    DataFactory.of(ObjectPair.class).valid();
+            assertThat(list.errorType()).isEqualTo(ErrorType.UNSUPPORTED_CLASS_TYPE);
+            assertThat(list.reason()).contains("field 'things': needs 2 element(s)");
+
+            DataFactoryResult<ObjectKeys> map = DataFactory.of(ObjectKeys.class).valid();
+            assertThat(map.errorType()).isEqualTo(ErrorType.UNSUPPORTED_CLASS_TYPE);
+            assertThat(map.reason()).contains("field 'entries': needs 1 element(s)");
         }
 
         @Test
-        @DisplayName("a map with untyped keys or values has no too-large invalid case")
-        void untypedMapsHaveNoOversizedCase() {
-            assertThat(DataFactory.of(ObjectKeys.class).invalidList().getAll())
-                    .allSatisfy(o -> assertThat(o.entries()).hasSizeLessThan(2));
+        @DisplayName("a @Size that needs more distinct values than exist fails, naming the field")
+        void moreDistinctValuesThanExistFails() {
+            DataFactoryResult<ThreeFlags> flags =
+                    DataFactory.of(ThreeFlags.class).valid();
+            assertThat(flags.errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION);
+            assertThat(flags.reason()).contains("field 'flags': needs 3 distinct Boolean value(s)");
+
+            assertThat(DataFactory.of(TwoAddresses.class).valid().errorType())
+                    .isEqualTo(ErrorType.INVALID_CONFIGURATION);
+            assertThat(DataFactory.of(NoChoices.class).valid().errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION);
+        }
+
+        @Test
+        @DisplayName("an unsized collection of an undeclared type is empty, and a sized map gets that many entries")
+        void unsizedStaysEmptyAndSizedMapsAreFilled() {
+            assertThat(DataFactory.of(LooseBag.class).valid().get().things()).isEmpty();
+            assertThat(DataFactory.of(TwoEntries.class).valid().get().entries()).hasSize(2);
+            assertThat(DataFactory.of(ThreeFlagMap.class).valid().errorType())
+                    .isEqualTo(ErrorType.INVALID_CONFIGURATION);
+        }
+
+        @Test
+        @DisplayName("a map with untyped keys or values still gets a too-large invalid case")
+        void untypedMapsStillGetAnOversizedCase() {
+            assertThat(DataFactory.of(ObjectKeysAtMostOne.class).invalidList().getAll())
+                    .anySatisfy(o -> assertThat(o.entries()).hasSize(2));
             assertThat(DataFactory.of(ObjectValues.class).invalidList().getAll())
-                    .allSatisfy(o -> assertThat(o.entries()).hasSizeLessThan(2));
-        }
-
-        @Test
-        @DisplayName("a Set that needs more distinct values than its element type has stays empty")
-        void aSetWithTooFewDistinctValuesStaysEmpty() {
-            assertThat(DataFactory.of(ThreeFlags.class).valid().get().flags()).isEmpty();
-            assertThat(DataFactory.of(TwoAddresses.class).valid().get().addresses())
-                    .isEmpty();
+                    .anySatisfy(o -> assertThat(o.entries()).hasSize(2));
         }
 
         @Test
