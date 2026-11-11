@@ -244,8 +244,8 @@ class NumericShaperTest {
         @Test
         void pageHint() {
             var f = fieldOf("page", Integer.class);
-            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
-                    .isPositive();
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random()))
+                    .isEqualTo(0);
         }
 
         @Test

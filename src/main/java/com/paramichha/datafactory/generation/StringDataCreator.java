@@ -251,10 +251,24 @@ final class StringDataCreator implements DataCreator {
         return partial + check;
     }
 
+    /** Whether a camel-case, snake-case or kebab-case name has {@code word} as one of its words. */
+    static boolean hasWord(String name, String word) {
+        for (String part : name.split("(?<=[a-z0-9])(?=[A-Z])|[_\\-\\s]+")) {
+            if (part.equalsIgnoreCase(word)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static String semanticByName(String name, DataMachine machine) {
         String n = name.toLowerCase(Locale.ROOT);
         if (n.contains("email")) {
             return machine.text("email");
+        }
+        // Before the "name" checks: a user name is a login, not a person's name.
+        if (n.contains("username") || n.contains("user_name")) {
+            return machine.text("username");
         }
         if (n.contains("phone") || n.contains("mobile")) {
             return machine.text("phone");
@@ -320,6 +334,10 @@ final class StringDataCreator implements DataCreator {
         if (n.endsWith("id") || n.endsWith("Id")) {
             return machine.text("uuid");
         }
+        // Before "code": a sort code is six digits.
+        if (n.contains("sortcode") || n.contains("sort_code")) {
+            return machine.digits(6);
+        }
         if (n.contains("code")) {
             return machine.text("isbn10");
         }
@@ -341,7 +359,8 @@ final class StringDataCreator implements DataCreator {
         if (n.contains("bic") || n.contains("swift")) {
             return machine.text("bic");
         }
-        if (n.contains("ip") && !n.contains("zip")) {
+        // "ip" as a word of its own (clientIp, ip_v4): not the letters inside recipient or shipTo.
+        if (hasWord(name, "ip")) {
             return machine.text("ip");
         }
         if (n.contains("colour") || n.contains("color")) {

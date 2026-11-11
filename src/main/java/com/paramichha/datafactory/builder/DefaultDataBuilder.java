@@ -505,11 +505,49 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         return (int) Math.min(Math.max(size, 0), MAX_GENERATED_SIZE);
     }
 
-    /** Canonical valid collection — always the first entry of {@link #collectionBoundaries}. */
+    /**
+     * Canonical valid collection — always the first entry of {@link #collectionBoundaries}.
+     *
+     * @throws DataFactoryException when the field must hold elements and they cannot be produced
+     */
     private Object resolveCollection(FieldDescriptor field, DataMachine m) {
+        Object c = canonicalCollection(field, m);
+        if (c == null) {
+            throw cannotFill(field, field.listElementType(), typicalSize(field));
+        }
+        return c;
+    }
+
+    /**
+     * The collection at the typical size. When its elements cannot be produced: an empty
+     * collection if the field may be empty, or null if @Size or @NotEmpty asks for elements.
+     */
+    private Object canonicalCollection(FieldDescriptor field, DataMachine m) {
         Object c = buildCollection(field, typicalSize(field), m);
-        // Element type can't be generated (e.g. Object) — fall back to an empty container.
-        return c != null ? c : buildCollection(field, 0, m);
+        if (c != null) {
+            return c;
+        }
+        return mustHoldElements(field) ? null : buildCollection(field, 0, m);
+    }
+
+    private static boolean mustHoldElements(FieldDescriptor field) {
+        Long lo = sizeMin(field);
+        return lo != null && lo > 0;
+    }
+
+    /** The failure for a collection or map that needs {@code size} elements nobody can produce. */
+    private static DataFactoryException cannotFill(FieldDescriptor field, Class<?> elementType, int size) {
+        if (elementType == Object.class) {
+            return new DataFactoryException(
+                    ErrorType.UNSUPPORTED_CLASS_TYPE,
+                    "needs " + size + " element(s), but its element type is not declared, so none can be generated."
+                            + " Declare the type, or provide the value via .with()");
+        }
+        return new DataFactoryException(
+                ErrorType.INVALID_CONFIGURATION,
+                "needs " + size + " " + (field.isMap() || field.isSet() ? "distinct " : "")
+                        + elementType.getSimpleName() + " value(s), and that many cannot be generated."
+                        + " Relax its @Size, or provide the value via .with()");
     }
 
     /** Valid collections at the typical size and at each declared @Size / @NotEmpty boundary. */
@@ -526,7 +564,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         }
         List<Object> values = new ArrayList<>();
         for (int size : sizes) {
-            Object c = size == typicalSize(field) ? resolveCollection(field, m) : buildCollection(field, size, m);
+            Object c = size == typicalSize(field) ? canonicalCollection(field, m) : buildCollection(field, size, m);
             if (c != null) {
                 values.add(c);
             }
@@ -677,9 +715,20 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
     }
 
     private Object resolveMap(FieldDescriptor field, DataMachine m) {
+        int size = typicalSize(field);
+        if (size > 1) { // @Size asks for more than the one entry built below
+            Object sized = buildMap(field, size, m);
+            if (sized == null) {
+                throw cannotFill(field, field.mapKeyType(), size);
+            }
+            return sized;
+        }
         Object key = resolveElement(field.mapKeyType(), field.name() + ".key", m);
         Object value = resolveElement(field.mapValueType(), field.name() + ".value", m);
         if (key == null || value == null) {
+            if (mustHoldElements(field)) {
+                throw cannotFill(field, key == null ? field.mapKeyType() : field.mapValueType(), size);
+            }
             return new LinkedHashMap<>();
         }
         Map<Object, Object> map = new LinkedHashMap<>();

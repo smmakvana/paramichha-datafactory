@@ -21,7 +21,12 @@ class StringNameHintsTest {
 
     @ParameterizedTest(name = "{0} -> {1}")
     @CsvSource({
-        "recipient, ip",
+        "username, username",
+        "user_name, username",
+        "clientIp, ip",
+        "ip_v4, ip",
+        "recipient, word",
+        "shipTo, word",
         "role, jobtitle",
         "position, jobtitle",
         "salutation, prefix",
@@ -33,5 +38,12 @@ class StringNameHintsTest {
     @DisplayName("the field name picks the kind of text")
     void fieldNamePicksTheKindOfText(String fieldName, String kind) {
         assertThat(valueFor(fieldName)).isEqualTo(DataMachines.seeded(SEED).text(kind));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"sortCode", "sort_code"})
+    @DisplayName("a sort code is six digits")
+    void sortCodeIsSixDigits(String fieldName) {
+        assertThat((String) valueFor(fieldName)).matches("\\d{6}");
     }
 }
