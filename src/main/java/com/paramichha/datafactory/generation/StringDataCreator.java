@@ -3,6 +3,7 @@ package com.paramichha.datafactory.generation;
 import com.paramichha.datafactory.constraint.FieldConstraints;
 import com.paramichha.datafactory.constraint.FormatType;
 import com.paramichha.datafactory.constraint.NumericBounds;
+import java.util.Locale;
 
 /** Produces {@code String} values. */
 final class StringDataCreator implements DataCreator {
@@ -14,7 +15,7 @@ final class StringDataCreator implements DataCreator {
         String base = baseValue(field, machine);
 
         if (!(target instanceof BoundaryTarget.Fixed)) {
-            return fitToBounds(base, field, field.format(), machine);
+            return fitToBounds(base, field, field.format());
         }
 
         long targetLength = ((BoundaryTarget.Fixed) target).value();
@@ -60,6 +61,8 @@ final class StringDataCreator implements DataCreator {
      * quantifiers {n} {n,m} * + ?, literals, and alternation.
      * Falls back to semantic name matching for complex patterns.
      */
+    // Warnings go to the console: the library has no logging dependency.
+    @SuppressWarnings("PMD.SystemPrintln")
     static String generateFromPattern(String regexp) {
         if (regexp == null || regexp.isEmpty()) {
             return "A";
@@ -191,9 +194,7 @@ final class StringDataCreator implements DataCreator {
             String[] parts = inner.split(",");
             int count;
             try {
-                count = parts.length == 1
-                        ? Integer.parseInt(parts[0].trim())
-                        : Integer.parseInt(parts[0].trim()); // use min
+                count = Integer.parseInt(parts[0].trim()); // {n} or {min,max}: use n or min
             } catch (NumberFormatException e) {
                 count = 1;
             }
@@ -238,7 +239,7 @@ final class StringDataCreator implements DataCreator {
         int sum = 0;
         for (int i = partial.length() - 1; i >= 0; i--) {
             int n = partial.charAt(i) - '0';
-            if ((partial.length() - i) % 2 == 1) {
+            if ((partial.length() - i) % 2 != 0) {
                 n *= 2;
                 if (n > 9) {
                     n -= 9;
@@ -251,7 +252,7 @@ final class StringDataCreator implements DataCreator {
     }
 
     private static String semanticByName(String name, DataMachine machine) {
-        String n = name.toLowerCase();
+        String n = name.toLowerCase(Locale.ROOT);
         if (n.contains("email")) {
             return machine.text("email");
         }
@@ -441,7 +442,7 @@ final class StringDataCreator implements DataCreator {
         return url + "/x".repeat((target - url.length() + 1) / 2).substring(0, target - url.length());
     }
 
-    private static String fitToBounds(String base, FieldConstraints field, FormatType fmt, DataMachine machine) {
+    private static String fitToBounds(String base, FieldConstraints field, FormatType fmt) {
         Long min = intMin(field.bounds());
         Long max = intMax(field.bounds());
         String result = base;

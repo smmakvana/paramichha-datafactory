@@ -25,6 +25,8 @@ public final class AnnotationResolver {
         return runPipeline(fieldName, resolveType(fieldTypeName), annotationStrings, TextAnnotationReader.INSTANCE);
     }
 
+    // Warnings go to the console: the library has no logging dependency.
+    @SuppressWarnings("PMD.SystemPrintln")
     private static <A> FieldConstraints runPipeline(
             String fieldName, Class<?> fieldType, List<A> annotations, AnnotationReader classifier) {
         FieldConstraints.Builder b = FieldConstraints.builder(fieldName, fieldType);
@@ -34,13 +36,9 @@ public final class AnnotationResolver {
         }
 
         // Pass 1 — presence
-        boolean hasNullConstraint = false;
-        boolean hasCascadeValid = false;
-        boolean hasSizeConstraint = false;
         for (A a : annotations) {
             if (classifier.isNotNull(a) || classifier.isNotBlank(a) || classifier.isNotEmpty(a)) {
                 b.nullable(false);
-                hasNullConstraint = true;
             }
             if (classifier.isNotBlank(a)) {
                 b.hasNotBlank(true);
@@ -50,14 +48,6 @@ public final class AnnotationResolver {
             }
             if (classifier.isValid(a)) {
                 b.cascadeValid(true);
-                hasCascadeValid = true;
-            }
-            if (classifier.classifyQuantity(a) != null
-                    && (fieldType == String.class
-                            || fieldType.isArray()
-                            || java.util.Collection.class.isAssignableFrom(fieldType)
-                            || java.util.Map.class.isAssignableFrom(fieldType))) {
-                hasSizeConstraint = true;
             }
         }
 

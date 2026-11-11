@@ -11,7 +11,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +22,12 @@ import java.util.Set;
  */
 public record FieldDescriptor(String name, Class<?> rawType, Type genericType, List<Annotation> validations) {
 
-    private static final java.util.concurrent.ConcurrentHashMap<Class<?>, List<FieldDescriptor>> CACHE =
+    /** Keeps its own unmodifiable copy of the annotations. */
+    public FieldDescriptor {
+        validations = List.copyOf(validations);
+    }
+
+    private static final java.util.concurrent.ConcurrentMap<Class<?>, List<FieldDescriptor>> CACHE =
             new java.util.concurrent.ConcurrentHashMap<>();
 
     public static List<FieldDescriptor> extract(Class<?> type) {
@@ -95,7 +99,7 @@ public record FieldDescriptor(String name, Class<?> rawType, Type genericType, L
         return result;
     }
 
-    private static FieldDescriptor build(String name, Class<?> rawType, Type genericType, Annotation[] annotations) {
+    private static FieldDescriptor build(String name, Class<?> rawType, Type genericType, Annotation... annotations) {
         List<Annotation> validations = new ArrayList<>();
         Set<Class<? extends Annotation>> seen = new HashSet<>();
         for (Annotation a : annotations) {
@@ -107,13 +111,14 @@ public record FieldDescriptor(String name, Class<?> rawType, Type genericType, L
                 validations.add(a);
             }
         }
-        return new FieldDescriptor(name, rawType, genericType, Collections.unmodifiableList(validations));
+        return new FieldDescriptor(name, rawType, genericType, validations);
     }
 
     public boolean isList() {
         return rawType == List.class || rawType == Collection.class;
     }
 
+    /** Whether the field is a {@code Set} or one of the JDK set types. */
     public boolean isSet() {
         return rawType == java.util.Set.class
                 || rawType == java.util.LinkedHashSet.class
@@ -123,6 +128,7 @@ public record FieldDescriptor(String name, Class<?> rawType, Type genericType, L
                 || rawType == java.util.NavigableSet.class;
     }
 
+    /** Whether the field is a {@code Map} or one of the JDK map types. */
     public boolean isMap() {
         return rawType == java.util.Map.class
                 || rawType == java.util.LinkedHashMap.class
@@ -136,6 +142,7 @@ public record FieldDescriptor(String name, Class<?> rawType, Type genericType, L
         return rawType.isArray();
     }
 
+    /** Whether the field is a {@code Queue} or {@code Deque}, or one of the JDK queue types. */
     public boolean isQueue() {
         return rawType == java.util.Queue.class
                 || rawType == java.util.Deque.class
@@ -144,6 +151,7 @@ public record FieldDescriptor(String name, Class<?> rawType, Type genericType, L
                 || rawType == java.util.PriorityQueue.class;
     }
 
+    /** The key type of a map field; {@code String} when it is not declared. */
     public Class<?> mapKeyType() {
         if (genericType instanceof java.lang.reflect.ParameterizedType pt && pt.getActualTypeArguments().length >= 2) {
             java.lang.reflect.Type arg = pt.getActualTypeArguments()[0];
@@ -154,6 +162,7 @@ public record FieldDescriptor(String name, Class<?> rawType, Type genericType, L
         return String.class;
     }
 
+    /** The value type of a map field; {@code String} when it is not declared. */
     public Class<?> mapValueType() {
         if (genericType instanceof java.lang.reflect.ParameterizedType pt && pt.getActualTypeArguments().length >= 2) {
             java.lang.reflect.Type arg = pt.getActualTypeArguments()[1];
@@ -174,6 +183,10 @@ public record FieldDescriptor(String name, Class<?> rawType, Type genericType, L
         return rawType == java.util.Optional.class || isList() || isSet() || isMap() || isQueue() || isNested();
     }
 
+    /**
+     * Whether the field is an object of the project's own, to be built field by field: not a
+     * primitive, array, enum, {@code Optional}, or a JDK or framework type.
+     */
     public boolean isNested() {
         if (rawType == java.util.Optional.class) {
             return false;
@@ -189,6 +202,7 @@ public record FieldDescriptor(String name, Class<?> rawType, Type genericType, L
                 && !pkg.startsWith("com.fasterxml.");
     }
 
+    /** The element type of a collection or {@code Optional} field; {@code String} when it is not declared. */
     public Class<?> listElementType() {
         if (genericType instanceof ParameterizedType pt) {
             Type arg = pt.getActualTypeArguments()[0];
@@ -199,6 +213,7 @@ public record FieldDescriptor(String name, Class<?> rawType, Type genericType, L
         return String.class;
     }
 
+    /** The field's annotation of the given type, or null when it has none. */
     @SuppressWarnings("unchecked")
     public <A extends Annotation> A annotation(Class<A> type) {
         for (Annotation a : validations) {

@@ -8,8 +8,10 @@ public interface DoubleValue extends FieldValue<Double> {
 
     DoubleValue negative();
 
+    @Override
     DoubleValue with(Class<? extends Annotation> annotation);
 
+    @Override
     DoubleValue with(String annotation);
 
     double toDouble();

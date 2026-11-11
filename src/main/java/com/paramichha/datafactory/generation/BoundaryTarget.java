@@ -30,6 +30,7 @@ public sealed interface BoundaryTarget
     /** Every target record carries its label as a component. */
     String label();
 
+    /** The number this target aims at, or null when it is not a fixed number. */
     default Long targetQuantity() {
         return switch (this) {
             case Fixed f -> f.value();

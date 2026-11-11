@@ -38,6 +38,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      * @param min inclusive minimum
      * @param max inclusive maximum
      */
+    @Override
     public DefaultIntegerValue range(int min, int max) {
         return with("@Min(" + min + ")").with("@Max(" + max + ")");
     }
@@ -48,6 +49,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      *
      * @param min inclusive minimum
      */
+    @Override
     public DefaultIntegerValue min(int min) {
         return with("@Min(" + min + ")");
     }
@@ -58,6 +60,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      *
      * @param max inclusive maximum
      */
+    @Override
     public DefaultIntegerValue max(int max) {
         return with("@Max(" + max + ")");
     }
@@ -66,6 +69,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
+    @Override
     public DefaultIntegerValue positive() {
         return with(Positive.class);
     }
@@ -74,6 +78,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
+    @Override
     public DefaultIntegerValue negative() {
         return with(Negative.class);
     }
@@ -83,6 +88,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      *
      * @param annotation the annotation type to add
      */
+    @Override
     public DefaultIntegerValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -94,6 +100,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
+    @Override
     public DefaultIntegerValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -105,6 +112,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      * @return a valid int
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
     public int toInt() {
         return delegate.valid();
     }
@@ -121,6 +129,7 @@ public final class DefaultIntegerValue implements IntegerValue {
         return this;
     }
 
+    @Override
     public Integer valid() {
         return delegate.valid();
     }
@@ -130,6 +139,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      *
      * @return list of valid boundary values
      */
+    @Override
     public List<Integer> validList() {
         return delegate.validList();
     }
@@ -139,6 +149,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      *
      * @return a value that violates at least one constraint
      */
+    @Override
     public Integer invalid() {
         return delegate.invalid();
     }
@@ -148,6 +159,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      *
      * @return list of invalid values
      */
+    @Override
     public List<Integer> invalidList() {
         return delegate.invalidList();
     }
@@ -158,6 +170,7 @@ public final class DefaultIntegerValue implements IntegerValue {
      * @param count the number of values to generate
      * @return list of valid values
      */
+    @Override
     public List<Integer> stream(int count) {
         return delegate.stream(count);
     }

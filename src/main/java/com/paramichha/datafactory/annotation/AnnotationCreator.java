@@ -4,6 +4,7 @@ import com.paramichha.datafactory.AnnotationParseException;
 import jakarta.validation.constraints.NotNull;
 import java.lang.annotation.Annotation;
 
+@FunctionalInterface
 public interface AnnotationCreator {
     /**
      * Each handler decides how to parse attributes and build annotation.

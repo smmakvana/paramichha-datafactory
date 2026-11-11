@@ -60,6 +60,8 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         return with(fieldName, null);
     }
 
+    // Null means "create the machine again from the new seed".
+    @SuppressWarnings("PMD.NullAssignment")
     @Override
     public DefaultDataBuilder<T> seed(long seed) {
         this.seed = seed;
@@ -296,6 +298,8 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         return DataFactoryResult.failure(errorType, detail == null ? context : context + ": " + detail);
     }
 
+    // Identity on purpose: a throwable that is its own cause.
+    @SuppressWarnings("PMD.CompareObjectsWithEquals")
     private static String rootMessage(Throwable t) {
         String msg = t.getMessage();
         for (Throwable c = t.getCause(); c != null && c != c.getCause(); c = c.getCause()) {
@@ -308,6 +312,8 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
 
     // ── Internal resolution ───────────────────────────────────────────────────
 
+    // ConstraintChecker.warn is not a logger call.
+    @SuppressWarnings("PMD.GuardLogStatement")
     private void surfaceProductionWarnings(List<FieldDescriptor> fields) {
         for (FieldDescriptor field : fields) {
             ConstraintChecker.warn(field.name(), field.rawType(), field.validations());
@@ -488,7 +494,8 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
     /** Size used for the canonical valid value: one element, moved inside any @Size range. */
     private static int typicalSize(FieldDescriptor field) {
         long size = 1;
-        Long lo = sizeMin(field), hi = sizeMax(field);
+        Long lo = sizeMin(field);
+        Long hi = sizeMax(field);
         if (lo != null && size < lo) {
             size = lo;
         }
@@ -507,9 +514,10 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
 
     /** Valid collections at the typical size and at each declared @Size / @NotEmpty boundary. */
     private List<Object> collectionBoundaries(FieldDescriptor field, DataMachine m) {
-        LinkedHashSet<Integer> sizes = new LinkedHashSet<>();
+        Set<Integer> sizes = new LinkedHashSet<>();
         sizes.add(typicalSize(field));
-        Long lo = sizeMin(field), hi = sizeMax(field);
+        Long lo = sizeMin(field);
+        Long hi = sizeMax(field);
         if (lo != null && lo <= MAX_GENERATED_SIZE) {
             sizes.add(lo.intValue());
         }
@@ -555,7 +563,8 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
             return List.of();
         }
         List<ConstraintCase> cases = new ArrayList<>();
-        Long lo = analyze(field).bounds().min(), hi = sizeMax(field);
+        Long lo = analyze(field).bounds().min();
+        Long hi = sizeMax(field);
         if (lo != null && lo > 0 && lo - 1 <= MAX_GENERATED_SIZE) {
             Object c = buildSized(field, (int) (lo - 1), m);
             if (c != null) {
@@ -594,7 +603,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
                 if (elemType == Object.class) {
                     return null;
                 }
-                LinkedHashSet<Object> distinct = new LinkedHashSet<>();
+                Set<Object> distinct = new LinkedHashSet<>();
                 for (int attempt = 0; attempt < size * 10 && distinct.size() < size; attempt++) {
                     for (Object v : ValueBuilderFactory.create(elemType, m).stream(1)) {
                         if (v == null) {
@@ -645,7 +654,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
      * {@code null} when that many distinct keys can't be produced (e.g. Boolean keys).
      */
     private Object buildMap(FieldDescriptor field, int size, DataMachine m) {
-        LinkedHashMap<Object, Object> map = new LinkedHashMap<>();
+        Map<Object, Object> map = new LinkedHashMap<>();
         if (size == 0) {
             return map;
         }
@@ -673,7 +682,7 @@ public final class DefaultDataBuilder<T> implements DataBuilder<T> {
         if (key == null || value == null) {
             return new LinkedHashMap<>();
         }
-        LinkedHashMap<Object, Object> map = new LinkedHashMap<>();
+        Map<Object, Object> map = new LinkedHashMap<>();
         map.put(key, value);
         return map;
     }

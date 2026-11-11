@@ -52,6 +52,8 @@ public class DataFactoryException extends RuntimeException {
      * Returns the error type of the first {@code DataFactoryException} in the
      * cause chain that carries one, or {@code null} if none does.
      */
+    // Identity on purpose: a throwable that is its own cause.
+    @SuppressWarnings("PMD.CompareObjectsWithEquals")
     public static ErrorType errorTypeInChain(Throwable t) {
         for (Throwable c = t; c != null; c = c.getCause()) {
             if (c instanceof DataFactoryException dfe && dfe.errorType != null) {

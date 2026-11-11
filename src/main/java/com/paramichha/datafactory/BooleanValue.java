@@ -8,7 +8,9 @@ public interface BooleanValue extends FieldValue<Boolean> {
 
     BooleanValue assertFalse();
 
+    @Override
     BooleanValue with(Class<? extends Annotation> annotation);
 
+    @Override
     BooleanValue with(String annotation);
 }

@@ -35,6 +35,7 @@ public final class DefaultBooleanValue implements BooleanValue {
      * The generated value must be {@code true}.
      * Maps to {@code @AssertTrue}.
      */
+    @Override
     public DefaultBooleanValue assertTrue() {
         return with(AssertTrue.class);
     }
@@ -43,6 +44,7 @@ public final class DefaultBooleanValue implements BooleanValue {
      * The generated value must be {@code false}.
      * Maps to {@code @AssertFalse}.
      */
+    @Override
     public DefaultBooleanValue assertFalse() {
         return with(AssertFalse.class);
     }
@@ -52,6 +54,7 @@ public final class DefaultBooleanValue implements BooleanValue {
      *
      * @param annotation the annotation type to add
      */
+    @Override
     public DefaultBooleanValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -63,6 +66,7 @@ public final class DefaultBooleanValue implements BooleanValue {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
+    @Override
     public DefaultBooleanValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -80,6 +84,7 @@ public final class DefaultBooleanValue implements BooleanValue {
         return this;
     }
 
+    @Override
     public Boolean valid() {
         return delegate.valid();
     }
@@ -89,6 +94,7 @@ public final class DefaultBooleanValue implements BooleanValue {
      *
      * @return list of valid boundary values
      */
+    @Override
     public List<Boolean> validList() {
         return delegate.validList();
     }
@@ -98,6 +104,7 @@ public final class DefaultBooleanValue implements BooleanValue {
      *
      * @return a value that violates at least one constraint
      */
+    @Override
     public Boolean invalid() {
         return delegate.invalid();
     }
@@ -107,6 +114,7 @@ public final class DefaultBooleanValue implements BooleanValue {
      *
      * @return list of invalid values
      */
+    @Override
     public List<Boolean> invalidList() {
         return delegate.invalidList();
     }
@@ -117,6 +125,7 @@ public final class DefaultBooleanValue implements BooleanValue {
      * @param count the number of values to generate
      * @return list of valid values
      */
+    @Override
     public List<Boolean> stream(int count) {
         return delegate.stream(count);
     }

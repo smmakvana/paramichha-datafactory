@@ -21,6 +21,7 @@ public final class ConstructorObjectCreation implements ObjectCreation {
             return type.getDeclaredConstructor(
                     fields.stream().map(FieldDescriptor::rawType).toArray(Class[]::new));
         } catch (NoSuchMethodException ignored) {
+            // no exact match: look for a constructor with compatible parameter types below
         }
         return Arrays.stream(type.getDeclaredConstructors())
                 .filter(c -> c.getParameterCount() == fields.size())

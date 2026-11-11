@@ -5,6 +5,7 @@ import com.paramichha.datafactory.constraint.NumericBounds;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Locale;
 
 /** Produces numeric values for all Java numeric types. */
 final class NumericDataCreator implements DataCreator {
@@ -53,7 +54,7 @@ final class NumericDataCreator implements DataCreator {
     private static long semanticValue(FieldConstraints field, DataMachine machine) {
         Long min = intMin(field.bounds());
         Long max = intMax(field.bounds());
-        String name = field.fieldName().toLowerCase();
+        String name = field.fieldName().toLowerCase(Locale.ROOT);
 
         if (name.contains("age")) {
             return bounded(30L, min, max);

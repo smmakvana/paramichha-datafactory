@@ -144,6 +144,7 @@ public record FieldConstraints(
             return this;
         }
 
+        /** The constraints collected so far. */
         public FieldConstraints build() {
             return new FieldConstraints(
                     fieldName,

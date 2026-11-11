@@ -1,6 +1,7 @@
 package com.paramichha.datafactory.generation;
 
 import com.paramichha.datafactory.constraint.FieldConstraints;
+import java.util.Locale;
 
 /**
  * Produces {@code Character} / {@code char} values.
@@ -38,7 +39,7 @@ final class CharacterDataCreator implements DataCreator {
         }
 
         // Semantic — field name hints
-        String name = field.fieldName().toLowerCase();
+        String name = field.fieldName().toLowerCase(Locale.ROOT);
         if (name.contains("gender")) {
             return machine.number(0, 1) == 0 ? 'M' : 'F';
         }

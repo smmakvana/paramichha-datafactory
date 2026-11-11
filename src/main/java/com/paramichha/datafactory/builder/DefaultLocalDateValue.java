@@ -37,6 +37,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      * The generated date must be strictly in the past.
      * Equivalent to {@code @Past}.
      */
+    @Override
     public DefaultLocalDateValue past() {
         return with(Past.class);
     }
@@ -45,6 +46,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      * The generated date must be in the past or today.
      * Equivalent to {@code @PastOrPresent}.
      */
+    @Override
     public DefaultLocalDateValue pastOrPresent() {
         return with(PastOrPresent.class);
     }
@@ -53,6 +55,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      * The generated date must be strictly in the future.
      * Equivalent to {@code @Future}.
      */
+    @Override
     public DefaultLocalDateValue future() {
         return with(Future.class);
     }
@@ -61,6 +64,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      * The generated date must be in the future or today.
      * Equivalent to {@code @FutureOrPresent}.
      */
+    @Override
     public DefaultLocalDateValue futureOrPresent() {
         return with(FutureOrPresent.class);
     }
@@ -70,6 +74,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      *
      * @param annotation the annotation type to add
      */
+    @Override
     public DefaultLocalDateValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -81,6 +86,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
+    @Override
     public DefaultLocalDateValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -98,6 +104,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
         return this;
     }
 
+    @Override
     public LocalDate valid() {
         return delegate.valid();
     }
@@ -107,6 +114,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      *
      * @return list of valid boundary dates
      */
+    @Override
     public List<LocalDate> validList() {
         return delegate.validList();
     }
@@ -116,6 +124,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      *
      * @return a date that violates at least one constraint
      */
+    @Override
     public LocalDate invalid() {
         return delegate.invalid();
     }
@@ -125,6 +134,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      *
      * @return list of invalid dates
      */
+    @Override
     public List<LocalDate> invalidList() {
         return delegate.invalidList();
     }
@@ -135,6 +145,7 @@ public final class DefaultLocalDateValue implements LocalDateValue {
      * @param count the number of values to generate
      * @return list of valid dates
      */
+    @Override
     public List<LocalDate> stream(int count) {
         return delegate.stream(count);
     }

@@ -39,6 +39,10 @@ public final class ConstraintChecker {
 
     private ConstraintChecker() {}
 
+    /**
+     * Prints a warning for each constraint a production field of this type would normally declare
+     * and does not, for example a missing {@code @NotNull}.
+     */
     public static void warn(String fieldName, Class<?> fieldType, List<Annotation> declared) {
         if (neverWarn(fieldType)) {
             return;
@@ -87,6 +91,8 @@ public final class ConstraintChecker {
         }
     }
 
+    // Warnings go to the console: the library has no logging dependency.
+    @SuppressWarnings("PMD.SystemPrintln")
     private static void log(String fieldName, String message) {
         System.out.println("⚠  DataFactory [PRODUCTION] '" + fieldName + "': " + message);
     }

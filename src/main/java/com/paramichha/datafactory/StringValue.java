@@ -62,7 +62,9 @@ public interface StringValue extends FieldValue<String> {
 
     StringValue minLength(int min);
 
+    @Override
     StringValue with(Class<? extends Annotation> annotation);
 
+    @Override
     StringValue with(String annotation);
 }

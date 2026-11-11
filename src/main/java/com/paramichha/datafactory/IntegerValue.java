@@ -14,8 +14,10 @@ public interface IntegerValue extends FieldValue<Integer> {
 
     IntegerValue negative();
 
+    @Override
     IntegerValue with(Class<? extends Annotation> annotation);
 
+    @Override
     IntegerValue with(String annotation);
 
     int toInt();

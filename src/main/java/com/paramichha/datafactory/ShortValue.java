@@ -14,8 +14,10 @@ public interface ShortValue extends FieldValue<Short> {
 
     ShortValue negative();
 
+    @Override
     ShortValue with(Class<? extends Annotation> annotation);
 
+    @Override
     ShortValue with(String annotation);
 
     short toShort();

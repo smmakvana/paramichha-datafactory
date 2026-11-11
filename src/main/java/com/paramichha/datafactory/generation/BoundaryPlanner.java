@@ -27,6 +27,7 @@ public final class BoundaryPlanner {
 
     private BoundaryPlanner() {}
 
+    /** The boundary targets to generate for a field: the edges of its constraints and a typical value. */
     public static List<BoundaryTarget> plan(FieldConstraints field) {
         if (field.mustBeNull()) {
             return List.of(BoundaryTarget.nullTarget());

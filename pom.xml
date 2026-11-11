@@ -27,8 +27,8 @@
         <tag>HEAD</tag>
     </scm>
     <properties>
-        <!-- Override of the paramichha-dev default, removed once Checkstyle, PMD and SpotBugs report nothing. -->
-        <quality.fail>false</quality.fail>
+        <!-- SpotBugs findings that are not defects, with the reason for each. -->
+        <spotbugs.excludeFilterFile>${project.basedir}/spotbugs-exclude.xml</spotbugs.excludeFilterFile>
         <datafactory-catalog.version>0.2.0-SNAPSHOT</datafactory-catalog.version>
         <!-- Line-coverage floor checked by `mvn verify` (rule in paramichha-dev). Every line is
              covered: new code needs a test, or the build fails. Never lower it. -->

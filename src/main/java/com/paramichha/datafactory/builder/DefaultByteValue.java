@@ -35,6 +35,7 @@ public final class DefaultByteValue implements ByteValue {
      * @param min inclusive minimum
      * @param max inclusive maximum
      */
+    @Override
     public DefaultByteValue range(byte min, byte max) {
         return with("@Min(" + min + ")").with("@Max(" + max + ")");
     }
@@ -45,6 +46,7 @@ public final class DefaultByteValue implements ByteValue {
      *
      * @param min inclusive minimum
      */
+    @Override
     public DefaultByteValue min(byte min) {
         return with("@Min(" + min + ")");
     }
@@ -55,6 +57,7 @@ public final class DefaultByteValue implements ByteValue {
      *
      * @param max inclusive maximum
      */
+    @Override
     public DefaultByteValue max(byte max) {
         return with("@Max(" + max + ")");
     }
@@ -63,6 +66,7 @@ public final class DefaultByteValue implements ByteValue {
      * The generated value must be strictly positive.
      * Equivalent to {@code @Positive}.
      */
+    @Override
     public DefaultByteValue positive() {
         return with(Positive.class);
     }
@@ -71,6 +75,7 @@ public final class DefaultByteValue implements ByteValue {
      * The generated value must be strictly negative.
      * Equivalent to {@code @Negative}.
      */
+    @Override
     public DefaultByteValue negative() {
         return with(Negative.class);
     }
@@ -80,6 +85,7 @@ public final class DefaultByteValue implements ByteValue {
      *
      * @param annotation the annotation type to add
      */
+    @Override
     public DefaultByteValue with(Class<? extends Annotation> annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -91,6 +97,7 @@ public final class DefaultByteValue implements ByteValue {
      * @param annotation the annotation string
      * @throws AnnotationParseException if the string cannot be parsed
      */
+    @Override
     public DefaultByteValue with(String annotation) {
         delegate = delegate.with(annotation);
         return this;
@@ -102,6 +109,7 @@ public final class DefaultByteValue implements ByteValue {
      * @return a valid byte
      * @throws DataFactoryException if no valid value can be generated
      */
+    @Override
     public byte toByte() {
         return delegate.valid();
     }
@@ -118,6 +126,7 @@ public final class DefaultByteValue implements ByteValue {
         return this;
     }
 
+    @Override
     public Byte valid() {
         return delegate.valid();
     }
@@ -127,6 +136,7 @@ public final class DefaultByteValue implements ByteValue {
      *
      * @return list of valid boundary values
      */
+    @Override
     public List<Byte> validList() {
         return delegate.validList();
     }
@@ -136,6 +146,7 @@ public final class DefaultByteValue implements ByteValue {
      *
      * @return a value that violates at least one constraint
      */
+    @Override
     public Byte invalid() {
         return delegate.invalid();
     }
@@ -145,6 +156,7 @@ public final class DefaultByteValue implements ByteValue {
      *
      * @return list of invalid values
      */
+    @Override
     public List<Byte> invalidList() {
         return delegate.invalidList();
     }
@@ -155,6 +167,7 @@ public final class DefaultByteValue implements ByteValue {
      * @param count the number of values to generate
      * @return list of valid values
      */
+    @Override
     public List<Byte> stream(int count) {
         return delegate.stream(count);
     }
