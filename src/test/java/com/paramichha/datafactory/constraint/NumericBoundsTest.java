@@ -1,11 +1,9 @@
 package com.paramichha.datafactory.constraint;
 
+import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -322,6 +320,121 @@ class NumericBoundsTest {
             var dec = (NumericBounds.DecimalBounds) r;
             assertThat(dec.decMin()).isNull();
             assertThat(dec.decMax()).isNull();
+        }
+    }
+
+    @Nested
+    @DisplayName("QuantityBounds")
+    class QuantityBoundFactories {
+
+        @Test
+        void unbounded() {
+            assertThat(NumericBounds.unbounded().isUnbounded()).isTrue();
+        }
+
+        @Test
+        void of() {
+            var b = NumericBounds.of(1L, 10L);
+            assertThat(b.min()).isEqualTo(1L);
+            assertThat(b.max()).isEqualTo(10L);
+        }
+
+        @Test
+        void atLeast() {
+            var b = NumericBounds.atLeast(5L);
+            assertThat(b.hasMin()).isTrue();
+            assertThat(b.hasMax()).isFalse();
+        }
+
+        @Test
+        void atMost() {
+            var b = NumericBounds.atMost(5L);
+            assertThat(b.hasMax()).isTrue();
+            assertThat(b.hasMin()).isFalse();
+        }
+
+        @Test
+        void exactly() {
+            var b = NumericBounds.exactly(5L);
+            assertThat(b.min()).isEqualTo(b.max());
+        }
+
+        @Test
+        void hasBoth() {
+            assertThat(NumericBounds.of(1L, 10L).hasBoth()).isTrue();
+        }
+
+        @Test
+        void hasBoth_false() {
+            assertThat(NumericBounds.atLeast(1L).hasBoth()).isFalse();
+        }
+
+        @Test
+        void isContradictory_true() {
+            assertThat(new NumericBounds.IntegerBounds(10L, 5L).isContradictory()).isTrue();
+        }
+
+        @Test
+        void isContradictory_false() {
+            assertThat(new NumericBounds.IntegerBounds(5L, 10L).isContradictory()).isFalse();
+        }
+
+        @Test
+        void isContradictory_noMin() {
+            assertThat(NumericBounds.atMost(5L).isContradictory()).isFalse();
+        }
+
+        // intersect — all branch combinations in maxOf/minOf
+        @Test
+        void intersectBothBounds() {
+            var a = NumericBounds.of(2L, 8L);
+            var b = NumericBounds.of(5L, 10L);
+            var r = a.intersect(b);
+            assertThat(r.min()).isEqualTo(5L); // max of 2,5
+            assertThat(r.max()).isEqualTo(8L); // min of 8,10
+        }
+
+        @Test
+        void intersectThisMinNull() {
+            // maxOf(null, 5) → 5
+            var a = NumericBounds.atMost(10L);
+            var b = NumericBounds.atLeast(5L);
+            var r = a.intersect(b);
+            assertThat(r.min()).isEqualTo(5L);
+            assertThat(r.max()).isEqualTo(10L);
+        }
+
+        @Test
+        void intersectOtherMinNull() {
+            // maxOf(5, null) → 5
+            var a = NumericBounds.atLeast(5L);
+            var b = NumericBounds.atMost(10L);
+            var r = a.intersect(b);
+            assertThat(r.min()).isEqualTo(5L);
+        }
+
+        @Test
+        void intersectThisMaxNull() {
+            // minOf(null, 10) → 10
+            var a = NumericBounds.atLeast(1L);
+            var b = NumericBounds.atMost(10L);
+            var r = a.intersect(b);
+            assertThat(r.max()).isEqualTo(10L);
+        }
+
+        @Test
+        void intersectOtherMaxNull() {
+            // minOf(10, null) → 10
+            var a = NumericBounds.atMost(10L);
+            var b = NumericBounds.atLeast(1L);
+            var r = a.intersect(b);
+            assertThat(r.max()).isEqualTo(10L);
+        }
+
+        @Test
+        void intersectBothNullRemainsUnbounded() {
+            var r = NumericBounds.unbounded().intersect(NumericBounds.unbounded());
+            assertThat(r.isUnbounded()).isTrue();
         }
     }
 }
