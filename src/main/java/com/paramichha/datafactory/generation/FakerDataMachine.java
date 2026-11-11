@@ -1,9 +1,8 @@
 package com.paramichha.datafactory.generation;
 
-import net.datafaker.Faker;
-
 import java.util.Random;
 import java.util.UUID;
+import net.datafaker.Faker;
 
 /**
  * {@link DataMachine} backed by DataFaker.
@@ -16,18 +15,20 @@ import java.util.UUID;
  */
 final class FakerDataMachine implements DataMachine {
 
-    private final Faker  faker;
+    private final Faker faker;
     private final Random random;
 
     FakerDataMachine(Faker faker, Random random) {
-        this.faker  = faker;
+        this.faker = faker;
         this.random = random;
     }
 
     @Override
     public String text(String hint) {
         // UUID is special — not a Faker YAML key, needs direct Random
-        if (hint != null && hint.equalsIgnoreCase("uuid")) return uuid();
+        if (hint != null && hint.equalsIgnoreCase("uuid")) {
+            return uuid();
+        }
         // All other hints go through DataHint mapping
         return DataHint.fromVariableName(hint).produce(faker);
     }

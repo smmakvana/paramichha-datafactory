@@ -1,22 +1,22 @@
-//package com.paramichha.datafactory;
+// package com.paramichha.datafactory;
 //
-//import com.paramichha.datafactory.catalog.*;
-//import jakarta.validation.Valid;
-//import jakarta.validation.Validator;
-//import jakarta.validation.ValidatorFactory;
-//import jakarta.validation.constraints.*;
-//import lombok.Builder;
-//import lombok.Value;
-//import org.junit.jupiter.api.*;
+// import com.paramichha.datafactory.catalog.*;
+// import jakarta.validation.Valid;
+// import jakarta.validation.Validator;
+// import jakarta.validation.ValidatorFactory;
+// import jakarta.validation.constraints.*;
+// import lombok.Builder;
+// import lombok.Value;
+// import org.junit.jupiter.api.*;
 //
-//import java.math.BigDecimal;
-//import java.time.LocalDate;
-//import java.util.List;
+// import java.math.BigDecimal;
+// import java.time.LocalDate;
+// import java.util.List;
 //
-//import static org.assertj.core.api.Assertions.assertThat;
-//import static org.assertj.core.api.Assertions.assertThatThrownBy;
+// import static org.assertj.core.api.Assertions.assertThat;
+// import static org.assertj.core.api.Assertions.assertThatThrownBy;
 //
-///**
+/// **
 // * Flagship test for DataFactory public API.
 // *
 // * Structure mirrors what TestKit generates for user classes:
@@ -26,8 +26,8 @@
 // *
 // * Tests only via the public API — no engine internals.
 // */
-//@DisplayName("DataFactory")
-//class DataFactoryTest {
+// @DisplayName("DataFactory")
+// class DataFactoryTest {
 //
 //    private static Validator validator;
 //
@@ -400,4 +400,4 @@
 //            assertThat(DataFactory.of(AnnotatedPrimitivesRequest.class).invalidList().getAll()).isNotEmpty();
 //        }
 //    }
-//}
+// }

@@ -1,12 +1,12 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.DataFactory;
 import com.paramichha.datafactory.instantiation.LombokObjectCreation;
 import jakarta.validation.constraints.NotBlank;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Evicting the descriptor and creation caches (used by hot reload) leaves generation working. */
 class FieldDescriptorCacheEvictionTest {

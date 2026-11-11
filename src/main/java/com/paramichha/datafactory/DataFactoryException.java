@@ -54,8 +54,12 @@ public class DataFactoryException extends RuntimeException {
      */
     public static ErrorType errorTypeInChain(Throwable t) {
         for (Throwable c = t; c != null; c = c.getCause()) {
-            if (c instanceof DataFactoryException dfe && dfe.errorType != null) return dfe.errorType;
-            if (c.getCause() == c) break;
+            if (c instanceof DataFactoryException dfe && dfe.errorType != null) {
+                return dfe.errorType;
+            }
+            if (c.getCause() == c) {
+                break;
+            }
         }
         return null;
     }

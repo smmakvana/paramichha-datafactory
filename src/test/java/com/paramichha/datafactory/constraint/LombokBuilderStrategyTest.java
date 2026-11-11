@@ -1,17 +1,18 @@
 package com.paramichha.datafactory.constraint;
 
-import jakarta.validation.constraints.NotBlank;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.instantiation.LombokObjectCreation;
+import jakarta.validation.constraints.NotBlank;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Value;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Lombok builder strategy: wrapper and primitive setters, and numeric coercion. */
 @DisplayName("Lombok builder strategy")
@@ -30,8 +31,7 @@ class LombokBuilderStrategyTest {
                     new FieldDescriptor("intVal", Integer.class, Integer.class, Collections.emptyList()),
                     new FieldDescriptor("longVal", Long.class, Long.class, Collections.emptyList()),
                     new FieldDescriptor("floatVal", Float.class, Float.class, Collections.emptyList()),
-                    new FieldDescriptor("doubleVal", Double.class, Double.class, Collections.emptyList())
-            );
+                    new FieldDescriptor("doubleVal", Double.class, Double.class, Collections.emptyList()));
             return LombokObjectCreation.INSTANCE.create(AllPrimitivesLombok.class, fields, values);
         }
 
@@ -84,8 +84,7 @@ class LombokBuilderStrategyTest {
                     new FieldDescriptor("intVal", int.class, int.class, Collections.emptyList()),
                     new FieldDescriptor("longVal", long.class, long.class, Collections.emptyList()),
                     new FieldDescriptor("floatVal", float.class, float.class, Collections.emptyList()),
-                    new FieldDescriptor("doubleVal", double.class, double.class, Collections.emptyList())
-            );
+                    new FieldDescriptor("doubleVal", double.class, double.class, Collections.emptyList()));
             return LombokObjectCreation.INSTANCE.create(AllWrappersLombok.class, fields, values);
         }
 
@@ -135,12 +134,12 @@ class LombokBuilderStrategyTest {
             var fields = FieldDescriptor.extract(AllWrappersForCoerce.class);
             var values = new LinkedHashMap<String, Object>();
             // Pass Integer for all fields — coerce will convert each to target type
-            values.put("longVal", 42);   // Integer → Long
-            values.put("intVal", 42);   // Integer → Integer (isInstance = true, passthrough)
-            values.put("shortVal", 42);   // Integer → Short
-            values.put("byteVal", 42);   // Integer → Byte
-            values.put("doubleVal", 42);   // Integer → Double
-            values.put("floatVal", 42);   // Integer → Float
+            values.put("longVal", 42); // Integer → Long
+            values.put("intVal", 42); // Integer → Integer (isInstance = true, passthrough)
+            values.put("shortVal", 42); // Integer → Short
+            values.put("byteVal", 42); // Integer → Byte
+            values.put("doubleVal", 42); // Integer → Double
+            values.put("floatVal", 42); // Integer → Float
             var r = LombokObjectCreation.INSTANCE.create(AllWrappersForCoerce.class, fields, values);
             assertThat(r.getLongVal()).isEqualTo(42L);
             assertThat(r.getIntVal()).isEqualTo(42);
@@ -220,7 +219,7 @@ class LombokBuilderStrategyTest {
         void nullValueCoercesToNull() throws Exception {
             var fields = FieldDescriptor.extract(BoolWrapperRequest.class);
             var values = new LinkedHashMap<String, Object>();
-            values.put("flag", null);   // Boolean wrapper — null is valid, coerce(null, Boolean) → null
+            values.put("flag", null); // Boolean wrapper — null is valid, coerce(null, Boolean) → null
             var result = LombokObjectCreation.INSTANCE.create(BoolWrapperRequest.class, fields, values);
             assertThat(result.getFlag()).isNull();
         }
@@ -236,28 +235,27 @@ class LombokBuilderStrategyTest {
         @Value
         @Builder
         static class BoolPrimRequest {
-            boolean flag;   // Lombok generates flag(boolean) — rawType=boolean.class, exact match
+            boolean flag; // Lombok generates flag(boolean) — rawType=boolean.class, exact match
         }
 
         @Value
         @Builder
         static class CharPrimRequest {
-            char letter;    // Lombok generates letter(char) — rawType=char.class, exact match
+            char letter; // Lombok generates letter(char) — rawType=char.class, exact match
         }
 
         // toWrapper fallback: pass primitive field descriptor but builder expects wrapper
         @Value
         @Builder
         static class BoolWrapperRequest {
-            Boolean flag;   // Lombok generates flag(Boolean)
+            Boolean flag; // Lombok generates flag(Boolean)
         }
 
         // coerce — non-Number value hits "return value" fallback
         @Value
         @Builder
         static class StringRequest {
-            @NotBlank
-            String name;
+            @NotBlank String name;
         }
     }
 
@@ -282,7 +280,7 @@ class LombokBuilderStrategyTest {
             // coerce(null, String.class) -> null path
             var fields = FieldDescriptor.extract(BoolCharRequest.class);
             var values = new LinkedHashMap<String, Object>();
-            values.put("boolPrim", null);  // primitive -> skipped before coerce
+            values.put("boolPrim", null); // primitive -> skipped before coerce
             values.put("charPrim", 'A');
             // Should not throw — null skipped for primitive
             var result = LombokObjectCreation.INSTANCE.create(BoolCharRequest.class, fields, values);
@@ -301,26 +299,26 @@ class LombokBuilderStrategyTest {
         @Test
         void unmatchedFieldHasNoSetter() throws Exception {
             // Field name that has no matching setter in the builder -> findSetter returns null -> skipped
-            var fields = List.of(new FieldDescriptor("unknownFieldXYZ", String.class, String.class,
-                    Collections.emptyList()));
+            var fields = List.of(
+                    new FieldDescriptor("unknownFieldXYZ", String.class, String.class, Collections.emptyList()));
             var values = Map.of("unknownFieldXYZ", (Object) "test");
             // Should not throw even though setter not found
             // canHandle will be true (has builder() method)
-            assertThat(LombokObjectCreation.INSTANCE.canCreate(NoSetterForField.class, fields)).isTrue();
+            assertThat(LombokObjectCreation.INSTANCE.canCreate(NoSetterForField.class, fields))
+                    .isTrue();
         }
 
         @Value
         @Builder
         static class BoolCharRequest {
-            boolean boolPrim;   // primitive — Lombok generates boolPrim(boolean)
-            char charPrim;   // primitive — Lombok generates charPrim(char)
+            boolean boolPrim; // primitive — Lombok generates boolPrim(boolean)
+            char charPrim; // primitive — Lombok generates charPrim(char)
         }
 
         @Value
         @Builder
         static class StringOnlyRequest {
-            @NotBlank
-            String name;
+            @NotBlank String name;
         }
 
         static class NoSetterForField {

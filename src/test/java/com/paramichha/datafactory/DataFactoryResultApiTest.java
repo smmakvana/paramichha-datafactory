@@ -1,57 +1,85 @@
 package com.paramichha.datafactory;
 
-import jakarta.validation.constraints.*;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.validation.Valid;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-
+import jakarta.validation.constraints.AssertFalse;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Negative;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 class DataFactoryResultApiTest {
 
     // ── fixtures ──────────────────────────────────────────────────────────────
 
-    record Simple(@NotBlank @Size(max = 20) String name, @Min(18) @Max(120) int age) {}
+    record Simple(
+            @NotBlank @Size(max = 20) String name,
+            @Min(18) @Max(120) int age) {}
 
-    record MinAboveMax(@NotBlank String name, @Min(5) @Max(3) int quantity) {}
+    record MinAboveMax(
+            @NotBlank String name, @Min(5) @Max(3) int quantity) {}
+
     record SizeAboveMax(@Size(min = 5, max = 3) String code) {}
+
     record PositiveNegative(@Positive @Negative Integer amount) {}
-    record DecimalAboveMax(@DecimalMin("2.0") @DecimalMax("1.0") java.math.BigDecimal rate) {}
+
+    record DecimalAboveMax(
+            @DecimalMin("2.0") @DecimalMax("1.0") java.math.BigDecimal rate) {}
+
     record NullAndNotNull(@Null @NotNull String legacy) {}
+
     record NullPrimitive(@Null int count) {}
+
     record TrueAndFalse(@AssertTrue @AssertFalse Boolean flag) {}
 
     record NullAllowed(@Null String legacy, @NotBlank String name) {}
-    record MustBeFalse(@AssertFalse boolean deleted, @NotBlank String name) {}
+
+    record MustBeFalse(
+            @AssertFalse boolean deleted, @NotBlank String name) {}
 
     /** One field DataFactory has no creator for; the rest are ordinary. */
     record WithUnsupported(@NotBlank String name, @Min(1) int age, AtomicInteger counter) {}
 
     /** Mixed: one conflicting field, two good ones. */
-    record OneBadField(@NotBlank String name, @Min(10) @Max(1) int broken, @Email String email) {}
+    record OneBadField(
+            @NotBlank String name,
+            @Min(10) @Max(1) int broken,
+            @Email String email) {}
 
     interface NotAClass {}
 
     record Inner(@NotBlank String city) {}
+
     record Bag(
             @Size(min = 2, max = 4) List<String> tags,
             @NotEmpty Set<Integer> ids,
-            @Valid @NotNull Inner inner
-    ) {}
+            @Valid @NotNull Inner inner) {}
 
-    private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
+    private static final Validator VALIDATOR =
+            Validation.buildDefaultValidatorFactory().getValidator();
 
     record JustName(@NotBlank String name) {}
+
     record NameAndMore(@NotBlank String name, @Min(1) int extra) {}
 
     // ── happy path ────────────────────────────────────────────────────────────
@@ -137,16 +165,18 @@ class DataFactoryResultApiTest {
             var b = DataFactory.of(MinAboveMax.class);
             assertThat(b.invalid().errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION);
             assertThat(b.invalidFor("name").errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION);
-            assertThat(b.invalidList().failed()).allSatisfy(f ->
-                    assertThat(f.errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION));
-            assertThat(b.validList(3).failed()).hasSize(3).allSatisfy(f ->
-                    assertThat(f.errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION));
+            assertThat(b.invalidList().failed())
+                    .allSatisfy(f -> assertThat(f.errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION));
+            assertThat(b.validList(3).failed())
+                    .hasSize(3)
+                    .allSatisfy(f -> assertThat(f.errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION));
             assertThat(b.validPerField()).doesNotContainKey("_error").containsKey("name");
         }
 
         @Test
         void overridingTheConflictingFieldMakesTheClassBuildable() {
-            DataFactoryResult<MinAboveMax> r = DataFactory.of(MinAboveMax.class).with("quantity", 4).valid();
+            DataFactoryResult<MinAboveMax> r =
+                    DataFactory.of(MinAboveMax.class).with("quantity", 4).valid();
             assertThat(r.isSuccess()).isTrue();
             assertThat(r.get().quantity()).isEqualTo(4);
         }
@@ -189,6 +219,17 @@ class DataFactoryResultApiTest {
             assertThat(outer.errorType()).isNull();
             assertThat(DataFactoryException.errorTypeInChain(outer)).isEqualTo(ErrorType.NOT_INSTANTIABLE);
         }
+
+        @Test
+        void anExceptionThatIsItsOwnCauseEndsTheSearch() {
+            Throwable selfCaused = new RuntimeException("loop") {
+                @Override
+                public synchronized Throwable getCause() {
+                    return this;
+                }
+            };
+            assertThat(DataFactoryException.errorTypeInChain(selfCaused)).isNull();
+        }
     }
 
     // ── per-field generation ──────────────────────────────────────────────────
@@ -205,11 +246,14 @@ class DataFactoryResultApiTest {
             assertThat(fields.get("counter").errorType()).isEqualTo(ErrorType.UNSUPPORTED_CLASS_TYPE);
 
             FieldCases name = fields.get("name").get();
-            assertThat(name.validValues()).isNotEmpty().allSatisfy(v -> assertThat((String) v).isNotBlank());
+            assertThat(name.validValues())
+                    .isNotEmpty()
+                    .allSatisfy(v -> assertThat((String) v).isNotBlank());
             assertThat(name.invalidCases()).extracting(c -> c.constraint()).contains("NotBlank");
 
             FieldCases age = fields.get("age").get();
-            assertThat(age.validValues()).allSatisfy(v -> assertThat((Integer) v).isGreaterThanOrEqualTo(1));
+            assertThat(age.validValues())
+                    .allSatisfy(v -> assertThat((Integer) v).isGreaterThanOrEqualTo(1));
             assertThat(age.invalidCases()).extracting(c -> c.constraint()).containsExactly("Min");
         }
 
@@ -219,7 +263,9 @@ class DataFactoryResultApiTest {
             assertThat(fields.get("broken").errorType()).isEqualTo(ErrorType.INVALID_CONFIGURATION);
             assertThat(fields.get("name").isSuccess()).isTrue();
             assertThat(fields.get("email").isSuccess()).isTrue();
-            assertThat(fields.get("email").get().invalidCases()).extracting(c -> c.constraint()).contains("Email");
+            assertThat(fields.get("email").get().invalidCases())
+                    .extracting(c -> c.constraint())
+                    .contains("Email");
         }
 
         @Test
@@ -232,14 +278,26 @@ class DataFactoryResultApiTest {
         void seededFieldsAreDeterministic() {
             var a = DataFactory.of(Simple.class).seed(42).fields();
             var b = DataFactory.of(Simple.class).seed(42).fields();
-            assertThat(a.get("name").get().validValues()).isEqualTo(b.get("name").get().validValues());
-            assertThat(a.get("age").get().validValues()).isEqualTo(b.get("age").get().validValues());
+            assertThat(a.get("name").get().validValues())
+                    .isEqualTo(b.get("name").get().validValues());
+            assertThat(a.get("age").get().validValues())
+                    .isEqualTo(b.get("age").get().validValues());
         }
 
         @Test
         void fieldValuesDoNotDependOnOtherFields() {
-            List<Object> alone = DataFactory.of(JustName.class).seed(7).fields().get("name").get().validValues();
-            List<Object> withMore = DataFactory.of(NameAndMore.class).seed(7).fields().get("name").get().validValues();
+            List<Object> alone = DataFactory.of(JustName.class)
+                    .seed(7)
+                    .fields()
+                    .get("name")
+                    .get()
+                    .validValues();
+            List<Object> withMore = DataFactory.of(NameAndMore.class)
+                    .seed(7)
+                    .fields()
+                    .get("name")
+                    .get()
+                    .validValues();
             assertThat(alone).isEqualTo(withMore);
         }
     }
@@ -256,7 +314,8 @@ class DataFactoryResultApiTest {
         @Test
         void listValidValuesCoverSizeBoundaries() {
             List<Integer> sizes = fields.get("tags").get().validValues().stream()
-                    .map(v -> ((Collection<?>) v).size()).toList();
+                    .map(v -> ((Collection<?>) v).size())
+                    .toList();
             assertThat(sizes).contains(2, 4).allSatisfy(n -> assertThat(n).isBetween(2, 4));
         }
 
@@ -264,14 +323,16 @@ class DataFactoryResultApiTest {
         void listInvalidCasesAreOneTooFewAndOneTooMany() {
             List<Integer> sizes = fields.get("tags").get().invalidCases().stream()
                     .filter(c -> c.constraint().equals("Size"))
-                    .map(c -> ((Collection<?>) c.value()).size()).toList();
+                    .map(c -> ((Collection<?>) c.value()).size())
+                    .toList();
             assertThat(sizes).containsExactlyInAnyOrder(1, 5);
         }
 
         @Test
         void notEmptySetHasAnEmptyInvalidCaseAndNonEmptyValidValues() {
             FieldCases ids = fields.get("ids").get();
-            assertThat(ids.validValues()).allSatisfy(v -> assertThat((Collection<?>) v).isNotEmpty());
+            assertThat(ids.validValues())
+                    .allSatisfy(v -> assertThat((Collection<?>) v).isNotEmpty());
             assertThat(ids.invalidCases()).anySatisfy(c -> {
                 assertThat(c.constraint()).isEqualTo("NotEmpty");
                 assertThat((Collection<?>) c.value()).isEmpty();
@@ -311,8 +372,10 @@ class DataFactoryResultApiTest {
             for (Class<?> c : List.of(Simple.class, Bag.class)) {
                 DataFactoryResults<?> rs = DataFactory.of(c).seed(3).invalidList();
                 assertThat(rs.isSuccess()).as(c.getSimpleName()).isTrue();
-                rs.results().forEach(r ->
-                        assertThat(VALIDATOR.validate(r.get())).as(c.getSimpleName() + " " + r.get()).isNotEmpty());
+                rs.results()
+                        .forEach(r -> assertThat(VALIDATOR.validate(r.get()))
+                                .as(c.getSimpleName() + " " + r.get())
+                                .isNotEmpty());
             }
         }
 
@@ -321,11 +384,16 @@ class DataFactoryResultApiTest {
             for (Class<?> c : List.of(Simple.class, Bag.class)) {
                 DataFactory.of(c).seed(5).fields().forEach((name, r) -> {
                     FieldCases fc = r.get();
-                    fc.validValues().forEach(v -> assertThat(VALIDATOR.validateValue(c, name, v))
-                            .as(c.getSimpleName() + "." + name + " valid " + v).isEmpty());
+                    fc.validValues()
+                            .forEach(v -> assertThat(VALIDATOR.validateValue(c, name, v))
+                                    .as(c.getSimpleName() + "." + name + " valid " + v)
+                                    .isEmpty());
                     // type-default probes (annotationDriven=false) are probes, not violations
-                    fc.invalidCases().stream().filter(ConstraintCase::annotationDriven).forEach(ic -> assertThat(VALIDATOR.validateValue(c, name, ic.value()))
-                            .as(c.getSimpleName() + "." + name + " " + ic.constraint() + " " + ic.value()).isNotEmpty());
+                    fc.invalidCases().stream()
+                            .filter(ConstraintCase::annotationDriven)
+                            .forEach(ic -> assertThat(VALIDATOR.validateValue(c, name, ic.value()))
+                                    .as(c.getSimpleName() + "." + name + " " + ic.constraint() + " " + ic.value())
+                                    .isNotEmpty());
                 });
             }
         }
@@ -334,12 +402,14 @@ class DataFactoryResultApiTest {
     @Test
     @DisplayName("VERSION is the artifact version from the build, not a hard-coded string")
     void versionComesFromTheBuild() {
-        assertThat(DataFactory.VERSION).isNotEqualTo("unknown").doesNotContain("${")
+        assertThat(DataFactory.VERSION)
+                .isNotEqualTo("unknown")
+                .doesNotContain("${")
                 .matches("\\d+\\.\\d+\\.\\d+.*")
                 .isEqualTo(System.getProperty("project.version", DataFactory.VERSION));
     }
 
-        // ── validPerField shape ───────────────────────────────────────────────────
+    // ── validPerField shape ───────────────────────────────────────────────────
 
     @Test
     @DisplayName("validPerField never invents an \"_error\" key for a class-level failure")

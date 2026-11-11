@@ -2,19 +2,35 @@ package com.paramichha.datafactory.builder;
 
 import com.paramichha.datafactory.ConstraintCase;
 import com.paramichha.datafactory.FieldValue;
-import com.paramichha.datafactory.constraint.*;
+import com.paramichha.datafactory.constraint.AnnotationResolver;
+import com.paramichha.datafactory.constraint.FieldConstraints;
+import com.paramichha.datafactory.constraint.NumericBounds;
 import com.paramichha.datafactory.generation.BoundaryPlanner;
 import com.paramichha.datafactory.generation.DataGenerator;
-
 import com.paramichha.datafactory.generation.DataMachine;
 import com.paramichha.datafactory.generation.DataMachines;
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 
-final public class FieldValueBuilder<T> implements FieldValue<T> {
+public final class FieldValueBuilder<T> implements FieldValue<T> {
 
     private final FieldConstraints constraints;
     private final List<Annotation> extraAnnotations;
@@ -25,7 +41,8 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
         this(constraints, List.of(), machine, null);
     }
 
-    private FieldValueBuilder(FieldConstraints constraints, List<Annotation> extraAnnotations, DataMachine machine, Long seed) {
+    private FieldValueBuilder(
+            FieldConstraints constraints, List<Annotation> extraAnnotations, DataMachine machine, Long seed) {
         this.constraints = constraints;
         this.extraAnnotations = extraAnnotations;
         this.machine = machine;
@@ -33,15 +50,15 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     }
 
     private DataMachine machine() {
-        if (seed != null) return DataMachines.seeded(seed);
+        if (seed != null) {
+            return DataMachines.seeded(seed);
+        }
         return machine != null ? machine : DataMachines.random();
     }
 
     @Override
     public FieldValueBuilder<T> with(Class<? extends Annotation> annotationClass) {
-        Annotation instance = StringAnnotationParser.INSTANCE
-                .parse("@" + annotationClass.getSimpleName());
-        if (instance == null) return this;
+        Annotation instance = StringAnnotationParser.INSTANCE.parse("@" + annotationClass.getSimpleName());
         List<Annotation> next = new ArrayList<>(extraAnnotations);
         next.add(instance);
         return new FieldValueBuilder<>(constraints, List.copyOf(next), machine, seed);
@@ -50,14 +67,15 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     @Override
     public FieldValueBuilder<T> with(String annotationString) {
         Annotation instance = StringAnnotationParser.INSTANCE.parse(annotationString);
-        if (instance == null) return this;
         List<Annotation> next = new ArrayList<>(extraAnnotations);
         next.add(instance);
         return new FieldValueBuilder<>(constraints, List.copyOf(next), machine, seed);
     }
 
     private FieldConstraints resolvedConstraints() {
-        if (extraAnnotations.isEmpty()) return constraints;
+        if (extraAnnotations.isEmpty()) {
+            return constraints;
+        }
         // Re-analyze merging base field annotations with extras.
         // Base annotations come from the descriptor's validations (held inside the original
         // FieldConstraints build chain) — we reconstruct from the extra list merged on top.
@@ -67,8 +85,7 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
         // using .with() to supply the full annotation list via FieldBuilderFactory.create(name, type, list).
         // For the common .with(annotationString) path, merge into a fresh analysis.
         List<Annotation> merged = new ArrayList<>(extraAnnotations);
-        return AnnotationResolver.analyze(
-                constraints.fieldName(), constraints.fieldType(), merged);
+        return AnnotationResolver.analyze(constraints.fieldName(), constraints.fieldType(), merged);
     }
 
     @Override
@@ -96,7 +113,9 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     public T invalid() {
         FieldConstraints rc = resolvedConstraints();
         List<ConstraintCase> cases = annotationCases(rc);
-        if (cases.isEmpty()) cases = constraintCases(rc);
+        if (cases.isEmpty()) {
+            cases = constraintCases(rc);
+        }
         return (T) (cases.isEmpty() ? null : cases.getFirst().value());
     }
 
@@ -124,7 +143,9 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     @Override
     public List<T> stream(int count) {
         List<T> result = new ArrayList<>(count);
-        for (int i = 0; i < count; i++) result.add(valid());
+        for (int i = 0; i < count; i++) {
+            result.add(valid());
+        }
         return java.util.Collections.unmodifiableList(result); // may hold nulls for @Null fields
     }
 
@@ -140,7 +161,8 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
 
     private static List<ConstraintCase> annotationCases(FieldConstraints c) {
         return constraintCases(c).stream()
-                .filter(ConstraintCase::annotationDriven).toList();
+                .filter(ConstraintCase::annotationDriven)
+                .toList();
     }
 
     private static List<ConstraintCase> constraintCases(FieldConstraints c) {
@@ -150,22 +172,29 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
 
         // Type-default invalid cases — only when field has no binding constraint
         boolean skipNull = c.cascadeValid() && c.nullable();
-        if (!type.isPrimitive() && !c.mustBeNull() && c.nullable() && !skipNull)
+        if (!type.isPrimitive() && !c.mustBeNull() && c.nullable() && !skipNull) {
             cases.add(ConstraintCase.typeDefault(fn, "Null", null));
-        if (type == String.class && c.nullable())
+        }
+        if (type == String.class && c.nullable()) {
             cases.add(ConstraintCase.typeDefault(fn, "Blank", ""));
-        if (isNumeric(type) && c.nullable() && !boundsHasMin(c.bounds()))
+        }
+        if (isNumeric(type) && c.nullable() && !boundsHasMin(c.bounds())) {
             cases.add(ConstraintCase.typeDefault(fn, "Negative", castNumeric(type, -1)));
-        if (isBoolean(type) && c.nullable() && !c.assertTrueRequired() && !c.assertFalseRequired())
+        }
+        if (isBoolean(type) && c.nullable() && !c.assertTrueRequired() && !c.assertFalseRequired()) {
             cases.add(ConstraintCase.typeDefault(fn, "False", false));
-        if (isList(type) && c.nullable() && intMin(c.bounds()) == null)
+        }
+        if (isList(type) && c.nullable() && intMin(c.bounds()) == null) {
             cases.add(ConstraintCase.typeDefault(fn, "Empty", List.of()));
+        }
 
         // Annotation-driven invalid cases — from declared constraints
-        if (!c.nullable())
+        if (!c.nullable()) {
             cases.add(ConstraintCase.of(fn, "NotNull", null));
-        if (c.hasNotBlank() && type == String.class)
+        }
+        if (c.hasNotBlank() && type == String.class) {
             cases.add(ConstraintCase.of(fn, "NotBlank", ""));
+        }
         switch (c.format()) {
             case EMAIL -> cases.add(ConstraintCase.of(fn, "Email", "not-an-email"));
             case URL -> cases.add(ConstraintCase.of(fn, "URL", "not-a-url"));
@@ -174,8 +203,7 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
             case EAN -> cases.add(ConstraintCase.of(fn, "EAN", "000-bad-ean"));
             case UUID_STRING -> cases.add(ConstraintCase.of(fn, "UUID", "not-a-uuid"));
             case PATTERN -> cases.add(ConstraintCase.of(fn, "Pattern", "!!!INVALID!!!"));
-            default -> {
-            }
+            default -> {}
         }
         if (type == String.class && c.maxIntegerDigits() < Integer.MAX_VALUE) {
             cases.add(ConstraintCase.of(fn, "Digits", "1".repeat(c.maxIntegerDigits() + 2)));
@@ -185,41 +213,52 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
             cases.add(ConstraintCase.of(fn, "Digits", BigDecimal.valueOf(tooMany)));
         }
         if (type == String.class && c.bounds() instanceof NumericBounds.DecimalBounds db) {
-            if (db.decMax() != null)
-                cases.add(ConstraintCase.of(fn, "DecimalMax",
-                        db.decMax().add(BigDecimal.TEN).toPlainString()));
-            else if (db.decMin() != null)
-                cases.add(ConstraintCase.of(fn, "DecimalMin",
-                        db.decMin().subtract(BigDecimal.TEN).toPlainString()));
+            if (db.decMax() != null) {
+                cases.add(ConstraintCase.of(
+                        fn, "DecimalMax", db.decMax().add(BigDecimal.TEN).toPlainString()));
+            } else if (db.decMin() != null) {
+                cases.add(ConstraintCase.of(
+                        fn, "DecimalMin", db.decMin().subtract(BigDecimal.TEN).toPlainString()));
+            }
         }
         Long intMin = intMin(c.bounds());
         Long intMax = intMax(c.bounds());
-        if (intMin != null && type == String.class && intMin > 0)
+        if (intMin != null && type == String.class && intMin > 0) {
             cases.add(ConstraintCase.of(fn, "Size", "x".repeat((int) (intMin - 1))));
-        if (intMax != null && type == String.class)
+        }
+        if (intMax != null && type == String.class) {
             cases.add(ConstraintCase.of(fn, "Size", "x".repeat((int) (intMax + 1))));
+        }
         // @Size on a collection or map counts elements. Null is valid for @Size (only @NotNull
         // rejects it), so the violations are one element too few and one too many.
         if (isSized(type)) {
-            if (intMin != null && intMin > 0)
+            if (intMin != null && intMin > 0) {
                 cases.add(ConstraintCase.of(fn, "Size", sizedOf(type, (int) (intMin - 1))));
-            if (intMax != null && intMax < MAX_SIZE_PROBE)
+            }
+            if (intMax != null && intMax < MAX_SIZE_PROBE) {
                 cases.add(ConstraintCase.of(fn, "Size", sizedOf(type, (int) (intMax + 1))));
+            }
         }
         // Only emit the value just outside a bound if it can be represented by the type:
         // @Max(127) on a byte has no "127 + 1" (it would wrap to -128 and look like a valid min).
-        if (intMin != null && isNumeric(type) && fitsType(type, intMin - 1))
+        if (intMin != null && isNumeric(type) && fitsType(type, intMin - 1)) {
             cases.add(ConstraintCase.of(fn, "Min", castNumeric(type, intMin - 1)));
-        if (intMax != null && isNumeric(type) && fitsType(type, intMax + 1))
+        }
+        if (intMax != null && isNumeric(type) && fitsType(type, intMax + 1)) {
             cases.add(ConstraintCase.of(fn, "Max", castNumeric(type, intMax + 1)));
-        if (c.isPast())
+        }
+        if (c.isPast()) {
             cases.add(ConstraintCase.of(fn, "Past", futureTemporal(type)));
-        if (c.isFuture())
+        }
+        if (c.isFuture()) {
             cases.add(ConstraintCase.of(fn, "Future", pastTemporal(type)));
-        if (c.assertTrueRequired())
+        }
+        if (c.assertTrueRequired()) {
             cases.add(ConstraintCase.of(fn, "AssertTrue", false));
-        if (c.assertFalseRequired())
+        }
+        if (c.assertFalseRequired()) {
             cases.add(ConstraintCase.of(fn, "AssertFalse", true));
+        }
 
         return List.copyOf(deduplicate(cases));
     }
@@ -229,19 +268,29 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     private static List<ConstraintCase> deduplicate(List<ConstraintCase> cases) {
         List<ConstraintCase> result = new ArrayList<>();
         Set<String> seen = new LinkedHashSet<>();
-        for (ConstraintCase c : cases)
-            if (seen.add(c.constraint() + ":" + c.value())) result.add(c);
+        for (ConstraintCase c : cases) {
+            if (seen.add(c.constraint() + ":" + c.value())) {
+                result.add(c);
+            }
+        }
         return result;
     }
 
     private static boolean isNumeric(Class<?> t) {
-        return t == Integer.class || t == int.class
-                || t == Long.class || t == long.class
-                || t == Short.class || t == short.class
-                || t == Byte.class || t == byte.class
-                || t == Double.class || t == double.class
-                || t == Float.class || t == float.class
-                || t == BigInteger.class || t == BigDecimal.class;
+        return t == Integer.class
+                || t == int.class
+                || t == Long.class
+                || t == long.class
+                || t == Short.class
+                || t == short.class
+                || t == Byte.class
+                || t == byte.class
+                || t == Double.class
+                || t == double.class
+                || t == Float.class
+                || t == float.class
+                || t == BigInteger.class
+                || t == BigDecimal.class;
     }
 
     private static boolean isList(Class<?> t) {
@@ -263,13 +312,17 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     static Object sizedOf(Class<?> type, int size) {
         if (Map.class.isAssignableFrom(type)) {
             Map<Object, Object> map = new LinkedHashMap<>();
-            for (int i = 0; i < size; i++) map.put("k" + i, "v" + i);
+            for (int i = 0; i < size; i++) {
+                map.put("k" + i, "v" + i);
+            }
             return map;
         }
-        Collection<Object> collection = Set.class.isAssignableFrom(type) ? new LinkedHashSet<>()
-                : Queue.class.isAssignableFrom(type) ? new ArrayDeque<>()
-                : new ArrayList<>();
-        for (int i = 0; i < size; i++) collection.add("x" + i);
+        Collection<Object> collection = Set.class.isAssignableFrom(type)
+                ? new LinkedHashSet<>()
+                : Queue.class.isAssignableFrom(type) ? new ArrayDeque<>() : new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            collection.add("x" + i);
+        }
         return collection;
     }
 
@@ -279,42 +332,92 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
 
     /** Whether {@code value} is inside the range of an integral type; non-integral types always fit. */
     static boolean fitsType(Class<?> type, long value) {
-        if (type == Byte.class || type == byte.class) return value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE;
-        if (type == Short.class || type == short.class) return value >= Short.MIN_VALUE && value <= Short.MAX_VALUE;
-        if (type == Integer.class || type == int.class) return value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE;
+        if (type == Byte.class || type == byte.class) {
+            return value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE;
+        }
+        if (type == Short.class || type == short.class) {
+            return value >= Short.MIN_VALUE && value <= Short.MAX_VALUE;
+        }
+        if (type == Integer.class || type == int.class) {
+            return value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE;
+        }
         return true; // long, floating point, BigDecimal, BigInteger: no wrap for these bounds
     }
 
     private static Object castNumeric(Class<?> type, long value) {
-        if (type == Integer.class || type == int.class) return (int) value;
-        if (type == Long.class || type == long.class) return value;
-        if (type == Short.class || type == short.class) return (short) value;
-        if (type == Byte.class || type == byte.class) return (byte) value;
-        if (type == Double.class || type == double.class) return (double) value;
-        if (type == Float.class || type == float.class) return (float) value;
-        if (type == BigDecimal.class) return BigDecimal.valueOf(value);
+        if (type == Integer.class || type == int.class) {
+            return (int) value;
+        }
+        if (type == Long.class || type == long.class) {
+            return value;
+        }
+        if (type == Short.class || type == short.class) {
+            return (short) value;
+        }
+        if (type == Byte.class || type == byte.class) {
+            return (byte) value;
+        }
+        if (type == Double.class || type == double.class) {
+            return (double) value;
+        }
+        if (type == Float.class || type == float.class) {
+            return (float) value;
+        }
+        if (type == BigDecimal.class) {
+            return BigDecimal.valueOf(value);
+        }
         return BigInteger.valueOf(value); // the only other type isNumeric allows
     }
 
     private static Object futureTemporal(Class<?> type) {
-        if (type == LocalDate.class)      return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE;
-        if (type == LocalDateTime.class)  return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE_TIME;
-        if (type == ZonedDateTime.class)  return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE_TIME.atZone(com.paramichha.datafactory.generation.TemporalAnchor.ZONE);
-        if (type == OffsetDateTime.class) return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE_TIME.atOffset(ZoneOffset.UTC);
-        if (type == Date.class)           return Date.from(com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_INSTANT);
-        if (type == Year.class)           return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_YEAR;
-        if (type == YearMonth.class)      return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_YEARMONTH;
+        if (type == LocalDate.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE;
+        }
+        if (type == LocalDateTime.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE_TIME;
+        }
+        if (type == ZonedDateTime.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE_TIME.atZone(
+                    com.paramichha.datafactory.generation.TemporalAnchor.ZONE);
+        }
+        if (type == OffsetDateTime.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_DATE_TIME.atOffset(ZoneOffset.UTC);
+        }
+        if (type == Date.class) {
+            return Date.from(com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_INSTANT);
+        }
+        if (type == Year.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_YEAR;
+        }
+        if (type == YearMonth.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_YEARMONTH;
+        }
         return com.paramichha.datafactory.generation.TemporalAnchor.FUTURE_INSTANT;
     }
 
     private static Object pastTemporal(Class<?> type) {
-        if (type == LocalDate.class)      return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE;
-        if (type == LocalDateTime.class)  return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE_TIME;
-        if (type == ZonedDateTime.class)  return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE_TIME.atZone(com.paramichha.datafactory.generation.TemporalAnchor.ZONE);
-        if (type == OffsetDateTime.class) return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE_TIME.atOffset(ZoneOffset.UTC);
-        if (type == Date.class)           return Date.from(com.paramichha.datafactory.generation.TemporalAnchor.PAST_INSTANT);
-        if (type == Year.class)           return com.paramichha.datafactory.generation.TemporalAnchor.PAST_YEAR;
-        if (type == YearMonth.class)      return com.paramichha.datafactory.generation.TemporalAnchor.PAST_YEARMONTH;
+        if (type == LocalDate.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE;
+        }
+        if (type == LocalDateTime.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE_TIME;
+        }
+        if (type == ZonedDateTime.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE_TIME.atZone(
+                    com.paramichha.datafactory.generation.TemporalAnchor.ZONE);
+        }
+        if (type == OffsetDateTime.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.PAST_DATE_TIME.atOffset(ZoneOffset.UTC);
+        }
+        if (type == Date.class) {
+            return Date.from(com.paramichha.datafactory.generation.TemporalAnchor.PAST_INSTANT);
+        }
+        if (type == Year.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.PAST_YEAR;
+        }
+        if (type == YearMonth.class) {
+            return com.paramichha.datafactory.generation.TemporalAnchor.PAST_YEARMONTH;
+        }
         return com.paramichha.datafactory.generation.TemporalAnchor.PAST_INSTANT;
     }
 
@@ -329,7 +432,8 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     private static Long intMin(NumericBounds b) {
         return switch (b) {
             case NumericBounds.IntegerBounds i -> i.min();
-            case NumericBounds.DecimalBounds d -> d.decMin() != null ? d.decMin().longValue() : null;
+            case NumericBounds.DecimalBounds d ->
+                d.decMin() != null ? d.decMin().longValue() : null;
             case NumericBounds.Unbounded u -> null;
         };
     }
@@ -337,7 +441,8 @@ final public class FieldValueBuilder<T> implements FieldValue<T> {
     private static Long intMax(NumericBounds b) {
         return switch (b) {
             case NumericBounds.IntegerBounds i -> i.max();
-            case NumericBounds.DecimalBounds d -> d.decMax() != null ? d.decMax().longValue() : null;
+            case NumericBounds.DecimalBounds d ->
+                d.decMax() != null ? d.decMax().longValue() : null;
             case NumericBounds.Unbounded u -> null;
         };
     }

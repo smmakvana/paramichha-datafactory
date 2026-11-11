@@ -8,5 +8,4 @@ public interface AnnotationLookup {
     Class<? extends Annotation> getAnnotation(String name) throws AnnotationParseException;
 
     ArgumentType getArgumentType(Class<? extends Annotation> clazz) throws AnnotationParseException;
-
 }

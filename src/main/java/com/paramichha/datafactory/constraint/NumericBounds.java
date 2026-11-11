@@ -18,25 +18,43 @@ import java.math.BigDecimal;
  * convenience methods on the interface.
  */
 public sealed interface NumericBounds
-        permits NumericBounds.Unbounded,
-                NumericBounds.IntegerBounds,
-                NumericBounds.DecimalBounds {
+        permits NumericBounds.Unbounded, NumericBounds.IntegerBounds, NumericBounds.DecimalBounds {
 
     // ── variants ──────────────────────────────────────────────────────────
 
     record Unbounded() implements NumericBounds {}
 
     record IntegerBounds(Long min, Long max) implements NumericBounds {
-        public boolean hasMin()          { return min != null; }
-        public boolean hasMax()          { return max != null; }
-        public boolean hasBoth()         { return min != null && max != null; }
-        public boolean isContradictory() { return min != null && max != null && min > max; }
+        public boolean hasMin() {
+            return min != null;
+        }
+
+        public boolean hasMax() {
+            return max != null;
+        }
+
+        public boolean hasBoth() {
+            return min != null && max != null;
+        }
+
+        public boolean isContradictory() {
+            return min != null && max != null && min > max;
+        }
     }
 
     record DecimalBounds(BigDecimal decMin, BigDecimal decMax) implements NumericBounds {
-        public boolean hasMin()          { return decMin != null; }
-        public boolean hasMax()          { return decMax != null; }
-        public boolean hasBoth()         { return decMin != null && decMax != null; }
+        public boolean hasMin() {
+            return decMin != null;
+        }
+
+        public boolean hasMax() {
+            return decMax != null;
+        }
+
+        public boolean hasBoth() {
+            return decMin != null && decMax != null;
+        }
+
         public boolean isContradictory() {
             return decMin != null && decMax != null && decMin.compareTo(decMax) > 0;
         }
@@ -46,17 +64,32 @@ public sealed interface NumericBounds
 
     // IntegerBounds' record components override min() and max(); a decimal bound is truncated.
     default Long min() {
-        return this instanceof DecimalBounds b && b.decMin() != null ? b.decMin().longValue() : null;
+        return this instanceof DecimalBounds b && b.decMin() != null
+                ? b.decMin().longValue()
+                : null;
     }
 
     default Long max() {
-        return this instanceof DecimalBounds b && b.decMax() != null ? b.decMax().longValue() : null;
+        return this instanceof DecimalBounds b && b.decMax() != null
+                ? b.decMax().longValue()
+                : null;
     }
 
-    default boolean hasMin()       { return min() != null; }
-    default boolean hasMax()       { return max() != null; }
-    default boolean hasBoth()      { return min() != null && max() != null; }
-    default boolean isUnbounded()  { return this instanceof Unbounded; }
+    default boolean hasMin() {
+        return min() != null;
+    }
+
+    default boolean hasMax() {
+        return max() != null;
+    }
+
+    default boolean hasBoth() {
+        return min() != null && max() != null;
+    }
+
+    default boolean isUnbounded() {
+        return this instanceof Unbounded;
+    }
 
     /** False for {@link Unbounded}; {@link IntegerBounds} and {@link DecimalBounds} override this. */
     default boolean isContradictory() {
@@ -65,30 +98,52 @@ public sealed interface NumericBounds
 
     // ── factories ─────────────────────────────────────────────────────────
 
-    static NumericBounds unbounded()            { return new Unbounded(); }
-    static NumericBounds of(Long min, Long max) { return new IntegerBounds(min, max); }
-    static NumericBounds atLeast(long min)      { return new IntegerBounds(min, null); }
-    static NumericBounds atMost(long max)       { return new IntegerBounds(null, max); }
-    static NumericBounds exactly(long v)        { return new IntegerBounds(v, v); }
+    static NumericBounds unbounded() {
+        return new Unbounded();
+    }
 
-    static NumericBounds atLeastDecimal(BigDecimal min) { return new DecimalBounds(min, null); }
-    static NumericBounds atMostDecimal(BigDecimal max)  { return new DecimalBounds(null, max); }
+    static NumericBounds of(Long min, Long max) {
+        return new IntegerBounds(min, max);
+    }
+
+    static NumericBounds atLeast(long min) {
+        return new IntegerBounds(min, null);
+    }
+
+    static NumericBounds atMost(long max) {
+        return new IntegerBounds(null, max);
+    }
+
+    static NumericBounds exactly(long v) {
+        return new IntegerBounds(v, v);
+    }
+
+    static NumericBounds atLeastDecimal(BigDecimal min) {
+        return new DecimalBounds(min, null);
+    }
+
+    static NumericBounds atMostDecimal(BigDecimal max) {
+        return new DecimalBounds(null, max);
+    }
 
     // ── intersection ─────────────────────────────────────────────────────
 
     default NumericBounds intersect(NumericBounds other) {
         return switch (this) {
             case Unbounded ignored -> other;
-            case IntegerBounds a -> switch (other) {
-                case Unbounded ignored -> a;
-                case IntegerBounds b   -> new IntegerBounds(maxOf(a.min(), b.min()), minOf(a.max(), b.max()));
-                case DecimalBounds b   -> promoteAndIntersect(a, b);
-            };
-            case DecimalBounds a -> switch (other) {
-                case Unbounded ignored -> a;
-                case IntegerBounds b   -> promoteAndIntersect(b, a);
-                case DecimalBounds b   -> new DecimalBounds(maxOfDec(a.decMin(), b.decMin()), minOfDec(a.decMax(), b.decMax()));
-            };
+            case IntegerBounds a ->
+                switch (other) {
+                    case Unbounded ignored -> a;
+                    case IntegerBounds b -> new IntegerBounds(maxOf(a.min(), b.min()), minOf(a.max(), b.max()));
+                    case DecimalBounds b -> promoteAndIntersect(a, b);
+                };
+            case DecimalBounds a ->
+                switch (other) {
+                    case Unbounded ignored -> a;
+                    case IntegerBounds b -> promoteAndIntersect(b, a);
+                    case DecimalBounds b ->
+                        new DecimalBounds(maxOfDec(a.decMin(), b.decMin()), minOfDec(a.decMax(), b.decMax()));
+                };
         };
     }
 
@@ -97,21 +152,52 @@ public sealed interface NumericBounds
     private static NumericBounds promoteAndIntersect(IntegerBounds i, DecimalBounds d) {
         BigDecimal dMin = d.decMin() != null ? d.decMin() : (i.min() != null ? BigDecimal.valueOf(i.min()) : null);
         BigDecimal dMax = d.decMax() != null ? d.decMax() : (i.max() != null ? BigDecimal.valueOf(i.max()) : null);
-        if (i.min() != null && d.decMin() != null) dMin = maxOfDec(BigDecimal.valueOf(i.min()), d.decMin());
-        if (i.max() != null && d.decMax() != null) dMax = minOfDec(BigDecimal.valueOf(i.max()), d.decMax());
+        if (i.min() != null && d.decMin() != null) {
+            dMin = maxOfDec(BigDecimal.valueOf(i.min()), d.decMin());
+        }
+        if (i.max() != null && d.decMax() != null) {
+            dMax = minOfDec(BigDecimal.valueOf(i.max()), d.decMax());
+        }
         return new DecimalBounds(dMin, dMax);
     }
 
     private static Long maxOf(Long a, Long b) {
-        if (a == null) return b; if (b == null) return a; return Math.max(a, b);
+        if (a == null) {
+            return b;
+        }
+        if (b == null) {
+            return a;
+        }
+        return Math.max(a, b);
     }
+
     private static Long minOf(Long a, Long b) {
-        if (a == null) return b; if (b == null) return a; return Math.min(a, b);
+        if (a == null) {
+            return b;
+        }
+        if (b == null) {
+            return a;
+        }
+        return Math.min(a, b);
     }
+
     private static BigDecimal maxOfDec(BigDecimal a, BigDecimal b) {
-        if (a == null) return b; if (b == null) return a; return a.compareTo(b) >= 0 ? a : b;
+        if (a == null) {
+            return b;
+        }
+        if (b == null) {
+            return a;
+        }
+        return a.compareTo(b) >= 0 ? a : b;
     }
+
     private static BigDecimal minOfDec(BigDecimal a, BigDecimal b) {
-        if (a == null) return b; if (b == null) return a; return a.compareTo(b) <= 0 ? a : b;
+        if (a == null) {
+            return b;
+        }
+        if (b == null) {
+            return a;
+        }
+        return a.compareTo(b) <= 0 ? a : b;
     }
 }

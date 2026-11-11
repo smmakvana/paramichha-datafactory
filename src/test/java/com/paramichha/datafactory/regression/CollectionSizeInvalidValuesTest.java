@@ -1,16 +1,15 @@
 package com.paramichha.datafactory.regression;
 
-import com.paramichha.datafactory.DataFactory;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.paramichha.datafactory.DataFactory;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * @Size on a collection or map counts elements, and Bean Validation treats null as valid for
@@ -22,11 +21,14 @@ class CollectionSizeInvalidValuesTest {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static List<Object> invalid(Class<?> type, String size) {
-        return (List<Object>) DataFactory.field((Class) type).with(size).seed(7L).invalidList();
+        return (List<Object>)
+                DataFactory.field((Class) type).with(size).seed(7L).invalidList();
     }
 
     private static List<Integer> sizes(List<Object> values) {
-        return values.stream().map(v -> v instanceof Map<?, ?> m ? m.size() : ((Collection<?>) v).size()).toList();
+        return values.stream()
+                .map(v -> v instanceof Map<?, ?> m ? m.size() : ((Collection<?>) v).size())
+                .toList();
     }
 
     @Test

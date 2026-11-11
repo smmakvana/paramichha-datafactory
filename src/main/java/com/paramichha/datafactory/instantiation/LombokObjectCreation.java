@@ -1,7 +1,6 @@
 package com.paramichha.datafactory.instantiation;
 
 import com.paramichha.datafactory.constraint.FieldDescriptor;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
@@ -19,11 +18,10 @@ public final class LombokObjectCreation implements ObjectCreation {
 
     public static final LombokObjectCreation INSTANCE = new LombokObjectCreation();
 
-    private static final ConcurrentHashMap<Class<?>, ConcurrentHashMap<String, Optional<Method>>>
-            SETTER_CACHE = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<?>, ConcurrentHashMap<String, Optional<Method>>> SETTER_CACHE =
+            new ConcurrentHashMap<>();
 
-    private LombokObjectCreation() {
-    }
+    private LombokObjectCreation() {}
 
     /** #13 — call this after hot-reload or classloader swap to clear stale setter cache. */
     public static void evictAll() {
@@ -61,52 +59,96 @@ public final class LombokObjectCreation implements ObjectCreation {
     }
 
     private static Object coerce(Object value, Class<?> targetType) {
-        if (value == null) return null;
-        if (targetType.isInstance(value)) return value;
+        if (value == null) {
+            return null;
+        }
+        if (targetType.isInstance(value)) {
+            return value;
+        }
 
         if (value instanceof Number n) {
-            if (targetType == BigInteger.class)
+            if (targetType == BigInteger.class) {
                 return BigInteger.valueOf(n.longValue());
-            if (targetType == BigDecimal.class)
+            }
+            if (targetType == BigDecimal.class) {
                 return BigDecimal.valueOf(n.doubleValue());
-            if (targetType == Long.class || targetType == long.class)
+            }
+            if (targetType == Long.class || targetType == long.class) {
                 return n.longValue();
-            if (targetType == Integer.class || targetType == int.class)
+            }
+            if (targetType == Integer.class || targetType == int.class) {
                 return n.intValue();
-            if (targetType == Short.class || targetType == short.class)
+            }
+            if (targetType == Short.class || targetType == short.class) {
                 return n.shortValue();
-            if (targetType == Byte.class || targetType == byte.class)
+            }
+            if (targetType == Byte.class || targetType == byte.class) {
                 return n.byteValue();
-            if (targetType == Double.class || targetType == double.class)
+            }
+            if (targetType == Double.class || targetType == double.class) {
                 return n.doubleValue();
-            if (targetType == Float.class || targetType == float.class)
+            }
+            if (targetType == Float.class || targetType == float.class) {
                 return n.floatValue();
+            }
         }
 
         return value;
     }
 
     private static Class<?> toPrimitive(Class<?> wrapper) {
-        if (wrapper == Boolean.class) return boolean.class;
-        if (wrapper == Byte.class) return byte.class;
-        if (wrapper == Short.class) return short.class;
-        if (wrapper == Integer.class) return int.class;
-        if (wrapper == Long.class) return long.class;
-        if (wrapper == Float.class) return float.class;
-        if (wrapper == Double.class) return double.class;
-        if (wrapper == Character.class) return char.class;
+        if (wrapper == Boolean.class) {
+            return boolean.class;
+        }
+        if (wrapper == Byte.class) {
+            return byte.class;
+        }
+        if (wrapper == Short.class) {
+            return short.class;
+        }
+        if (wrapper == Integer.class) {
+            return int.class;
+        }
+        if (wrapper == Long.class) {
+            return long.class;
+        }
+        if (wrapper == Float.class) {
+            return float.class;
+        }
+        if (wrapper == Double.class) {
+            return double.class;
+        }
+        if (wrapper == Character.class) {
+            return char.class;
+        }
         return null;
     }
 
     private static Class<?> toWrapper(Class<?> primitive) {
-        if (primitive == boolean.class) return Boolean.class;
-        if (primitive == byte.class) return Byte.class;
-        if (primitive == short.class) return Short.class;
-        if (primitive == int.class) return Integer.class;
-        if (primitive == long.class) return Long.class;
-        if (primitive == float.class) return Float.class;
-        if (primitive == double.class) return Double.class;
-        if (primitive == char.class) return Character.class;
+        if (primitive == boolean.class) {
+            return Boolean.class;
+        }
+        if (primitive == byte.class) {
+            return Byte.class;
+        }
+        if (primitive == short.class) {
+            return Short.class;
+        }
+        if (primitive == int.class) {
+            return Integer.class;
+        }
+        if (primitive == long.class) {
+            return Long.class;
+        }
+        if (primitive == float.class) {
+            return Float.class;
+        }
+        if (primitive == double.class) {
+            return Double.class;
+        }
+        if (primitive == char.class) {
+            return Character.class;
+        }
         return null;
     }
 
@@ -121,8 +163,7 @@ public final class LombokObjectCreation implements ObjectCreation {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T create(Class<T> type, List<FieldDescriptor> fields,
-                        Map<String, Object> values) throws Exception {
+    public <T> T create(Class<T> type, List<FieldDescriptor> fields, Map<String, Object> values) throws Exception {
         Method builderMethod = type.getDeclaredMethod("builder");
         builderMethod.setAccessible(true);
         Object builder = builderMethod.invoke(null);
@@ -130,17 +171,20 @@ public final class LombokObjectCreation implements ObjectCreation {
 
         for (FieldDescriptor f : fields) {
             Object value = values.get(f.name());
-            if (value == null && f.rawType().isPrimitive()) continue;
+            if (value == null && f.rawType().isPrimitive()) {
+                continue;
+            }
 
             // #13 — use computeIfAbsent only for successful lookups;
             //        absent Optional means "not found" and is cached, which is correct for
             //        immutable compiled classes. For dynamic/reloaded classes call evictAll().
             Method setter = SETTER_CACHE
                     .computeIfAbsent(builderClass, c -> new ConcurrentHashMap<>())
-                    .computeIfAbsent(f.name(), n -> Optional.ofNullable(
-                            findSetter(builderClass, n, f.rawType())))
+                    .computeIfAbsent(f.name(), n -> Optional.ofNullable(findSetter(builderClass, n, f.rawType())))
                     .orElse(null);
-            if (setter == null) continue;
+            if (setter == null) {
+                continue;
+            }
 
             setter.setAccessible(true);
             setter.invoke(builder, coerce(value, setter.getParameterTypes()[0]));

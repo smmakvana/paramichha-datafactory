@@ -1,17 +1,20 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.ConstraintCase;
 import com.paramichha.datafactory.builder.FieldValueBuilder;
 import com.paramichha.datafactory.builder.ValueBuilderFactory;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("FieldBuilder")
 class FieldValueTest {
@@ -31,7 +34,9 @@ class FieldValueTest {
 
         @Test
         void email_allValuesContainAt() {
-            var fb = ValueBuilderFactory.create(String.class).with(NotBlank.class).with(Email.class);
+            var fb = ValueBuilderFactory.create(String.class)
+                    .with(NotBlank.class)
+                    .with(Email.class);
             assertThat(fb.validList()).isNotEmpty();
             fb.validList().forEach(v -> assertThat(v).matches("[\\w.+-]+@[\\w.-]+\\.\\w+"));
         }
@@ -39,16 +44,17 @@ class FieldValueTest {
         @Test
         void stringWithSize_allValuesFitBounds() {
             var fb = ValueBuilderFactory.create(String.class)
-                                        .with(NotBlank.class)
-                                        .with("@Size(min=5, max=20)");
+                    .with(NotBlank.class)
+                    .with("@Size(min=5, max=20)");
             fb.validList().forEach(v -> assertThat(v.length()).isBetween(5, 20));
         }
 
         @Test
         void emailWithSize_allValuesAreEmailAndFitBounds() {
             var fb = ValueBuilderFactory.create(String.class)
-                                        .with(NotBlank.class).with(Email.class)
-                                        .with("@Size(min=8, max=50)");
+                    .with(NotBlank.class)
+                    .with(Email.class)
+                    .with("@Size(min=8, max=50)");
             fb.validList().forEach(v -> {
                 assertThat(v).contains("@");
                 assertThat(v.length()).isBetween(8, 50);
@@ -96,7 +102,8 @@ class FieldValueTest {
         void integer_noAnnotations_returnsTypeDefaultRange() {
             var values = ValueBuilderFactory.create(Integer.class).validList();
             assertThat(values).isNotEmpty();
-            // unannotated int → type-natural bounds: MIN_VALUE, MIN_VALUE+1, midpoint, MAX_VALUE-1, MAX_VALUE + semantic
+            // unannotated int → type-natural bounds: MIN_VALUE, MIN_VALUE+1, midpoint, MAX_VALUE-1, MAX_VALUE +
+            // semantic
             assertThat(values).contains(Integer.MIN_VALUE, 0, Integer.MAX_VALUE);
         }
 
@@ -164,11 +171,18 @@ class FieldValueTest {
 
         @Test
         void sizeConstraint_producesTooShortAndTooLong() {
-            var cases = dfb(String.class).with(NotBlank.class).with("@Size(min=5, max=20)").constraintCases();
-            assertThat(cases).anyMatch(c -> c.constraint().equals("Size")
-                    && c.value() != null && c.value().toString().length() < 5);
-            assertThat(cases).anyMatch(c -> c.constraint().equals("Size")
-                    && c.value() != null && c.value().toString().length() > 20);
+            var cases = dfb(String.class)
+                    .with(NotBlank.class)
+                    .with("@Size(min=5, max=20)")
+                    .constraintCases();
+            assertThat(cases)
+                    .anyMatch(c -> c.constraint().equals("Size")
+                            && c.value() != null
+                            && c.value().toString().length() < 5);
+            assertThat(cases)
+                    .anyMatch(c -> c.constraint().equals("Size")
+                            && c.value() != null
+                            && c.value().toString().length() > 20);
         }
 
         @Test
@@ -180,15 +194,13 @@ class FieldValueTest {
         @Test
         void assertTrue_producesFalseCase() {
             assertThat(dfb(Boolean.class).with(AssertTrue.class).constraintCases())
-                    .anyMatch(c -> c.constraint().equals("AssertTrue")
-                            && Boolean.FALSE.equals(c.value()));
+                    .anyMatch(c -> c.constraint().equals("AssertTrue") && Boolean.FALSE.equals(c.value()));
         }
 
         @Test
         void past_producesNotPastCase() {
             assertThat(dfb(LocalDate.class).with(Past.class).constraintCases())
-                    .anyMatch(c -> c.constraint().equals("Past")
-                            && ((LocalDate) c.value()).isAfter(LocalDate.now()));
+                    .anyMatch(c -> c.constraint().equals("Past") && ((LocalDate) c.value()).isAfter(LocalDate.now()));
         }
     }
 
@@ -227,14 +239,12 @@ class FieldValueTest {
         @Test
         void boolean_falseIsTypeDefault() {
             assertThat(dfb(Boolean.class).constraintCases())
-                    .anyMatch(c -> c.constraint().equals("False")
-                            && Boolean.FALSE.equals(c.value()));
+                    .anyMatch(c -> c.constraint().equals("False") && Boolean.FALSE.equals(c.value()));
         }
 
         @Test
         void localDate_nullIsTypeDefault() {
-            assertThat(dfb(LocalDate.class).constraintCases())
-                    .anyMatch(c -> c.value() == null);
+            assertThat(dfb(LocalDate.class).constraintCases()).anyMatch(c -> c.value() == null);
         }
 
         @Test
@@ -244,8 +254,7 @@ class FieldValueTest {
 
         @Test
         void string_hasAtLeastTwoInvalidCases() {
-            assertThat(dfb(String.class).constraintCases())
-                    .hasSizeGreaterThanOrEqualTo(2);
+            assertThat(dfb(String.class).constraintCases()).hasSizeGreaterThanOrEqualTo(2);
         }
     }
 
@@ -259,24 +268,30 @@ class FieldValueTest {
 
         @Test
         void notNull_exactlyOneNullCase() {
-            long count = dfb(String.class).with(NotNull.class)
-                    .constraintCases().stream().filter(c -> c.value() == null).count();
+            long count = dfb(String.class).with(NotNull.class).constraintCases().stream()
+                    .filter(c -> c.value() == null)
+                    .count();
             assertThat(count).isEqualTo(1);
         }
 
         @Test
         void notBlank_exactlyOneBlankCase() {
-            long count = dfb(String.class).with(NotBlank.class)
-                    .constraintCases().stream().filter(c -> "".equals(c.value())).count();
+            long count = dfb(String.class).with(NotBlank.class).constraintCases().stream()
+                    .filter(c -> "".equals(c.value()))
+                    .count();
             assertThat(count).isEqualTo(1);
         }
 
         @Test
         void constraintKeys_areUnique() {
             List<String> keys = dfb(String.class)
-                    .with(NotBlank.class).with(Email.class).with("@Size(min=8, max=50)")
-                    .constraintCases().stream()
-                    .map(c -> c.constraint() + ":" + c.value()).toList();
+                    .with(NotBlank.class)
+                    .with(Email.class)
+                    .with("@Size(min=8, max=50)")
+                    .constraintCases()
+                    .stream()
+                    .map(c -> c.constraint() + ":" + c.value())
+                    .toList();
             assertThat(keys).doesNotHaveDuplicates();
         }
     }
@@ -291,8 +306,7 @@ class FieldValueTest {
 
         @Test
         void unannotatedNull_isNotAnnotationDriven() {
-            assertThat(dfb(String.class).constraintCases())
-                    .anyMatch(c -> c.value() == null && !c.annotationDriven());
+            assertThat(dfb(String.class).constraintCases()).anyMatch(c -> c.value() == null && !c.annotationDriven());
         }
 
         @Test
@@ -304,8 +318,7 @@ class FieldValueTest {
         @Test
         void unannotatedNegative_isNotAnnotationDriven() {
             assertThat(dfb(Integer.class).constraintCases())
-                    .anyMatch(c -> !c.annotationDriven()
-                            && c.value() instanceof Integer i && i < 0);
+                    .anyMatch(c -> !c.annotationDriven() && c.value() instanceof Integer i && i < 0);
         }
 
         @Test
@@ -323,8 +336,10 @@ class FieldValueTest {
         @Test
         void annotatedEmail_allCasesAreAnnotationDriven() {
             assertThat(dfb(String.class)
-                    .with(NotBlank.class).with(Email.class).with("@Size(min=8, max=50)")
-                    .constraintCases())
+                            .with(NotBlank.class)
+                            .with(Email.class)
+                            .with("@Size(min=8, max=50)")
+                            .constraintCases())
                     .allMatch(ConstraintCase::annotationDriven);
         }
     }

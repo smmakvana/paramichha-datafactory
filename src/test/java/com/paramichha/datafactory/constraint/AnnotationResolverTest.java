@@ -1,19 +1,36 @@
 package com.paramichha.datafactory.constraint;
 
-import jakarta.validation.constraints.*;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.URL;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.validation.constraints.AssertFalse;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Negative;
+import jakarta.validation.constraints.NegativeOrZero;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import java.lang.annotation.Annotation;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 @DisplayName("AnnotationAnalyzer")
 class AnnotationResolverTest {
@@ -275,8 +292,7 @@ class AnnotationResolverTest {
     @SuppressWarnings("unchecked")
     private <A extends Annotation> A proxy(Class<A> type) {
         return (A) java.lang.reflect.Proxy.newProxyInstance(
-                type.getClassLoader(), new Class<?>[]{type},
-                (proxy, method, args) -> switch (method.getName()) {
+                type.getClassLoader(), new Class<?>[] {type}, (proxy, method, args) -> switch (method.getName()) {
                     case "annotationType" -> type;
                     case "groups" -> new Class<?>[0];
                     case "payload" -> new Class<?>[0];
@@ -462,7 +478,8 @@ class AnnotationResolverTest {
 
         @Test
         void pastOrPresent() {
-            assertThat(analyze("d", LocalDate.class, annPastOrPresent()).temporal()).isEqualTo(TemporalDirection.PAST_OR_NOW);
+            assertThat(analyze("d", LocalDate.class, annPastOrPresent()).temporal())
+                    .isEqualTo(TemporalDirection.PAST_OR_NOW);
         }
 
         @Test
@@ -472,12 +489,14 @@ class AnnotationResolverTest {
 
         @Test
         void futureOrPresent() {
-            assertThat(analyze("d", Instant.class, annFutureOrPresent()).temporal()).isEqualTo(TemporalDirection.FUTURE_OR_NOW);
+            assertThat(analyze("d", Instant.class, annFutureOrPresent()).temporal())
+                    .isEqualTo(TemporalDirection.FUTURE_OR_NOW);
         }
 
         @Test
         void none() {
-            assertThat(analyze("d", LocalDateTime.class, annNotNull()).temporal()).isEqualTo(TemporalDirection.NONE);
+            assertThat(analyze("d", LocalDateTime.class, annNotNull()).temporal())
+                    .isEqualTo(TemporalDirection.NONE);
         }
     }
 
@@ -542,47 +561,42 @@ class AnnotationResolverTest {
 
         @Test
         void notBlank_email() {
-            var f = AnnotationResolver.analyzeFromStrings("email", "String",
-                    List.of("@NotBlank", "@Email"));
+            var f = AnnotationResolver.analyzeFromStrings("email", "String", List.of("@NotBlank", "@Email"));
             assertThat(f.nullable()).isFalse();
             assertThat(f.format()).isEqualTo(FormatType.EMAIL);
         }
 
         @Test
         void min_max() {
-            var f = AnnotationResolver.analyzeFromStrings("age", "Integer",
-                    List.of("@Min(18)", "@Max(120)"));
+            var f = AnnotationResolver.analyzeFromStrings("age", "Integer", List.of("@Min(18)", "@Max(120)"));
             assertThat(f.bounds().min()).isEqualTo(18L);
             assertThat(f.bounds().max()).isEqualTo(120L);
         }
 
         @Test
         void size_parsesMinMax() {
-            var f = AnnotationResolver.analyzeFromStrings("name", "String",
-                    List.of("@Size(min=2, max=50)"));
+            var f = AnnotationResolver.analyzeFromStrings("name", "String", List.of("@Size(min=2, max=50)"));
             assertThat(f.bounds().min()).isEqualTo(2L);
             assertThat(f.bounds().max()).isEqualTo(50L);
         }
 
         @Test
         void pattern_extractsRegexp() {
-            var f = AnnotationResolver.analyzeFromStrings("code", "String",
-                    List.of("@Pattern(regexp=\"^[A-Z]{2}\\\\d{4}$\")"));
+            var f = AnnotationResolver.analyzeFromStrings(
+                    "code", "String", List.of("@Pattern(regexp=\"^[A-Z]{2}\\\\d{4}$\")"));
             assertThat(f.format()).isEqualTo(FormatType.PATTERN);
             assertThat(f.patternRegexp()).isEqualTo("^[A-Z]{2}\\d{4}$");
         }
 
         @Test
         void positive_setsMinOne() {
-            var f = AnnotationResolver.analyzeFromStrings("count", "Integer",
-                    List.of("@Positive"));
+            var f = AnnotationResolver.analyzeFromStrings("count", "Integer", List.of("@Positive"));
             assertThat(f.bounds().min()).isEqualTo(1L);
         }
 
         @Test
         void past_setsPastDirection() {
-            var f = AnnotationResolver.analyzeFromStrings("dob", "LocalDate",
-                    List.of("@Past"));
+            var f = AnnotationResolver.analyzeFromStrings("dob", "LocalDate", List.of("@Past"));
             assertThat(f.temporal()).isEqualTo(TemporalDirection.PAST);
         }
     }

@@ -1,31 +1,37 @@
 package com.paramichha.datafactory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.paramichha.datafactory.utils.JavaNames;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 /** Level 1 shortcuts, the static object shortcuts, the result types and JavaNames. */
 class ShortcutsAndResultsTest {
 
-    enum Status { NEW, ACTIVE, CLOSED }
+    enum Status {
+        NEW,
+        ACTIVE,
+        CLOSED
+    }
 
-    enum Empty { }
+    enum Empty {}
 
-    record Person(@NotBlank String name, @NotNull @Email String email, @Min(18) @Max(99) int age) {}
+    record Person(
+            @NotBlank String name,
+            @NotNull @Email String email,
+            @Min(18) @Max(99) int age) {}
 
     static class Holder {
         @NotBlank @jakarta.validation.constraints.Size(max = 5) String code;
@@ -37,16 +43,26 @@ class ShortcutsAndResultsTest {
         @Test
         void singleValues() {
             assertThat(DataFactory.email()).matches("[\\w.+-]+@[\\w.-]+\\.\\w+");
-            assertThat(List.of(DataFactory.name(), DataFactory.firstName(), DataFactory.lastName(), DataFactory.phone(),
-                    DataFactory.city(), DataFactory.country(), DataFactory.postcode(), DataFactory.company(),
-                    DataFactory.description())).allSatisfy(v -> assertThat(v).isNotBlank());
+            assertThat(List.of(
+                            DataFactory.name(),
+                            DataFactory.firstName(),
+                            DataFactory.lastName(),
+                            DataFactory.phone(),
+                            DataFactory.city(),
+                            DataFactory.country(),
+                            DataFactory.postcode(),
+                            DataFactory.company(),
+                            DataFactory.description()))
+                    .allSatisfy(v -> assertThat(v).isNotBlank());
             assertThat(DataFactory.url()).startsWith("http");
             assertThat(UUID.fromString(DataFactory.uuid())).isNotNull();
         }
 
         @Test
         void lists() {
-            assertThat(DataFactory.emails(3)).hasSize(3).allSatisfy(v -> assertThat(v).contains("@"));
+            assertThat(DataFactory.emails(3))
+                    .hasSize(3)
+                    .allSatisfy(v -> assertThat(v).contains("@"));
             assertThat(DataFactory.names(2)).hasSize(2);
             assertThat(DataFactory.phones(2)).hasSize(2);
             assertThat(DataFactory.cities(2)).hasSize(2);
@@ -58,9 +74,13 @@ class ShortcutsAndResultsTest {
         @Test
         void enums() {
             assertThat(DataFactory.enumOf(Status.class)).isIn((Object[]) Status.values());
-            assertThat(DataFactory.enumOf(Status.class, 5)).hasSize(5).allSatisfy(s -> assertThat(s).isIn((Object[]) Status.values()));
+            assertThat(DataFactory.enumOf(Status.class, 5))
+                    .hasSize(5)
+                    .allSatisfy(s -> assertThat(s).isIn((Object[]) Status.values()));
             assertThat(DataFactory.enumOf(Status.class, 7L)).isEqualTo(DataFactory.enumOf(Status.class, 7L));
-            assertThat(DataFactory.enumOf(Status.class, 4, 7L)).isEqualTo(DataFactory.enumOf(Status.class, 4, 7L)).hasSize(4);
+            assertThat(DataFactory.enumOf(Status.class, 4, 7L))
+                    .isEqualTo(DataFactory.enumOf(Status.class, 4, 7L))
+                    .hasSize(4);
             assertThatThrownBy(() -> DataFactory.enumOf(Empty.class)).hasMessageContaining("Empty has no constants");
             assertThatThrownBy(() -> DataFactory.enumOf(Empty.class, 2)).hasMessageContaining("no constants");
             assertThatThrownBy(() -> DataFactory.enumOf(Empty.class, 1L)).hasMessageContaining("no constants");
@@ -80,7 +100,8 @@ class ShortcutsAndResultsTest {
         @Test
         void fromReflectedFieldReadsItsAnnotations() throws Exception {
             FieldValue<String> code = DataFactory.field(Holder.class.getDeclaredField("code"));
-            assertThat(code.validList()).allSatisfy(v -> assertThat(v).isNotBlank().hasSizeLessThanOrEqualTo(5));
+            assertThat(code.validList())
+                    .allSatisfy(v -> assertThat(v).isNotBlank().hasSizeLessThanOrEqualTo(5));
             assertThat(code.invalidList()).contains("");
         }
 
@@ -102,7 +123,9 @@ class ShortcutsAndResultsTest {
             assertThat(p.age()).isBetween(18, 99);
             assertThat(DataFactory.invalid(Person.class).isSuccess()).isTrue();
             int badAge = DataFactory.invalidFor(Person.class, "age").get().age();
-            assertThat(badAge < 18 || badAge > 99).as("age %s breaks @Min(18) @Max(99)", badAge).isTrue();
+            assertThat(badAge < 18 || badAge > 99)
+                    .as("age %s breaks @Min(18) @Max(99)", badAge)
+                    .isTrue();
             assertThat(DataFactory.invalidFor(Person.class, "nope").isFailure()).isTrue();
             assertThat(DataFactory.validList(Person.class, 3).getAll()).hasSize(3);
             assertThat(DataFactory.invalidList(Person.class).getAll()).isNotEmpty();
@@ -148,7 +171,9 @@ class ShortcutsAndResultsTest {
         @Test
         void failure() {
             assertThat(bad.isFailure()).isTrue();
-            assertThatThrownBy(bad::get).isInstanceOf(DataFactoryException.class).hasMessageContaining("NOT_INSTANTIABLE")
+            assertThatThrownBy(bad::get)
+                    .isInstanceOf(DataFactoryException.class)
+                    .hasMessageContaining("NOT_INSTANTIABLE")
                     .hasMessageContaining("no ctor");
             assertThat(bad.getOrNull()).isNull();
             assertThat(bad.getOrElse("d")).isEqualTo("d");
@@ -162,8 +187,11 @@ class ShortcutsAndResultsTest {
 
         @Test
         void equalityAndText() {
-            assertThat(ok).isEqualTo(DataFactoryResult.success("x")).hasSameHashCodeAs(DataFactoryResult.success("x"))
-                    .isNotEqualTo(bad).isNotEqualTo("x");
+            assertThat(ok)
+                    .isEqualTo(DataFactoryResult.success("x"))
+                    .hasSameHashCodeAs(DataFactoryResult.success("x"))
+                    .isNotEqualTo(bad)
+                    .isNotEqualTo("x");
             assertThat(bad).isEqualTo(DataFactoryResult.failure(ErrorType.NOT_INSTANTIABLE, "no ctor"));
             assertThat(ok.toString()).contains("x");
             assertThat(bad.toString()).contains("no ctor");
@@ -181,8 +209,10 @@ class ShortcutsAndResultsTest {
             assertThat(partial.isPartial()).isTrue();
             assertThat(partial.succeeded()).containsExactly(ok);
             assertThat(partial.failed()).containsExactly(bad);
-            assertThatThrownBy(partial::getAll).isInstanceOf(DataFactoryException.class)
-                    .hasMessageContaining("boom").hasMessageContaining("1 of 2 results failed");
+            assertThatThrownBy(partial::getAll)
+                    .isInstanceOf(DataFactoryException.class)
+                    .hasMessageContaining("boom")
+                    .hasMessageContaining("1 of 2 results failed");
             assertThat(DataFactoryResults.of(List.of(ok)).getAll()).containsExactly("a");
             assertThat(partial.successCount()).isEqualTo(1);
             assertThat(partial.failureCount()).isEqualTo(1);

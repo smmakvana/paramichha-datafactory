@@ -8,8 +8,7 @@ final class TextAnnotationReader implements AnnotationReader {
 
     public static final TextAnnotationReader INSTANCE = new TextAnnotationReader();
 
-    private TextAnnotationReader() {
-    }
+    private TextAnnotationReader() {}
 
     private static String s(Object o) {
         return (String) o;
@@ -20,12 +19,15 @@ final class TextAnnotationReader implements AnnotationReader {
     }
 
     private static Long extractLong(String s, String prefix) {
-        int start = s.indexOf(prefix);
-        if (start < 0) return null;
-        start += prefix.length();
+        // Every caller has already found the prefix in s.
+        int start = s.indexOf(prefix) + prefix.length();
         int end = start;
-        if (end < s.length() && s.charAt(end) == '-') end++;
-        while (end < s.length() && Character.isDigit(s.charAt(end))) end++;
+        if (end < s.length() && s.charAt(end) == '-') {
+            end++;
+        }
+        while (end < s.length() && Character.isDigit(s.charAt(end))) {
+            end++;
+        }
         try {
             return Long.parseLong(s.substring(start, end));
         } catch (NumberFormatException ignored) {
@@ -35,7 +37,9 @@ final class TextAnnotationReader implements AnnotationReader {
 
     private static Long extractNamedLong(String s, String param) {
         int idx = s.indexOf(param);
-        if (idx < 0) return null;
+        if (idx < 0) {
+            return null;
+        }
         return extractLong(s.substring(idx), param);
     }
 
@@ -67,13 +71,27 @@ final class TextAnnotationReader implements AnnotationReader {
     @Override
     public FormatType classifyFormat(Object raw) {
         String s = s(raw);
-        if (has(s, "Email")) return FormatType.EMAIL;
-        if (has(s, "URL")) return FormatType.URL;
-        if (has(s, "Pattern")) return FormatType.PATTERN;
-        if (has(s, "CreditCardNumber")) return FormatType.CREDIT_CARD;
-        if (has(s, "ISBN")) return FormatType.ISBN;
-        if (has(s, "EAN")) return FormatType.EAN;
-        if (has(s, "UUID")) return FormatType.UUID_STRING;  // #4 — was missing
+        if (has(s, "Email")) {
+            return FormatType.EMAIL;
+        }
+        if (has(s, "URL")) {
+            return FormatType.URL;
+        }
+        if (has(s, "Pattern")) {
+            return FormatType.PATTERN;
+        }
+        if (has(s, "CreditCardNumber")) {
+            return FormatType.CREDIT_CARD;
+        }
+        if (has(s, "ISBN")) {
+            return FormatType.ISBN;
+        }
+        if (has(s, "EAN")) {
+            return FormatType.EAN;
+        }
+        if (has(s, "UUID")) {
+            return FormatType.UUID_STRING;
+        } // #4 — was missing
         return FormatType.NONE;
     }
 
@@ -81,41 +99,67 @@ final class TextAnnotationReader implements AnnotationReader {
     public String extractPatternRegexp(Object raw) {
         String s = s(raw);
         int idx = s.indexOf("regexp");
-        if (idx < 0) return null;
+        if (idx < 0) {
+            return null;
+        }
         int q1 = s.indexOf('"', idx);
-        if (q1 < 0) return null;
+        if (q1 < 0) {
+            return null;
+        }
         int q2 = s.indexOf('"', q1 + 1);
-        if (q2 < 0) return null;
+        if (q2 < 0) {
+            return null;
+        }
         return s.substring(q1 + 1, q2).replace("\\\\", "\\");
     }
 
     @Override
     public NumericBounds classifyQuantity(Object raw) {
         String s = s(raw);
-        if (has(s, "PositiveOrZero")) return NumericBounds.atLeast(0L);
-        if (has(s, "Positive") && !has(s, "PositiveOrZero")) return NumericBounds.atLeast(1L);
-        if (has(s, "NegativeOrZero")) return NumericBounds.atMost(0L);
-        if (has(s, "Negative") && !has(s, "NegativeOrZero")) return NumericBounds.atMost(-1L);
+        if (has(s, "PositiveOrZero")) {
+            return NumericBounds.atLeast(0L);
+        }
+        if (has(s, "Positive") && !has(s, "PositiveOrZero")) {
+            return NumericBounds.atLeast(1L);
+        }
+        if (has(s, "NegativeOrZero")) {
+            return NumericBounds.atMost(0L);
+        }
+        if (has(s, "Negative") && !has(s, "NegativeOrZero")) {
+            return NumericBounds.atMost(-1L);
+        }
         if (has(s, "Min(")) {
             Long v = extractLong(s, "Min(");
-            if (v != null) return NumericBounds.atLeast(v);
+            if (v != null) {
+                return NumericBounds.atLeast(v);
+            }
         }
         if (has(s, "Max(")) {
             Long v = extractLong(s, "Max(");
-            if (v != null) return NumericBounds.atMost(v);
+            if (v != null) {
+                return NumericBounds.atMost(v);
+            }
         }
         if (has(s, "Size") || has(s, "Length")) {
             Long min = extractNamedLong(s, "min=");
             Long max = extractNamedLong(s, "max=");
-            if (min != null && min == 0) min = null;
-            if (max != null && max == Integer.MAX_VALUE) max = null;
-            if (min != null || max != null) return NumericBounds.of(min, max);
+            if (min != null && min == 0) {
+                min = null;
+            }
+            if (max != null && max == Integer.MAX_VALUE) {
+                max = null;
+            }
+            if (min != null || max != null) {
+                return NumericBounds.of(min, max);
+            }
         }
         // #5 — @Range(min=X, max=Y) was completely unhandled
         if (has(s, "Range")) {
             Long min = extractNamedLong(s, "min=");
             Long max = extractNamedLong(s, "max=");
-            if (min != null || max != null) return NumericBounds.of(min, max);
+            if (min != null || max != null) {
+                return NumericBounds.of(min, max);
+            }
         }
         return null;
     }
@@ -135,10 +179,18 @@ final class TextAnnotationReader implements AnnotationReader {
     @Override
     public TemporalDirection classifyTemporal(Object raw) {
         String s = s(raw);
-        if (has(s, "PastOrPresent")) return TemporalDirection.PAST_OR_NOW;
-        if (has(s, "Past")) return TemporalDirection.PAST;
-        if (has(s, "FutureOrPresent")) return TemporalDirection.FUTURE_OR_NOW;
-        if (has(s, "Future")) return TemporalDirection.FUTURE;
+        if (has(s, "PastOrPresent")) {
+            return TemporalDirection.PAST_OR_NOW;
+        }
+        if (has(s, "Past")) {
+            return TemporalDirection.PAST;
+        }
+        if (has(s, "FutureOrPresent")) {
+            return TemporalDirection.FUTURE_OR_NOW;
+        }
+        if (has(s, "Future")) {
+            return TemporalDirection.FUTURE;
+        }
         return TemporalDirection.NONE;
     }
 

@@ -27,10 +27,7 @@
         <tag>HEAD</tag>
     </scm>
     <properties>
-        <!-- Overrides of the paramichha-dev defaults, removed one by one as this repository is cleaned:
-             spotless.check.skip once it is formatted with spotless:apply, quality.fail once
-             Checkstyle, PMD and SpotBugs report nothing. -->
-        <spotless.check.skip>true</spotless.check.skip>
+        <!-- Override of the paramichha-dev default, removed once Checkstyle, PMD and SpotBugs report nothing. -->
         <quality.fail>false</quality.fail>
         <datafactory-catalog.version>0.2.0-SNAPSHOT</datafactory-catalog.version>
         <!-- Line-coverage floor checked by `mvn verify` (rule in paramichha-dev). Every line is

@@ -5,12 +5,16 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import jakarta.validation.constraints.*;
-import lombok.Builder;
-import lombok.Value;
-
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Set;
+import lombok.Builder;
+import lombok.Value;
 
 /**
  * Validation Testing — the most powerful use case for DataFactory.
@@ -32,12 +36,16 @@ import java.util.Set;
  */
 public class ValidationTesting {
 
-    @Value @Builder
+    @Value
+    @Builder
     static class RegistrationRequest {
         @NotBlank @Email @Size(max = 100) String email;
+
         @NotBlank @Size(min = 8, max = 50) String password;
+
         @NotBlank @Size(min = 2, max = 50) String fullName;
-        @NotNull @Min(18) @Max(120)        Integer age;
+
+        @NotNull @Min(18) @Max(120) Integer age;
     }
 
     public static void main(String[] args) {
@@ -49,7 +57,8 @@ public class ValidationTesting {
 
     static void validObject(Validator validator) {
         section("Valid object — zero violations");
-        RegistrationRequest r = DataFactory.of(RegistrationRequest.class).valid().get();
+        RegistrationRequest r =
+                DataFactory.of(RegistrationRequest.class).valid().get();
         System.out.println("  email:      " + r.getEmail());
         System.out.println("  name:       " + r.getFullName());
         System.out.println("  age:        " + r.getAge());
@@ -58,18 +67,22 @@ public class ValidationTesting {
 
     static void allViolations(Validator validator) {
         section("Each constraint tested — one invalid object per constraint");
-        List<RegistrationRequest> bad = DataFactory.of(RegistrationRequest.class).invalidList().getAll();
+        List<RegistrationRequest> bad =
+                DataFactory.of(RegistrationRequest.class).invalidList().getAll();
         System.out.printf("  %-12s %-28s %-20s %s%n", "field", "value", "constraint", "violations");
         System.out.println("  " + "-".repeat(75));
         for (RegistrationRequest req : bad) {
             Set<ConstraintViolation<RegistrationRequest>> v = validator.validate(req);
             if (v.isEmpty()) continue;
-            String field      = v.iterator().next().getPropertyPath().toString();
-            String constraint = v.iterator().next().getConstraintDescriptor()
-                    .getAnnotation().annotationType().getSimpleName();
-            String value      = fieldValue(req, field);
-            System.out.printf("  %-12s %-28s %-20s %d%n",
-                    field, shorten(value, 26), constraint, v.size());
+            String field = v.iterator().next().getPropertyPath().toString();
+            String constraint = v.iterator()
+                    .next()
+                    .getConstraintDescriptor()
+                    .getAnnotation()
+                    .annotationType()
+                    .getSimpleName();
+            String value = fieldValue(req, field);
+            System.out.printf("  %-12s %-28s %-20s %d%n", field, shorten(value, 26), constraint, v.size());
         }
         System.out.println();
         System.out.println("  Every constraint enforced. Zero manual setup.");
@@ -77,7 +90,8 @@ public class ValidationTesting {
 
     static void targetOneField(Validator validator) {
         section("Target one field — useful for controller tests");
-        RegistrationRequest r = DataFactory.of(RegistrationRequest.class).invalidFor("email").get();
+        RegistrationRequest r =
+                DataFactory.of(RegistrationRequest.class).invalidFor("email").get();
         Set<ConstraintViolation<RegistrationRequest>> v = validator.validate(r);
         System.out.println("  email:      " + r.getEmail() + "  ← invalid");
         System.out.println("  name:       " + r.getFullName() + "  ← valid");
@@ -87,11 +101,11 @@ public class ValidationTesting {
 
     static String fieldValue(RegistrationRequest r, String field) {
         return switch (field) {
-            case "email"    -> r.getEmail() == null ? "null" : r.getEmail();
+            case "email" -> r.getEmail() == null ? "null" : r.getEmail();
             case "password" -> r.getPassword() == null ? "null" : r.getPassword();
             case "fullName" -> r.getFullName() == null ? "null" : r.getFullName();
-            case "age"      -> r.getAge() == null ? "null" : String.valueOf(r.getAge());
-            default         -> "?";
+            case "age" -> r.getAge() == null ? "null" : String.valueOf(r.getAge());
+            default -> "?";
         };
     }
 

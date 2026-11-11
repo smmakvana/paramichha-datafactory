@@ -1,15 +1,14 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.annotation.AnnotationProxyFactory;
 import com.paramichha.datafactory.annotation.AnnotationUtils;
 import com.paramichha.datafactory.utils.PrimitiveDefaults;
 import jakarta.validation.constraints.Min;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Annotation parsing and proxy helpers. */
 @DisplayName("Annotation parsing and proxy helpers")

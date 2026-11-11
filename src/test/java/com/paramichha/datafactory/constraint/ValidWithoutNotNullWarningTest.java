@@ -1,14 +1,13 @@
 package com.paramichha.datafactory.constraint;
 
-import com.paramichha.datafactory.annotation.AnnotationProxyFactory;
-import jakarta.validation.Valid;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
 import static com.paramichha.datafactory.constraint.ConstraintTestSupport.stdout;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.paramichha.datafactory.annotation.AnnotationProxyFactory;
+import jakarta.validation.Valid;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /** @Valid without @NotNull is reported, because null skips the cascade. */
 @DisplayName("@Valid without @NotNull")

@@ -1,10 +1,11 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * 90%+ branch coverage for {@link NumericBounds}.
@@ -34,13 +35,40 @@ class NumericBoundsTest {
 
         private final NumericBounds u = NumericBounds.unbounded();
 
-        @Test void isUnbounded_true()        { assertThat(u.isUnbounded()).isTrue(); }
-        @Test void min_null()                { assertThat(u.min()).isNull(); }
-        @Test void max_null()                { assertThat(u.max()).isNull(); }
-        @Test void hasMin_false()            { assertThat(u.hasMin()).isFalse(); }
-        @Test void hasMax_false()            { assertThat(u.hasMax()).isFalse(); }
-        @Test void hasBoth_false()           { assertThat(u.hasBoth()).isFalse(); }
-        @Test void isContradictory_false()   { assertThat(u.isContradictory()).isFalse(); }
+        @Test
+        void isUnbounded_true() {
+            assertThat(u.isUnbounded()).isTrue();
+        }
+
+        @Test
+        void min_null() {
+            assertThat(u.min()).isNull();
+        }
+
+        @Test
+        void max_null() {
+            assertThat(u.max()).isNull();
+        }
+
+        @Test
+        void hasMin_false() {
+            assertThat(u.hasMin()).isFalse();
+        }
+
+        @Test
+        void hasMax_false() {
+            assertThat(u.hasMax()).isFalse();
+        }
+
+        @Test
+        void hasBoth_false() {
+            assertThat(u.hasBoth()).isFalse();
+        }
+
+        @Test
+        void isContradictory_false() {
+            assertThat(u.isContradictory()).isFalse();
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -118,7 +146,7 @@ class NumericBoundsTest {
             assertThat(b.hasMin()).isTrue();
             assertThat(b.hasMax()).isFalse();
             assertThat(b.hasBoth()).isFalse();
-            assertThat(b.min()).isEqualTo(1L);  // longValue of 1.5
+            assertThat(b.min()).isEqualTo(1L); // longValue of 1.5
             assertThat(b.max()).isNull();
             assertThat(b.isContradictory()).isFalse();
             assertThat(b.isUnbounded()).isFalse();
@@ -182,8 +210,7 @@ class NumericBoundsTest {
 
         @Test
         void unbounded_intersect_decimal() {
-            var r = NumericBounds.unbounded().intersect(
-                    NumericBounds.atLeastDecimal(new BigDecimal("1.5")));
+            var r = NumericBounds.unbounded().intersect(NumericBounds.atLeastDecimal(new BigDecimal("1.5")));
             assertThat(r.hasMin()).isTrue();
         }
 
@@ -230,8 +257,7 @@ class NumericBoundsTest {
         // 4. IntegerBounds ∩ DecimalBounds → promote
         @Test
         void integer_intersect_decimal() {
-            var r = NumericBounds.of(1L, 100L).intersect(
-                    NumericBounds.atLeastDecimal(new BigDecimal("10.5")));
+            var r = NumericBounds.of(1L, 100L).intersect(NumericBounds.atLeastDecimal(new BigDecimal("10.5")));
             assertThat(r).isInstanceOf(NumericBounds.DecimalBounds.class);
             assertThat(r.hasMin()).isTrue();
         }
@@ -247,8 +273,7 @@ class NumericBoundsTest {
         // 6. DecimalBounds ∩ IntegerBounds → promote
         @Test
         void decimal_intersect_integer() {
-            var r = NumericBounds.atLeastDecimal(new BigDecimal("2.5"))
-                    .intersect(NumericBounds.atMost(50L));
+            var r = NumericBounds.atLeastDecimal(new BigDecimal("2.5")).intersect(NumericBounds.atMost(50L));
             assertThat(r).isInstanceOf(NumericBounds.DecimalBounds.class);
             assertThat(r.hasMax()).isTrue();
         }
@@ -295,8 +320,7 @@ class NumericBoundsTest {
         // → dMin = i.min promoted, dMax = d.decMax; neither if-branch fires
         @Test
         void integer_min_only_decimal_max_only() {
-            var r = NumericBounds.atLeast(3L)
-                    .intersect(NumericBounds.atMostDecimal(new BigDecimal("30.0")));
+            var r = NumericBounds.atLeast(3L).intersect(NumericBounds.atMostDecimal(new BigDecimal("30.0")));
             var dec = (NumericBounds.DecimalBounds) r;
             assertThat(dec.decMin()).isEqualByComparingTo("3");
             assertThat(dec.decMax()).isEqualByComparingTo("30.0");
@@ -305,8 +329,7 @@ class NumericBoundsTest {
         // IntegerBounds max only (no min), DecimalBounds min only (no max)
         @Test
         void integer_max_only_decimal_min_only() {
-            var r = NumericBounds.atMost(20L)
-                    .intersect(NumericBounds.atLeastDecimal(new BigDecimal("5.5")));
+            var r = NumericBounds.atMost(20L).intersect(NumericBounds.atLeastDecimal(new BigDecimal("5.5")));
             var dec = (NumericBounds.DecimalBounds) r;
             assertThat(dec.decMin()).isEqualByComparingTo("5.5");
             assertThat(dec.decMax()).isEqualByComparingTo("20");
@@ -315,8 +338,7 @@ class NumericBoundsTest {
         // Both have null min, both have null max
         @Test
         void both_unbounded_decimal() {
-            var r = NumericBounds.of(null, null)
-                    .intersect(new NumericBounds.DecimalBounds(null, null));
+            var r = NumericBounds.of(null, null).intersect(new NumericBounds.DecimalBounds(null, null));
             var dec = (NumericBounds.DecimalBounds) r;
             assertThat(dec.decMin()).isNull();
             assertThat(dec.decMax()).isNull();
@@ -371,12 +393,14 @@ class NumericBoundsTest {
 
         @Test
         void isContradictory_true() {
-            assertThat(new NumericBounds.IntegerBounds(10L, 5L).isContradictory()).isTrue();
+            assertThat(new NumericBounds.IntegerBounds(10L, 5L).isContradictory())
+                    .isTrue();
         }
 
         @Test
         void isContradictory_false() {
-            assertThat(new NumericBounds.IntegerBounds(5L, 10L).isContradictory()).isFalse();
+            assertThat(new NumericBounds.IntegerBounds(5L, 10L).isContradictory())
+                    .isFalse();
         }
 
         @Test

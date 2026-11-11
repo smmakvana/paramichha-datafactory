@@ -1,18 +1,17 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.instantiation.LombokObjectCreation;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Value;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Targets LombokBuilderStrategy — coerce(), findSetter(), toPrimitive(), toWrapper() branches.
@@ -75,15 +74,14 @@ class LombokStrategyTest {
     class CanHandle {
         @Test
         void true_for_lombok_builder() {
-            assertThat(LombokObjectCreation.INSTANCE
-                    .canCreate(AllPrimitivesRequest.class, fields(AllPrimitivesRequest.class)))
+            assertThat(LombokObjectCreation.INSTANCE.canCreate(
+                            AllPrimitivesRequest.class, fields(AllPrimitivesRequest.class)))
                     .isTrue();
         }
 
         @Test
         void false_for_no_builder() {
-            assertThat(LombokObjectCreation.INSTANCE
-                    .canCreate(NoBuilderClass.class, fields(NoBuilderClass.class)))
+            assertThat(LombokObjectCreation.INSTANCE.canCreate(NoBuilderClass.class, fields(NoBuilderClass.class)))
                     .isFalse();
         }
     }
@@ -104,10 +102,22 @@ class LombokStrategyTest {
         @Test
         void all_primitives_populated() throws Exception {
             var values = Map.of(
-                    "boolVal", true, "charVal", 'X',
-                    "byteVal", (byte) 1, "shortVal", (short) 2,
-                    "intVal", 3, "longVal", 4L,
-                    "floatVal", 5.0f, "doubleVal", 6.0d);
+                    "boolVal",
+                    true,
+                    "charVal",
+                    'X',
+                    "byteVal",
+                    (byte) 1,
+                    "shortVal",
+                    (short) 2,
+                    "intVal",
+                    3,
+                    "longVal",
+                    4L,
+                    "floatVal",
+                    5.0f,
+                    "doubleVal",
+                    6.0d);
             var req = build(new java.util.LinkedHashMap<>(values));
             assertThat(req.isBoolVal()).isTrue();
             assertThat(req.getCharVal()).isEqualTo('X');
@@ -138,7 +148,7 @@ class LombokStrategyTest {
         void null_for_char_primitive_skipped() throws Exception {
             var values = new java.util.LinkedHashMap<String, Object>();
             values.put("boolVal", false);
-            values.put("charVal", null);   // primitive — should be skipped
+            values.put("charVal", null); // primitive — should be skipped
             values.put("byteVal", (byte) 0);
             values.put("shortVal", (short) 0);
             values.put("intVal", 0);
@@ -176,7 +186,7 @@ class LombokStrategyTest {
             values.put("floatVal", 1.0f);
             values.put("doubleVal", 1.0d);
             values.put("bigDecVal", BigDecimal.ONE);
-            values.put("bigIntVal", 42L);  // Long passed for BigInteger field — coerce must handle
+            values.put("bigIntVal", 42L); // Long passed for BigInteger field — coerce must handle
             var req = build(values);
             assertThat(req.getBigIntVal()).isEqualTo(BigInteger.valueOf(42));
         }
@@ -192,7 +202,7 @@ class LombokStrategyTest {
             values.put("longVal", 2L);
             values.put("floatVal", 2.0f);
             values.put("doubleVal", 2.0d);
-            values.put("bigDecVal", 10L);  // Long passed for BigDecimal — coerce must handle
+            values.put("bigDecVal", 10L); // Long passed for BigDecimal — coerce must handle
             values.put("bigIntVal", BigInteger.TWO);
             var req = build(values);
             assertThat(req.getBigDecVal()).isEqualByComparingTo("10");
@@ -203,7 +213,7 @@ class LombokStrategyTest {
             var values = new java.util.LinkedHashMap<String, Object>();
             values.put("boolVal", true);
             values.put("charVal", 'C');
-            values.put("byteVal", 5L);     // Long passed for Byte — coerce
+            values.put("byteVal", 5L); // Long passed for Byte — coerce
             values.put("shortVal", (short) 1);
             values.put("intVal", 1);
             values.put("longVal", 1L);
@@ -221,7 +231,7 @@ class LombokStrategyTest {
             values.put("boolVal", true);
             values.put("charVal", 'D');
             values.put("byteVal", (byte) 1);
-            values.put("shortVal", 100L);  // Long for Short — coerce
+            values.put("shortVal", 100L); // Long for Short — coerce
             values.put("intVal", 1);
             values.put("longVal", 1L);
             values.put("floatVal", 1.0f);
@@ -239,7 +249,7 @@ class LombokStrategyTest {
             values.put("charVal", 'E');
             values.put("byteVal", (byte) 1);
             values.put("shortVal", (short) 1);
-            values.put("intVal", 99L);  // Long for Integer — coerce
+            values.put("intVal", 99L); // Long for Integer — coerce
             values.put("longVal", 1L);
             values.put("floatVal", 1.0f);
             values.put("doubleVal", 1.0d);
@@ -258,7 +268,7 @@ class LombokStrategyTest {
             values.put("shortVal", (short) 1);
             values.put("intVal", 1);
             values.put("longVal", 1L);
-            values.put("floatVal", 7L);  // Long for Float — coerce
+            values.put("floatVal", 7L); // Long for Float — coerce
             values.put("doubleVal", 1.0d);
             values.put("bigDecVal", BigDecimal.ONE);
             values.put("bigIntVal", BigInteger.ONE);
@@ -276,7 +286,7 @@ class LombokStrategyTest {
             values.put("intVal", 1);
             values.put("longVal", 1L);
             values.put("floatVal", 1.0f);
-            values.put("doubleVal", 8L);  // Long for Double — coerce
+            values.put("doubleVal", 8L); // Long for Double — coerce
             values.put("bigDecVal", BigDecimal.ONE);
             values.put("bigIntVal", BigInteger.ONE);
             var req = build(values);
@@ -286,7 +296,7 @@ class LombokStrategyTest {
         @Test
         void null_for_wrapper_allowed() throws Exception {
             var values = new java.util.LinkedHashMap<String, Object>();
-            values.put("boolVal", null);    // wrapper — null is valid
+            values.put("boolVal", null); // wrapper — null is valid
             values.put("charVal", null);
             values.put("byteVal", null);
             values.put("shortVal", null);

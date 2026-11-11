@@ -1,10 +1,11 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Classifying annotation instances: format types and bounds. */
 @DisplayName("RuntimeAnnotationClassifier")
@@ -92,25 +93,25 @@ class RuntimeAnnotationClassifierTest {
             @org.hibernate.validator.constraints.UUID
             String f;
         }
+
         static class DecimalMaxHolder {
-            @jakarta.validation.constraints.DecimalMax("999")
-            java.math.BigDecimal f;
+            @jakarta.validation.constraints.DecimalMax("999") java.math.BigDecimal f;
         }
+
         static class LengthZeroMinHolder {
-            @org.hibernate.validator.constraints.Length(min = 0, max = 30)
-            String f;
+            @org.hibernate.validator.constraints.Length(min = 0, max = 30) String f;
         }
+
         static class LengthMaxIntHolder {
-            @org.hibernate.validator.constraints.Length(min = 3, max = Integer.MAX_VALUE)
-            String f;
+            @org.hibernate.validator.constraints.Length(min = 3, max = Integer.MAX_VALUE) String f;
         }
+
         static class MinHolder {
-            @jakarta.validation.constraints.Min(10)
-            int f;
+            @jakarta.validation.constraints.Min(10) int f;
         }
+
         static class MaxHolder {
-            @jakarta.validation.constraints.Max(5)
-            int f;
+            @jakarta.validation.constraints.Max(5) int f;
         }
     }
 }

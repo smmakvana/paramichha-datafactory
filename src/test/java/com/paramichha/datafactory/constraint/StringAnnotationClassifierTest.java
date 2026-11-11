@@ -1,10 +1,11 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Classifying annotation text: every branch of the string classifier. */
 @DisplayName("StringAnnotationClassifier")
@@ -115,47 +116,68 @@ class StringAnnotationClassifierTest {
         private final TextAnnotationReader C = TextAnnotationReader.INSTANCE;
 
         @Test
-        void classifyFormat_isbn()  { assertThat(C.classifyFormat("@ISBN")).isEqualTo(FormatType.ISBN); }
+        void classifyFormat_isbn() {
+            assertThat(C.classifyFormat("@ISBN")).isEqualTo(FormatType.ISBN);
+        }
+
         @Test
-        void classifyFormat_ean()   { assertThat(C.classifyFormat("@EAN")).isEqualTo(FormatType.EAN); }
+        void classifyFormat_ean() {
+            assertThat(C.classifyFormat("@EAN")).isEqualTo(FormatType.EAN);
+            assertThat(C.classifyFormat("@UUID")).isEqualTo(FormatType.UUID_STRING);
+        }
+
         @Test
-        void classifyFormat_none()  { assertThat(C.classifyFormat("@NotNull")).isEqualTo(FormatType.NONE); }
+        void classifyFormat_none() {
+            assertThat(C.classifyFormat("@NotNull")).isEqualTo(FormatType.NONE);
+        }
 
         @Test
         void extractPatternRegexp_no_regexp_keyword_returns_null() {
             assertThat(C.extractPatternRegexp("@NotBlank")).isNull();
         }
+
         @Test
         void extractPatternRegexp_no_opening_quote_returns_null() {
             assertThat(C.extractPatternRegexp("@Pattern(regexp=noQuote)")).isNull();
         }
+
         @Test
         void extractPatternRegexp_no_closing_quote_returns_null() {
             assertThat(C.extractPatternRegexp("@Pattern(regexp=\"noclose")).isNull();
         }
+
         @Test
         void extractPatternRegexp_valid() {
             assertThat(C.extractPatternRegexp("@Pattern(regexp=\"^[A-Z]+$\")")).isEqualTo("^[A-Z]+$");
         }
 
         @Test
-        void classifyQuantity_min_no_digits_returns_null()  { assertThat(C.classifyQuantity("@Min(abc)")).isNull(); }
+        void classifyQuantity_min_no_digits_returns_null() {
+            assertThat(C.classifyQuantity("@Min(abc)")).isNull();
+        }
+
         @Test
-        void classifyQuantity_max_no_digits_returns_null()  { assertThat(C.classifyQuantity("@Max(abc)")).isNull(); }
+        void classifyQuantity_max_no_digits_returns_null() {
+            assertThat(C.classifyQuantity("@Max(abc)")).isNull();
+        }
+
         @Test
         void classifyQuantity_size_both_trimmed_returns_null() {
             assertThat(C.classifyQuantity("@Size(min=0, max=2147483647)")).isNull();
         }
+
         @Test
         void classifyQuantity_length_both_trimmed_returns_null() {
             assertThat(C.classifyQuantity("@Length(min=0, max=2147483647)")).isNull();
         }
+
         @Test
         void classifyQuantity_min_returns_bounds() {
             var b = C.classifyQuantity("@Min(18)");
             assertThat(b).isEqualTo(new NumericBounds.IntegerBounds(18L, null));
             assertThat(b.min()).isEqualTo(18L);
         }
+
         @Test
         void classifyQuantity_max_returns_bounds() {
             var b = C.classifyQuantity("@Max(100)");
@@ -169,22 +191,32 @@ class StringAnnotationClassifierTest {
             assertThat(b).isEqualTo(new NumericBounds.IntegerBounds(-5L, null));
             assertThat(b.min()).isEqualTo(-5L);
         }
+
         @Test
         void extractLong_negative_max_parsed() {
             var b = C.classifyQuantity("@Max(-1)");
             assertThat(b).isEqualTo(new NumericBounds.IntegerBounds(null, -1L));
             assertThat(b.max()).isEqualTo(-1L);
         }
+
         @Test
         void extractLong_empty_returns_null() {
             assertThat(C.classifyQuantity("@Min()")).isNull();
         }
 
         @Test
-        void classifyTemporal_none()    { assertThat(C.classifyTemporal("@NotNull")).isEqualTo(TemporalDirection.NONE); }
+        void classifyTemporal_none() {
+            assertThat(C.classifyTemporal("@NotNull")).isEqualTo(TemporalDirection.NONE);
+        }
+
         @Test
-        void classifyTemporal_past()    { assertThat(C.classifyTemporal("@Past")).isEqualTo(TemporalDirection.PAST); }
+        void classifyTemporal_past() {
+            assertThat(C.classifyTemporal("@Past")).isEqualTo(TemporalDirection.PAST);
+        }
+
         @Test
-        void classifyTemporal_future()  { assertThat(C.classifyTemporal("@Future")).isEqualTo(TemporalDirection.FUTURE); }
+        void classifyTemporal_future() {
+            assertThat(C.classifyTemporal("@Future")).isEqualTo(TemporalDirection.FUTURE);
+        }
     }
 }

@@ -9,11 +9,16 @@ import java.util.List;
  */
 final class EnumDataCreator implements DataCreator {
     static final EnumDataCreator INSTANCE = new EnumDataCreator();
+
     private EnumDataCreator() {}
 
-    @Override public boolean supports(Class<?> type) { return type.isEnum(); }
+    @Override
+    public boolean supports(Class<?> type) {
+        return type.isEnum();
+    }
 
-    @Override public Object shape(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
+    @Override
+    public Object shape(FieldConstraints field, BoundaryTarget target, DataMachine machine) {
         return List.of(field.fieldType().getEnumConstants());
     }
 }

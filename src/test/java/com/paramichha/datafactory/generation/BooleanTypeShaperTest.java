@@ -1,11 +1,11 @@
 package com.paramichha.datafactory.generation;
 
-import java.time.*;
+import static com.paramichha.datafactory.generation.ShaperTestSupport.fieldOf;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static com.paramichha.datafactory.generation.ShaperTestSupport.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Boolean values: which fields the boolean shaper supports and what it shapes. */
 @DisplayName("BooleanTypeShaper")
@@ -31,12 +31,16 @@ class BooleanTypeShaperTest {
 
         @Test
         void shapeTrue() {
-            assertThat(BooleanDataCreator.INSTANCE.shape(fieldOf("f", Boolean.class), BoundaryTarget.trueTarget(), DataMachines.random())).isEqualTo(true);
+            assertThat(BooleanDataCreator.INSTANCE.shape(
+                            fieldOf("f", Boolean.class), BoundaryTarget.trueTarget(), DataMachines.random()))
+                    .isEqualTo(true);
         }
 
         @Test
         void shapeFalse() {
-            assertThat(BooleanDataCreator.INSTANCE.shape(fieldOf("f", Boolean.class), BoundaryTarget.falseTarget(), DataMachines.random())).isEqualTo(false);
+            assertThat(BooleanDataCreator.INSTANCE.shape(
+                            fieldOf("f", Boolean.class), BoundaryTarget.falseTarget(), DataMachines.random()))
+                    .isEqualTo(false);
         }
     }
 }

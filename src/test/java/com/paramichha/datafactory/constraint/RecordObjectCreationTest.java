@@ -1,11 +1,12 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.instantiation.RecordObjectCreation;
+import java.util.LinkedHashMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import java.util.LinkedHashMap;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /** Record creation: null primitive components take their default values. */
 @DisplayName("Record creation")
@@ -31,8 +32,7 @@ class RecordObjectCreationTest {
             assertThat(r.d()).isEqualTo(0.0d);
         }
 
-        record AllPrimRec(boolean b, char c, byte by, short s, int i, long l, float f, double d) {
-        }
+        record AllPrimRec(boolean b, char c, byte by, short s, int i, long l, float f, double d) {}
     }
 
     @Nested
@@ -50,14 +50,10 @@ class RecordObjectCreationTest {
             assertThat(result.f()).isEqualTo(0.0f);
         }
 
-        record WithDouble(double d, float f) {
-        }
+        record WithDouble(double d, float f) {}
     }
 
     @Nested
     @DisplayName("RecordStrategy — defaultPrimitive double arm")
-    class NullDoubleComponent {
-
-
-    }
+    class NullDoubleComponent {}
 }

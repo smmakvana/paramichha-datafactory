@@ -33,8 +33,7 @@ public final class ConstraintConflicts {
             conflicts.add(field + ": @Null conflicts with @NotNull/@NotBlank/@NotEmpty");
         }
         if (c.mustBeNull() && c.fieldType().isPrimitive()) {
-            conflicts.add(field + ": @Null on primitive type " + c.fieldType().getName()
-                    + " can never be satisfied");
+            conflicts.add(field + ": @Null on primitive type " + c.fieldType().getName() + " can never be satisfied");
         }
         if (c.bounds().isContradictory()) {
             conflicts.add(field + ": impossible range — lower bound " + lower(c.bounds())

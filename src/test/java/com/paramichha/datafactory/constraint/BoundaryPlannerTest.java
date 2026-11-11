@@ -1,18 +1,17 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.generation.BoundaryPlanner;
 import com.paramichha.datafactory.generation.BoundaryTarget;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 @DisplayName("BoundaryPlanner")
 class BoundaryPlannerTest {
@@ -22,7 +21,10 @@ class BoundaryPlannerTest {
     }
 
     private FieldConstraints intField(String name, NumericBounds bounds) {
-        return FieldConstraints.builder(name, Integer.class).bounds(bounds).integerOnly(true).build();
+        return FieldConstraints.builder(name, Integer.class)
+                .bounds(bounds)
+                .integerOnly(true)
+                .build();
     }
 
     private List<String> labels(List<BoundaryTarget> targets) {
@@ -173,7 +175,8 @@ class BoundaryPlannerTest {
         @Test
         void temporal_semanticOnly() {
             var f = FieldConstraints.builder("dob", LocalDate.class)
-                    .temporal(TemporalDirection.PAST).build();
+                    .temporal(TemporalDirection.PAST)
+                    .build();
             assertThat(labels(BoundaryPlanner.plan(f))).containsExactly("semantic");
         }
 
@@ -185,13 +188,17 @@ class BoundaryPlannerTest {
 
         @Test
         void boolean_assertTrue_onlyTrue() {
-            var f = FieldConstraints.builder("active", Boolean.class).assertTrueRequired(true).build();
+            var f = FieldConstraints.builder("active", Boolean.class)
+                    .assertTrueRequired(true)
+                    .build();
             assertThat(labels(BoundaryPlanner.plan(f))).containsExactly("true");
         }
 
         @Test
         void boolean_assertFalse_onlyFalse() {
-            var f = FieldConstraints.builder("deleted", Boolean.class).assertFalseRequired(true).build();
+            var f = FieldConstraints.builder("deleted", Boolean.class)
+                    .assertFalseRequired(true)
+                    .build();
             assertThat(labels(BoundaryPlanner.plan(f))).containsExactly("false");
         }
 
@@ -203,11 +210,16 @@ class BoundaryPlannerTest {
 
         @Test
         void mustBeNull_nullTarget() {
-            var f = FieldConstraints.builder("deprecated", String.class).mustBeNull(true).build();
+            var f = FieldConstraints.builder("deprecated", String.class)
+                    .mustBeNull(true)
+                    .build();
             assertThat(labels(BoundaryPlanner.plan(f))).containsExactly("null");
         }
 
-        enum Status {ACTIVE, INACTIVE}
+        enum Status {
+            ACTIVE,
+            INACTIVE
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -286,7 +298,9 @@ class BoundaryPlannerTest {
     class DecimalBounds {
 
         private FieldConstraints decimalField(String name, NumericBounds bounds) {
-            return FieldConstraints.builder(name, java.math.BigDecimal.class).bounds(bounds).build();
+            return FieldConstraints.builder(name, java.math.BigDecimal.class)
+                    .bounds(bounds)
+                    .build();
         }
 
         @Test
@@ -301,7 +315,8 @@ class BoundaryPlannerTest {
             var fc = decimalField("price", NumericBounds.atLeastDecimal(new BigDecimal("0.01")));
             var m = byLabel(BoundaryPlanner.plan(fc));
             assertThat(((BoundaryTarget.DecimalFixed) m.get("atMin")).value()).isEqualByComparingTo("0.01");
-            assertThat(((BoundaryTarget.DecimalFixed) m.get("justAboveMin")).value()).isEqualByComparingTo("0.02");
+            assertThat(((BoundaryTarget.DecimalFixed) m.get("justAboveMin")).value())
+                    .isEqualByComparingTo("0.02");
         }
 
         @Test
@@ -310,7 +325,8 @@ class BoundaryPlannerTest {
                     .intersect(NumericBounds.atMostDecimal(new BigDecimal("999.99")));
             var fc = decimalField("price", bounds);
             var labels = labels(BoundaryPlanner.plan(fc));
-            assertThat(labels).containsExactly("semantic", "atMin", "justAboveMin", "midpoint", "justBelowMax", "atMax");
+            assertThat(labels)
+                    .containsExactly("semantic", "atMin", "justAboveMin", "midpoint", "justBelowMax", "atMax");
         }
 
         @Test
@@ -323,5 +339,4 @@ class BoundaryPlannerTest {
             assertThat(((BoundaryTarget.DecimalFixed) m.get("atMax")).value()).isEqualByComparingTo("999.99");
         }
     }
-
 }

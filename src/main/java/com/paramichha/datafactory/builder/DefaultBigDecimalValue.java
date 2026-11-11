@@ -1,9 +1,12 @@
 package com.paramichha.datafactory.builder;
 
-import com.paramichha.datafactory.*;
+import com.paramichha.datafactory.AnnotationParseException;
+import com.paramichha.datafactory.BigDecimalValue;
+import com.paramichha.datafactory.DataFactory;
+import com.paramichha.datafactory.DataFactoryException;
+import com.paramichha.datafactory.FieldValue;
 import jakarta.validation.constraints.Negative;
 import jakarta.validation.constraints.Positive;
-
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -40,8 +43,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      * @param max inclusive maximum as a string, e.g. {@code "999.99"}
      */
     public DefaultBigDecimalValue range(String min, String max) {
-        return with("@DecimalMin(value=\"" + min + "\")")
-              .with("@DecimalMax(value=\"" + max + "\")");
+        return with("@DecimalMin(value=\"" + min + "\")").with("@DecimalMax(value=\"" + max + "\")");
     }
 
     /**
@@ -157,9 +159,7 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      * @return list of valid boundary values
      */
     public List<BigDecimal> validList() {
-        return delegate.validList().stream()
-                .map(this::applyScale)
-                .collect(Collectors.toList());
+        return delegate.validList().stream().map(this::applyScale).collect(Collectors.toList());
     }
 
     /**
@@ -187,13 +187,13 @@ public final class DefaultBigDecimalValue implements BigDecimalValue {
      * @return list of valid values
      */
     public List<BigDecimal> stream(int count) {
-        return delegate.stream(count).stream()
-                .map(this::applyScale)
-                .collect(Collectors.toList());
+        return delegate.stream(count).stream().map(this::applyScale).collect(Collectors.toList());
     }
 
     private BigDecimal applyScale(BigDecimal value) {
-        if (value == null || scale < 0) return value;
+        if (value == null || scale < 0) {
+            return value;
+        }
         return value.setScale(scale, RoundingMode.HALF_UP);
     }
 }

@@ -2,7 +2,6 @@ package com.paramichha.datafactory.snapshot;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

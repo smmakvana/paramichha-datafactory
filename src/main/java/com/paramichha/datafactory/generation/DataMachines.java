@@ -1,9 +1,8 @@
 package com.paramichha.datafactory.generation;
 
-import net.datafaker.Faker;
-
 import java.util.Locale;
 import java.util.Random;
+import net.datafaker.Faker;
 
 /**
  * Factory for {@link DataMachine} instances.

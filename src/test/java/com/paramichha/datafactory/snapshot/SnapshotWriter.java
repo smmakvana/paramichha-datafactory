@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import jakarta.validation.Validator;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,15 +50,11 @@ public final class SnapshotWriter {
                 .setSerializationInclusion(JsonInclude.Include.ALWAYS);
     }
 
-    public static String toJson(
-            Object valid,
-            Map<String, List<?>> validMap,
-            List<?> invalidList,
-            Validator validator) {
+    public static String toJson(Object valid, Map<String, List<?>> validMap, List<?> invalidList, Validator validator) {
         try {
             Map<String, Object> root = new LinkedHashMap<>();
-            root.put("valid",       toEntry(valid, validator));
-            root.put("validMap",    toValidMapEntries(validMap, validator));
+            root.put("valid", toEntry(valid, validator));
+            root.put("validMap", toValidMapEntries(validMap, validator));
             root.put("invalidList", toInvalidEntries(invalidList, validator));
             // Always "\n": Jackson's default pretty printer uses the OS line separator,
             // which made snapshots written on Windows (\r\n) differ from Linux (\n).
@@ -72,27 +66,23 @@ public final class SnapshotWriter {
 
     private static Map<String, Object> toEntry(Object obj, Validator validator) {
         Map<String, Object> entry = new LinkedHashMap<>();
-        entry.put("object",     obj);
+        entry.put("object", obj);
         entry.put("violations", violations(obj, validator));
         return entry;
     }
 
-    private static Map<String, List<?>> toValidMapEntries(
-            Map<String, List<?>> validMap, Validator validator) {
+    private static Map<String, List<?>> toValidMapEntries(Map<String, List<?>> validMap, Validator validator) {
         Map<String, List<?>> result = new LinkedHashMap<>();
-        validMap.forEach((field, variants) ->
-                result.put(field, variants.stream()
-                        .map(v -> toEntry(v, validator))
-                        .collect(Collectors.toList())));
+        validMap.forEach((field, variants) -> result.put(
+                field, variants.stream().map(v -> toEntry(v, validator)).collect(Collectors.toList())));
         return result;
     }
 
-    private static List<Map<String, Object>> toInvalidEntries(
-            List<?> invalidList, Validator validator) {
+    private static List<Map<String, Object>> toInvalidEntries(List<?> invalidList, Validator validator) {
         return invalidList.stream()
                 .map(obj -> {
                     Map<String, Object> entry = new LinkedHashMap<>();
-                    entry.put("object",     obj);
+                    entry.put("object", obj);
                     entry.put("violations", violations(obj, validator));
                     return entry;
                 })

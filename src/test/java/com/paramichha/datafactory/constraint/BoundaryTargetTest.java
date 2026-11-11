@@ -1,13 +1,12 @@
 package com.paramichha.datafactory.constraint;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.paramichha.datafactory.generation.BoundaryTarget;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * 90%+ branch coverage for {@link BoundaryTarget}.
@@ -33,10 +32,25 @@ class BoundaryTargetTest {
 
         private final BoundaryTarget t = BoundaryTarget.semantic();
 
-        @Test void label_is_semantic()       { assertThat(t.label()).isEqualTo("semantic"); }
-        @Test void isSemantic_true()         { assertThat(t.isSemantic()).isTrue(); }
-        @Test void isFixed_false()           { assertThat(t.isFixed()).isFalse(); }
-        @Test void targetQuantity_null()     { assertThat(t.targetQuantity()).isNull(); }
+        @Test
+        void label_is_semantic() {
+            assertThat(t.label()).isEqualTo("semantic");
+        }
+
+        @Test
+        void isSemantic_true() {
+            assertThat(t.isSemantic()).isTrue();
+        }
+
+        @Test
+        void isFixed_false() {
+            assertThat(t.isFixed()).isFalse();
+        }
+
+        @Test
+        void targetQuantity_null() {
+            assertThat(t.targetQuantity()).isNull();
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -111,7 +125,7 @@ class BoundaryTargetTest {
         void atDecimalMin() {
             var t = BoundaryTarget.atDecimalMin(new BigDecimal("1.50"));
             assertThat(t.label()).isEqualTo("atMin");
-            assertThat(t.targetQuantity()).isEqualTo(1L);   // longValue of 1.50
+            assertThat(t.targetQuantity()).isEqualTo(1L); // longValue of 1.50
             assertThat(t.isFixed()).isTrue();
             assertThat(t.isSemantic()).isFalse();
         }
@@ -204,39 +218,56 @@ class BoundaryTargetTest {
         @Nested
         @DisplayName("Construction")
         class Construction {
-            @Test @DisplayName("semantic() creates Semantic with label")
+            @Test
+            @DisplayName("semantic() creates Semantic with label")
             void semantic() {
                 assertThat(BoundaryTarget.semantic().label()).isEqualTo("semantic");
             }
-            @Test @DisplayName("atMin() creates Fixed with label atMin")
+
+            @Test
+            @DisplayName("atMin() creates Fixed with label atMin")
             void atMin() {
                 assertThat(BoundaryTarget.atMin(1L).label()).isEqualTo("atMin");
             }
-            @Test @DisplayName("atMax() creates Fixed with label atMax")
+
+            @Test
+            @DisplayName("atMax() creates Fixed with label atMax")
             void atMax() {
                 assertThat(BoundaryTarget.atMax(10L).label()).isEqualTo("atMax");
             }
-            @Test @DisplayName("atDecimalMin() creates DecimalFixed with label atMin")
+
+            @Test
+            @DisplayName("atDecimalMin() creates DecimalFixed with label atMin")
             void atDecimalMin() {
                 assertThat(BoundaryTarget.atDecimalMin(BigDecimal.ONE).label()).isEqualTo("atMin");
             }
-            @Test @DisplayName("atDecimalMax() creates DecimalFixed with label atMax")
+
+            @Test
+            @DisplayName("atDecimalMax() creates DecimalFixed with label atMax")
             void atDecimalMax() {
                 assertThat(BoundaryTarget.atDecimalMax(BigDecimal.TEN).label()).isEqualTo("atMax");
             }
-            @Test @DisplayName("nullTarget() creates Special with label null")
+
+            @Test
+            @DisplayName("nullTarget() creates Special with label null")
             void nullTarget() {
                 assertThat(BoundaryTarget.nullTarget().label()).isEqualTo("null");
             }
-            @Test @DisplayName("trueTarget() creates Special with label true")
+
+            @Test
+            @DisplayName("trueTarget() creates Special with label true")
             void trueTarget() {
                 assertThat(BoundaryTarget.trueTarget().label()).isEqualTo("true");
             }
-            @Test @DisplayName("falseTarget() creates Special with label false")
+
+            @Test
+            @DisplayName("falseTarget() creates Special with label false")
             void falseTarget() {
                 assertThat(BoundaryTarget.falseTarget().label()).isEqualTo("false");
             }
-            @Test @DisplayName("allEnumValues() creates Special")
+
+            @Test
+            @DisplayName("allEnumValues() creates Special")
             void allEnumValues() {
                 assertThat(BoundaryTarget.allEnumValues().label()).isEqualTo("allEnumValues");
             }
@@ -245,20 +276,27 @@ class BoundaryTargetTest {
         @Nested
         @DisplayName("Validation — targetQuantity()")
         class TargetQuantity {
-            @Test @DisplayName("Fixed returns value as Long")
+            @Test
+            @DisplayName("Fixed returns value as Long")
             void fixedReturnsValue() {
                 assertThat(BoundaryTarget.atMin(42L).targetQuantity()).isEqualTo(42L);
             }
-            @Test @DisplayName("DecimalFixed returns longValue()")
+
+            @Test
+            @DisplayName("DecimalFixed returns longValue()")
             void decimalFixedReturnsLong() {
                 assertThat(BoundaryTarget.atDecimalMin(BigDecimal.TEN).targetQuantity())
                         .isEqualTo(10L);
             }
-            @Test @DisplayName("Semantic returns null")
+
+            @Test
+            @DisplayName("Semantic returns null")
             void semanticReturnsNull() {
                 assertThat(BoundaryTarget.semantic().targetQuantity()).isNull();
             }
-            @Test @DisplayName("Special returns null")
+
+            @Test
+            @DisplayName("Special returns null")
             void specialReturnsNull() {
                 assertThat(BoundaryTarget.nullTarget().targetQuantity()).isNull();
             }
@@ -267,57 +305,84 @@ class BoundaryTargetTest {
         @Nested
         @DisplayName("Behaviour — isSemantic() and isFixed()")
         class TypeChecks {
-            @Test @DisplayName("semantic() isSemantic() true")
+            @Test
+            @DisplayName("semantic() isSemantic() true")
             void semanticIsSemantic() {
                 assertThat(BoundaryTarget.semantic().isSemantic()).isTrue();
             }
-            @Test @DisplayName("Fixed isFixed() true")
+
+            @Test
+            @DisplayName("Fixed isFixed() true")
             void fixedIsFixed() {
                 assertThat(BoundaryTarget.atMin(1L).isFixed()).isTrue();
             }
-            @Test @DisplayName("DecimalFixed isFixed() true")
+
+            @Test
+            @DisplayName("DecimalFixed isFixed() true")
             void decimalIsFixed() {
-                assertThat(BoundaryTarget.atDecimalMin(BigDecimal.ONE).isFixed()).isTrue();
+                assertThat(BoundaryTarget.atDecimalMin(BigDecimal.ONE).isFixed())
+                        .isTrue();
             }
-            @Test @DisplayName("Special isSemantic() false")
+
+            @Test
+            @DisplayName("Special isSemantic() false")
             void specialNotSemantic() {
                 assertThat(BoundaryTarget.nullTarget().isSemantic()).isFalse();
             }
-            @Test @DisplayName("Special isFixed() false")
+
+            @Test
+            @DisplayName("Special isFixed() false")
             void specialNotFixed() {
                 assertThat(BoundaryTarget.nullTarget().isFixed()).isFalse();
             }
-            @Test @DisplayName("justAboveMin label")
+
+            @Test
+            @DisplayName("justAboveMin label")
             void justAboveMin() {
                 assertThat(BoundaryTarget.justAboveMin(1L).label()).isEqualTo("justAboveMin");
             }
-            @Test @DisplayName("midpoint label")
+
+            @Test
+            @DisplayName("midpoint label")
             void midpoint() {
                 assertThat(BoundaryTarget.midpoint(1L, 10L).label()).isEqualTo("midpoint");
             }
-            @Test @DisplayName("justBelowMax label")
+
+            @Test
+            @DisplayName("justBelowMax label")
             void justBelowMax() {
                 assertThat(BoundaryTarget.justBelowMax(10L).label()).isEqualTo("justBelowMax");
             }
-            @Test @DisplayName("typeDefaultNegative label")
+
+            @Test
+            @DisplayName("typeDefaultNegative label")
             void typeDefaultNeg() {
                 assertThat(BoundaryTarget.typeDefaultNegative().label()).isEqualTo("negative");
             }
-            @Test @DisplayName("typeDefaultZero label")
+
+            @Test
+            @DisplayName("typeDefaultZero label")
             void typeDefaultZero() {
                 assertThat(BoundaryTarget.typeDefaultZero().label()).isEqualTo("zero");
             }
-            @Test @DisplayName("justAboveDecimalMin label")
+
+            @Test
+            @DisplayName("justAboveDecimalMin label")
             void justAboveDecimalMin() {
                 assertThat(BoundaryTarget.justAboveDecimalMin(BigDecimal.ONE).label())
                         .isEqualTo("justAboveMin");
             }
-            @Test @DisplayName("decimalMidpoint label")
+
+            @Test
+            @DisplayName("decimalMidpoint label")
             void decimalMidpoint() {
-                assertThat(BoundaryTarget.decimalMidpoint(BigDecimal.ONE, BigDecimal.TEN).label())
+                assertThat(BoundaryTarget.decimalMidpoint(BigDecimal.ONE, BigDecimal.TEN)
+                                .label())
                         .isEqualTo("midpoint");
             }
-            @Test @DisplayName("justBelowDecimalMax label")
+
+            @Test
+            @DisplayName("justBelowDecimalMax label")
             void justBelowDecimalMax() {
                 assertThat(BoundaryTarget.justBelowDecimalMax(BigDecimal.TEN).label())
                         .isEqualTo("justBelowMax");

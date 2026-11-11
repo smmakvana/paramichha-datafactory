@@ -1,17 +1,16 @@
 package com.paramichha.datafactory.regression;
 
-import com.paramichha.datafactory.DataFactory;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.paramichha.datafactory.DataFactory;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * Valid values for collection fields from the field-level API: a List field's value is a list
@@ -37,19 +36,28 @@ class CollectionValidValuesTest {
 
     @Test
     void queueAndDequeKeepTheirType() {
-        assertThat(valid(Queue.class)).isNotEmpty().allSatisfy(v -> assertThat(v).isInstanceOf(ArrayDeque.class));
-        assertThat(valid(Deque.class)).isNotEmpty().allSatisfy(v -> assertThat(v).isInstanceOf(ArrayDeque.class));
+        assertThat(valid(Queue.class))
+                .isNotEmpty()
+                .allSatisfy(v -> assertThat(v).isInstanceOf(ArrayDeque.class));
+        assertThat(valid(Deque.class))
+                .isNotEmpty()
+                .allSatisfy(v -> assertThat(v).isInstanceOf(ArrayDeque.class));
     }
 
     @Test
     void validCollectionsNeverExceedSizeMax() {
-        assertThat(valid(Set.class, "@Size(min=1, max=3)")).isNotEmpty()
+        assertThat(valid(Set.class, "@Size(min=1, max=3)"))
+                .isNotEmpty()
                 .allSatisfy(v -> assertThat(((Set<?>) v).size()).isBetween(1, 3));
-        assertThat(valid(List.class, "@Size(min=2, max=4)")).isNotEmpty()
+        assertThat(valid(List.class, "@Size(min=2, max=4)"))
+                .isNotEmpty()
                 .allSatisfy(v -> assertThat(((List<?>) v).size()).isBetween(2, 4));
     }
 
-    enum Colour { RED, GREEN }
+    enum Colour {
+        RED,
+        GREEN
+    }
 
     @Test
     void enumsStillExpandToEveryConstant() {

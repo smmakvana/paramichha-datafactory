@@ -1,12 +1,14 @@
 package com.paramichha.datafactory.examples;
 
 import com.paramichha.datafactory.DataFactory;
-import jakarta.validation.constraints.*;
-import lombok.Builder;
-import lombok.Value;
-
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.List;
+import lombok.Builder;
+import lombok.Value;
 
 /**
  * Fintech Example — realistic financial test data.
@@ -15,21 +17,31 @@ import java.util.List;
  */
 public class FintechExample {
 
-    @Value @Builder
+    @Value
+    @Builder
     static class PaymentRequest {
         @NotBlank String fromIban;
+
         @NotBlank String toIban;
+
         @NotNull @Positive BigDecimal amount;
+
         @NotBlank String reference;
     }
 
-    @Value @Builder
+    @Value
+    @Builder
     static class AccountRequest {
         @NotBlank @Email String email;
-        @NotBlank        String fullName;
-        @NotBlank        String sortCode;
-        @NotBlank        String accountNumber;
-        @NotBlank        String bic;
+
+        @NotBlank String fullName;
+
+        @NotBlank String sortCode;
+
+        @NotBlank String accountNumber;
+
+        @NotBlank String bic;
+
         @NotNull @Positive BigDecimal balance;
     }
 
@@ -44,8 +56,9 @@ public class FintechExample {
         section("Payment with realistic IBAN data");
         PaymentRequest p = DataFactory.of(PaymentRequest.class)
                 .with("fromIban", DataFactory.string().iban().valid())
-                .with("toIban",   DataFactory.string().iban().valid())
-                .valid().get();
+                .with("toIban", DataFactory.string().iban().valid())
+                .valid()
+                .get();
         System.out.println("  from:      " + p.getFromIban());
         System.out.println("  to:        " + p.getToIban());
         System.out.println("  amount:    " + p.getAmount());
@@ -55,10 +68,11 @@ public class FintechExample {
     static void accounts() {
         section("UK bank account");
         AccountRequest a = DataFactory.of(AccountRequest.class)
-                .with("sortCode",      DataFactory.string().sortCode().valid())
+                .with("sortCode", DataFactory.string().sortCode().valid())
                 .with("accountNumber", DataFactory.string().accountNumber().valid())
-                .with("bic",           DataFactory.string().bic().valid())
-                .valid().get();
+                .with("bic", DataFactory.string().bic().valid())
+                .valid()
+                .get();
         System.out.println("  email:   " + a.getEmail());
         System.out.println("  sort:    " + a.getSortCode());
         System.out.println("  account: " + a.getAccountNumber());
@@ -77,8 +91,10 @@ public class FintechExample {
 
     static void bulk() {
         section("100 payments for load testing");
-        List<PaymentRequest> payments = DataFactory.of(PaymentRequest.class).validList(100).getAll();
-        long unique = payments.stream().map(PaymentRequest::getFromIban).distinct().count();
+        List<PaymentRequest> payments =
+                DataFactory.of(PaymentRequest.class).validList(100).getAll();
+        long unique =
+                payments.stream().map(PaymentRequest::getFromIban).distinct().count();
         System.out.println("  generated:    " + payments.size());
         System.out.println("  unique ibans: " + unique);
     }

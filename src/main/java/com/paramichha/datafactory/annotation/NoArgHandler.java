@@ -6,7 +6,8 @@ import java.lang.annotation.Annotation;
 class NoArgHandler implements AnnotationCreator {
 
     @Override
-    public Annotation create(Class<? extends Annotation> clazz, String rawAttributeString) throws AnnotationParseException{
+    public Annotation create(Class<? extends Annotation> clazz, String rawAttributeString)
+            throws AnnotationParseException {
 
         if (!rawAttributeString.isEmpty()) {
             throw new AnnotationParseException(clazz.getSimpleName() + " does not accept attributes");
