@@ -153,26 +153,26 @@ class StringAnnotationClassifierTest {
         @Test
         void classifyQuantity_min_returns_bounds() {
             var b = C.classifyQuantity("@Min(18)");
-            assertThat(b).isNotNull();
+            assertThat(b).isEqualTo(new NumericBounds.IntegerBounds(18L, null));
             assertThat(b.min()).isEqualTo(18L);
         }
         @Test
         void classifyQuantity_max_returns_bounds() {
             var b = C.classifyQuantity("@Max(100)");
-            assertThat(b).isNotNull();
+            assertThat(b).isEqualTo(new NumericBounds.IntegerBounds(null, 100L));
             assertThat(b.max()).isEqualTo(100L);
         }
 
         @Test
         void extractLong_negative_value_parsed() {
             var b = C.classifyQuantity("@Min(-5)");
-            assertThat(b).isNotNull();
+            assertThat(b).isEqualTo(new NumericBounds.IntegerBounds(-5L, null));
             assertThat(b.min()).isEqualTo(-5L);
         }
         @Test
         void extractLong_negative_max_parsed() {
             var b = C.classifyQuantity("@Max(-1)");
-            assertThat(b).isNotNull();
+            assertThat(b).isEqualTo(new NumericBounds.IntegerBounds(null, -1L));
             assertThat(b.max()).isEqualTo(-1L);
         }
         @Test

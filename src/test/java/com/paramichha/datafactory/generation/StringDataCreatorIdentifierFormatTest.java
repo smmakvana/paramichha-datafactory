@@ -17,7 +17,7 @@ class StringDataCreatorIdentifierFormatTest {
     void isbnStringIsGenerated() {
         var fc = AnnotationResolver.analyzeFromStrings("isbn", "String", List.of("@ISBN"));
         var v = StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
-        assertThat(v).isNotBlank();
+        assertValidEan13(v);
     }
 
     @Test
@@ -25,6 +25,16 @@ class StringDataCreatorIdentifierFormatTest {
     void eanStringIsGenerated() {
         var fc = AnnotationResolver.analyzeFromStrings("ean", "String", List.of("@EAN"));
         var v = StringDataCreator.getString(fc, BoundaryTarget.semantic(), DataMachines.random());
-        assertThat(v).isNotBlank();
+        assertValidEan13(v);
+    }
+
+    /** ISBN-13 and EAN-13 share one check: digits weighted 1, 3, 1, 3 ... sum to a multiple of 10. */
+    private static void assertValidEan13(String v) {
+        assertThat(v).matches("\\d{13}");
+        int sum = 0;
+        for (int i = 0; i < 13; i++) {
+            sum += (v.charAt(i) - '0') * (i % 2 == 0 ? 1 : 3);
+        }
+        assertThat(sum % 10).as("check digit of %s", v).isZero();
     }
 }

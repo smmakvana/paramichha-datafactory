@@ -273,7 +273,7 @@ class StringShaperTest {
         void urlSemantic() {
             var f = field("site", String.class, "@URL");
             String v = StringDataCreator.getString(f, semantic(), DataMachines.random());
-            assertThat(v).isNotBlank();
+            assertThat(v).matches("https?://\\S+");
         }
 
         @Test
@@ -288,7 +288,7 @@ class StringShaperTest {
             // @Pattern — best-effort, returns base value
             var f = field("code", String.class, "@Pattern(regexp=\"^[A-Z]+$\")");
             String v = StringDataCreator.getString(f, semantic(), DataMachines.random());
-            assertThat(v).isNotNull();
+            assertThat(v).matches("[A-Z]+");
         }
 
         @Test
@@ -301,151 +301,151 @@ class StringShaperTest {
         @Test
         void semanticByName_phone() {
             var f = fieldOf("phone", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\(\\d{3}\\) \\d{3}-\\d{4}");
         }
 
         @Test
         void semanticByName_mobile() {
             var f = fieldOf("mobile", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\(\\d{3}\\) \\d{3}-\\d{4}");
         }
 
         @Test
         void semanticByName_firstName() {
             var f = fieldOf("firstName", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\p{Lu}\\p{Ll}+");
         }
 
         @Test
         void semanticByName_lastName() {
             var f = fieldOf("lastName", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\p{Lu}\\p{Ll}+");
         }
 
         @Test
         void semanticByName_name() {
             var f = fieldOf("name", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("([A-Z][a-z]+\\. )?[A-Z][a-z]+( [A-Z][\\w.]*)+");
         }
 
         @Test
         void semanticByName_password() {
             var f = fieldOf("password", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\S{8,}");
         }
 
         @Test
         void semanticByName_url() {
             var f = fieldOf("url", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("https?://\\S+");
         }
 
         @Test
         void semanticByName_city() {
             var f = fieldOf("city", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\p{Lu}[\\p{L} ().,'-]+");
         }
 
         @Test
         void semanticByName_countryCode() {
             var f = fieldOf("countryCode", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z]{2}");
         }
 
         @Test
         void semanticByName_country() {
             var f = fieldOf("country", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\p{Lu}[\\p{L} ().,'-]+");
         }
 
         @Test
         void semanticByName_address() {
             var f = fieldOf("address", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\d+ [A-Z].*");
         }
 
         @Test
         void semanticByName_postcode() {
             var f = fieldOf("postcode", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\d{5}");
         }
 
         @Test
         void semanticByName_zip() {
             var f = fieldOf("zip", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\d{5}");
         }
 
         @Test
         void semanticByName_currency() {
             var f = fieldOf("currency", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z]{3}");
         }
 
         @Test
         void semanticByName_description() {
             var f = fieldOf("description", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z].*\\.");
         }
 
         @Test
         void semanticByName_title() {
             var f = fieldOf("title", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\p{Lu}[\\p{L} ().,'-]+");
         }
 
         @Test
         void semanticByName_company() {
             var f = fieldOf("company", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z].+");
         }
 
         @Test
         void semanticByName_token() {
             var f = fieldOf("token", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
         }
 
         @Test
         void semanticByName_reference() {
             var f = fieldOf("reference", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("REF-\\d{6}");
         }
 
         @Test
         void semanticByName_id() {
             var f = fieldOf("userId", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
         }
 
         @Test
         void semanticByName_code() {
             var f = fieldOf("productCode", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\d{9}[\\dX]");
         }
 
         @Test
         void semanticByName_status() {
             var f = fieldOf("status", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z_]+");
         }
 
         @Test
         void semanticByName_type() {
             var f = fieldOf("type", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z_]+");
         }
 
         @Test
         void semanticByName_message() {
             var f = fieldOf("message", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z].*\\.");
         }
 
         @Test
         void semanticByName_fallback_word() {
             var f = fieldOf("zzz", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[a-z]+");
         }
 
         @Test
@@ -478,47 +478,47 @@ class StringShaperTest {
 
         @Test
         void linkHint() {
-            assertThat(StringDataCreator.getString(fieldOf("link", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(fieldOf("link", String.class), semantic(), DataMachines.random())).matches("https?://\\S+");
         }
 
         @Test
         void websiteHint() {
-            assertThat(StringDataCreator.getString(fieldOf("website", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(fieldOf("website", String.class), semantic(), DataMachines.random())).matches("https?://\\S+");
         }
 
         @Test
         void postalHint() {
-            assertThat(StringDataCreator.getString(fieldOf("postalCode", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(fieldOf("postalCode", String.class), semantic(), DataMachines.random())).matches("\\d{5}");
         }
 
         @Test
         void ccyHint() {
-            assertThat(StringDataCreator.getString(fieldOf("ccy", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(fieldOf("ccy", String.class), semantic(), DataMachines.random())).matches("[A-Z]{3}");
         }
 
         @Test
         void noteHint() {
-            assertThat(StringDataCreator.getString(fieldOf("note", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(fieldOf("note", String.class), semantic(), DataMachines.random())).matches("[A-Z].*\\.");
         }
 
         @Test
         void commentHint() {
-            assertThat(StringDataCreator.getString(fieldOf("comment", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(fieldOf("comment", String.class), semantic(), DataMachines.random())).matches("[A-Z].*\\.");
         }
 
         @Test
         void organisationHint() {
-            assertThat(StringDataCreator.getString(fieldOf("organisation", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(fieldOf("organisation", String.class), semantic(), DataMachines.random())).matches("[A-Z].+");
         }
 
         @Test
         void refHint() {
-            assertThat(StringDataCreator.getString(fieldOf("ref", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(fieldOf("ref", String.class), semantic(), DataMachines.random())).matches("REF-\\d{6}");
         }
 
         @Test
         void reasonHint() {
-            assertThat(StringDataCreator.getString(fieldOf("reason", String.class), semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(fieldOf("reason", String.class), semantic(), DataMachines.random())).matches("[A-Z].*\\.");
         }
     }
 }

@@ -245,19 +245,19 @@ class NumericShaperTest {
         @Test
         void pageHint() {
             var f = fieldOf("page", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNull();
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isPositive();
         }
 
         @Test
         void retryHint() {
             var f = fieldOf("retryCount", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNull();
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNegative();
         }
 
         @Test
         void attemptHint() {
             var f = fieldOf("attempts", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNull();
+            assertThat((Integer) NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNegative();
         }
 
         @Test
@@ -311,7 +311,7 @@ class NumericShaperTest {
         @Test
         void noBounds_noHint_returnsFakerValue() {
             var f = fieldOf("value", Integer.class);
-            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isNotNull();
+            assertThat(NumericDataCreator.getNumber(f, semantic(), DataMachines.random())).isInstanceOf(Integer.class);
         }
 
         @Test

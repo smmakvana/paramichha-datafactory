@@ -33,7 +33,7 @@ class FieldValueTest {
         void email_allValuesContainAt() {
             var fb = ValueBuilderFactory.create(String.class).with(NotBlank.class).with(Email.class);
             assertThat(fb.validList()).isNotEmpty();
-            fb.validList().forEach(v -> assertThat(v).contains("@"));
+            fb.validList().forEach(v -> assertThat(v).matches("[\\w.+-]+@[\\w.-]+\\.\\w+"));
         }
 
         @Test

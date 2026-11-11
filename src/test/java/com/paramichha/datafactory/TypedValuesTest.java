@@ -43,7 +43,7 @@ class TypedValuesTest {
             assertThat(UUID.fromString(DataFactory.string().uuid().valid())).isNotNull();
             assertThat(DataFactory.string().ipAddress().valid()).matches("\\d{1,3}(\\.\\d{1,3}){3}");
             assertThat(DataFactory.string("email").valid()).contains("@");
-            assertThat(DataFactory.string().hint("city").valid()).isNotBlank();
+            assertThat(DataFactory.string().hint("city").valid()).matches("\\p{Lu}[\\p{L} ().,'-]+");
             assertThat(DataFactory.string("shippingAddress").valid()).doesNotMatch("\\d{1,3}(\\.\\d{1,3}){3}");
         }
 
@@ -170,7 +170,7 @@ class TypedValuesTest {
             assertThat(DataFactory.decimal().negative().validList()).allSatisfy(v -> assertThat(v).isNegative());
             assertThat(DataFactory.decimal().digits(3, 2).validList())
                     .allSatisfy(v -> assertThat(v.abs()).isLessThan(new BigDecimal("1000")));
-            assertThat(DataFactory.decimal().scale(2).valid()).isNotNull();
+            assertThat(DataFactory.decimal().scale(2).validList()).allSatisfy(v -> assertThat(v.scale()).isLessThanOrEqualTo(2));
             assertThat(DataFactory.decimal().positive().invalidList()).isNotEmpty();
             assertThat(DataFactory.decimal().with("@DecimalMax(\"10\")").valid()).isLessThanOrEqualTo(BigDecimal.TEN);
             assertThat(DataFactory.decimal().stream(2)).hasSize(2);
