@@ -48,7 +48,7 @@ class ValueGeneratorTest {
         void shapeAll_singleValidString() {
             var f = AnnotationResolver.analyzeFromStrings("name", "String", List.of("@NotBlank"));
             var result = DataGenerator.shapeAll(f, BoundaryPlanner.plan(f), DataMachines.random());
-            assertThat(result).isNotEmpty();
+            assertThat(result).isNotEmpty().allSatisfy(v -> assertThat((String) v).isNotBlank());
             result.forEach(v -> assertThat(v).isInstanceOf(String.class));
         }
     }
