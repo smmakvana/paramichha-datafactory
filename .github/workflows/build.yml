@@ -1,0 +1,14 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build:
+    # The shared build: tests, coverage, formatting, Checkstyle, PMD and SpotBugs, with the reports
+    # attached to the run. See paramichha-dev/.github/workflows/quality-build.yml.
+    uses: smmakvana/paramichha-dev/.github/workflows/quality-build.yml@master
+    with:
+      dependencies: paramichha-dev paramichha-utils datafactory-catalog
