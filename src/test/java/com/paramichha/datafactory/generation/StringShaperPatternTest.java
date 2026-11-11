@@ -83,7 +83,7 @@ class StringShaperPatternTest {
         }
         @Test @DisplayName("{ unclosed — A is literal, { is literal")
         void unclosedBrace() {
-            assertThat(StringDataCreator.generateFromPattern("A{")).isNotNull();
+            assertThat(StringDataCreator.generateFromPattern("A{")).isEqualTo("A{");
         }
     }
 
@@ -149,7 +149,7 @@ class StringShaperPatternTest {
         }
         @Test @DisplayName("[ unclosed appends A and continues")
         void unclosedClass() {
-            assertThat(StringDataCreator.generateFromPattern("[unclosed")).isNotNull();
+            assertThat(StringDataCreator.generateFromPattern("[unclosed")).isEqualTo("Aunclosed");
         }
     }
 
@@ -179,7 +179,7 @@ class StringShaperPatternTest {
     class ExceptionFallback {
         @Test @DisplayName("malformed pattern returns A not exception")
         void malformedReturnsFallback() {
-            assertThat(StringDataCreator.generateFromPattern("[[[")).isNotNull();
+            assertThat(StringDataCreator.generateFromPattern("[[[")).isEqualTo("AAA");
         }
     }
 }

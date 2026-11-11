@@ -273,7 +273,7 @@ class StringShaperTest {
         void urlSemantic() {
             var f = field("site", String.class, "@URL");
             String v = StringDataCreator.getString(f, semantic(), DataMachines.random());
-            assertThat(v).isNotBlank();
+            assertThat(v).matches("https?://\\S+");
         }
 
         @Test
@@ -288,7 +288,7 @@ class StringShaperTest {
             // @Pattern — best-effort, returns base value
             var f = field("code", String.class, "@Pattern(regexp=\"^[A-Z]+$\")");
             String v = StringDataCreator.getString(f, semantic(), DataMachines.random());
-            assertThat(v).isNotNull();
+            assertThat(v).matches("[A-Z]+");
         }
 
         @Test
@@ -313,13 +313,13 @@ class StringShaperTest {
         @Test
         void semanticByName_firstName() {
             var f = fieldOf("firstName", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z][a-z]+");
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\p{Lu}\\p{Ll}+");
         }
 
         @Test
         void semanticByName_lastName() {
             var f = fieldOf("lastName", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z][a-z]+");
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\p{Lu}\\p{Ll}+");
         }
 
         @Test
@@ -343,19 +343,19 @@ class StringShaperTest {
         @Test
         void semanticByName_city() {
             var f = fieldOf("city", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z][A-Za-z ]+");
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\p{Lu}[\\p{L} ().,'-]+");
         }
 
         @Test
         void semanticByName_countryCode() {
             var f = fieldOf("countryCode", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z]{2}");
         }
 
         @Test
         void semanticByName_country() {
             var f = fieldOf("country", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z][A-Za-z ]+");
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\p{Lu}[\\p{L} ().,'-]+");
         }
 
         @Test
@@ -391,37 +391,37 @@ class StringShaperTest {
         @Test
         void semanticByName_title() {
             var f = fieldOf("title", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z][A-Za-z ]+");
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\p{Lu}[\\p{L} ().,'-]+");
         }
 
         @Test
         void semanticByName_company() {
             var f = fieldOf("company", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z].+");
         }
 
         @Test
         void semanticByName_token() {
             var f = fieldOf("token", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
         }
 
         @Test
         void semanticByName_reference() {
             var f = fieldOf("reference", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("REF-\\d{6}");
         }
 
         @Test
         void semanticByName_id() {
             var f = fieldOf("userId", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
         }
 
         @Test
         void semanticByName_code() {
             var f = fieldOf("productCode", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("\\d{9}[\\dX]");
         }
 
         @Test
@@ -433,7 +433,7 @@ class StringShaperTest {
         @Test
         void semanticByName_type() {
             var f = fieldOf("type", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[A-Z_]+");
         }
 
         @Test
@@ -445,7 +445,7 @@ class StringShaperTest {
         @Test
         void semanticByName_fallback_word() {
             var f = fieldOf("zzz", String.class);
-            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).isNotBlank();
+            assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random())).matches("[a-z]+");
         }
 
         @Test
