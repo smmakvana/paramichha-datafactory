@@ -24,6 +24,16 @@
       "instrument" : "fugit",
       "price" : 1.50,
       "quantity" : 1.50,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : "   "
+    },
+    "violations" : [ "tradeId" ]
+  }, {
+    "object" : {
+      "instrument" : "fugit",
+      "price" : 1.50,
+      "quantity" : 1.50,
       "side" : null,
       "status" : "PENDING",
       "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
@@ -42,6 +52,16 @@
   }, {
     "object" : {
       "instrument" : "",
+      "price" : 1.50,
+      "quantity" : 1.50,
+      "side" : "BUY",
+      "status" : "PENDING",
+      "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"
+    },
+    "violations" : [ "instrument" ]
+  }, {
+    "object" : {
+      "instrument" : "   ",
       "price" : 1.50,
       "quantity" : 1.50,
       "side" : "BUY",

@@ -25,6 +25,18 @@
     "violations" : [ "tradeId" ]
   }, {
     "object" : {
+      "legs" : [ {
+        "instrument" : "eum",
+        "price" : 1.50,
+        "quantity" : 1.50,
+        "side" : "BUY"
+      } ],
+      "status" : "PENDING",
+      "tradeId" : "   "
+    },
+    "violations" : [ "tradeId" ]
+  }, {
+    "object" : {
       "legs" : null,
       "status" : "PENDING",
       "tradeId" : "ba419d35-0dfe-8af7-aee7-bbe10c45c028"

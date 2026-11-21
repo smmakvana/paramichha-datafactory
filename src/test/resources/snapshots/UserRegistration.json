@@ -21,6 +21,15 @@
     "object" : {
       "age" : 30,
       "dateOfBirth" : "2020-06-15",
+      "email" : "   ",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "email", "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
       "email" : "not-an-email",
       "fullName" : "Mr. Nanci Stokes",
       "password" : "3bJmXXap1S#"
@@ -44,6 +53,15 @@
       "password" : "3bJmXXap1S#"
     },
     "violations" : [ "fullName", "fullName" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "   ",
+      "password" : "3bJmXXap1S#"
+    },
+    "violations" : [ "fullName" ]
   }, {
     "object" : {
       "age" : 30,
@@ -114,6 +132,15 @@
       "email" : "lamar.lehner@hotmail.com",
       "fullName" : "Mr. Nanci Stokes",
       "password" : ""
+    },
+    "violations" : [ "password", "password" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "fullName" : "Mr. Nanci Stokes",
+      "password" : "   "
     },
     "violations" : [ "password", "password" ]
   }, {

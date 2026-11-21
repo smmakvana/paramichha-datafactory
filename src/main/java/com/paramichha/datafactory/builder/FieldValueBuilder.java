@@ -194,6 +194,9 @@ public final class FieldValueBuilder<T> implements FieldValue<T> {
         }
         if (c.hasNotBlank() && type == String.class) {
             cases.add(ConstraintCase.of(fn, "NotBlank", ""));
+            // Whitespace only is blank too, and the case a hand-written check most often misses
+            // (s.isEmpty() instead of s.isBlank()).
+            cases.add(ConstraintCase.of(fn, "NotBlankWhitespace", "   "));
         }
         switch (c.format()) {
             case EMAIL -> cases.add(ConstraintCase.of(fn, "Email", "not-an-email"));

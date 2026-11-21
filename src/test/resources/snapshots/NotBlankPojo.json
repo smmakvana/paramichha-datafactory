@@ -15,6 +15,13 @@
     "violations" : [ "username" ]
   }, {
     "object" : {
+      "firstName" : "Lynda",
+      "lastName" : "Oberbrunner",
+      "username" : "   "
+    },
+    "violations" : [ "username" ]
+  }, {
+    "object" : {
       "firstName" : null,
       "lastName" : "Oberbrunner",
       "username" : "lamar.lehner"
@@ -23,6 +30,13 @@
   }, {
     "object" : {
       "firstName" : "",
+      "lastName" : "Oberbrunner",
+      "username" : "lamar.lehner"
+    },
+    "violations" : [ "firstName" ]
+  }, {
+    "object" : {
+      "firstName" : "   ",
       "lastName" : "Oberbrunner",
       "username" : "lamar.lehner"
     },
@@ -38,6 +52,13 @@
     "object" : {
       "firstName" : "Lynda",
       "lastName" : "",
+      "username" : "lamar.lehner"
+    },
+    "violations" : [ "lastName" ]
+  }, {
+    "object" : {
+      "firstName" : "Lynda",
+      "lastName" : "   ",
       "username" : "lamar.lehner"
     },
     "violations" : [ "lastName" ]

@@ -28,6 +28,18 @@
       "age" : 30,
       "country" : "Uruguay",
       "dateOfBirth" : "2020-06-15",
+      "email" : "   ",
+      "firstName" : "Clemencia",
+      "lastName" : "McLaughlin",
+      "password" : "wID1C8$U1%L^*M!q",
+      "phone" : "(350) 413-9336"
+    },
+    "violations" : [ "email", "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "country" : "Uruguay",
+      "dateOfBirth" : "2020-06-15",
       "email" : "not-an-email",
       "firstName" : "Clemencia",
       "lastName" : "McLaughlin",
@@ -59,6 +71,18 @@
       "phone" : "(350) 413-9336"
     },
     "violations" : [ "firstName", "firstName" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "country" : "Uruguay",
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "firstName" : "   ",
+      "lastName" : "McLaughlin",
+      "password" : "wID1C8$U1%L^*M!q",
+      "phone" : "(350) 413-9336"
+    },
+    "violations" : [ "firstName" ]
   }, {
     "object" : {
       "age" : 30,
@@ -114,6 +138,18 @@
       "dateOfBirth" : "2020-06-15",
       "email" : "lamar.lehner@hotmail.com",
       "firstName" : "Clemencia",
+      "lastName" : "   ",
+      "password" : "wID1C8$U1%L^*M!q",
+      "phone" : "(350) 413-9336"
+    },
+    "violations" : [ "lastName" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "country" : "Uruguay",
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "firstName" : "Clemencia",
       "lastName" : "x",
       "password" : "wID1C8$U1%L^*M!q",
       "phone" : "(350) 413-9336"
@@ -152,6 +188,18 @@
       "firstName" : "Clemencia",
       "lastName" : "McLaughlin",
       "password" : "",
+      "phone" : "(350) 413-9336"
+    },
+    "violations" : [ "password", "password" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "country" : "Uruguay",
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "firstName" : "Clemencia",
+      "lastName" : "McLaughlin",
+      "password" : "   ",
       "phone" : "(350) 413-9336"
     },
     "violations" : [ "password", "password" ]
@@ -254,6 +302,18 @@
   }, {
     "object" : {
       "age" : 30,
+      "country" : "Uruguay",
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "firstName" : "Clemencia",
+      "lastName" : "McLaughlin",
+      "password" : "wID1C8$U1%L^*M!q",
+      "phone" : "   "
+    },
+    "violations" : [ "phone" ]
+  }, {
+    "object" : {
+      "age" : 30,
       "country" : null,
       "dateOfBirth" : "2020-06-15",
       "email" : "lamar.lehner@hotmail.com",
@@ -267,6 +327,18 @@
     "object" : {
       "age" : 30,
       "country" : "",
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "firstName" : "Clemencia",
+      "lastName" : "McLaughlin",
+      "password" : "wID1C8$U1%L^*M!q",
+      "phone" : "(350) 413-9336"
+    },
+    "violations" : [ "country" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "country" : "   ",
       "dateOfBirth" : "2020-06-15",
       "email" : "lamar.lehner@hotmail.com",
       "firstName" : "Clemencia",

@@ -16,6 +16,13 @@
   }, {
     "object" : {
       "age" : 346,
+      "nickname" : "qui",
+      "required" : "   "
+    },
+    "violations" : [ "required" ]
+  }, {
+    "object" : {
+      "age" : 346,
       "nickname" : null,
       "required" : "eum"
     },

@@ -13,6 +13,12 @@
     "violations" : [ "email" ]
   }, {
     "object" : {
+      "email" : "   ",
+      "password" : "zbvS3^C0"
+    },
+    "violations" : [ "email", "email" ]
+  }, {
+    "object" : {
       "email" : "not-an-email",
       "password" : "zbvS3^C0"
     },
@@ -27,6 +33,12 @@
     "object" : {
       "email" : "lamar.lehner@hotmail.com",
       "password" : ""
+    },
+    "violations" : [ "password", "password" ]
+  }, {
+    "object" : {
+      "email" : "lamar.lehner@hotmail.com",
+      "password" : "   "
     },
     "violations" : [ "password", "password" ]
   }, {

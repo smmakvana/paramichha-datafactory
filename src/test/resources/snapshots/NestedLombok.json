@@ -25,6 +25,18 @@
     "violations" : [ "name" ]
   }, {
     "object" : {
+      "address" : {
+        "city" : "Lake Ellena",
+        "country" : "Armenia",
+        "line1" : "accusantium",
+        "postcode" : "13207"
+      },
+      "email" : "clemencia.mcdermott@hotmail.com",
+      "name" : "   "
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
       "address" : null,
       "email" : "clemencia.mcdermott@hotmail.com",
       "name" : "Garnet VonRueden"
@@ -51,6 +63,18 @@
         "postcode" : "13207"
       },
       "email" : "",
+      "name" : "Garnet VonRueden"
+    },
+    "violations" : [ "email" ]
+  }, {
+    "object" : {
+      "address" : {
+        "city" : "Lake Ellena",
+        "country" : "Armenia",
+        "line1" : "accusantium",
+        "postcode" : "13207"
+      },
+      "email" : "   ",
       "name" : "Garnet VonRueden"
     },
     "violations" : [ "email" ]
