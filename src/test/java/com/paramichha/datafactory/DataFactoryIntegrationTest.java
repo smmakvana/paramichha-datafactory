@@ -402,10 +402,10 @@ class DataFactoryIntegrationTest {
         @Test
         void unannotated_field_produces_type_default_violations() {
             // active (boolean, no annotation) → false (type-default)
-            // label (@NotBlank) → null + ""
-            // total: 3
+            // label (@NotBlank) → null + "" + "   " (whitespace only is blank too)
+            // total: 4
             assertThat(DataFactory.of(BoolPrimitiveRequest.class).invalidList().getAll())
-                    .hasSize(3);
+                    .hasSize(4);
         }
 
         @Test

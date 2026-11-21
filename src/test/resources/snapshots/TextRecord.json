@@ -19,6 +19,14 @@
     "object" : {
       "description" : "Dolorum asperiores ab nostrum velit minima minima.",
       "initial" : "I",
+      "name" : "   ",
+      "notes" : "Dicta earum incidunt quibusdam quaerat pariatur pariatur laudantium."
+    },
+    "violations" : [ "name" ]
+  }, {
+    "object" : {
+      "description" : "Dolorum asperiores ab nostrum velit minima minima.",
+      "initial" : "I",
       "name" : "",
       "notes" : "Dicta earum incidunt quibusdam quaerat pariatur pariatur laudantium."
     },
@@ -47,6 +55,14 @@
       "notes" : "Dicta earum incidunt quibusdam quaerat pariatur pariatur laudantium."
     },
     "violations" : [ "description", "description" ]
+  }, {
+    "object" : {
+      "description" : "   ",
+      "initial" : "I",
+      "name" : "Garnet VonRueden",
+      "notes" : "Dicta earum incidunt quibusdam quaerat pariatur pariatur laudantium."
+    },
+    "violations" : [ "description" ]
   }, {
     "object" : {
       "description" : "x",

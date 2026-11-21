@@ -14,6 +14,12 @@
   }, {
     "object" : {
       "backupEmail" : "clemencia.mcdermott@hotmail.com",
+      "email" : "   "
+    },
+    "violations" : [ "email", "email" ]
+  }, {
+    "object" : {
+      "backupEmail" : "clemencia.mcdermott@hotmail.com",
       "email" : "not-an-email"
     },
     "violations" : [ "email" ]

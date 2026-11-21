@@ -142,6 +142,16 @@
   }, {
     "object" : {
       "amount" : -1.00,
+      "minAmount" : "   ",
+      "price" : 499999.50,
+      "probability" : 0.5,
+      "rating" : 0.5,
+      "tax" : 1.50
+    },
+    "violations" : [ "minAmount", "minAmount" ]
+  }, {
+    "object" : {
+      "amount" : -1.00,
       "minAmount" : "-9.99",
       "price" : 499999.50,
       "probability" : 0.5,

@@ -13,6 +13,12 @@
     "violations" : [ "barcode", "barcode" ]
   }, {
     "object" : {
+      "barcode" : "   ",
+      "productName" : "Ms. Shakira McLaughlin"
+    },
+    "violations" : [ "barcode", "barcode" ]
+  }, {
+    "object" : {
       "barcode" : "000-bad-ean",
       "productName" : "Ms. Shakira McLaughlin"
     },
@@ -27,6 +33,12 @@
     "object" : {
       "barcode" : "0384055893221",
       "productName" : ""
+    },
+    "violations" : [ "productName" ]
+  }, {
+    "object" : {
+      "barcode" : "0384055893221",
+      "productName" : "   "
     },
     "violations" : [ "productName" ]
   } ],

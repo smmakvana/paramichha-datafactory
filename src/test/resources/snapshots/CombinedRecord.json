@@ -22,6 +22,15 @@
       "age" : 30,
       "balance" : 1.50,
       "dateOfBirth" : "2020-06-15",
+      "email" : "   ",
+      "name" : "Mr. Nanci Stokes"
+    },
+    "violations" : [ "email", "email" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
       "email" : "not-an-email",
       "name" : "Mr. Nanci Stokes"
     },
@@ -44,6 +53,15 @@
       "name" : ""
     },
     "violations" : [ "name", "name" ]
+  }, {
+    "object" : {
+      "age" : 30,
+      "balance" : 1.50,
+      "dateOfBirth" : "2020-06-15",
+      "email" : "lamar.lehner@hotmail.com",
+      "name" : "   "
+    },
+    "violations" : [ "name" ]
   }, {
     "object" : {
       "age" : 30,

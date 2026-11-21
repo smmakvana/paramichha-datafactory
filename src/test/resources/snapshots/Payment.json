@@ -18,6 +18,14 @@
   }, {
     "object" : {
       "amount" : 1.50,
+      "fromIban" : "   ",
+      "reference" : "REF-953375",
+      "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+    },
+    "violations" : [ "fromIban" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
       "fromIban" : "VA98384055893226262603",
       "reference" : "REF-953375",
       "toIban" : null
@@ -29,6 +37,14 @@
       "fromIban" : "VA98384055893226262603",
       "reference" : "REF-953375",
       "toIban" : ""
+    },
+    "violations" : [ "toIban" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "fromIban" : "VA98384055893226262603",
+      "reference" : "REF-953375",
+      "toIban" : "   "
     },
     "violations" : [ "toIban" ]
   }, {
@@ -60,6 +76,14 @@
       "amount" : 1.50,
       "fromIban" : "VA98384055893226262603",
       "reference" : "",
+      "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
+    },
+    "violations" : [ "reference" ]
+  }, {
+    "object" : {
+      "amount" : 1.50,
+      "fromIban" : "VA98384055893226262603",
+      "reference" : "   ",
       "toIban" : "UA960363316IpqsQMHDr4pPOrJPbP"
     },
     "violations" : [ "reference" ]
