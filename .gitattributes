@@ -1,2 +1,8 @@
-# Snapshot JSON is compared byte-for-byte: keep LF on every OS
-*.json text eol=lf
+# LF everywhere, also on Windows checkouts: Spotless checks LF line endings.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.jar binary
+*.png binary
+*.ttf binary
+*.pdf binary
