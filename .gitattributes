@@ -1,7 +1,5 @@
-# LF everywhere, also on Windows checkouts: Spotless checks LF line endings.
+# Use LF for text files on every checkout so Spotless sees the same bytes on Windows and Unix.
 * text=auto eol=lf
-*.bat text eol=crlf
-*.cmd text eol=crlf
 *.jar binary
 *.png binary
 *.ttf binary
