@@ -1,1 +1,6 @@
+# Use LF for text files on every checkout so Spotless sees the same bytes on Windows and Unix.
 * text=auto eol=lf
+*.jar binary
+*.png binary
+*.ttf binary
+*.pdf binary

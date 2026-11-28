@@ -316,14 +316,16 @@ class StringShaperTest {
         void semanticByName_firstName() {
             var f = fieldOf("firstName", String.class);
             assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random()))
-                    .matches("\\p{Lu}\\p{Ll}+");
+                    // Real names: O'Kon, McDonald, Smith-Jones — a capital first, then letters, ' or -.
+                    .matches("\\p{Lu}[\\p{L}'-]*\\p{Ll}");
         }
 
         @Test
         void semanticByName_lastName() {
             var f = fieldOf("lastName", String.class);
             assertThat(StringDataCreator.getString(f, semantic(), DataMachines.random()))
-                    .matches("\\p{Lu}\\p{Ll}+");
+                    // Real names: O'Kon, McDonald, Smith-Jones — a capital first, then letters, ' or -.
+                    .matches("\\p{Lu}[\\p{L}'-]*\\p{Ll}");
         }
 
         @Test

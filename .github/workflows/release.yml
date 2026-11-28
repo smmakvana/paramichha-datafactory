@@ -1,0 +1,17 @@
+# Publishing a GitHub Release (tag v<version>) publishes this library to GitHub Packages, where the
+# projects given access build with it. See paramichha-dev's publish.yml for the steps and the release order.
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    uses: smmakvana/paramichha-dev/.github/workflows/publish.yml@master
+    with:
+      dependencies: paramichha-dev paramichha-utils datafactory-catalog

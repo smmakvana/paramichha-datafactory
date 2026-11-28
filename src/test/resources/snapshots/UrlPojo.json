@@ -14,6 +14,12 @@
   }, {
     "object" : {
       "apiEndpoint" : "https://www.graig-tillman.biz:29573/natus?quam=reiciendis&perspiciatis=quidem#optio",
+      "website" : "   "
+    },
+    "violations" : [ "website", "website" ]
+  }, {
+    "object" : {
+      "apiEndpoint" : "https://www.graig-tillman.biz:29573/natus?quam=reiciendis&perspiciatis=quidem#optio",
       "website" : "not-a-url"
     },
     "violations" : [ "website" ]
